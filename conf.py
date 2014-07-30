@@ -95,6 +95,7 @@ NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ("/archive.html", "Archive"),
         ("/categories/index.html", "Tags"),
+        ("/talks.html", "Talks"),
         ("/rss.xml", "RSS feed"),
     ),
 }
