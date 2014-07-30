@@ -12,21 +12,21 @@ In [a previous post][prev], I talked about ways to optimize PyCon
 financial aid grants. This is a follow-up on those efforts. Quick
 recap:
 
-- There is a fixed budget $b$ available for grants, between 100k and
-  200k USD.
+- There is a fixed budget \\(b\\) available for grants, between 100k
+  and 200k USD.
 - There are a number of people (approximately 300) requesting various
-  amounts $r_i$ (approximately between 100 USD and 2000 USD) of
-  financial aid, and receive a grant $g_i$ so that $0 \le g_i \le
-  r_i$.
-- Financial aid applicants can be assigned scores $s_i$, a relative
-  value describing how much we'd like to have them at PyCon.
+  amounts \\(r_i\\) (approximately between 100 USD and 2000 USD) of
+  financial aid, and receive a grant \\(g_i\\) so that \\(0 \le g_i
+  \le r_i\\).
+- Financial aid applicants can be assigned scores \\(s_i\\), a
+  relative value describing how much we'd like to have them at PyCon.
 - PyCon wants to optimize the total expected value of scores. That
   means getting as many people as possible to come, weighted by score.
-- We've conjectured that we can estimate the probability $p_i$ that
-  someone attends as either $g_i/r_i$, or $(g_i/r_i)^2$. The former
-  prefers to spread the budget across a larger number of smaller
-  grants, whereas the latter prefers to focus the budget into a
-  smaller number of larger grants.
+- We've conjectured that we can estimate the probability \\(p_i\\)
+  that someone attends as either \\(g_i/r_i\\), or \\((g_i/r_i)^2\\).
+  The former prefers to spread the budget across a larger number of
+  smaller grants, whereas the latter prefers to focus the budget into
+  a smaller number of larger grants.
 
 If any of that doesn't make sense, you should read
 [the previous blog post][prev] for more details.
@@ -67,9 +67,9 @@ generic constraint solver. I ended that post saying that I would try
 to remeedy that by applying a more specific solver that takes
 advantage of a particular structure of the problem.
 
-When you set $p_i = g_i/r_i$, this turns into a linear programming
-problem, since $r_i$ is a constant. When you set $p_i =
-\left(g_i/r_i\right)^2$, it turns into a quadratic programming
+When you set \\(p_i = g_i/r_i\\), this turns into a linear programming
+problem, since \\(r_i\\) is a constant. When you set \\(p_i =
+\left(g_i/r_i\right)^2\\), it turns into a quadratic programming
 problem. Turns out there's two things I missed about the quadratic
 problem:
 
@@ -82,13 +82,13 @@ problem:
 
 ## Fixing the model
 
-That doesn't mean we should put the $(g_i/r_i)^k$ out to pasture: it
-just means that I didn't pick the $k$ I really wanted. Specifically,
-if I were to pick $k=1/2$, I'd get:
+That doesn't mean we should put the \\((g_i/r_i)^k\\) out to pasture:
+it just means that I didn't pick the \\(k\\) I really wanted.
+Specifically, if I were to pick \\(k=1/2\\), I'd get:
 
 $$p_i = \left(\frac{g_i}{r_i}\right)^{1/2} = \sqrt{\frac{g_i}{r_i}}$$
 
-In general, if $k = 1/n$:
+In general, if  \\(k = 1/n\\):
 
 $$p_i = \left(\frac{g_i}{r_i}\right)^{1/n} = \sqrt[n]{\frac{g_i}{r_i}}$$
 
@@ -98,9 +98,9 @@ optimization. That's okay, there are still a couple of applicable
 optimization algorithms.
 
 Some of these algorithms require the derivative of the goal function
-with respect to a particular grant size $g_j$ at a particular point.
-In case we don't have the real derivative, we can still provide a
-numerical approximation. In our case, we don't really need to
+with respect to a particular grant size \\(g_j\\) at a particular
+point. In case we don't have the real derivative, we can still provide
+a numerical approximation. In our case, we don't really need to
 approximate, since the derivatives are fairly easy to compute
 analytically:
 
@@ -129,7 +129,7 @@ SciPy's optimization module provides the following algorithms:
 
 The first two are not applicable because they only appear to support
 bounds on individual variables. I also need a constraint over the
-*sum* of variables for the budget: $\sum g_i \le b$. The last one
+*sum* of variables for the budget:  \\(\sum g_i \le b\\). The last one
 isn't applicable because this isn't a linear least-squares problem.
 That leaves `cobyla` and `slsqp`.
 
@@ -159,14 +159,14 @@ k = 1/100: [ 10.  11.  11.  23.  34.  10.  50.], sum: 150.0
 
 Some takeaways:
 
-- As predicted, as $1/k$ increases, the optimization gradually starts
-  spreading the budget out more evenly; preferring to give many
+- As predicted, as \\(1/k\\) increases, the optimization gradually
+  starts spreading the budget out more evenly; preferring to give many
   partial grants rather than a few large ones.
-- This effect is mostly only pronounced for $1/k = 2, 3$; after that,
-  increasing $1/k$ doesn't make much of a difference anymore. This is
-  what I'd expect when I visualize the $p_i$ functions in my head, but
-  I haven't ruled out numerical instability.
-- Even at high $1/k$, the two high scorers get their full grant
+- This effect is mostly only pronounced for \\(1/k = 2, 3\\); after
+  that, increasing \\(1/k\\) doesn't make much of a difference
+  anymore. This is what I'd expect when I visualize the \\(p_i\\)
+  functions in my head, but I haven't ruled out numerical instability.
+- Even at high \\(1/k\\), the two high scorers get their full grant
   amount. That's quite understandable for the one that's only asking
   for 10, but even the one asking for a large grant gets it
   unconditionally. This probably means that tweaking the scoring
