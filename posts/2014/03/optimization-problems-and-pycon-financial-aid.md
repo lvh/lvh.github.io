@@ -4,7 +4,7 @@
 .. slug: optimization-problems-and-pycon-financial-aid
 .. link:
 .. description:
-.. tags: pycon
+.. tags: pycon, mathjax
 -->
 
 

@@ -4,7 +4,7 @@
 .. slug: more-on-financial-aid-grant-optimization
 .. link:
 .. description:
-.. tags: pycon
+.. tags: pycon, mathjax
 -->
 
 
