@@ -281,7 +281,7 @@ $${2 \cdot 10^{5} \choose 10^{5}} = \frac{(2 \cdot 10^{5})!}{10^{5}! \cdot 10^{5
 
 That is a very big number. I needed logarithms to compute it. It is so
 huge that it makes the number of atoms in the observable universe
-(about $10^{80}$) look like rounding error.
+(about \\(10^{80}\\)) look like rounding error.
 
 In an attempt to "fix" that problem, I tried only handing out funds in
 chunks of 100 USD each. Then, we have 1000 chunks to hand out and 2000
