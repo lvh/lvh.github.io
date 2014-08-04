@@ -66,9 +66,9 @@ other hand, had awesome docs with lots of examples.
 Implementation
 --------------
 
-All implementations are on Github at `lvh/kdfperf`_. It'd be nice if these were easier
-to run; if anyone feels inclined to add a few Dockerfiles, that would
-be much appreciated.
+All implementations are on Github at `lvh/kdfperf`_. It'd be nice if
+these were easier to run. In particular, if anyone feels inclined to
+add a few Dockerfiles, that would be much appreciated.
 
 Both the HKDF implementation and the BLAKE2 implementation come in
 "one pass" and "multipass" varieties:
