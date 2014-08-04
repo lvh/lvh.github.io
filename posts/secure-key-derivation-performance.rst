@@ -47,8 +47,8 @@ than both SHA-1 and MD5.
 Due to some of the differences between SHA-2-era hashes like SHA-256
 and (post-)SHA-3-era hashes like BLAKE2, BLAKE2 does not necessarily
 require the padding provided by HMAC (and by extension HKDF) in order
-to be a secure PRF/KDF. BLAKE2 comes with a highly efficient PRF/MAC
-mode built-in.
+to be a secure MAC. BLAKE2 comes with a highly efficient MAC mode
+built-in.
 
 Furthermore, BLAKE2 directly provides a "personalization" parameter
 similar to the "info" parameter of HKDF. While this is more limited in
