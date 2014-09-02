@@ -1,7 +1,7 @@
 .. title: On discussing software security improvements
 .. slug: on-discussing-software-security-improvements
 .. date: 2014-07-28 23:58:27 UTC-07:00
-.. tags: crypto, security, python, private
+.. tags: crypto, security, python
 .. link:
 .. description: How to discuss software security improvements.
 .. type: text
