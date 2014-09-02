@@ -84,7 +84,10 @@ Here be dragons! Horribly unscientific, only run once, on my laptop,
 with a bunch of other things open, code not peer reviewed yet! No error
 bars! This might as well be total nonsense!
 
-Results: https://gist.github.com/lvh/e2e4dfd0ce0d90776616
+Python
+~~~~~~
+
+Results are available here: https://gist.github.com/lvh/e2e4dfd0ce0d90776616
 
 TL;DR:
 
@@ -92,6 +95,13 @@ TL;DR:
   ~100x (one-pass).
 - Multipass is only about 7% slower than one-pass for BLAKE2, but the
   difference is almost 20% for HMAC-SHA256.
+
+This is somewhat to be expected; keep in mind that the HKDF
+implementation is pure Python, whereas the BLAKE2 implementation is a
+tiny C wrapper around some Python.
+
+I'd run them on PyPy to get the difference down, but it appears
+pyblake2 doesn't work on PyPy.
 
 .. _HKDF: http://tools.ietf.org/html/rfc5869
 .. _`HKDF-style info parameter`: http://tools.ietf.org/html/rfc5869#section-3.2
