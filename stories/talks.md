@@ -12,6 +12,23 @@ This is a list of some of my presentations and some of the places I've
 presented them. This list is woefully incomplete: if there's anything
 missing or you have some missing talk materials, please get in touch!
 
+## Clojure Intro
+
+An introduction to Clojure, a pragmatic, modern Lisp for the JVM and
+other platforms. Focus on the new (and old) stuff it brings to the
+table, such as functional programming, pervasive immutability, strong
+concurrency primitives, and the unmatched flexibility of Lisp.
+
+This lecture was part of Comparative Programming Languages
+(B-KUL-H0S01A), which is a part of the Master of Engineering degree.
+Thanks to professor [Frank Piessens](https://cs.kuleuven.be/~frank/)
+for the opportunity to give this lecture in his class, and Thomas
+Goossens of [BeClojure](http://beclojure.org/) for the organization.
+
+[Slides (HTML)](//www.lvh.io/ClojureIntro),
+[source repo](https://github.com/lvh/ClojureIntro). This is a
+lecture-length talk (120 minutes).
+
 ## Twisted Mixing
 
 A common criticism of the [Twisted](https://www.twistedmatrix.com)
