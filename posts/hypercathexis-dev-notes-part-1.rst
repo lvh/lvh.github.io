@@ -12,8 +12,7 @@
 
 .. epigraph::
 
-   hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \\-kə-ˈthek-səs, -ka-\\
-
+   hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \\-kə-ˈthek-səs, -ka-\\:
    excessive concentration of desire upon a particular object
 
 I'm considering renaming the project to its plural, hypercathexes,
