@@ -1,3 +1,16 @@
+img#logo {
+    position: absolute;
+    width: 25%;
+    right: 0;
+    top: 80px;
+}
+
+@media (max-width: 1024px) {
+    img#logo {
+        display: none;
+    }
+}
+
 @media (min-width: 1024px) {
     .body-content {
         width: 50em;
