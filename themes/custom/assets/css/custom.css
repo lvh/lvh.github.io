@@ -1,3 +1,7 @@
+.body-content {
+    text-align: justify;
+}
+
 img#logo {
     position: absolute;
     width: 25%;
@@ -13,6 +17,6 @@ img#logo {
 
 @media (min-width: 1024px) {
     .body-content {
-        width: 50em;
+        width: 40em;
     }
 }
