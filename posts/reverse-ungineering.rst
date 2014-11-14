@@ -160,18 +160,18 @@ well enough to explain to a computer, and art is everything else. If
 that's true, there's definitely plenty of art to be found in
 engineering.
 
-I don't think anyone wants to get dragged into a semantic argument
-about what art *is*. I think even with a much narrower view of art,
-engineers do plenty of it, as I've tried to argue before. Not all
-engineering calls are a direct consequence of quantum mechanics;
-sometimes, it is really just down to what the engineer finds most
-platable. Even civil engineers, the gray predictable stalwarts of our
-story, care about making beautiful things.
+Nobody wants to get dragged into a semantic argument about what art
+*is*. Even with a much narrower view of art, engineers do plenty of
+it, as I've tried to argue before. Not all engineering calls are
+direct consequences of quantum mechanics; sometimes, it is really just
+down to what the engineer finds most platable. Even civil engineers,
+the gray predictable stalwarts of our story, care about making
+beautiful things.
 
 Conclusion
 ==========
 
-I think the similarities run deep. I don't want to throw that away
+I think the similarities run deep. I hope we don't throw that away
 essentially just because our field is a little younger. We're all
 hackers here; and we're all engineers, too.
 
