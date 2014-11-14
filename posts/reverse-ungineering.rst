@@ -44,19 +44,19 @@ engineering standards to a project that isn't.
 
 I emphatically agree that software projects aren't civil engineering
 projects, and that attempts to treat the former like the latter have
-done much more harm than good. That said, I think the point could be
-nuanced in several important ways.
+done much more harm than good. That said, I think reality is more
+nuanced.
 
-Firstly, I believe civil engineering is really the outlier here: other
-engineering disciplines don't do as well by the civil engineering
-success yardstick either. The few engineering endeavors in other
-fields that do do well, are typically civil engineering in disguise,
-such as nuclear and chemical plants.  Rank-and-file projects in most
-fields of engineering operate a lot more like a software project than
-building a skyscraper. Projects are late and over budget, often highly
+Firstly, civil engineering is the outlier here. Other engineering
+disciplines don't do as well by the civil engineering success
+yardstick either. The few engineering endeavors in other fields that
+do do well are typically civil engineering in disguise, such as
+nuclear and chemical plants.  Rank-and-file projects in most fields of
+engineering operate a lot more like a software project than building a
+skyscraper. Projects are late and over budget, often highly
 experimental in nature, and in many cases also subject to changing
-requirements. It's true just can't plan ahead in software, but we're
-not alone.
+requirements. It's true that we just can't plan ahead in software, but
+we're not alone.
 
 On a related note, we may be confounding cause and effect here, even
 if we overlook that not all engineering is civil engineering. Are
