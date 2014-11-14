@@ -67,7 +67,7 @@ and often because we're not engineering, or because, unlike civil
 engineering projects, we *can*? [#anthropic]_
 
 Finally, software has existed for decades, buildings for
-millennia. Bridges used to collapse all the time; Tacoma Narrows
+millennia. Bridges used to collapse all the time. Tacoma Narrows
 wasn't so long ago. If the tour guide on my trip to Paris is to be
 believed, one of those bridges has collapsed four times already.
 
@@ -109,19 +109,18 @@ get it by taking Hooke's law and throwing some calculus at it. Hooke's
 law itself is more math than physics, too: it's a first-order
 approximation based only on the observation that stuff stretches when
 you pull it. It's wrong all the time, even for fairly germane
-materials and setups. [#hooke]_ Both theories were put together long
-before we had serious [#serious]_ materials science. We use them
-because they (mostly) work, not because they are a consequence of a
-physical model.
+objects. [#hooke]_ Both theories were put together long before we had
+serious [#serious]_ materials science. We use them because they
+(mostly) work, not because they are a consequence of a physical model.
 
 That was just one example from a single discipline, but it holds more
 generally, too. I analyze circuits by recognizing subsections. If you
 show me a piece that looks like a low-pass filter, I am not distracted
 by Maxwell's equations to figure out what that little capacitor is
 doing.  I could certainly derive its behavior that way: in fact,
-someone made me do that once. Quite instructive. But I'm not bothered
-with the electrodynamics of a capacitor right now; I'm just trying to
-understand this circuit.
+someone made me do that once, and it was quite instructive. But I'm
+not bothered with the electrodynamics of a capacitor right now; I'm
+just trying to understand this circuit.
 
 This isn't just how engineers happen to do their jobs in practice,
 either. Engineering breakthroughs live on both sides of science's
@@ -129,7 +128,7 @@ cutting edge. When Shockley et al. first managed to get a transistor
 to work, we didn't really understand what was going on. [#tor]_ Carnot
 was building engines long before anyone realized he had stumbled upon
 one of the most fundamental properties of the universe. Nobody was
-doing metaphysics. Sadi just wanted a better steam engine.
+doing metaphysics. Sadi wanted a better steam engine.
 
 To me, saying that I-beam was dimensioned with the help of beam theory
 is about as far from the truth as saying that a software project was
