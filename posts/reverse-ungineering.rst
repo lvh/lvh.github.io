@@ -38,21 +38,20 @@ accepted in civil engineering, a Serious Engineering Discipline:
 I certainly wouldn't. Computers are terrible, but not quite *that*
 bad, as Glyph points out. "Failure" simply means something different
 for software projects than it does for construction projects. Many of
-those "failed" projects were quite successful by other measures; the
-problem isn't with software projects, it's with applying civil
-engineering standards to a project that isn't.
+those "failed" software projects were quite successful by other
+measures; the problem isn't with software projects, it's with applying
+civil engineering standards to a project that isn't.
 
 I emphatically agree that software projects aren't civil engineering
-projects, and that attempts to treat the former like the latter have
-done much more harm than good. That said, I think reality is more
-nuanced.
+projects. Attempts to treat the former like the latter have done much
+more harm than good. That said, I think reality is more nuanced.
 
 Firstly, civil engineering is the outlier here. Other engineering
 disciplines don't do as well by the civil engineering success
-yardstick either. The few engineering endeavors in other fields that
-do do well are typically civil engineering in disguise, such as
-nuclear and chemical plants.  Rank-and-file projects in most fields of
-engineering operate a lot more like a software project than building a
+yardstick either. In other fields, the few engineering endeavors that
+do are typically civil engineering in disguise, such as nuclear and
+chemical plants.  Rank-and-file projects in most fields of engineering
+operate a lot more like a software project than the construction of a
 skyscraper. Projects are late and over budget, often highly
 experimental in nature, and in many cases also subject to changing
 requirements. It's true that we just can't plan ahead in software, but
@@ -110,7 +109,7 @@ law itself is more math than physics, too: it's a first-order
 approximation based only on the observation that stuff stretches when
 you pull it. It's wrong all the time, even for fairly germane
 objects. [#hooke]_ Both theories were put together long before we had
-serious [#serious]_ materials science. We use them because they
+serious materials science. [#serious]_ We use them because they
 (mostly) work, not because they are a consequence of a physical model.
 
 That was just one example from a single discipline, but it holds more
@@ -134,8 +133,8 @@ To me, saying that I-beam was dimensioned with the help of beam theory
 is about as far from the truth as saying that a software project was
 built with the help of category theory. I'm sure that there's some way
 that that thing I just wrote is a covariant functor and you can
-co-Yoneda your way to proving natural isomorphism, but you don't
-really have to let that affect you if you don't want it to. It's easy
+co-Yoneda your way to proving natural isomorphism, but I don't
+really have to let that affect me if I don't want it to. It's easy
 to reduce an applied field to *just* the application of that field,
 but that doesn't make it so, especially if we haven't even really
 figured out the field yet.
