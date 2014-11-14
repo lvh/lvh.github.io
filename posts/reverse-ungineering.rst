@@ -133,11 +133,11 @@ To me, saying that I-beam was dimensioned with the help of beam theory
 is about as far from the truth as saying that a software project was
 built with the help of category theory. I'm sure that there's some way
 that that thing I just wrote is a covariant functor and you can
-co-Yoneda your way to proving natural isomorphism, but I don't
-really have to let that affect me if I don't want it to. It's easy
-to reduce an applied field to *just* the application of that field,
-but that doesn't make it so, especially if we haven't even really
-figured out the field yet.
+co-Yoneda your way to proving natural isomorphism, but I don't *have*
+to care in order to successfully produce some software. It's easy to
+reduce an applied field to *just* the application of that field, but
+that doesn't make it so; especially if we haven't even really figured
+out the field yet.
 
 So, even if the math and science behind computer engineering is
 somehow less real than that other math and science, I think that
