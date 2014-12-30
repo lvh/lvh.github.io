@@ -47,10 +47,10 @@ software projects were quite successful by other measures; the problem
 isn't with software projects, it's with applying civil engineering
 standards to a project that isn't.
 
-I agree that software projects aren't civil engineering projects.
-Attempts to treat the former like the latter have done much more harm
-than good. That said, I don't think that makes software
-not-engineering.
+Software projects aren't civil engineering projects.  Attempts to
+treat the former like the latter have done much more harm than
+good. That said, that doesn't mean that software development isn't
+engineering.
 
 Firstly, civil engineering is the outlier here. Other engineering
 disciplines don't do well according to the civil engineering success
@@ -63,13 +63,13 @@ experimental in nature, and in many cases also subject to changing
 requirements. It's true that we just can't plan ahead in software, but
 we're not alone.
 
-Secondly, we may be confounding cause and effect here, even if we
-overlook that not all engineering is civil engineering. Are software
-projects unable to stick to these standards because it's not
-engineering, or is civil engineering the only thing that sticks to
-them because *they have no other choice*? Conversely, do we fail early
-and often because we're not engineering, or because, unlike civil
-engineering projects, we *can*? [#anthropic]_
+Secondly, we may be confounding cause and effect, even if we overlook
+that not all engineering is civil engineering. Are software projects
+unable to stick to these standards because it's not engineering, or is
+civil engineering the only thing that sticks to them because *they
+have no other choice*? Conversely, do we fail early and often because
+we're not engineering, or because, unlike civil engineering projects,
+we *can*? [#anthropic]_
 
 Finally, software has existed for decades, but buildings have for
 millennia. Bridges used to collapse all the time. Tacoma Narrows
