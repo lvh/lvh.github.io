@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 30 Dec 2014 13:50:14 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 30 Dec 2014 13:52:19 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
 &lt;p&gt;Recently, some friends of mine suggested that "software engineer" is
 not a good job title. While they are of course free to call their
 profession whatever they like, I respectfully disagree: I think
@@ -32,9 +32,8 @@ software projects were quite successful by other measures; the problem
 isn't with software projects, it's with applying civil engineering
 standards to a project that isn't.&lt;/p&gt;
 &lt;p&gt;Software projects aren't civil engineering projects.  Attempts to
-treat the former like the latter have done much more harm than
-good. That said, that doesn't mean that software development isn't
-engineering.&lt;/p&gt;
+treat them as such have done much more harm than good. That said, that
+doesn't mean that software development isn't engineering.&lt;/p&gt;
 &lt;p&gt;Firstly, civil engineering is the outlier here. Other engineering
 disciplines don't do well according to the civil engineering success
 yardstick either. The few engineering endeavors that do are usually
@@ -44,7 +43,7 @@ operate a lot more like a software project than the construction of a
 skyscraper. Projects are late and over budget, often highly
 experimental in nature, and in many cases also subject to changing
 requirements. It's true that we just can't plan ahead in software, but
-we're not alone.&lt;/p&gt;
+we're not the only ones.&lt;/p&gt;
 &lt;p&gt;Secondly, we may be confounding cause and effect, even if we overlook
 that not all engineering is civil engineering. Are software projects
 unable to stick to these standards because it's not engineering, or is

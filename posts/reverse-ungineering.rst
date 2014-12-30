@@ -48,9 +48,8 @@ isn't with software projects, it's with applying civil engineering
 standards to a project that isn't.
 
 Software projects aren't civil engineering projects.  Attempts to
-treat the former like the latter have done much more harm than
-good. That said, that doesn't mean that software development isn't
-engineering.
+treat them as such have done much more harm than good. That said, that
+doesn't mean that software development isn't engineering.
 
 Firstly, civil engineering is the outlier here. Other engineering
 disciplines don't do well according to the civil engineering success
@@ -61,7 +60,7 @@ operate a lot more like a software project than the construction of a
 skyscraper. Projects are late and over budget, often highly
 experimental in nature, and in many cases also subject to changing
 requirements. It's true that we just can't plan ahead in software, but
-we're not alone.
+we're not the only ones.
 
 Secondly, we may be confounding cause and effect, even if we overlook
 that not all engineering is civil engineering. Are software projects
