@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 30 Dec 2014 11:01:11 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 30 Dec 2014 11:03:20 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
 &lt;p&gt;Recently, some friends of mine suggested that "software engineer" is
 not a good job title. While they are of course free to call their
 profession whatever they like, I respectfully disagree: I think
@@ -82,7 +82,7 @@ Euler-Bernouilli beam theory, for example. Very heavy textbooks with
 very heavy math. Neither my physical therapist nor my regular one
 expect me to ever &lt;em&gt;truly&lt;/em&gt; recover. Nonetheless, area moments and
 section moduli are the only way to understand where the &lt;tt class="docutils literal"&gt;I&lt;/tt&gt; in
-I-beams comes from.&lt;/p&gt;
+I-beam comes from.&lt;/p&gt;
 &lt;p&gt;Nasty math didn't prevent me from dimensioning that I-beam. And I do
 really mean &lt;em&gt;math&lt;/em&gt;, not physics: Euler-Bernouilli is a math hack. You
 get it by taking Hooke's law and throwing some calculus at it. Hooke's

@@ -104,7 +104,7 @@ Euler-Bernouilli beam theory, for example. Very heavy textbooks with
 very heavy math. Neither my physical therapist nor my regular one
 expect me to ever *truly* recover. Nonetheless, area moments and
 section moduli are the only way to understand where the ``I`` in
-I-beams comes from.
+I-beam comes from.
 
 Nasty math didn't prevent me from dimensioning that I-beam. And I do
 really mean *math*, not physics: Euler-Bernouilli is a math hack. You
