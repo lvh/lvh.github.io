@@ -30,20 +30,22 @@ good:
   entirely. Only a third of projects succeed according to those
   criteria of being under budget, within specification, and complete.
 
-Those shenanigans would never be accepted in civil engineering, a
-Serious Engineering Discipline:
+Such shenanigans would never be accepted in a Serious Engineering
+Discipline, like civil engineering:
 
   Would you want to live in a city where almost a quarter of all the
   buildings were simply abandoned half-constructed, or fell down
   during construction? Where almost half of the buildings were missing
   floors, had rents in the millions of dollars, or both?
 
-I certainly wouldn't. Computers are terrible, but not quite *that*
-bad, as Glyph points out. "Failure" simply means something different
-for software projects than it does for construction projects. Many of
-those "failed" software projects were quite successful by other
-measures; the problem isn't with software projects, it's with applying
-civil engineering standards to a project that isn't.
+I certainly wouldn't.
+
+Computers are terrible, but not quite *that* bad, as Glyph points
+out. "Failure" simply means something different for software projects
+than it does for construction projects. Many of those "failed"
+software projects were quite successful by other measures; the problem
+isn't with software projects, it's with applying civil engineering
+standards to a project that isn't.
 
 I agree that software projects aren't civil engineering projects.
 Attempts to treat the former like the latter have done much more harm
