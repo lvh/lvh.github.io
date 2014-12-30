@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 30 Dec 2014 12:34:37 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 30 Dec 2014 13:50:14 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
 &lt;p&gt;Recently, some friends of mine suggested that "software engineer" is
 not a good job title. While they are of course free to call their
 profession whatever they like, I respectfully disagree: I think
@@ -17,23 +17,24 @@ Most software projects fail; as of 2009, 44% are late, over budget,
 or out of specification, and an additional 24% are canceled
 entirely. Only a third of projects succeed according to those
 criteria of being under budget, within specification, and complete.&lt;/blockquote&gt;
-&lt;p&gt;Those shenanigans would never be accepted in civil engineering, a
-Serious Engineering Discipline:&lt;/p&gt;
+&lt;p&gt;Such shenanigans would never be accepted in a Serious Engineering
+Discipline, like civil engineering:&lt;/p&gt;
 &lt;blockquote&gt;
 Would you want to live in a city where almost a quarter of all the
 buildings were simply abandoned half-constructed, or fell down
 during construction? Where almost half of the buildings were missing
 floors, had rents in the millions of dollars, or both?&lt;/blockquote&gt;
-&lt;p&gt;I certainly wouldn't. Computers are terrible, but not quite &lt;em&gt;that&lt;/em&gt;
-bad, as Glyph points out. "Failure" simply means something different
-for software projects than it does for construction projects. Many of
-those "failed" software projects were quite successful by other
-measures; the problem isn't with software projects, it's with applying
-civil engineering standards to a project that isn't.&lt;/p&gt;
-&lt;p&gt;I agree that software projects aren't civil engineering projects.
-Attempts to treat the former like the latter have done much more harm
-than good. That said, I don't think that makes software
-not-engineering.&lt;/p&gt;
+&lt;p&gt;I certainly wouldn't.&lt;/p&gt;
+&lt;p&gt;Computers are terrible, but not quite &lt;em&gt;that&lt;/em&gt; bad, as Glyph points
+out. "Failure" simply means something different for software projects
+than it does for construction projects. Many of those "failed"
+software projects were quite successful by other measures; the problem
+isn't with software projects, it's with applying civil engineering
+standards to a project that isn't.&lt;/p&gt;
+&lt;p&gt;Software projects aren't civil engineering projects.  Attempts to
+treat the former like the latter have done much more harm than
+good. That said, that doesn't mean that software development isn't
+engineering.&lt;/p&gt;
 &lt;p&gt;Firstly, civil engineering is the outlier here. Other engineering
 disciplines don't do well according to the civil engineering success
 yardstick either. The few engineering endeavors that do are usually
@@ -44,13 +45,13 @@ skyscraper. Projects are late and over budget, often highly
 experimental in nature, and in many cases also subject to changing
 requirements. It's true that we just can't plan ahead in software, but
 we're not alone.&lt;/p&gt;
-&lt;p&gt;Secondly, we may be confounding cause and effect here, even if we
-overlook that not all engineering is civil engineering. Are software
-projects unable to stick to these standards because it's not
-engineering, or is civil engineering the only thing that sticks to
-them because &lt;em&gt;they have no other choice&lt;/em&gt;? Conversely, do we fail early
-and often because we're not engineering, or because, unlike civil
-engineering projects, we &lt;em&gt;can&lt;/em&gt;? &lt;a class="footnote-reference" href="http://www.lvh.io/posts/reverse-ungineering.html#anthropic" id="id1"&gt;[1]&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Secondly, we may be confounding cause and effect, even if we overlook
+that not all engineering is civil engineering. Are software projects
+unable to stick to these standards because it's not engineering, or is
+civil engineering the only thing that sticks to them because &lt;em&gt;they
+have no other choice&lt;/em&gt;? Conversely, do we fail early and often because
+we're not engineering, or because, unlike civil engineering projects,
+we &lt;em&gt;can&lt;/em&gt;? &lt;a class="footnote-reference" href="http://www.lvh.io/posts/reverse-ungineering.html#anthropic" id="id1"&gt;[1]&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Finally, software has existed for decades, but buildings have for
 millennia. Bridges used to collapse all the time. Tacoma Narrows
 wasn't so long ago. If the tour guide on my trip to Paris is to be
@@ -88,10 +89,10 @@ really mean &lt;em&gt;math&lt;/em&gt;, not physics: Euler-Bernouilli is a math h
 get it by taking Hooke's law and throwing some calculus at it. Hooke's
 law itself is more math than physics, too: it's a first-order
 approximation based only on the observation that stuff stretches when
-you pull it. It's wrong all the time, even for fairly germane
-objects. &lt;a class="footnote-reference" href="http://www.lvh.io/posts/reverse-ungineering.html#hooke" id="id3"&gt;[3]&lt;/a&gt; Both theories were put together long before we had
-serious materials science. &lt;a class="footnote-reference" href="http://www.lvh.io/posts/reverse-ungineering.html#serious" id="id4"&gt;[4]&lt;/a&gt; We use them because they
-(mostly) work, not because they are a consequence of a physical model.&lt;/p&gt;
+you pull it. It's wrong all the time, even for fairly germane objects
+like rubber bands. Both theories were put together long before we had
+materials science. We use them because they (mostly) work, not because
+they are a consequence of a physical model.&lt;/p&gt;
 &lt;p&gt;That was just one example from a single discipline, but it holds more
 generally, too. I analyze circuits by recognizing subsections. If you
 show me a piece that looks like a low-pass filter, I am not distracted
@@ -103,7 +104,7 @@ just trying to understand this circuit!&lt;/p&gt;
 &lt;p&gt;This isn't just how engineers happen to do their jobs in practice,
 either. Engineering breakthroughs live on both sides of science's
 cutting edge. When Shockley et al. first managed to get a transistor
-to work, we didn't really understand what was going on. &lt;a class="footnote-reference" href="http://www.lvh.io/posts/reverse-ungineering.html#tor" id="id5"&gt;[5]&lt;/a&gt; Carnot
+to work, we didn't really understand what was going on. &lt;a class="footnote-reference" href="http://www.lvh.io/posts/reverse-ungineering.html#tor" id="id3"&gt;[3]&lt;/a&gt; Carnot
 was building engines long before anyone realized he had stumbled upon
 one of the most fundamental properties of the universe. Nobody was
 doing metaphysics. Sadi wanted a better steam engine.&lt;/p&gt;
@@ -169,24 +170,10 @@ lack of better word; I mean the American "civil engineer"
 here), chemical, electrical, and yes, computer.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="hooke" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://www.lvh.io/posts/reverse-ungineering.html#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Got a rubber band?&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="serious" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://www.lvh.io/posts/reverse-ungineering.html#id4"&gt;[4]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't mean to characterize previous efforts as not
-serious. They simply didn't have the tools to do what we
-can do today.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
 &lt;table class="docutils footnote" frame="void" id="tor" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://www.lvh.io/posts/reverse-ungineering.html#id5"&gt;[5]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;While it is very easy to make up a sensible-sounding
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://www.lvh.io/posts/reverse-ungineering.html#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;While it is very easy to make up a sensible-sounding
 narrative time line after the fact for the breakthroughs in
 physics and engineering that eventually made the transistor
 possible, this ignores the strong disagreements between

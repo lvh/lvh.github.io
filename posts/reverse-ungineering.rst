@@ -30,25 +30,27 @@ good:
   entirely. Only a third of projects succeed according to those
   criteria of being under budget, within specification, and complete.
 
-Those shenanigans would never be accepted in civil engineering, a
-Serious Engineering Discipline:
+Such shenanigans would never be accepted in a Serious Engineering
+Discipline, like civil engineering:
 
   Would you want to live in a city where almost a quarter of all the
   buildings were simply abandoned half-constructed, or fell down
   during construction? Where almost half of the buildings were missing
   floors, had rents in the millions of dollars, or both?
 
-I certainly wouldn't. Computers are terrible, but not quite *that*
-bad, as Glyph points out. "Failure" simply means something different
-for software projects than it does for construction projects. Many of
-those "failed" software projects were quite successful by other
-measures; the problem isn't with software projects, it's with applying
-civil engineering standards to a project that isn't.
+I certainly wouldn't.
 
-I agree that software projects aren't civil engineering projects.
-Attempts to treat the former like the latter have done much more harm
-than good. That said, I don't think that makes software
-not-engineering.
+Computers are terrible, but not quite *that* bad, as Glyph points
+out. "Failure" simply means something different for software projects
+than it does for construction projects. Many of those "failed"
+software projects were quite successful by other measures; the problem
+isn't with software projects, it's with applying civil engineering
+standards to a project that isn't.
+
+Software projects aren't civil engineering projects.  Attempts to
+treat the former like the latter have done much more harm than
+good. That said, that doesn't mean that software development isn't
+engineering.
 
 Firstly, civil engineering is the outlier here. Other engineering
 disciplines don't do well according to the civil engineering success
@@ -61,13 +63,13 @@ experimental in nature, and in many cases also subject to changing
 requirements. It's true that we just can't plan ahead in software, but
 we're not alone.
 
-Secondly, we may be confounding cause and effect here, even if we
-overlook that not all engineering is civil engineering. Are software
-projects unable to stick to these standards because it's not
-engineering, or is civil engineering the only thing that sticks to
-them because *they have no other choice*? Conversely, do we fail early
-and often because we're not engineering, or because, unlike civil
-engineering projects, we *can*? [#anthropic]_
+Secondly, we may be confounding cause and effect, even if we overlook
+that not all engineering is civil engineering. Are software projects
+unable to stick to these standards because it's not engineering, or is
+civil engineering the only thing that sticks to them because *they
+have no other choice*? Conversely, do we fail early and often because
+we're not engineering, or because, unlike civil engineering projects,
+we *can*? [#anthropic]_
 
 Finally, software has existed for decades, but buildings have for
 millennia. Bridges used to collapse all the time. Tacoma Narrows
@@ -111,10 +113,10 @@ really mean *math*, not physics: Euler-Bernouilli is a math hack. You
 get it by taking Hooke's law and throwing some calculus at it. Hooke's
 law itself is more math than physics, too: it's a first-order
 approximation based only on the observation that stuff stretches when
-you pull it. It's wrong all the time, even for fairly germane
-objects. [#hooke]_ Both theories were put together long before we had
-serious materials science. [#serious]_ We use them because they
-(mostly) work, not because they are a consequence of a physical model.
+you pull it. It's wrong all the time, even for fairly germane objects
+like rubber bands. Both theories were put together long before we had
+materials science. We use them because they (mostly) work, not because
+they are a consequence of a physical model.
 
 That was just one example from a single discipline, but it holds more
 generally, too. I analyze circuits by recognizing subsections. If you
@@ -193,12 +195,6 @@ hackers here; and we're all engineers, too.
             encompasses many disciplines, including architectural (for
             lack of better word; I mean the American "civil engineer"
             here), chemical, electrical, and yes, computer.
-
-.. [#hooke] Got a rubber band?
-
-.. [#serious] I don't mean to characterize previous efforts as not
-              serious. They simply didn't have the tools to do what we
-              can do today.
 
 .. [#tor] While it is very easy to make up a sensible-sounding
           narrative time line after the fact for the breakthroughs in
