@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Building a continuous deployment system, part two: what is it? | lvh</title>
+
+    
+            <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+
+    
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.xml">
+
+      <link rel="canonical" href="http://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html">
+
+
+
+
+    
+        <!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]-->
+
+    
+
+
+    
+
+    <meta name="author" content="lvh">
+        <link rel="prev" href="building-a-continuous-deployment-system-part-one.html" title="Building a continuous deployment system, part one" type="text/html">
+        <link rel="next" href="building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" title="Building a continuous deployment system, part three, preparing for continuous deployment" type="text/html">
+    
+    <meta property="og:site_name" content="lvh">
+    <meta property="og:title" content="Building a continuous deployment system, part two: what is it?">
+    <meta property="og:url" content="http://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html">
+    <meta property="og:description" content="Hi! This is part two of my continuous deployment rantseries which started here. In this part, I'll try to explain what I'm talking about when I say continuous deployment.
+
+Strictly speaking, continuou">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2010-09-26T13:37:00-07:00">
+
+    
+
+    
+
+
+
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://www.lvh.io/">
+                <img src="../../../pinchy.svg" alt="lvh" id="logo">
+
+                <span id="blog-title">lvh</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                
+                <li>
+<a href="../../../archive.html">Archive</a>
+                </li>
+<li>
+<a href="../../../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../../../talks.html">Talks</a>
+                </li>
+<li>
+<a href="../../../rss.xml">RSS feed</a>
+
+                
+            </li>
+</ul>
+                
+<!-- Custom search -->
+<form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://www.lvh.io/">
+<input type="hidden" name="k8" value="#444444">
+<input type="hidden" name="k9" value="#D51920">
+<input type="hidden" name="kt" value="h">
+<input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;">
+<input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+                
+                
+                    
+    <li>
+    <a href="building-a-continuous-deployment-system-part-two-what-is-it-.md" id="sourcelink">Source</a>
+    </li>
+
+                
+            </ul>
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    
+    <header>
+        
+    <h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Building a continuous deployment system, part two: what is it?</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2010-09-26T13:37:00-07:00" itemprop="datePublished" title="2010-09-26 13:37">2010-09-26 13:37</time></a></p>
+            
+        <p class="sourceline"><a href="building-a-continuous-deployment-system-part-two-what-is-it-.md" id="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header>
+
+    <div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Hi! This is part two of my continuous deployment <span style="text-decoration: line-through;">rant</span>series which started <a href="http://lvh.posterous.com/building-a-continuous-deployment-system-part">here</a>. In this part, I'll try to explain what I'm talking about when I say continuous deployment.</p>
+
+<p>Strictly speaking, continuous deployment just means that you push code out to production servers all the time, practically as it gets written.</p>
+
+<p>Think about that for a second. Are you scared? If so, why? Don't feel too bad if you are. Most people I've talked to about this are somewhere halfway between intrigued and terrified, and are mostly glad it's not happening to their code. A lot of those people also produce great software anyway. The people that don't feel anxious at all either haven't produced enough production software yet, or are already busy doing continuous deployment.</p>
+
+<p>People who already practice continuous integration, with all sorts of tests and code quality metrics, often talk about how trunk is always ready for production. Continuous deployment is about putting your money where your mouth is and actually doing just that. The basic idea is similar to that of continuous integration: test as many things as you sensibly can and fail as quickly as possible once things go awry. Hopefully, that'll contain minor hiccups before they become real problems (generally defined as "the kind that costs revenue").</p>
+
+<p>However, I don't think the strict definition is a very useful thing to do or talk about purely by itself. I've learned that continuous deployment doesn't come alone. Much more so than continuous integration, which feels like a natural extension of TDD, continuous deployment pretty much turns your development process upside down. Doing continuous deployment without a disciplined team to back it up and a testing infrastructure to constantly check your work is a bit like having a transmission without an engine and a steering wheel. (I apologize for the car analogy, and promise to try and not make a habit out of it.)</p>
+
+<p>From what I've read and my own experience, teams who have successfully applied continuous deployment see these two things come back inseparably. If you want to make sure your code isn't plain broken, you better have a wide array of tests. If you want to make sure the code you're now responsible for in production isn't terrible, you better be doing code review (pair programming and/or tool-assisted code review is great -- we've had success doing both). There's nothing quite like the first time you commit a file and then watching your shiny new piece of code do something on a production server less than a minute later.</p>
+
+<p>So, I guess the series is partially about continuous deployment proper, and partly about greenfielding a development process that rocks.</p>
+
+<p> </p>
+</div>
+    </div>
+    <aside class="postpromonav">
+    <nav>
+    
+
+    
+        <ul class="pager">
+            <li class="previous">
+                <a href="building-a-continuous-deployment-system-part-one.html" rel="prev" title="Building a continuous deployment system, part one">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" rel="next" title="Building a continuous deployment system, part three, preparing for continuous deployment">Next post</a>
+            </li>
+        </ul>
+
+    </nav>
+    </aside>
+    
+
+</article>
+
+
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+    </div>
+</div>
+
+
+            <script src="../../../assets/js/all-nocdn.js"></script>
+    
+<!-- Social buttons -->
+<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+<!-- End of social buttons -->
+
+
+    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <!-- fancy dates -->
+    <script>
+    moment.locale("");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script>
+    <!-- end fancy dates -->
+    
+
+
+</body>
+</html>

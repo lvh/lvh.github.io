@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="description" content="This is a demo site for Nikola.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>lvh (old posts, page 2) | lvh</title>
+
+    
+            <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+
+    
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+
+      <link rel="canonical" href="http://www.lvh.io/index-2.html">
+
+
+
+        <link rel="prev" href="index-3.html" type="text/html">
+        <link rel="next" href="index-1.html" type="text/html">
+
+    
+        <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
+
+    
+
+
+
+
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://www.lvh.io/">
+                <img src="pinchy.svg" alt="lvh" id="logo">
+
+                <span id="blog-title">lvh</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                
+                <li>
+<a href="archive.html">Archive</a>
+                </li>
+<li>
+<a href="categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="talks.html">Talks</a>
+                </li>
+<li>
+<a href="rss.xml">RSS feed</a>
+
+                
+            </li>
+</ul>
+                
+<!-- Custom search -->
+<form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://www.lvh.io/">
+<input type="hidden" name="k8" value="#444444">
+<input type="hidden" name="k9" value="#D51920">
+<input type="hidden" name="kt" value="h">
+<input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;">
+<input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+                
+                
+                    
+                
+            </ul>
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<div class="postindex">
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/05/i-don-t-understand-rest-pagination.html" class="u-url">I don't understand REST pagination</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/05/i-don-t-understand-rest-pagination.html" rel="bookmark"><time class="published dt-published" datetime="2011-05-12T13:37:00-07:00" itemprop="datePublished" title="2011-05-12 13:37">2011-05-12 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Hey.</p>
+<p></p>
+<br>So, in <a href="https://github.com/lvh/txyoga">txYoga</a>, in implemented pagination in terms of query parameters to a collection. If you want to access the range of elements [100, 110), you would say: <span style="font-family: courier new,monospace;"><a href="http://whatever/collection?start=100;stop=110">http://whatever/collection?start=100;stop=110</a></span>. The feature here is that pages give you the link to the next and previous page. The response (JSON) looks something like <span style="font-family: courier new,monospace;">{"results": [...], "next": nextURL, "prev": prevURL}</span>. That way, you pretty much just have to follow URLs to walk down the collection as a doubly  linked list of pages. The supposed feature is that I can change how my pages work, and users hopefully won't notice, since they shouldn't be building their own URLs anyway.<p></p> Now, at the same time, I'm looking at <a href="http://dojotoolkit.org/reference-guide/dojo/store/JsonRest.html">dojo's JsonRest API</a>. It's suggesting that I use the Range and Content-Range headers for pagination support. It also has a single JSON array as a response (so, [{...}, ...]) instead of my JSON object. I started RFC diving and hey look, they're right, HTTP understands <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.12">ranges with arbitrary units</a>. So, are my URLs wrong? Are people supposed to conjure Range URLs themselves? Why are these darned ranges inclusive? Another problem is that the specification doesn't really seem to support non-numeric ranges, whereas to txYoga, that's not really a problem as long as the underlying collection understands it.<p></p> Isn't REST supposed to be hypertext-driven? Aren't people basically supposed to never construct URLs, and rely on me to provide them to them? Where am I supposed to put those URLs? Yaaargh.<p></p> <br>cheers<div>lvh</div>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/05/crowdsourcing-opinions-on-a-rest-api-post-put-or-both-.html" class="u-url">Crowdsourcing opinions on a REST API: POST, PUT or both?</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/05/crowdsourcing-opinions-on-a-rest-api-post-put-or-both-.html" rel="bookmark"><time class="published dt-published" datetime="2011-05-06T13:37:00-07:00" itemprop="datePublished" title="2011-05-06 13:37">2011-05-06 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>As some of you undoubtedly know, I'm writing a thing called txYoga, which is a REST framework for Twisted.</p>
+<p></p>The fundamental operations in this post are CRUD:<br><ol>
+<li>Creating elements</li>
+<li>Retrieving them</li> <li>Updating them</li>
+<li>Deleting them</li>
+</ol>Now, retrieving is obvious: send a GET request to the element. Getting rid of them is too: same thing, but a DELETE. Updates are done using PUT to the element. Creating elements, though, is a bit more ambiguous:<br> <ol>
+<li>If the client knows the complete path to the element (so, particularly the final part of the new element's URI), it PUTs to that URI (for which there is currently no element).</li>
+<li>If the client doesn't know or care, it POSTs to the collection. The collection creates the element, and probably returns the URL under which the new element is available.<br> </li>
+</ol>One of the fundamental differences between POST and PUT is that PUT is idempotent, but POST is not. If you send me the same PUT request once, twice or ten times, you'll end up with the same state. POSTing to the collection might work once (or pretty much indefinitely, if you're producing objects with an UUID identifier for example).<p></p> This is because in txYoga, each element has exactly one identifying attribute (which is the thing that's used to access the element). That's what makes PUT feels so awkward: what you're putting contains the information to decide what the name of the object is (since it has to have the identifying attribute), but the object doesn't know what name it's going to be put under (since that name only exists after the object is created), so you have to repeat yourself. With POST, you don't really care.<p></p> Additionally, you'd be using the same thing for updating and creating new elements, which I guess sort-of makes sense, but reminds me of Perl's autovivification and not in a good way.<p></p>The question is: should I support both PUT and POST for creating elements? On the one hand, There should be one-- and preferably only one --obvious way to do it. On the other, this is what REST pretty much does -- and practicality beats purity (although this isn't very practical for me...).</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/03/reflections-on-stories-from-disgruntled-launchpad-users.html" class="u-url">Reflections on stories from (disgruntled) Launchpad users</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/03/reflections-on-stories-from-disgruntled-launchpad-users.html" rel="bookmark"><time class="published dt-published" datetime="2011-03-09T13:37:00-08:00" itemprop="datePublished" title="2011-03-09 13:37">2011-03-09 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Hello again :-)</p>
+<p></p>
+<br>I tweeted something. I'm quite proud of it. It's exactly 140 characters, and it captures the essence of the last few days' worth of articles quite well. Obviously it makes concessions to accuracy for reasons of brevity, but here goes anyway:<p></p> <div style="margin-left: 40px;">It seems to me Github people use Github as a coping mechanism for git, and Launchpad people use Bazaar and a coping mechanism for Launchpad.</div>
+<br>That explains virtually all of the feedback and workflow I've received. It seems Github users use git as a tool to get code into Github as quickly as possible, so magic and sprinkles can be added to it. That means the Github people have done an excellent job. It's managed to create an environment where you have awesome features like truly polished pull requests and a great code browser that lets you peek into someone else's repository without you having to worry about adding a remote, fetching objects, removing a remote...<p></p> Github tries to minimize your exposure to git -- <a href="http://chriswanstrath.com/hub/">hub</a> even more so (with hub, clones and pulls look like they do with bzr for me. Huge win.). Even without having to call git's UX bad, that makes (business) sense: the Github people aren't the git people so they want you in their service as much as possible. And man, have they succeeded.<p></p> On the other side of that argument, there's Launchpad and Bazaar. Most of the discussions about Launchpad's UI warts (and, keeping in mind my last article, some of them are just a question of catering to a different audience but some of them really are simply faults) go something like this:<br> <div style="margin-left: 40px;">
+<b>unhappy user:</b> Hey lvh, take a look at $BOGUS_UI_CHOICE. Come on, you have to admit, that just sucks.<br><b>lvh</b>: Huh. You're right -- that is pretty bad. I just never noticed because I use $BZR_INVOCATION to get to that information.<br> </div>
+<br>Case in point: merge proposals. Apparently they had an in-page diff. I had no idea.<p></p>Github users use Github to do things. Launchpad users use Launchpad as branch storage + metadata (bug tracker, merge proposals, primarily) so they can convince bzr to do things. When Github users go to Launchpad, perhaps without truly trying to use it, they see the prospect of using something like Github but worse. When Launchpad users go to Github, they see the prospect of getting to use git for everything instead of bzr. (And, let's be honest -- if you're diffing between remotes all day, Github is more pleasant than plain git, and bzr is too.)<p></p> cheers<div>lvh</div>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/03/on-sysadmins-programmers-and-reconciliation-a-response-to-zed-shaw-s-post-.html" class="u-url">On sysadmins, programmers, and reconciliation (a response to Zed Shaw's post)</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/03/on-sysadmins-programmers-and-reconciliation-a-response-to-zed-shaw-s-post-.html" rel="bookmark"><time class="published dt-published" datetime="2011-03-08T13:37:00-08:00" itemprop="datePublished" title="2011-03-08 13:37">2011-03-08 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Zed Shaw posted <a href="http://sheddingbikes.com/posts/1299555462.html">a response</a> to <a href="http://b.lvh.cc/why-do-people-hate-launchpad-so-much">my article on why people hate Launchpad</a>. Apart from causing the number of readers to skyrocket by an order of magnitude, it's given me some new perspective on the problem. As always, I love feedback, especially if people agree with things I say ;-)</p>
+<p></p> Assuming Zed's right (and I think he's at the very least got a point), <a href="http://b.lvh.cc/a-compiled-list-of-launchpads-perceived-flaws">my previous list of grievances</a> splits up into two things:<br> <ol> <li>Things that make Launchpad more like Github. In Zed's terminology, make Launchpad less of a sysadmin place and more of a programmer place. Following Zed's conclusion, these are bad changes.<br>
+</li>
+<li>Things that make everyone's life easier and aren't necessarily about one group versus the other. As the contrapositive to Zed's conclusion, they are good changes.<br> </li>
+</ol>Now, I think at least some of the UI changes from that list are in that last group. Particularly the code browser UI issues (and they are legion -- Loggerhead is on occasion hard to like) are something I don't really see how anyone could object to. Concrete examples are:<br> <ul>
+<li>Renaming "View branch content" to "View code". "Code" is a word programmers scan for. To quote Zed's article: code, code, code. Contrary to popular belief you can actually access trunk's code with a single click from the project's front page! It's just cleverly hidden.<br> </li>
+<li>Merging the branch and branch content pages, embedding Loggerhead in the page like Github's file browser, instead of making it a separate page. Sysadminny types probably wouldn't ever have looked at that page in the first place.</li> <li>Removing dead project features (like translations, blueprints, answers) for J. Random User</li>
+</ul>There are, of course, also ideas that would piss off the syadminny group, like moving series around or putting a Github style code browser on the overview page. (Probably explains why I dislike that last feature.)<p></p> But yeah: if you fixed every single point in that list of perceived flaws, my in-brain mockup of what Launchpad 2.0 would look like would still decidedly be Launchpad and not Github: which is probably what Zed is talking about. And, like he said, that doesn't actually have to be problem.<p></p> I agree that both Github and Launchpad would be very hard-pressed to transform into something everyone likes, but the "why" of that wasn't quite clear enough in my head yet for me to write a blog post about it (my posts are bad enough when I'm convinced I do know what I want to say). Zed's article helped quite a bit there.<p></p> The difference is I have no idea what this third system that caters to both in the same place would look like yet. Zed probably has a better idea of what he's talking about than I do.<p></p>My idea is different. It's probably a bit worse, since you'd have N places where code live instead of 1, but at least in the short run it seems like less effort to end up with a working thing. The idea goes like this: if Github and Launchpad are really different beasts catering to different beasts, maybe we shouldn't try to make them be the same, and instead let them cooperate. This is why I think (well, hope) the idea of <a href="http://b.lvh.cc/bridging-the-gap-between-launchpad-and-github">bridging Launchpad and Github</a> -- having them play nicely together in the same sandbox instead of the current situation we're they're direct competitors -- may have some value to it.<p></p> I'd really like some feedback on Github fans on that. I <i>know</i> Launchpad people are going to like it since they can pretty much just use Launchpad and don't have to care Github exists. I'm hoping people don't find Launchpad so revolting that using its bug tracker and merge proposals (as cited in that article I linked, features at least as good on Launchpad as on Github) becomes a contribution blocker.<p></p> cheers<br>lvh</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/03/bridging-the-gap-between-launchpad-and-github.html" class="u-url">Bridging the gap between Launchpad and Github</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/03/bridging-the-gap-between-launchpad-and-github.html" rel="bookmark"><time class="published dt-published" datetime="2011-03-06T13:37:00-08:00" itemprop="datePublished" title="2011-03-06 13:37">2011-03-06 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Hey.</p>
+<p></p>
+<br>Ever the diplomat, I've been trying to figure out a way to use Launchpad yet keeping the people that dislike it happy.<p></p>It is based on two premises. If you disagree with them, you may as well stop reading now. (or, even better: tell me why)<br> <ul>
+<li>Launchpad's bug tracker is preferable, or at least equal, to Github Issues.</li>
+<li>Launchpad's merge proposals are identical to Github Pull Request 2.0's, with the exception of bug tracker integration.</li> </ul>First of all, the project uses Launchpad as a bug tracker, and Launchpad merge proposals as the mandatory code review for getting code into trunk. Launchpad trunk is constantly mirrored into a Github repository.<p></p>  Launchpad users that want to develop the project pretend Github doesn't exist.<p></p>Github users that want to develop the project pretend Launchpad doesn't exist. They just fork the repository and make some changes, as they normally would. Once they want to get some code into trunk, they file a pull request, which is where the magic starts.<p></p> A bot creates an alternative merge proposal equivalent to the pull request. There are two options for doing that:<br><ul>
+<li>Grabbing the pull request diff</li>
+<li>Using bzr-git to import the branch into git</li>
+</ul> (The latter is preferable because it preserves commit structure. The former is probably easier to implement and less hairy to implement/maintain due to impedance mismatches.)<p></p>Either way, a new branch is created with the same name as the Github branch. Ideally, the merge proposal is linked to the appropriate bug. That means the branch should contain information about the bug it relates to (possibly in the name, eg 54321-fixQuantumTransmogrifier), since, as far as I know, git has no equivalent to bzr commit's --fixes. The pull request gets a link to the merge proposal. All review-related work happens in Launchpad, not Github. Based on the second premise, this is acceptable.<p></p> The obvious problem here is that Github users can't really monitor what's going on in terms of development in Launchpadland and vice-versa. A solution may be to push more branches, but I dislike doing that. Perhaps using their respective APIs, the data can be syndicated into a common source. Ideas welcome.<p></p> cheers<div>lvh</div>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/03/a-compiled-list-of-launchpad-s-perceived-flaws.html" class="u-url">A compiled list of Launchpad's perceived flaws</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/03/a-compiled-list-of-launchpad-s-perceived-flaws.html" rel="bookmark"><time class="published dt-published" datetime="2011-03-06T13:37:00-08:00" itemprop="datePublished" title="2011-03-06 13:37">2011-03-06 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>(Note: just because I say "perceived" flaws doesn't mean I don't agree they are. It's just a way to encourage feedback from people who disagree.)</p>
+<p></p>I've compiled the responses I've received so far to <a href="http://b.lvh.cc/why-do-people-hate-launchpad-so-much" target="_blank">my previous article about Launchpad</a>. This is intended as constructive criticism and hopefully stuff that can be used to build a better Launchpad.<p></p> I'd like to thank everyone who bothered to have a <a href="http://b.lvh.cc/religious-wars-considered-harmful-considered">sensible, adult discussion</a> about Launchpad with me. I very much appreciate your feedback, even the rants. The Launchpad people are also expressed interest in this previously unreceived feedback (which makes sense, I guess). There certainly were a lot of you! If it ends up making Launchpad a nicer place for everyone maybe it's worth the time it took, though.<p></p> The vast majority of complaints I've seen are about Launchpad's interface.  People perceive the Launchpad interface as hard to use and anything but obvious. They particularly feel there's just too much noise, making useful features hard to find.<p></p> I tried to distill stuff that smells like it's easy to fix to me. It didn't always work, of course. Some problems (primarily about Loggerhead) require non-trivial amounts of work.<p></p>Here are some concrete examples:
+<ol>
+<li>As a user, I don't care that a project doesn't use Launchpad for translations, but it takes up the spot of a primary feature in the main menu and the Get Involved box. It should only be shown to the Maintainer (a single user or a group). This also counts for  Blueprints and Answers, except it's less obvious what they mean to people, apparently. Most projects really only need Overview, Code and Bugs (in fact, Github and Bitbucket do away with the entire Overview tab, too -- but that's not universally seen as a requirement for a usable thing).</li>
+<li>Latest reported bugs, latest questions and the FAQ box on the landing page are considered unnecessary noise: it's duplicated on the respective specific pages, and the people who actually need that kind of notification probably should get e-mails anyway.</li>
+<li>Announcements on the other hand are a far more important feature, but they're tucked away: on the Bazaar's Launchpad Overview page, I have to scroll down to find it. Perhaps they should have a more prominent position on the page.</li>
+<li>Downloads are important enough that they probably warrant a separate page. The Overview page's Packages in Distributions pages can be moved there, too, further decluttering the Overview page.</li>
+<li>A lot of people don't understand Blueprints or consider it a misfeature. Fixing the first point would obviously alleviate that since it'd be opt-in.</li>
+<li>As a user, I can't figure out how to browse the code. "View branch content" ought to be called "View code", or something -- it makes sense to a Bazaar/Launchpad user but not to J. Random Contributor.</li>
+<li>People really like Github's Readme Driven Development. Perhaps the overview could be grabbed from the development focus' README file? Admittedly some README's may be too large for this to work well with the current landing page.</li>
+<li>Subscribe to bug mail is a primary feature on the project landing page, even above the Get Involved box. This doesn't make sense: that's a Bugs specific feature, and the Bugs page has an identical feature already. It could just be removed without loss of functionality.</li>
+<li>Series and milestones are a code feature: I don't particularly care about them on the overview page, and they would probably be better off on the code page. Preferably after the branches or at least foldable, since it does take up quite a bit of screen real estate. In order to parse it and turn it into useful information, you probably need to be more than a little involved in the project already. The idea is that not sufficiently many users care to warrant such a prominent place on the landing page.</li>
+<li>Loggerhead's date format is hard to parse. Github and Bitbucket use relative, human-readable timedeltas, except for dates sufficiently far away (where they use a plain date). You could still make the real date accessable on mouseover if people wnat that feature.</li>
+<li>Loggerhead is very poorly integrated with the rest of Launchpad: it feels like a tacked on feature. Compare to Github and Bitbucket where code viewing is an integral part of the user experience.</li>
+<li>Somewhat conjoined with the previous point: there's a separate page for a branch and the branch content and that confuses people. Perhaps they could be integrated without overloading branch pages. (One particularly important feature is merge proposals, but they're accessible from the Code page).</li>
+<li>People are unhappy with the lack of progress on Loggerhead. I feel kind of bad about this point since it makes me sound like I'm calling people lazy bums, but journalistic integrity demands I report it. I had <a href="https://bugs.launchpad.net/loggerhead/+bug/569358%20">quite</a> <a href="https://bugs.launchpad.net/loggerhead/+bug/569355">a few</a> bugs listed as examples. I don't know if these are unique or illustrations of a more general problem.</li>
+<li>Although merge proposals are used for code review, people are confused by the Code page saying "code review" when it means "merge proposals". It would be nice if everything said merge proposals. Or is the point here that Launchpad might integrate with other code review tools?</li>
+<li>Some people can't use the e-mail interface <a href="https://bugs.launchpad.net/bugs/643224">because the DKIM whitelist is hardcoded</a>.</li>
+</ol>
+<p><br>To be continued.</p>
+<p></p>cheers<br>lvh</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/03/why-do-people-hate-launchpad-so-much-.html" class="u-url">Why do people hate Launchpad so much?</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/03/why-do-people-hate-launchpad-so-much-.html" rel="bookmark"><time class="published dt-published" datetime="2011-03-05T13:37:00-08:00" itemprop="datePublished" title="2011-03-05 13:37">2011-03-05 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Following a discussing on Convore recently, I noticed some people (names withheld to protect the guilty -- I'm sure they will speak up if they feel like it) strongly dislike Launchpad. Apparently they dislike it so much they would rather use a different project if they find something that uses it.</p>
+<p></p> I don't get it.<p></p>First off, lI'm not trying to make this a git vs hg vs bzr vs whatever discussion, except perhaps to the extent that those tools shape their respective hosting system. Not that I think those discussions have to devolve into religious wars (<a href="http://b.lvh.cc/religious-wars-considered-harmful-considered">a subject on which I have blogged recently</a>), it's just that I'd like to limit the scope so we end with a bunch of things that can actually be improved.<p></p> My main problem with <a href="https://github.com/">the 500lb gorilla in the room</a> is its issue tracker. I know, it's a simple feature tacked on later, and all in all the ability to link to branches and revisions and to be able to close tickets from commit messages ain't so bad.<p></p> One particular unfortunate choice is that they decided to make pull requests issue tracker artifacts. I'm convinced it should be an attachment to one, instead. Pull requests are about merging code. There must be a reason to do that -- that reason is a ticket. That means if you use pull requests as a mechanism for code review (which they seem to be marketed as), ergo having all code be added using them, all changes to trunk have at least two issue tracker artifacts: the ticket describing the change, and the pull request carrying the code that does it. I think that's a bit silly. Pull requests hence often become somewhat of a ticket in their own right, which works well for one-time contributions which are typically limited in scope, but it seems this results in an inconsistent workflow which is a bit more annoying for things that actually do require a ticket.<p></p> Launchpad's issue tracker, on the other hand, is one I particularly like.<p></p>It's unique in the sense that it lets you track the state of bugs in different parts of downstream. Additionally, bugs aren't unique to a project -- allowing people from different groups to collaborate on the same issue. It lets me assign bugs to a person: a feature I sorely miss in Github. The equivalent of Github Issue's voting feature is just a "this affects me" link: similar to Google Code's starring idea. The goal is always the same: measure the importance of a bug without getting the noise of a million "me, too" messages. (Github and Launchpad's way of doing it seems more effective, though.)<p></p> Launchpad's alternative to pull requests, called merge proposals, are quite similar to Github's pull requests 2.0. The main difference is the bug tracker interaction: like I've described above, they <i>attach</i> to issues, instead of being them themselves.<p></p> A complain I often hear yet don't quite grok is the apparent difficulty of getting to code. Personally, I don't quite see the problem. The main branch (lp:projectname) and its contents are one click away from the front page. All of the branches of a project (from everyone! not just the project leads), are visible with a single click from the project front page, under the "Code" menu. I must admit I rarely use that web UI: instead, I just bzr co lp:projectname if I want to take a look.<p></p> The contributor story is also fairly pleasant, in my opinion. I don't even need to fork anything (at least not explicitly): just get the branch, make some changes, push them to lp:~lvh/projectname/mybranch and done. That magic syntax isn't Launchpad-specific: that's called <a href="https://code.launchpad.net/bzr-bookmarks">a bookmark</a>, and you can just as well have your own if you don't use Launchpad.<p></p> So what exactly is the problem? I'm planning on moving a project from Fossil to something else at Pycon -- but if everyone hates it so much, I'm willing to reconsider. For example: I'd use Github if I can find a useful issue tracker to go with it. I'd use bitbucket if there's some reasonable way to have in-repo pull requests (like Github pull requests 2.0 or Launchpad merge proposals).</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/03/religious-wars-considered-harmful-considered-harmful.html" class="u-url">Religious wars considered harmful considered harmful</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/03/religious-wars-considered-harmful-considered-harmful.html" rel="bookmark"><time class="published dt-published" datetime="2011-03-05T13:37:00-08:00" itemprop="datePublished" title="2011-03-05 13:37">2011-03-05 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Hey.</p>
+<p></p>
+<br>Can we stop avoiding subjects because we've elevated them to the state of personal opinion? Especially since "personal opinion" usually ends up meaning "dogma", and is quite often used as an excuse to cover up ignorance.<p></p> The usual suspects here are of course:<br><ul>
+<li>vim versus emacs versus whatever</li>
+<li>git versus mercurial versus bazaar versus whatever</li>
+<li>twisted versus gevent versus eventlet versus tornado versus whatever</li> <li>django versus pyramid versus web2py versus web.py versus cherrypy versus whatever<br>
+</li>
+</ul>Here's why. Not every discussion about them has to devolve into a full-blown flame war. Yes, there are trolls. Yes, there are clueless fan-boys who've drunk one glass too many of the delicious Kool-Aid. We have those pretty much everywhere else, too, though: and we just ignore them. But we're not trolls -- we're reasonable adults with different favorite tools. Perhaps that's based on extensive experience. Perhaps it isn't. Perhaps it's based on stuff that's not even true anymore. Can't we talk about them as one reasonable adult to another? Preferably without resulting in name calling and blatant demagogy.<p></p> Dismissing discussions a priori effectively means you've decided, up front, that they're going to have a net negative outcome. At best, that's insulting to the people you'd be discussing with. At worst, it's a monumental display of arrogance, since you've just decided that there is nothing that can be learned from people who have done things differently.<p></p> I'm not talking about people who mindlessly promote their favorite version control system or editor or library, without having given the alternatives the light of day. They're annoying in their own right, but they're nothing compared to the people who then proceed to trash-talk the alternatives without having any real arguments. Like something someone smarter than myself said: <a href="https://twitter.com/#%21/jacobian/status/18369419788951552">"if you promote your project by dissing the competition, I'll assume that your project sucks or you're a dick. Either way I won't use it."</a> -- except it's not even their project.<p></p> If you don't know what a mark ring or a kill ring is, any disparaging comment you make about Emacs is probably worth a troll stamp, sorry. If you haven't used anything but git, I'm not particularly interested that you think everything that isn't git is dumb. If you didn't manage to get through the finger tutorial and you've never used any of the alternatives either, I don't really care if you think Twisted is complicated. Quite frankly, you don't know what you're talking about. Your braindead statements don't contribute to anything but my blood pressure.<p></p> I've tried to have sensible discussions countless times, and when I succeeded, it ended up being perfectly civil <i>and</i> showing someone how maybe not everything the enemy is doing is so bad. Perhaps they have ideas worth stealing. Perhaps we can stop worrying about what separates us, silence the trolls like we do everywhere else, and focus on what we have in common.<p></p> cheers<br>lvh</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2010/10/pycon-us-talk.html" class="u-url">Pycon US talk</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2010/10/pycon-us-talk.html" rel="bookmark"><time class="published dt-published" datetime="2010-10-13T13:37:00-07:00" itemprop="datePublished" title="2010-10-13 13:37">2010-10-13 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Finances permitting, I will attend Pycon US 2011. I will also try to give a talk about most of the meat and potatoes on this blog.</p>
+<p></p>
+<div>What do you think should be included? What do you think shouldn't be?</div>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2010/10/cautious-deployment-for-continuous-availability.html" class="u-url">Cautious deployment for continuous availability</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2010/10/cautious-deployment-for-continuous-availability.html" rel="bookmark"><time class="published dt-published" datetime="2010-10-04T13:37:00-07:00" itemprop="datePublished" title="2010-10-04 13:37">2010-10-04 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<div>In <a href="http://lvh.posterous.com/designing-a-continuous-deployment-system-caut">my last post</a>, I talked about cautious deployment as a technique for recovering from botched deployments. Cautious deployment also solves a second problem by helping you get continuous availability.</div>
+
+<p></p>
+<div>In the article about cautious deployment, I had the following graph for hypothetical, optimistic deployment:</div>
+<div>[[posterous-content:L2vALkn09tFOvqjIkPGw]]</div>
+<p></p>
+<div>Obviously, that's a bit simplistic. It would be correct, if all your servers decide to restart the service in a perfectly synchronized fashion, and all of your servers manage do that operation in precisely identical amounts of time, and no interdependencies between your services.</div>
+<p></p>
+<div>Typically: none of those things are true. starting services is a stochastic process and you really don't quite know how long it'll take. Stuff depends on each other all the time. Hence, the graph is more likely to look something like this:</div>
+<p></p>
+<div>[[posterous-content:67uOLIMpCLyTivUYZ5MS]]</div>
+<div>Of course, it's occasionally way worse than this. Your users generally don't know nor care that you're upgrading, so those few early starters get to deal with a disproportionately high load. That could happen up to the point where watchdogs mistakenly believe the process has just crashed. That watchdog then orders for that process to be restarted, which of course only makes it worse for all of the other processes still up.</div>
+<p></p>
+<div>(If you're thinking "Oh come on. It's nowhere near that bad" -- how do you know? Did you measure that? For some people, it definitely is.)</div>
+<p></p>
+<div>This problem is often overlooked, because there's tons of ways of missing it completely (mostly because statistics is hard).</div>
+<div><ol>
+<li>Not even bothering to analyze (unfortunately the most common)</li>
+<li>Not recognizing the worst case</li>
+<li>Normal distribution not being a good fit</li>
+<li>Failure to recognize the weakest link</li>
+</ol></div>
+<div>Unfortunately, most of the people fall in group one. Come on guys, we can all do better than this. If there's two recurring patterns in modern (I hate to use the word, but...) agile businesses, that comes back across the board it's "measure" and "iterate". Even rudimentary tests are better than flying blind.</div>
+<p></p>
+<div>Number two, failure to recognize the worst case, generally happens when people do some kind of basic analysis. That generally amounts to taking a bunch of values and then computing the mean/median and working from there. Not recognizing the worst case is really a special case of not really assessing the distribution of your values correctly.</div>
+<p></p>
+<div>A mean is pretty interesting by itself, but you can't get too much useful information out of it completely by itself. Knowing a service starts within a second on average is pretty useless when it has a standard deviation of a minute. (If that's the case, descriptive statistics just showed you that your data probably doesn't fit a normal distribution very well: the lower limit for physically possible events is at Z=-1<span style="font-family: sans-serif; font-size: 13px; line-height: 19px;">/60, unless your servers start up in negative amounts of time...</span>)</div>
+<p></p>
+<div>First of all, that service might have things that are waiting on it to get started. This is the weakest link argument: your slowest step just became a defining factor for the performance of the entire process. Secondly, people perceive jittery things worse than consistent things, all other things being equal. Imagine if Google loaded a lot faster often (would you even really notice?) but about as often as it would load faster, it would take five seconds.</div>
+<p></p>
+<div>Even when you have people who do some pretty reasonable statistical analysis on individual parts, that becomes only half the story in a distributed system. Even with measurements from real deployments, it's extremely hard to predict how these things will behave.</div>
+<p></p>
+<div>Bottom line? Statistics is hard, and it's easy to get fooled into thinking you've got it right even when you're miles off (I've been bitten by this myself, more than once). Once you've done that, set up a sandboxed miniature model for your entire (distributed) system, and check the assumptions from your statistics against it. After that, you're only likely to miss scale issues. </div>
+<p></p>
+<div>Even when you take all of that into account, you will get things wrong. That was my original point about cautious deployment: as long as you have that and it works, you're allowed to get it wrong once in a while. Fail gracefully. It's not so scary to leap the chasm when there's a net to catch you.</div>
+</div>
+    </div>
+    </article>
+</div>
+
+        <nav class="postindexpager">
+        <ul class="pager">
+            <li class="previous">
+                <a href="index-3.html" rel="prev">Newer posts</a>
+            </li>
+            <li class="next">
+                <a href="index-1.html" rel="next">Older posts</a>
+            </li>
+        </ul>
+        </nav>
+
+
+
+
+
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+    </div>
+</div>
+
+
+            <script src="assets/js/all-nocdn.js"></script>
+    
+<!-- Social buttons -->
+<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+<!-- End of social buttons -->
+
+
+    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <!-- fancy dates -->
+    <script>
+    moment.locale("");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script>
+    <!-- end fancy dates -->
+    
+
+
+</body>
+</html>

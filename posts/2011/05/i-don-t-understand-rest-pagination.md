@@ -1,0 +1,10 @@
+<!--
+.. title: I don't understand REST pagination
+.. date: 2011/05/12 13:37
+.. slug: i-don-t-understand-rest-pagination
+.. link:
+.. description:
+.. tags: 
+-->
+
+Hey.<p /><br />So, in <a href="https://github.com/lvh/txyoga">txYoga</a>, in implemented pagination in terms of query parameters to a collection. If you want to access the range of elements [100, 110), you would say: <span style="font-family: courier new,monospace;"><a href="http://whatever/collection?start=100;stop=110">http://whatever/collection?start=100;stop=110</a></span>. The feature here is that pages give you the link to the next and previous page. The response (JSON) looks something like <span style="font-family: courier new,monospace;">{&quot;results&quot;: [...], &quot;next&quot;: nextURL, &quot;prev&quot;: prevURL}</span>. That way, you pretty much just have to follow URLs to walk down the collection as a doubly  linked list of pages. The supposed feature is that I can change how my pages work, and users hopefully won&#39;t notice, since they shouldn&#39;t be building their own URLs anyway.<p /> Now, at the same time, I&#39;m looking at <a href="http://dojotoolkit.org/reference-guide/dojo/store/JsonRest.html">dojo&#39;s JsonRest API</a>. It&#39;s suggesting that I use the Range and Content-Range headers for pagination support. It also has a single JSON array as a response (so, [{...}, ...]) instead of my JSON object. I started RFC diving and hey look, they&#39;re right, HTTP understands <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.12">ranges with arbitrary units</a>. So, are my URLs wrong? Are people supposed to conjure Range URLs themselves? Why are these darned ranges inclusive? Another problem is that the specification doesn&#39;t really seem to support non-numeric ranges, whereas to txYoga, that&#39;s not really a problem as long as the underlying collection understands it.<p /> Isn&#39;t REST supposed to be hypertext-driven? Aren&#39;t people basically supposed to never construct URLs, and rely on me to provide them to them? Where am I supposed to put those URLs? Yaaargh.<p /> <br />cheers<div>lvh</div>

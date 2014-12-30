@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>A continuous deployment interlude: picking a development stack | lvh</title>
+
+    
+            <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+
+    
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.xml">
+
+      <link rel="canonical" href="http://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html">
+
+
+
+
+    
+        <!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]-->
+
+    
+
+
+    
+
+    <meta name="author" content="lvh">
+        <link rel="prev" href="building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" title="Building a continuous deployment system, part three, preparing for continuous deployment" type="text/html">
+        <link rel="next" href="we-now-have-an-animal-mascot-.html" title="We now have an animal mascot!" type="text/html">
+    
+    <meta property="og:site_name" content="lvh">
+    <meta property="og:title" content="A continuous deployment interlude: picking a development stack">
+    <meta property="og:url" content="http://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html">
+    <meta property="og:description" content="At some point in time, you're going to have to pick a set of tools to do your dev work with. You probably want a bunch of things, including:
+
+A version control system. Preferably not CVS, Visual Sourc">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2010-09-28T13:37:00-07:00">
+
+    
+
+    
+
+
+
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://www.lvh.io/">
+                <img src="../../../pinchy.svg" alt="lvh" id="logo">
+
+                <span id="blog-title">lvh</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                
+                <li>
+<a href="../../../archive.html">Archive</a>
+                </li>
+<li>
+<a href="../../../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../../../talks.html">Talks</a>
+                </li>
+<li>
+<a href="../../../rss.xml">RSS feed</a>
+
+                
+            </li>
+</ul>
+                
+<!-- Custom search -->
+<form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://www.lvh.io/">
+<input type="hidden" name="k8" value="#444444">
+<input type="hidden" name="k9" value="#D51920">
+<input type="hidden" name="kt" value="h">
+<input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;">
+<input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+                
+                
+                    
+    <li>
+    <a href="a-continuous-deployment-interlude-picking-a-development-stack.md" id="sourcelink">Source</a>
+    </li>
+
+                
+            </ul>
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    
+    <header>
+        
+    <h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">A continuous deployment interlude: picking a development stack</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2010-09-28T13:37:00-07:00" itemprop="datePublished" title="2010-09-28 13:37">2010-09-28 13:37</time></a></p>
+            
+        <p class="sourceline"><a href="a-continuous-deployment-interlude-picking-a-development-stack.md" id="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header>
+
+    <div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<div>
+<div>At some point in time, you're going to have to pick a set of tools to do your dev work with. You probably want a bunch of things, including:</div>
+<div><ol>
+<li>A version control system. Preferably not CVS, Visual SourceSafe, ClearCase, Perforce, RCS, SCCS...</li>
+<li>A ticketing system. Preferably not Trac.</li>
+<li>A code review system, possibly just informal code review as part of the ticketing system.</li>
+</ol></div>
+<div>Like pretty much everyone, I'm not without bias. I <em>love</em> Bazaar. It's the best version control system I've ever used (and I've used most of the popular ones). I've got a number of reasons why I prefer it over git and hg, but I'm not going to debate VCSes here. All of the version control systems I've just named are all pretty great pieces of software, far superior to what we had to put up with before we had them. That's unfortunate, because then <a href="http://en.wikipedia.org/wiki/Parkinson's_Law_of_Triviality" target="_blank">Parkinson's law of triviality</a> comes into effect, and people who really don't even care very much either way will feel the need to defend their favorite piece of software to the death. I think we should come to terms with VCS wars being the new editor wars. (The inverse relation between clue and volume is an unfortunate perennial in these things.)</div>
+<p></p>
+<div>At my old place of work, we found a way around that. We had an SVN trunk, and no human was allowed to commit to it. There's a bot takes patches which commits to trunk -- and patches are only sent after two (later three) people sign off on the code review. One obvious advantage is that you completely avoid religious wars. I don't have to convince people to switch to $AWESOME_VCS. There's also the problem of authorship erasure: because the bot commits everything and this was a very simplistic bespoke system, tools like <span style="font-family: courier new, monospace;">svn blame</span> stop working. At first sight, this seems pretty bad. I'm not entirely convinced: it's not great, but on the other hand, it is a sort-of neat way of enforcing collective code ownership. Overall, I think this was a nice experiment, but it's about time we stop mucking around and build some better tools.</div>
+<p></p>
+<div>I started by looking all of the hosted services and the DVCS that powers them:</div>
+<div><ol>
+<li>Launchpad with Bazaar.</li>
+<li>Bitbucket with Mercurial</li>
+<li>Github with git (and <a href="http://github.com/defunkt/hub">hub</a>)</li>
+</ol></div>
+<div>Because of my affinity for Bazaar, Launchpad obviously came first. Alas, there's a problem with Launchpad for small commercial projects. Pricing.</div>
+<p></p>
+<div>[[posterous-content:shOrCG05NvDQO8UBylbu]]</div>
+<div>Here's how it works. Github (in dark red) has a <a href="http://github.com/plans" target="_blank">bunch of plans for private repositories</a>. Bitbucket (in light blue) has a <a href="http://bitbucket.org/plans" target="_blank">bunch of plans for private repositories</a>. Launchpad (in yellow) has a <a href="https://launchpad.net/+tour/join-launchpad" target="_blank">one size fits all $250/yr/project plan</a>.</div>
+<p></p>
+<div>I am in no way saying $250 is an unsurmountable amount of money for a company. I am saying that at the low end of the spectrum, you get a whole lot more bang for your buck at Github and especially Bitbucket than you get at Launchpad. The services they provide are not equivalent: merge proposals are quite a bit better than pull requests in both Github and Bitbucket (although Github's Pull Request 2.0's are halfway there, their pull-request-is-an-issue philosophy makes it impossible to use pull requests as proposed solutions to tickets), and the issue tracker feels a lot more polished than both Github's and Bitbucket's (although between those two, Bitbucket probably wins that round). I'm not saying it's not better. I'm saying I'm having a hard time justifying that it's around $200/year/project better. It's not that Launchpad's expensive as much as the competition is really, really cheap.</div>
+<p></p>
+<div>Let's say I'm a tiny bootstrapping startup with somewhere between $10k and $30k to spend. If you've got one project, $250/yr that's quite all right. However, building your big app as a set of smaller ones has a number of advantages, in terms of administration and deployment. Once I've got 5+ tiny projects (which, put together, make up the code in my startup), it's about $1250/yr. Still not insurmountable, but I've got more interesting things to spend $1k+ on than Launchpad. $1k/year for hosting is not a sensible way to spend your money when most of those projects only get a few tickets a week.</div>
+<p></p>
+<div>So, just to be clear: I'm not saying Launchpad sucks. I think Launchpad is great. I'm not saying Launchpad's pricing scheme is asinine. I'm saying their pricing scheme works out very badly for what I want to do, and that I'm having a hard time convincing other people the extra cost is worth the difference in functionality.</div>
+<p></p>
+</div>
+
+<div>In the next post, I'll talk about rolling your own development stack.</div>
+</div>
+    </div>
+    <aside class="postpromonav">
+    <nav>
+    
+
+    
+        <ul class="pager">
+            <li class="previous">
+                <a href="building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" rel="prev" title="Building a continuous deployment system, part three, preparing for continuous deployment">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="we-now-have-an-animal-mascot-.html" rel="next" title="We now have an animal mascot!">Next post</a>
+            </li>
+        </ul>
+
+    </nav>
+    </aside>
+    
+
+</article>
+
+
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+    </div>
+</div>
+
+
+            <script src="../../../assets/js/all-nocdn.js"></script>
+    
+<!-- Social buttons -->
+<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+<!-- End of social buttons -->
+
+
+    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <!-- fancy dates -->
+    <script>
+    moment.locale("");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script>
+    <!-- end fancy dates -->
+    
+
+
+</body>
+</html>

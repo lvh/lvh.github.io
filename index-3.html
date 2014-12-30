@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="description" content="This is a demo site for Nikola.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>lvh (old posts, page 3) | lvh</title>
+
+    
+            <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+
+    
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+
+      <link rel="canonical" href="http://www.lvh.io/index-3.html">
+
+
+
+        <link rel="prev" href="index.html" type="text/html">
+        <link rel="next" href="index-2.html" type="text/html">
+
+    
+        <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
+
+    
+
+
+
+
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://www.lvh.io/">
+                <img src="pinchy.svg" alt="lvh" id="logo">
+
+                <span id="blog-title">lvh</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                
+                <li>
+<a href="archive.html">Archive</a>
+                </li>
+<li>
+<a href="categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="talks.html">Talks</a>
+                </li>
+<li>
+<a href="rss.xml">RSS feed</a>
+
+                
+            </li>
+</ul>
+                
+<!-- Custom search -->
+<form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://www.lvh.io/">
+<input type="hidden" name="k8" value="#444444">
+<input type="hidden" name="k9" value="#D51920">
+<input type="hidden" name="kt" value="h">
+<input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;">
+<input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+                
+                
+                    
+                
+            </ul>
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<div class="postindex">
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2013/12/external-drive-lossage-on-mavericks.html" class="u-url">External drive lossage on Mavericks</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2013/12/external-drive-lossage-on-mavericks.html" rel="bookmark"><time class="published dt-published" datetime="2013-12-18T11:22:00-08:00" itemprop="datePublished" title="2013-12-18 11:22">2013-12-18 11:22</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Welp, my WD 1TB Passport drive borked. Seems to be a <a href="https://discussions.apple.com/thread/5475136">common issue on
+Mavericks</a> with a select
+number of drives, including this one, apparently...</p>
+<p>Common themes:</p>
+<ol>
+<li>Started with OS X complaining at me because I supposedly ejected
+the drive unsafely, even though the drive was still in the USB slot.</li>
+<li>Drive isn't mounted automatically anymore. Console says filesystem
+is busted: <code>17/12/13 20:18:35,000 kernel[0]: hfs: Runtime corruption
+detected on My Passport, fsck will be forced on next mount.</code>
+</li>
+<li>Drive can't be /unmounted/ using Disk Utility either both in
+regular desktop mode and in recovery mode (booting with ⌘+R). This
+means that even trying to just nuke the partition and starting over
+doesn't work; it just sits there for a while and then eventually times
+out saying it can't unmount the drive.</li>
+</ol>
+<p>I did not, at any point, have WD's drive management software installed
+(unless it managed to do it behind my back). First thing I did was put
+a new GUID table on it with one partition.</p>
+<p>Apparently the solution is to boot into Linux to fix the drive. I'll
+let you know how that pans out.</p>
+<p>UPDATE: Booted into Linux, was able to read everything. <code>fsck</code> does
+report something wrong with the filesystem, but not bad enough that I
+can't mount or umount it. Was able to salvage what looks to be all the
+data I wanted; didn't bother to try and get e.g. Time Machine or
+Spotlight index data off, which is where I suspect the issues to stem
+from.</p>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2013/11/using-protractor-with-angularjs-and-yeoman.html" class="u-url">Using protractor with AngularJS and Yeoman</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2013/11/using-protractor-with-angularjs-and-yeoman.html" rel="bookmark"><time class="published dt-published" datetime="2013-11-15T11:29:00-08:00" itemprop="datePublished" title="2013-11-15 11:29">2013-11-15 11:29</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>In writing the website for Crypto 101, my upcoming book, I've been
+toying around with AngularJS. The basic setup was done using Yeoman.</p>
+<p>First of all, the Yeoman Angular generator gives you a
+<code>karma-e2e.conf.js</code>, but doesn't really configure grunt to do any
+end-to-end testing. Turns out that the new hotness for Angular
+scenario testing is based on Protractor. Karma isn't deprecated, it's
+just for unit tests. Protractor is based on Selenium, which is
+probably an upgrade :-)</p>
+<p>Anyway, here's what I had to do to get started.</p>
+<ol>
+<li>In the root of your app, install protractor and the Selenium
+   standalone server.</li>
+</ol>
+<pre class="code literal-block">npm install --save-dev protractor
+./node_modules/protractor/bin/install_selenium_standalone
+</pre>
+
+
+<ol>
+<li>
+<p>Optionally, add <code>selenium</code> to your <code>.gitignore</code>, since it contains
+   a ~30MB binary that doesn't belong in your git repo.</p>
+</li>
+<li>
+<p>Add a <code>protractor.conf.js</code> file. Here's mine. Remember that there's
+   some stuff in there for you to uncomment, so don't just copy paste.
+   On my machine, the default driver was Internet Explorer for
+   Windows, which is strange given that I'm running on OS X. Oh well.
+   This uses Chrome instead.</p>
+</li>
+</ol>
+<pre class="code literal-block"><span class="nx">exports</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">seleniumAddress</span><span class="o">:</span> <span class="s1">'http://localhost:4444/wd/hub'</span><span class="p">,</span>
+  <span class="nx">specs</span><span class="o">:</span> <span class="p">[</span>
+    <span class="c1">// To run plain JS files, uncomment the following line:</span>
+    <span class="c1">// './test/integration/*.js',</span>
+    <span class="c1">// To run Coffeescript files, uncomment the following line:</span>
+    <span class="c1">// '.tmp/integration/*.js'</span>
+  <span class="p">],</span>
+
+  <span class="c1">// Set capabilities.</span>
+  <span class="nx">capabilities</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s1">'browserName'</span><span class="o">:</span> <span class="s1">'chrome'</span>
+  <span class="p">},</span>
+
+  <span class="nx">jasmineNodeOpts</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">showColors</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">defaultTimeoutInterval</span><span class="o">:</span> <span class="mi">30000</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<ol>
+<li>If you're using Coffeescript, change your Gruntfile to build your
+   integration tests:</li>
+</ol>
+<pre class="code literal-block">  grunt.initConfig({
+    // ...
+    coffee: {
+      // ...
+      test: {
+        files: [
+        // ...
+        {
+          expand: true,
+          cwd: 'test/integration',
+          src: '{,*/}*.coffee',
+          dest: '.tmp/integration',
+          ext: '.js'
+        }]
+      }
+    },
+  // ...
+})
+</pre>
+
+
+<ol>
+<li>
+<p>Write some tests in <code>test/integration</code>.</p>
+</li>
+<li>
+<p>You can now manually run your tests. First run Selenium:</p>
+</li>
+</ol>
+<pre class="code literal-block">./node_modules/protractor/bin/install_selenium_standalone
+</pre>
+
+
+<p>Then run your tests:</p>
+<pre class="code literal-block">./node_modules/protractor/bin/protractor protractor.conf.js
+</pre>
+
+
+<p>Once I figure out the proper way to do this in Grunt, I'll let you
+know.</p>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2013/10/thoughts-on-rdrand-in-linux.html" class="u-url">Thoughts on RDRAND in Linux</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2013/10/thoughts-on-rdrand-in-linux.html" rel="bookmark"><time class="published dt-published" datetime="2013-10-19T21:47:00-07:00" itemprop="datePublished" title="2013-10-19 21:47">2013-10-19 21:47</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>This has been brewing since I read <a href="https://www.change.org/en-GB/petitions/linus-torvalds-remove-rdrand-from-dev-random-4/responses/9066">Linus' response to the petition to
+remove <code>RDRAND</code> from /dev/random</a>.</p>
+<p>For those of you who don't know, <code>RDRAND</code> is a CPU instruction
+introduced by Intel on recent CPUs. It (supposedly) uses a hardware
+entropy source, and runs it through AES in CBC-MAC mode, to produce
+random numbers.</p>
+<p>Out of fear that <code>RDRAND</code> may somehow be backdoored, someone
+petitioned to remove <code>RDRAND</code> support to "improve the overall security
+of the kernel". If <code>RDRAND</code> contains a back door, and an unknown
+attacker can control the output, that could break pretty much all
+userland crypto.</p>
+<p>Linus fulminated, as he is wont to do. He suggested we go read
+<code>drivers/char/random.c</code>. I quote (expletives and insults omitted):</p>
+<blockquote>
+<p>we use rdrand as <em>one</em> of many inputs into the random pool, and we
+use it as a way to <em>improve</em> that random pool. So even if rdrand
+were to be back-doored by the NSA, our use of rdrand actually
+improves the quality of the random numbers you get from
+/dev/random.</p>
+</blockquote>
+<p>I went ahead and read <code>random.c</code>. You can read it for yourself <a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/char/random.c">in
+Linus' tree</a>.</p>
+<p>Disclaimer: I am not an expert in this piece of code. I have no doubt
+Linus is far more familiar with it than I am. I'd love to be proven
+wrong. I'm just taking his advice and reading some code.</p>
+<p>The function I'm interested in is <code>extract_buf</code>:</p>
+<pre class="code literal-block">    <span class="cm">/*</span>
+<span class="cm">     * If we have a architectural hardware random number</span>
+<span class="cm">     * generator, mix that in, too.</span>
+<span class="cm">     */</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LONGS</span><span class="p">(</span><span class="n">EXTRACT_SIZE</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">v</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">arch_get_random_long</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">))</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="n">hash</span><span class="p">.</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="n">v</span><span class="p">;</span>
+    <span class="p">}</span>
+</pre>
+
+
+<p>This is in the extraction phase. This is after the hash is being mixed
+back in to the pool (and that's for backtracking attacks: not intended
+as an input to the pool). It seems to me like the output of
+<code>arch_get_random_long</code> is being XORed in with the extracted output,
+not with the pool.</p>
+<p>If I were to put on my tin-foil hat, I would suggest that the
+difficulty has now been moved from being able to subvert the pool as
+one of its entropy sources (which we think is impossible), versus
+being able to see what you're about to be XORed with. The latter seems
+a lot closer to the realm of stuff a microcode instruction can do.</p>
+<p>To put it into Python:</p>
+<pre class="code literal-block"><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">getrandbits</span>
+
+<span class="k">def</span> <span class="nf">extract_buf</span><span class="p">():</span>
+    <span class="sd">"""Gets 16 bytes from the pool, and mixes them with RDRAND output.</span>
+
+<span class="sd">    """</span>
+    <span class="n">pool_bits</span> <span class="o">=</span> <span class="n">extract_from_pool</span><span class="p">()</span>
+    <span class="n">rdrand_bits</span> <span class="o">=</span> <span class="n">rdrand</span><span class="p">()</span>
+    <span class="k">return</span>  <span class="n">pool_bits</span> <span class="o">^</span> <span class="n">rdrand_bits</span>
+
+<span class="k">def</span> <span class="nf">extract_from_pool</span><span class="p">():</span>
+    <span class="sd">"""Pretend to get some good, unpredictable bytes from the pool.</span>
+
+<span class="sd">    Actually gets a long with some non-cryptographically secure random</span>
+<span class="sd">    bits from random.getrandbits, which is usually a Mersenne Twister.</span>
+
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">getrandbits</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">rdrand</span><span class="p">():</span>
+    <span class="sd">"""</span>
+<span class="sd">    A malicious hardware instruction.</span>
+<span class="sd">    """</span>
+    <span class="n">pool_bits</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="s">"pool_bits"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pool_bits</span> <span class="o">^</span> <span class="mh">0xabad1dea</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">extract_buf</span><span class="p">()</span> <span class="o">==</span> <span class="mh">0xabad1dea</span>
+</pre>
+
+
+<p>Why can't RDRAND work like this?</p>
+<p>Some comments based on feedback I've gotten so far:</p>
+<ol>
+<li>This attack does not need to know where the PRNG state lives in
+memory. First of all, this isn't an attack on the PRNG state, it's on
+the PRNG output. Secondly, the instruction only needs to peek ahead at
+what is about to happen (specifically, what's about to be XORed with)
+the RDRAND output. That doesn't require knowing where the PRNG state
+(or its output) is being stored in memory; we're already talking
+register level at that point.</li>
+<li>While it's certainly true that if you can't trust the CPU, you
+can't trust anything, that doesn't really make this problem go away.
+<code>RDRAND</code> being broken wouldn't make software crash, which is a lot
+harder for almost all other instructions. <code>RDRAND</code> being broken
+wouldn't result in measurable side-effects, unlike what would happen
+if <code>PCLMULDQ</code> contained a back door. Furthermore, it's a lot easier to
+backdoor one single microcode instruction and a lot more plausible and
+feasible for a CSPRNG to be backdoored than it is to think of a CPU as
+some kind of intelligent being that's actively malicious or being
+remotely controlled.</li>
+</ol>
+<p>For what it's worth, it seems <a href="https://twitter.com/zooko/status/392334674690723840">Zooko agrees with me</a>.</p>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2013/01/securing-against-timing-attacks-with-twisted.html" class="u-url">Securing against timing attacks with Twisted</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2013/01/securing-against-timing-attacks-with-twisted.html" rel="bookmark"><time class="published dt-published" datetime="2013-01-30T18:55:00-08:00" itemprop="datePublished" title="2013-01-30 18:55">2013-01-30 18:55</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<h3>What are timing attacks?</h3>
+<p>Timing attacks are side-channel attacks that rely on inferring secret
+information from operations by measuring how long they take to execute.</p>
+<p>A complete explanation is outside of the scope of this article, but
+the <a href="https://en.wikipedia.org/wiki/Timing_attack">Wikipedia article</a>
+might be a good starting point for the interested reader.</p>
+<h3>Why should I care about them?</h3>
+<p>Because they can creep in before you know it, and break your otherwise
+fine system.</p>
+<p>A common way they're introduced are string comparisons. String
+comparisons in many langauge implementations, including all
+implementations of Python I know of, short-circuit. They work roughly
+like this:</p>
+<pre class="code literal-block"><span class="k">def</span> <span class="nf">strcmp</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">c1</span> <span class="o">!=</span> <span class="n">c2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</pre>
+
+
+<p>This means that as soon as they can prove the two strings are not
+equal, they return <code>False</code> and ignore the rest of the string. This is
+a very simple and effective performance optimization. And that's
+precisely why, from a security point of view, it's a liability.</p>
+<p>Since it takes longer to compare "The quick brown fox jumps over the
+lazy dog" to "The quick brown fox jumps over the lazy god" than it
+does to compare it to "Lorem ipsum", or even a Lipsum of the same
+length, an attacker can use that timing information to figure out what
+the original string is that is being compared to, even when he
+shouldn't.</p>
+<h3>Why did you care?</h3>
+<p>Password resets.</p>
+<p>The typically recommended way of doing them is to generate a random
+number, one that's sufficiently long that an attacker can't guess it.
+Then, you relay that number to the user using some alternative channel
+(usually a URL in an e-mail).</p>
+<p>Bar the random number, those URLs are predictable. That means an
+attacker can trivially try any number he wants. If an attacker is
+allowed to do that enough, he could measure timing differences between
+different numbers (introduced by string comparison functions that
+short-circuit or even by the database's index) to efficiently deduce
+the value of a "good" number.</p>
+<p>Also, if membership is private, an attacker may exploit timing
+differences in the password reset <em>request</em> function to farm e-mail
+addresses.</p>
+<h3>How do I protect against timing attacks?</h3>
+<p>Just to be clear: timing attacks are a complicated problem, and this
+article describes just one strategy I've applied to help secure
+against them.</p>
+<p>The easiest way to prevent a timing attack is to make sure that the
+timing your hypothetical attacker can measure is unrelated to the work
+you have to do.</p>
+<p>Since I was using <a href="http://twistedmatrix.com">Twisted</a> and
+<a href="http://amp-protocol.net/">AMP</a>, this was actually quite easy. I wrote
+a decorator for AMP responder functions that does exactly that:</p>
+<pre class="code literal-block"><span class="k">def</span> <span class="nf">_immediateResponder</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    A decorator for responder functions that should return immediately and</span>
+<span class="sd">    execute asynchronously, as a defense against timing attacks.</span>
+
+<span class="sd">    The responder decorator should be applied after (above) this decorator::</span>
+
+<span class="sd">        @SomeCommand.responder</span>
+<span class="sd">        @_immediateResponder</span>
+<span class="sd">        def responder(...):</span>
+<span class="sd">            ....</span>
+
+<span class="sd">    This should be timing attack resistant since it is unconditional: the</span>
+<span class="sd">    the AMP response is returned immediately, and the real responder is</span>
+<span class="sd">    scheduled to run at the next chance the reactor has to do so.</span>
+
+<span class="sd">    This only works with AMP commands with empty responses. That's probably a</span>
+<span class="sd">    good idea anyway: almost all information you could add to the response</span>
+<span class="sd">    is liable to introduce a timing attack vulnerability.</span>
+
+<span class="sd">    Since this precludes your ability to communicate success or failure to</span>
+<span class="sd">    the caller, the decorated function should return quite quickly (or, if it</span>
+<span class="sd">    can't, that should be clearly documented). Otherwise, you may end up in a</span>
+<span class="sd">    a race condition, where the caller assumes the operation has completed,</span>
+<span class="sd">    but it is in progress or hasn't started yet.</span>
+
+<span class="sd">    The original responder function is available on the decorated function as</span>
+<span class="sd">    the ``responderFunction`` attribute.</span>
+<span class="sd">    """</span>
+    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">reactor</span><span class="o">.</span><span class="n">callLater</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="n">wrapped</span><span class="o">.</span><span class="n">responderFunction</span> <span class="o">=</span> <span class="n">f</span>
+    <span class="k">return</span> <span class="n">wrapped</span>
+</pre>
+
+
+<p>When I get an incoming RPC call, the function doing the actual work is
+scheduled to run at the next reactor iteration. Then, an empty
+response is returned. All of this happens in amortized constant time,
+and independent of any secrets. As a result, it can't really leak
+much about them.</p>
+<h3>An abstraction too high</h3>
+<p>The above was an effective response to a proof-of-concept timing
+attack exploit. Unfortunately, that doesn't mean you've fixed every
+timing attack.</p>
+<p>In particular, this example is a few layers of abstraction removed
+from the grit of real-world I/O. Just because I returned <code>{}</code> (an
+empty response) immediately, doesn't mean the underlying IO happens
+immediately.</p>
+<p>In particular, the write output latency could be coerced to depend on
+the computation time, because the function passed to it could be
+executed before the <code>write</code>. If that happens, and the time it takes is
+dependant on some secret, delaying the write, the latency on the
+attacker's side could be used to measure the work done.</p>
+<p>I have not yet been able to turn the above into a working exploit.</p>
+<p>There are a number of ways this could be mitigated. Since there's no
+working exploit, it's unclear if this mitigation would render a timing
+attack infeasible.</p>
+<p>One way I've considered to mitigate this is to limit the time that the
+reactor is blocked. In my concrete example, this was fortunately
+already the case, since one of the first things it did was defer to a
+thread that released the GIL (to compute the key from the password
+using <code>scrypt</code>). Alternatively, if you're doing this for Python
+code, you could write your function cooperatively.</p>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2013/01/moving-to-octopress-on-github-pages.html" class="u-url">Moving to Octopress on Github Pages</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2013/01/moving-to-octopress-on-github-pages.html" rel="bookmark"><time class="published dt-published" datetime="2013-01-28T10:58:00-08:00" itemprop="datePublished" title="2013-01-28 10:58">2013-01-28 10:58</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <p>Long overdue, I'm told.</p>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
+        <h1 class="p-name entry-title"><a href="posts/2011/11/designing-a-rest-api-logging-in.html" class="u-url">Designing a REST API: logging in</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2011/11/designing-a-rest-api-logging-in.html" rel="bookmark"><time class="published dt-published" datetime="2011-11-27T13:37:00-08:00" itemprop="datePublished" title="2011-11-27 13:37">2011-11-27 13:37</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<div>Hey. As many of you probably know, I'm building a business, and that business involves a REST API being consumed by browsers (for now).</div>
+
+<p></p>
+<div>The problem I'm hitting is registration and logging in. It just doesn't seem to be a problem that fits REST very well -- maybe I'm thinking too much about services and not enough about resources, so I'm writing this blog posts to get my thoughts in order and hopefully get some useful feedback.</div>
+<p></p>
+<div>This post is about user registration and login, and how they're hard to fit into REST.</div>
+<p></p>
+<div>Context: users are uniquely identified by a user id, which is a random string of sufficient size. These ids are immutable and uniquely refer to this user from registration until forever. User emails are also unique, but they can change, so they are not a good way to refer to a user. Users register and log in using email and password.</div>
+<p></p>
+<div><strong><span style="font-size: medium;">Option 1: separate authentication endpoint</span></strong></div>
+<p></p>
+<div>The idea here is that there are two things:</div>
+<div>
+<ul>
+<li>the REST API, which authenticated things talk to</li>
+<li>the authentication endpoint, where unauthenticated things go to become authenticated</li>
+</ul>
+The downside is that there are two things. One of them speaks REST, and the other speaks gnarly ad-hoc RPC or maybe JSON-RPC or something.</div>
+<p></p>
+<div>The upside is that the REST API only needs to understand one kind of token.</div>
+<p></p>
+<div><span style="font-size: medium;"><strong>Option 2: everything in REST</strong></span></div>
+<p></p>
+<blockquote class="gmail_quote" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0.8ex; border-left-width: 1px; border-left-color: #cccccc; border-left-style: solid; padding-left: 1ex;">Special cases aren't special enough to break the rules.</blockquote>
+<blockquote class="gmail_quote" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0.8ex; border-left-width: 1px; border-left-color: #cccccc; border-left-style: solid; padding-left: 1ex;">-- Zen of Python</blockquote>
+<p></p>
+<div>The advantage is that there is one canonical source for everything. Everything including access grants (which should be nice for OAuth later). You can use the REST API to perform any action, see anything in the system...</div>
+<p></p>
+<div>The downsides:</div>
+<div>
+<ul>
+<li>the REST API has to understand more than one kind of authentication. This also might make it a bit uglier to interoperate with OAuth later.</li>
+<li>Logging in takes too many round trips. First I have to query <span style="font-family: courier new,monospace;">users/?email={EMAIL}</span><span style="font-family: arial,helvetica,sans-serif;"> to go from e-mail address to user id. Then, I have to POST to users/accessGrants -- which is if I'm allowed to guess the URL, which I really shouldn't, I should GET users/ first (HATEOAS and all that -- but I'm willing to ignore that for now). All of this happens over HTTPS with HTTP Basic auth. TLS handshakes are slow, and verifying securely stored passwords is even slower.</span>
+</li>
+</ul>
+</div>
+<p></p>
+<div><strong><span style="font-size: medium;">Option 2b: everything in REST, with shortcuts</span></strong></div>
+<blockquote class="gmail_quote" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0.8ex; border-left-width: 1px; border-left-color: #cccccc; border-left-style: solid; padding-left: 1ex;">Although practicality beats purity.</blockquote>
+<blockquote class="gmail_quote" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0.8ex; border-left-width: 1px; border-left-color: #cccccc; border-left-style: solid; padding-left: 1ex;">-- Zen of Python </blockquote>
+<div>... but, unfortunately, also:</div>
+<blockquote class="gmail_quote" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0.8ex; border-left-width: 1px; border-left-color: #cccccc; border-left-style: solid; padding-left: 1ex;">
+<div>There should be one-- and preferably only one --obvious way to do it.</div>
+</blockquote>
+<blockquote class="gmail_quote" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0.8ex; border-left-width: 1px; border-left-color: #cccccc; border-left-style: solid; padding-left: 1ex;">-- Zen of Python </blockquote>
+<p></p>
+<div>The upsides are the same as for the REST API, except we get rid of the downside that logging in takes too many round trips, because there's a shortcut for that.</div>
+<p></p>
+<div>That shortcut would be something that speaks some kind of ad-hoccy RPC, or possibly JSON-RPC. One of the exported methods/procedures would be "getGrant", which takes a username and password and returns the key. These endpoints talk to the same database behind the scenes. Killer feature: one round trip.</div>
+<p></p>
+<div>Downside is that the API should probably still be able to take user credentials, since this is is a shortcut....</div>
+<p></p>
+<div>Yes, I know OAuth exists. For now, we have no interest in opening this API up yet. We'll do that as soon as we have a platform worth caring about, an API that doesn't change every three seconds, and a security expert that's reviewed it.</div>
+</div>
+    </div>
+    </article>
+</div>
+
+        <nav class="postindexpager">
+        <ul class="pager">
+            <li class="previous">
+                <a href="index.html" rel="prev">Newer posts</a>
+            </li>
+            <li class="next">
+                <a href="index-2.html" rel="next">Older posts</a>
+            </li>
+        </ul>
+        </nav>
+
+
+
+
+
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+    </div>
+</div>
+
+
+            <script src="assets/js/all-nocdn.js"></script>
+    
+<!-- Social buttons -->
+<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+<!-- End of social buttons -->
+
+
+    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <!-- fancy dates -->
+    <script>
+    moment.locale("");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script>
+    <!-- end fancy dates -->
+    
+
+
+</body>
+</html>
