@@ -113,8 +113,8 @@ really mean *math*, not physics: Euler-Bernouilli is a math hack. You
 get it by taking Hooke's law and throwing some calculus at it. Hooke's
 law itself is more math than physics, too: it's a first-order
 approximation based only on the observation that stuff stretches when
-you pull it. It's wrong all the time, even for fairly germane
-objects. [#hooke]_ Both theories were put together long before we had
+you pull it. It's wrong all the time, even for fairly germane objects
+like rubber bands. Both theories were put together long before we had
 serious materials science. [#serious]_ We use them because they
 (mostly) work, not because they are a consequence of a physical model.
 
@@ -195,8 +195,6 @@ hackers here; and we're all engineers, too.
             encompasses many disciplines, including architectural (for
             lack of better word; I mean the American "civil engineer"
             here), chemical, electrical, and yes, computer.
-
-.. [#hooke] Got a rubber band?
 
 .. [#serious] I don't mean to characterize previous efforts as not
               serious. They simply didn't have the tools to do what we
