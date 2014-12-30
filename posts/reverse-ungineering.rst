@@ -48,9 +48,8 @@ isn't with software projects, it's with applying civil engineering
 standards to a project that isn't.
 
 Software projects aren't civil engineering projects.  Attempts to
-treat the former like the latter have done much more harm than
-good. That said, that doesn't mean that software development isn't
-engineering.
+treat them as such have done much more harm than good. That said, that
+doesn't mean that software development isn't engineering.
 
 Firstly, civil engineering is the outlier here. Other engineering
 disciplines don't do well according to the civil engineering success
