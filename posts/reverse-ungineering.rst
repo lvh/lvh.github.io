@@ -115,8 +115,8 @@ law itself is more math than physics, too: it's a first-order
 approximation based only on the observation that stuff stretches when
 you pull it. It's wrong all the time, even for fairly germane objects
 like rubber bands. Both theories were put together long before we had
-serious materials science. [#serious]_ We use them because they
-(mostly) work, not because they are a consequence of a physical model.
+materials science. We use them because they (mostly) work, not because
+they are a consequence of a physical model.
 
 That was just one example from a single discipline, but it holds more
 generally, too. I analyze circuits by recognizing subsections. If you
@@ -195,10 +195,6 @@ hackers here; and we're all engineers, too.
             encompasses many disciplines, including architectural (for
             lack of better word; I mean the American "civil engineer"
             here), chemical, electrical, and yes, computer.
-
-.. [#serious] I don't mean to characterize previous efforts as not
-              serious. They simply didn't have the tools to do what we
-              can do today.
 
 .. [#tor] While it is very easy to make up a sensible-sounding
           narrative time line after the fact for the breakthroughs in
