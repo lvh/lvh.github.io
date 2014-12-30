@@ -61,9 +61,9 @@ experimental in nature, and in many cases also subject to changing
 requirements. It's true that we just can't plan ahead in software, but
 we're not alone.
 
-On a related note, we may be confounding cause and effect here, even
-if we overlook that not all engineering is civil engineering. Are
-software projects unable to stick to these standards because it's not
+Secondly, we may be confounding cause and effect here, even if we
+overlook that not all engineering is civil engineering. Are software
+projects unable to stick to these standards because it's not
 engineering, or is civil engineering the only thing that sticks to
 them because *they have no other choice*? Conversely, do we fail early
 and often because we're not engineering, or because, unlike civil
