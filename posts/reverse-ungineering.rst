@@ -6,7 +6,7 @@
 .. description:
 .. type: text
 
-Title with apologies to Glyph.
+(Title with apologies to Glyph.)
 
 Recently, some friends of mine suggested that "software engineer" is
 not a good job title. While they are of course free to call their
@@ -19,16 +19,19 @@ the disagreement is feathery at best.
 What if buildings failed as often as software projects?
 =======================================================
 
-When it comes to getting things done, we're just not very good, as
-Glyph points out:
+To illustrate the differences between software development and other
+engineering disciplines, Glyph compares software to civil engineering.
+
+For example, when it comes to getting things done, we're just not very
+good:
 
   Most software projects fail; as of 2009, 44% are late, over budget,
   or out of specification, and an additional 24% are canceled
   entirely. Only a third of projects succeed according to those
   criteria of being under budget, within specification, and complete.
 
-He then rightly points out that those shenanigans would never be
-accepted in civil engineering, a Serious Engineering Discipline:
+Those shenanigans would never be accepted in civil engineering, a
+Serious Engineering Discipline:
 
   Would you want to live in a city where almost a quarter of all the
   buildings were simply abandoned half-constructed, or fell down
@@ -42,14 +45,15 @@ those "failed" software projects were quite successful by other
 measures; the problem isn't with software projects, it's with applying
 civil engineering standards to a project that isn't.
 
-I emphatically agree that software projects aren't civil engineering
-projects. Attempts to treat the former like the latter have done much
-more harm than good. That said, I think reality is more nuanced.
+I agree that software projects aren't civil engineering projects.
+Attempts to treat the former like the latter have done much more harm
+than good. That said, I don't think that makes software
+not-engineering.
 
 Firstly, civil engineering is the outlier here. Other engineering
-disciplines don't do as well by the civil engineering success
-yardstick either. In other fields, the few engineering endeavors that
-do are typically civil engineering in disguise, such as nuclear and
+disciplines don't do well according to the civil engineering success
+yardstick either. The few engineering endeavors that do are usually
+civil engineering in disguise, such as the construction of nuclear and
 chemical plants.  Rank-and-file projects in most fields of engineering
 operate a lot more like a software project than the construction of a
 skyscraper. Projects are late and over budget, often highly
@@ -65,7 +69,7 @@ them because *they have no other choice*? Conversely, do we fail early
 and often because we're not engineering, or because, unlike civil
 engineering projects, we *can*? [#anthropic]_
 
-Finally, software has existed for decades, buildings for
+Finally, software has existed for decades, but buildings have for
 millennia. Bridges used to collapse all the time. Tacoma Narrows
 wasn't so long ago. If the tour guide on my trip to Paris is to be
 believed, one of those bridges has collapsed four times already.
@@ -78,8 +82,8 @@ unlike "real" engineering, it is not backed by "real" science or math.
 This statement is usually paired with a dictionary definition of the
 word "engineering".
 
-I feel this characterization is incongruent with what engineers do
-daily.
+I feel this characterization is incongruent with the daily reality of
+engineering.
 
 Consider the civil engineer, presumably the engineeringest engineer
 there is. [#civil]_ If you ask me to dimension an I-beam for
@@ -116,10 +120,10 @@ That was just one example from a single discipline, but it holds more
 generally, too. I analyze circuits by recognizing subsections. If you
 show me a piece that looks like a low-pass filter, I am not distracted
 by Maxwell's equations to figure out what that little capacitor is
-doing.  I could certainly derive its behavior that way: in fact,
+doing.  I could certainly derive its behavior that way; in fact,
 someone made me do that once, and it was quite instructive. But I'm
 not bothered with the electrodynamics of a capacitor right now; I'm
-just trying to understand this circuit.
+just trying to understand this circuit!
 
 This isn't just how engineers happen to do their jobs in practice,
 either. Engineering breakthroughs live on both sides of science's
@@ -148,7 +152,7 @@ But *that* isn't art!
 =====================
 
 Many people smarter than I have made the argument that programming is
-an art, not dissimilar from painting, music or even cooking. I'm
+art, not dissimilar from painting, music or even cooking. I'm
 inclined to agree: many talented programmers are also very talented
 artists in other fields. However, I do disagree that those things are
 art-like *unlike* engineering, which is supposedly just cold, hard
@@ -157,15 +161,16 @@ science.
 There's a not-so-old adage that science is everything we understand
 well enough to explain to a computer, and art is everything else. If
 that's true, there's definitely plenty of art to be found in
-engineering.
+engineering. (That was a little tongue-in-cheek. Nobody wants to get
+dragged into a semantic argument about what art *is*.)
 
-Nobody wants to get dragged into a semantic argument about what art
-*is*. Even with a much narrower view of art, engineers do plenty of
-it, as I've tried to argue before. Not all engineering calls are
-direct consequences of quantum mechanics; sometimes, it is really just
-down to what the engineer finds most platable. Even civil engineers,
-the gray predictable stalwarts of our story, care about making
-beautiful things.
+Even with a much narrower view of art, engineers do plenty of it, as
+I've tried to argue before. Not all engineering calls are direct
+consequences of relativity, thermodynamics or quantum
+mechanics. Sometimes, it is really just down to what the engineer
+finds most palatable. Even civil engineers, the gray predictable
+stalwarts of our story, care about making beautiful things. The Burj
+Khalifa wasn't a consequence of a human following an algorithm.
 
 Conclusion
 ==========
