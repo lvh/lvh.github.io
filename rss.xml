@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 30 Dec 2014 13:52:19 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Fri, 20 Feb 2015 11:04:59 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Updated GPG key</title><link>http://www.lvh.io/posts/updated-gpg-key.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is also available in a &lt;a href="https://gist.github.com/lvh/6adfe51aa42bb268a273"&gt;Gist&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+I am cycling my GPG key.
+
+My old key has fingerprint:
+
+D9DC 4315 772F 8E91 DD22 B153 DFD1 3DF7 A8DD 569B
+
+My new key has fingerprint:
+
+45DC 13EB 6A01 21E8 5219 8C09 8763 869B E2B2 663E
+
+(If you're looking for the key ID, that's the last 8 hex characters of
+the fingerprint.)
+
+While my new key may superficially seem less secure, since I have gone
+from a 4096 bit RSA key to a 3072 bit one, the new one has the
+wonderful advantage of living on a smart card.
+
+I have no reason to presume my old key to be compromised.  I have
+changed the expiration date of my old key to March 7th of this year. I
+have signed the new key with the old one.
+
+I am in the process of updating https://keybase.io/lvh.
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
+
+iQIcBAEBCgAGBQJU54Q5AAoJEISZopctIA+8JqYP/2agk8RHNklaPqQ6JHdK7Rtu
+ehtok2X7wcirWAridRK/l0Tfjl5x2lFJitb+rP5X3k30qw2FvoLF9YOvbQBzezR+
+ma9S050GPlvs2knmRQb9f53KmjlmC9DLHT40f3BUJtUteH5X8KgEy2YfbThN2B4C
+Z6P30w03gqMkOu5vpaUTe6wkTMpMeGfQz240Kwa3N84UkzzAP3dTBOkm1AiHDUeJ
+yj4a9zz+qzayVGI0A1W5W8zd4+GK7Pant7I/lRd02jRQHoHtnbgiBm+5PbGvihFp
+zdtrd9YDIhWJzo84qSawQCVAuhy+8CGMFqOHBtTo/BV6HklVLUuOdrfy+IwpV9Jh
+cj2Cc5AauFYcWYzJkYL9MHj0b6UI4Uxx1OiAq7onBsajaIE97nLbt1j9A4I4Pb4d
+7ub6YmTnwA5aLwqPbfl/egX5xKEIXq/TGcVnbpxY65fw4GsG/hJyq5JHrW43ATqX
+sSTdnmIbjyw/PQFr+U0ddUfOnbITJKUElZnCami/JnZV6jDUOPY/Kn48nsxF6bk2
+UatqaXpR7yQAvzHz9Yl2sZHcMw/TguumqwuYUQWLFUVZJmmc3iunCfFDVD9tiEz1
+00M4PZxhIZt8zKDKIb0PSVa46yHt+kSlgtdgwIvvbuZn9TokXdp/n/DXvBkqohQg
+De57mY9RnWwt5fy6AWd1
+=lzks
+-----END PGP SIGNATURE-----
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://www.lvh.io/posts/updated-gpg-key.html</guid><pubDate>Fri, 20 Feb 2015 19:02:55 GMT</pubDate></item><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
 &lt;p&gt;Recently, some friends of mine suggested that "software engineer" is
 not a good job title. While they are of course free to call their
 profession whatever they like, I respectfully disagree: I think
@@ -855,252 +898,4 @@ that does have &lt;a href="http://networkx.lanl.gov/reference/generated/networkx
 out I was wrong, and shoving me in the direction of the answers.&lt;/p&gt;
 &lt;p&gt;In this blog post I used several freely available graph illustrations
 from Wikipedia. The complete graph illustrations were made by
-&lt;a href="https://commons.wikimedia.org/wiki/User:Koko90"&gt;koko90&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</guid><pubDate>Tue, 18 Mar 2014 20:05:00 GMT</pubDate></item><item><title>Optimization problems and PyCon financial aid</title><link>http://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This year, I have partly taken on some new responsibilities in
-organizing PyCon. Specifically, I've done some work on financial aid.
-(Next year, I will be taking on the position of financial aid chair.)
-There have been some challenges that I've thrown some code at. Some of
-it stuck.&lt;/p&gt;
-&lt;p&gt;I'm very much interested in your comments, thoughts, alternative
-approaches, et cetera. Hit me up on
-&lt;a href="https://twitter.com/lvh"&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Hotel room allocation&lt;/h3&gt;
-&lt;p&gt;The first issue I solved was one of hotel room allocation. We provide
-the financial aid applicants with hotel rooms. To keep costs down, we
-pair people up, two by two.&lt;/p&gt;
-&lt;p&gt;We want to pair people so that we have to book a minimal number of
-days. If there's days on the start of the room booking where only one
-person is booking the room, we have to pay for the rest.&lt;/p&gt;
-&lt;h4&gt;A greedy algorithm&lt;/h4&gt;
-&lt;p&gt;I start out with generating every possible pairing. Assuming we have
-300 financial aid applicants, that's:&lt;/p&gt;
-&lt;p&gt;$${300 \choose 2} = \frac{300!}{2! \cdot 298!} = 44850$$&lt;/p&gt;
-&lt;p&gt;That's more than we can check by hand, but still pretty easy for a
-computer. Besides, there are actually fewer pairs than that: some
-people request to be paired together explicitly, and we only pair
-people of the same gender.&lt;/p&gt;
-&lt;p&gt;Then, I sort them by number of unmatched days, that is, how many days
-would have a single person in the hotel room if we paired them
-together. Finally, I just greedily start grabbing pairs, keeping track
-of the people that have been allocated rooms as I go along. As soon as
-everyone is accounted for, we stop.&lt;/p&gt;
-&lt;p&gt;Other than perhaps minding the edge conditions where you have an odd
-number of people to pair, this isn't too tricky. The implementation
-for this is on Github, in
-&lt;a href="https://github.com/lvh/pairing/blob/master/src/pairing/core.clj"&gt;&lt;code&gt;lvh/pairing&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;h4&gt;Solution, meet reality&lt;/h4&gt;
-&lt;p&gt;Before I wrote this, humans did this by hand. That took pretty long,
-and the solutions were decent, but suboptimal. All the humans that
-have tackled this problem seem to take the same approach: sort by
-check-in date, find exact or near matches in check-out dates, rinse,
-repeat.&lt;/p&gt;
-&lt;p&gt;The algorithm above did quite well, coming up with a significantly
-better result than the previous human allocation. It also produced
-very &lt;em&gt;interesting&lt;/em&gt; solutions. Turns out that by taking a big hit on
-one of the pairs (say, a pair that's 4 days mismatched four days), you
-can limit the damage on a large number of other pairs, and still come
-out on top. After reviewing with the person who previously had to do
-this manually, we quickly agreed that a human would most likely not
-have come up with this.&lt;/p&gt;
-&lt;p&gt;Furthermore, a lot of the pairs have matching check-out dates but with
-a mismatched check-in date; whereas humans typically only look for
-solutions in the other direction. This is easy to explain in
-hindsight; the algorithm has no concept of an ordering of events in
-time. It just tries to minimize the number of mismatched days.&lt;/p&gt;
-&lt;p&gt;I'm quite happy with the result. Any dollar I'm not devoting to a room
-that isn't being fully used will instead be going into an increased
-grant.&lt;/p&gt;
-&lt;p&gt;Unfortunately, finding this solution isn't the end of the story. It
-rarely survives the clash with reality. Many complex factors affect
-it: people will drastically change their room dates, people's visas
-get denied, et cetera. All sorts of unforseeable circumstances have
-lead to changes to the answer the algorithm originally produced. I
-don't expect that to change until PyCon is over; unfortunately, I also
-don't think that's a problem I can fix in a few lines of Clojure.&lt;/p&gt;
-&lt;h3&gt;Grant allocation&lt;/h3&gt;
-&lt;p&gt;The second issue is a much thornier one. Given the financial aid
-budget, figure out how to optimally distribute it. The budget is quite
-limited, a good deal smaller than the sum of what everyone requests.&lt;/p&gt;
-&lt;p&gt;There's a few reasons why this problem is complex. First of all,
-"optimal" is highly subjective. As I'm sure you'll notice very soon
-after thinking about it, it's very easy to verge off from math and
-straight into the realm of politics.&lt;/p&gt;
-&lt;h4&gt;A very simple greedy algorithm&lt;/h4&gt;
-&lt;p&gt;You might say that you want to get as many people as possible to come
-to PyCon, and you just greedily allocate the smallest grant requests
-first. This has a few disadvantages:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;It biases against the people that ostensibly need the money the
-   most.&lt;/li&gt;
-&lt;li&gt;It is ordering-sensitive: equivalent applications that happen to
-   come later in the queue are disadvantaged.&lt;/li&gt;
-&lt;li&gt;It oversimplifies how people react to grants, by making grant
-   allocation binary. Someone receiving 90% of their requested grant
-   amount will likely still be able to attend. Suppose you have 11
-   people, all requesting 100 USD, and you have 1000 USD to spend. The
-   greedy algorithm would give the first ten of them 100 USD and find
-   its purse empty for the eleventh. It would almost certainly be
-   better to give them all 90.91 USD instead.&lt;/li&gt;
-&lt;li&gt;Game-theoretically, it makes a lot of sense for everyone to apply
-   for a small grant that they will almost certainly get. (This is not
-   a real issue for us, because we still have humans eyeballing all
-   the applications.)&lt;/li&gt;
-&lt;li&gt;The only difference between applications is the amount they're
-   requesting, but there are people that we would like to bias in
-   favor of. For example, we'd like to try very hard to get speakers
-   or tutorial presenters to the conference, we might want to reward
-   people doing open source work, et cetera.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Selecting these critera is definitely squarely in the realm of
-politics, and I'd like to stick to the realm of math; so let's just
-assume that we can assign scores to applicants and that those scores
-are fair and just. If you feel like we shouldn't bias in favor of
-anyone at all, just assume that whenever I say "the score of an
-applicant" I mean "the number 1".&lt;/p&gt;
-&lt;h4&gt;A slightly smarter greedy algorithm&lt;/h4&gt;
-&lt;p&gt;One of the key ideas (which a lot of people seem to have when tackling
-this problem) is to translate an application's score into an amount of
-the budget. So, for example, let's say that the sum of all scores is
-100, and your score is 10, that means you can have up to 10% of the
-budget allocated to you.&lt;/p&gt;
-&lt;p&gt;So, I make a pass over all the remaining applicants. If you're asking
-less than your budget slice, you get your requested grant. If you're
-asking for more, I save you for a future pass. Even though the budget
-goes down between passes, budget slices will go up, because the total
-score drops.&lt;/p&gt;
-&lt;p&gt;You can't do this in one pass, increasing the budget as you go along
-if people request less than their slice, because you might introduce
-order dependence. For example, consider what happens when Alice and
-Charlie both need more than the budget allows for (and they have the
-same score and requested amount), and Bob needs less. If you process
-them in the order Alice - Bob - Charlie, Charlie may get his requested
-grant and Alice may not, just because Bob's in the middle making the
-budget bigger for Charlie.&lt;/p&gt;
-&lt;p&gt;Once everyone left is requesting more than their slice, they just get
-their slice instead of their requested amount.&lt;/p&gt;
-&lt;p&gt;This solution is adequate, but I'm not completely satisfied; everyone
-besides the last pass will get full grant amounts. You can find my
-implementation of this algorithm
-&lt;a href="https://github.com/lvh/hood/blob/master/src/hood/greedy.clj"&gt;on Github&lt;/a&gt;
-as well.&lt;/p&gt;
-&lt;h4&gt;A better model&lt;/h4&gt;
-&lt;p&gt;I think we can do better by applying some elementary probability
-theory. What we really want is to maximize the total score of the
-applicants that we expect to see at PyCon as a consequence of
-financial aid. Probability theory has a thing called the expected
-value of a random variable, which is pretty much just the integral of
-the random variable with respect to the probability. In our case, that
-just means that we want to maximize the sum of the probabiliies that a
-given applicant will come to PyCon given a particular grant amount,
-weighted by their score:&lt;/p&gt;
-&lt;p&gt;$$\max \sum s_i \cdot p_i$$&lt;/p&gt;
-&lt;p&gt;That just restates problems we can't solve in terms of problems we
-can't solve. What on earth could the probability that someone shows up
-be? We can't know the real value, since it's specific to each
-individual, and dependent on a lot of random, unknowable events. We
-can, however, make an educated guess. If we don't give them any money,
-they probably won't come. If we give them the amount they're asking
-for, they probably will.&lt;/p&gt;
-&lt;p&gt;We could conjecture that the probability someone will come to the
-conference is approximately the fraction of the amount they requested
-that they actually received:&lt;/p&gt;
-&lt;p&gt;$$p_i = \frac{g_i}{r_i}$$&lt;/p&gt;
-&lt;p&gt;For example, if someone gets 90% of their
-requested grant, we estimate that the odds they will attend are also
-90%; if we give them only 10%, we estimate it at just 10%.&lt;/p&gt;
-&lt;p&gt;Alternatively, we could conjecture that it's closer to the &lt;em&gt;square&lt;/em&gt; of
-that ratio; when giving someone a value that's very close to what they
-asked for, their probability of attending is still going to be very
-high; but if we only give them half, the odds they will attend will be
-closer to 25%, much lower than 50%. So, the expression becomes:&lt;/p&gt;
-&lt;p&gt;$$p^{\prime}_i = \left(\frac{g_i}{r_i}\right)^{2}$$&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Update:&lt;/em&gt; I now realize that this is probably not the expression that
- I actually want: it falls off very quickly as soon as an applicant
- gets anything less than the full amount. I've elaborated on this in
- &lt;a href="http://www.lvh.io/blog/2014/04/06/more-on-financial-aid-grant-optimization/"&gt;a new blog post&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;We will see how the square model emphasizes focusing the available
-funds on fewer grants, whereas the linear model will spread smaller
-grants more liberally.&lt;/p&gt;
-&lt;h4&gt;An attempt with constraint solvers&lt;/h4&gt;
-&lt;p&gt;(I would like to thank Mark Engelberg for helping me with the stuff in
-this chapter. It may not have panned out, but it was a very
-educational experience nonetheless.)&lt;/p&gt;
-&lt;p&gt;It'd be nice if we could just declaratively describe the problem,
-throw it into a computer program, and have it magically tell us the
-answer. Of course, there are programs that do exactly that, called
-solvers.&lt;/p&gt;
-&lt;p&gt;When I reached out on the Clojure mailing list, Mark Engelberg
-helpfully reached out and immediately handed out some cool runnable
-example for me to play with. Sure enough, they worked super, and with
-a carefully crafted three-person example we could clearly see the
-difference between the linear and quadratic models I was talking about
-above: under the square model, the concentrated grants, trying harder
-to give high-scoring applications the amount they requested. The
-linear model spread money out more evenly. That is, with the following
-applications:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:name&lt;/span&gt; &lt;span class="s"&gt;"Alice"&lt;/span&gt;, &lt;span class="ss"&gt;:score&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;, &lt;span class="ss"&gt;:requested&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;bob&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:name&lt;/span&gt; &lt;span class="s"&gt;"Bob"&lt;/span&gt;, &lt;span class="ss"&gt;:score&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;, &lt;span class="ss"&gt;:requested&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;carol&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:name&lt;/span&gt; &lt;span class="s"&gt;"Carol"&lt;/span&gt;, &lt;span class="ss"&gt;:score&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;, &lt;span class="ss"&gt;:requested&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;In a linear model, it comes up with:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;
- &lt;span class="nv"&gt;bob&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;
- &lt;span class="nv"&gt;carol&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;However, in the quadratic model, the optimizer rather gives Carol (who
-has a lower score) a complete grant than give Bob a partial one:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;
- &lt;span class="nv"&gt;bob&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
- &lt;span class="nv"&gt;carol&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;You can find the code &lt;a href="https://github.com/lvh/hood/blob/master/src/hood/constraint.clj"&gt;on
-Github&lt;/a&gt;.
-The tests that confirm the difference in behavior for the linear and
-quadratic models are in &lt;a href="https://github.com/lvh/hood/blob/master/test/hood/constraint_test.clj"&gt;the
-tests&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;There's one issue though; it didn't scale. Not bad enough that you'd
-notice on the three-person example (I thought my REPL was just being
-laggy), but bad enough that any real-world problem would be completely
-unsolvable. Why? Clearly constraint solvers are awesome real world
-tools with real world usage, it's not like they're supposed to fall
-over as soon as you throw a problem of reasonable size at it.&lt;/p&gt;
-&lt;p&gt;Well, let's do some napkin math. If we have 200 financial aid
-recipients that are all getting 1000 possible options (somewhere
-between 0 USD and 1000 USD, in whole-dollar increments), there's
-200,000 possible places to put any given dollar. If we have 100,000
-USD to spend, that's:&lt;/p&gt;
-&lt;p&gt;$${2 \cdot 10^{5} \choose 10^{5}} = \frac{(2 \cdot 10^{5})!}{10^{5}! \cdot 10^{5}!} \approx 10^{60203}$$&lt;/p&gt;
-&lt;p&gt;That is a very big number. I needed logarithms to compute it. It is so
-huge that it makes the number of atoms in the observable universe
-(about \(10^{80}\)) look like rounding error.&lt;/p&gt;
-&lt;p&gt;In an attempt to "fix" that problem, I tried only handing out funds in
-chunks of 100 USD each. Then, we have 1000 chunks to hand out and 2000
-places to put them:&lt;/p&gt;
-&lt;p&gt;$${2000 \choose 1000} = \frac{2000!}{1000! \cdot 1000!} \approx 10^{600}$$&lt;/p&gt;
-&lt;p&gt;I have made the problem 59,603 decimal orders of magnitude easier!
-Rejoice!&lt;/p&gt;
-&lt;p&gt;A constraint solver really doesn't "know" anything about the structure
-of the problem you're feeding it. That's a trade-off: in return, it
-grants you a lot of freedom in expressing your problem. Constraint
-solvers like LoCo are very valuable, they just aren't a good fit for
-this problem. They are designed for problems where the constraints
-really constraining the solution space. We're clearly not in that
-territory. We have many valid solutions, and we're struggling to look
-for a &lt;em&gt;good&lt;/em&gt; one.&lt;/p&gt;
-&lt;p&gt;There are two ways we can fix this:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Compromising on the freedom of expressing the problem. By pouring
-   our problem into a specific structured shape, we may be able to use
-   a much faster solver, specific to that class of problems. Also, by
-   allowing arbitrary real numbers instead of just integers, we can
-   use much faster solvers.&lt;/li&gt;
-&lt;li&gt;Compromising on finding the &lt;em&gt;optimal&lt;/em&gt; solution, instead searching
-   for a &lt;em&gt;decent&lt;/em&gt; solution. You can do that with algorithms like tabu
-   search or simulated annealing.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;I will be elaborating on these problems in a future blog post.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html</guid><pubDate>Mon, 10 Mar 2014 23:47:00 GMT</pubDate></item></channel></rss>
+&lt;a href="https://commons.wikimedia.org/wiki/User:Koko90"&gt;koko90&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</guid><pubDate>Tue, 18 Mar 2014 20:05:00 GMT</pubDate></item></channel></rss>
