@@ -1,3 +1,4 @@
 cache/*
 output/*
 *.py[co]
+*.db
