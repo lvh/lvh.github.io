@@ -104,6 +104,76 @@
 <div class="postindex">
     <article class="h-entry post-text">
     <header>
+        <h1 class="p-name entry-title"><a href="posts/2014/03/optimal-hotel-room-pairing.html" class="u-url">Optimal hotel room pairing</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2014/03/optimal-hotel-room-pairing.html" rel="bookmark"><time class="published dt-published" datetime="2014-03-18T13:05:00-07:00" itemprop="datePublished" title="2014-03-18 13:05">2014-03-18 13:05</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>The greedy hotel pairing algorithm from my <a href="http://blog.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/">previous post</a>
+gives good solutions. If you make some fairly reasonable-sounding
+assumptions about the problem, <em>very</em> good solutions. At any rate
+nicer than forcing a human to drudge through it; both in terms of
+person-hours spent and quality of the solutions.</p>
+<p>However, it turns out I was wrong about them being <em>optimal</em>
+solutions. There's no guarantee they would be, and in fact a good
+chance that they won't.</p>
+<h3>Finding optimal solutions</h3>
+<p>The good news is that there is a way to find the optimal solution.
+This problem can be modeled as a <a href="https://en.wikipedia.org/wiki/Matching_%28graph_theory%29">graph matching problem</a>;
+what we're trying to find is a weighted maximal matching.</p>
+<p>This is really easy if the graph is bipartite, but in our case we're
+actually dealing with two <a href="https://en.wikipedia.org/wiki/Complete_graph">complete graphs</a>: we try to pair
+people with similar gender. Within that compatible group, anyone can
+theoretically pair with anyone.</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/8/86/10-simplex_graph.svg"></p>
+<p>People interested in additional reading might be interested in:</p>
+<ul>
+<li><a href="http://theory.stanford.edu/~jvondrak/CS369P-files/lec6.pdf">Notes from a Stanford course by Jan Vondrak</a></li>
+<li><a href="http://www-sop.inria.fr/members/Frederic.Havet/Cours/matching.pdf">Notes from an Inria course by Frederic Havet</a></li>
+</ul>
+<h3>Picking an algorithm</h3>
+<p>There are several feasible algorithms for this.</p>
+<ul>
+<li>
+<a href="https://en.wikipedia.org/wiki/Blossom_algorithm">Edmonds' blossom algorithm</a>, the first polynomial-time
+  algorithm with running time \(O(V^4)\) or \(O(V^2\cdot E)\)</li>
+<li>Gabow's 1973 PhD thesis, an \(O(V^3)\) algorithm</li>
+<li>
+<a href="http://dl.acm.org/citation.cfm?id=1382663">An \(O(\sqrt{V} \cdot E)\)) improvement</a> by Micali (yes,
+  <a href="https://en.wikipedia.org/wiki/Silvio_Micali"><em>that</em> Micali</a>) and Vazirani</li>
+<li>Another improvement by Gabow, \(O(V(E + \log{V}))\)</li>
+</ul>
+<p>The current state of the art in computerized algorithms appears to be
+<a href="http://pub.ist.ac.at/~vnk/papers/blossom5.pdf">Blossom V</a> by Vladimir Kolmogorov. This algorithm finds
+<em>perfect</em> matchings (i.e. all nodes are included), which may be
+impossible for us, e.g. because of an odd number of pairs.</p>
+<h3>Issues</h3>
+<p>One issue with this approach is that it becomes pretty much impossible
+to adapt this to rooms for more than two people. In order to support
+that case my previous greedy algorithm remains the best thing I've
+found.</p>
+<p>I was unable to find an implementation of this in Java or Clojure.
+Fortunately, there is a Python library called <a href="http://networkx.lanl.gov">NetworkX</a>
+that does have <a href="http://networkx.lanl.gov/reference/generated/networkx.algorithms.matching.max_weight_matching.html">an implementation</a>.</p>
+<p>I have not yet turned this into a fully functional program, because:</p>
+<ul>
+<li>it's too late to apply it for this year</li>
+<li>there's a good chance we won't be doing this again for next year</li>
+</ul>
+<h3>Credits</h3>
+<p>I'd like to thank Tor Myklebust (<code>tmyklebu</code> on Freenode) for pointing
+out I was wrong, and shoving me in the direction of the answers.</p>
+<p>In this blog post I used several freely available graph illustrations
+from Wikipedia. The complete graph illustrations were made by
+<a href="https://commons.wikimedia.org/wiki/User:Koko90">koko90</a>.</p>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
         <h1 class="p-name entry-title"><a href="posts/2014/03/optimization-problems-and-pycon-financial-aid.html" class="u-url">Optimization problems and PyCon financial aid</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>

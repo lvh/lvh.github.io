@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 21 Feb 2015 22:10:17 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Securing APIs with shims</title><link>http://www.lvh.io/posts/securing-apis-with-shims.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 26 Feb 2015 11:14:08 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Updated GPG key</title><link>http://www.lvh.io/posts/updated-gpg-key.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This message is also available &lt;a href="https://gist.github.com/lvh/6adfe51aa42bb268a273"&gt;as a Gist&lt;/a&gt;. I have also updated
+&lt;a href="https://keybase.io/lvh"&gt;Keybase&lt;/a&gt; since writing the GPG signed message below.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+I am cycling my GPG key.
+
+My old key has fingerprint:
+
+D9DC 4315 772F 8E91 DD22 B153 DFD1 3DF7 A8DD 569B
+
+My new key has fingerprint:
+
+45DC 13EB 6A01 21E8 5219 8C09 8763 869B E2B2 663E
+
+(If you're looking for the key ID, that's the last 8 hex characters of
+the fingerprint.)
+
+While my new key may superficially seem less secure, since I have gone
+from a 4096 bit RSA key to a 3072 bit one, the new one has the
+wonderful advantage of living on a smart card.
+
+I have no reason to presume my old key to be compromised.  I have
+changed the expiration date of my old key to March 7th of this year. I
+have signed the new key with the old one.
+
+I am in the process of updating https://keybase.io/lvh.
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
+
+iQIcBAEBCgAGBQJU54Q5AAoJEISZopctIA+8JqYP/2agk8RHNklaPqQ6JHdK7Rtu
+ehtok2X7wcirWAridRK/l0Tfjl5x2lFJitb+rP5X3k30qw2FvoLF9YOvbQBzezR+
+ma9S050GPlvs2knmRQb9f53KmjlmC9DLHT40f3BUJtUteH5X8KgEy2YfbThN2B4C
+Z6P30w03gqMkOu5vpaUTe6wkTMpMeGfQz240Kwa3N84UkzzAP3dTBOkm1AiHDUeJ
+yj4a9zz+qzayVGI0A1W5W8zd4+GK7Pant7I/lRd02jRQHoHtnbgiBm+5PbGvihFp
+zdtrd9YDIhWJzo84qSawQCVAuhy+8CGMFqOHBtTo/BV6HklVLUuOdrfy+IwpV9Jh
+cj2Cc5AauFYcWYzJkYL9MHj0b6UI4Uxx1OiAq7onBsajaIE97nLbt1j9A4I4Pb4d
+7ub6YmTnwA5aLwqPbfl/egX5xKEIXq/TGcVnbpxY65fw4GsG/hJyq5JHrW43ATqX
+sSTdnmIbjyw/PQFr+U0ddUfOnbITJKUElZnCami/JnZV6jDUOPY/Kn48nsxF6bk2
+UatqaXpR7yQAvzHz9Yl2sZHcMw/TguumqwuYUQWLFUVZJmmc3iunCfFDVD9tiEz1
+00M4PZxhIZt8zKDKIb0PSVa46yHt+kSlgtdgwIvvbuZn9TokXdp/n/DXvBkqohQg
+De57mY9RnWwt5fy6AWd1
+=lzks
+-----END PGP SIGNATURE-----
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://www.lvh.io/posts/updated-gpg-key.html</guid><pubDate>Thu, 26 Feb 2015 17:07:17 GMT</pubDate></item><item><title>Securing APIs with shims</title><link>http://www.lvh.io/posts/securing-apis-with-shims.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
 the ability to perform a specific &lt;em&gt;action&lt;/em&gt;, it gave you the ability to
 perform a (limited) set of operations on a third party API,
 e.g. OpenStack. The capability URL wouldn't just be something you
@@ -896,58 +940,4 @@ k = 1/100: [ 10.  11.  11.  23.  34.  10.  50.], sum: 150.0
 &lt;p&gt;Since I'm so pleased with these results, I'm skipping &lt;code&gt;slsqp&lt;/code&gt; until I
 feel like it. Next up, I'll try to compare the COBYLA results above
 with the results of the greedy algorithm under various fitness
-metrics.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</guid><pubDate>Mon, 07 Apr 2014 03:34:00 GMT</pubDate></item><item><title>Optimal hotel room pairing</title><link>http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The greedy hotel pairing algorithm from my &lt;a href="http://blog.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;previous post&lt;/a&gt;
-gives good solutions. If you make some fairly reasonable-sounding
-assumptions about the problem, &lt;em&gt;very&lt;/em&gt; good solutions. At any rate
-nicer than forcing a human to drudge through it; both in terms of
-person-hours spent and quality of the solutions.&lt;/p&gt;
-&lt;p&gt;However, it turns out I was wrong about them being &lt;em&gt;optimal&lt;/em&gt;
-solutions. There's no guarantee they would be, and in fact a good
-chance that they won't.&lt;/p&gt;
-&lt;h3&gt;Finding optimal solutions&lt;/h3&gt;
-&lt;p&gt;The good news is that there is a way to find the optimal solution.
-This problem can be modeled as a &lt;a href="https://en.wikipedia.org/wiki/Matching_%28graph_theory%29"&gt;graph matching problem&lt;/a&gt;;
-what we're trying to find is a weighted maximal matching.&lt;/p&gt;
-&lt;p&gt;This is really easy if the graph is bipartite, but in our case we're
-actually dealing with two &lt;a href="https://en.wikipedia.org/wiki/Complete_graph"&gt;complete graphs&lt;/a&gt;: we try to pair
-people with similar gender. Within that compatible group, anyone can
-theoretically pair with anyone.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://upload.wikimedia.org/wikipedia/commons/8/86/10-simplex_graph.svg"&gt;&lt;/p&gt;
-&lt;p&gt;People interested in additional reading might be interested in:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://theory.stanford.edu/~jvondrak/CS369P-files/lec6.pdf"&gt;Notes from a Stanford course by Jan Vondrak&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://www-sop.inria.fr/members/Frederic.Havet/Cours/matching.pdf"&gt;Notes from an Inria course by Frederic Havet&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Picking an algorithm&lt;/h3&gt;
-&lt;p&gt;There are several feasible algorithms for this.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://en.wikipedia.org/wiki/Blossom_algorithm"&gt;Edmonds' blossom algorithm&lt;/a&gt;, the first polynomial-time
-  algorithm with running time \(O(V^4)\) or \(O(V^2\cdot E)\)&lt;/li&gt;
-&lt;li&gt;Gabow's 1973 PhD thesis, an \(O(V^3)\) algorithm&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://dl.acm.org/citation.cfm?id=1382663"&gt;An \(O(\sqrt{V} \cdot E)\)) improvement&lt;/a&gt; by Micali (yes,
-  &lt;a href="https://en.wikipedia.org/wiki/Silvio_Micali"&gt;&lt;em&gt;that&lt;/em&gt; Micali&lt;/a&gt;) and Vazirani&lt;/li&gt;
-&lt;li&gt;Another improvement by Gabow, \(O(V(E + \log{V}))\)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The current state of the art in computerized algorithms appears to be
-&lt;a href="http://pub.ist.ac.at/~vnk/papers/blossom5.pdf"&gt;Blossom V&lt;/a&gt; by Vladimir Kolmogorov. This algorithm finds
-&lt;em&gt;perfect&lt;/em&gt; matchings (i.e. all nodes are included), which may be
-impossible for us, e.g. because of an odd number of pairs.&lt;/p&gt;
-&lt;h3&gt;Issues&lt;/h3&gt;
-&lt;p&gt;One issue with this approach is that it becomes pretty much impossible
-to adapt this to rooms for more than two people. In order to support
-that case my previous greedy algorithm remains the best thing I've
-found.&lt;/p&gt;
-&lt;p&gt;I was unable to find an implementation of this in Java or Clojure.
-Fortunately, there is a Python library called &lt;a href="http://networkx.lanl.gov"&gt;NetworkX&lt;/a&gt;
-that does have &lt;a href="http://networkx.lanl.gov/reference/generated/networkx.algorithms.matching.max_weight_matching.html"&gt;an implementation&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;I have not yet turned this into a fully functional program, because:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;it's too late to apply it for this year&lt;/li&gt;
-&lt;li&gt;there's a good chance we won't be doing this again for next year&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Credits&lt;/h3&gt;
-&lt;p&gt;I'd like to thank Tor Myklebust (&lt;code&gt;tmyklebu&lt;/code&gt; on Freenode) for pointing
-out I was wrong, and shoving me in the direction of the answers.&lt;/p&gt;
-&lt;p&gt;In this blog post I used several freely available graph illustrations
-from Wikipedia. The complete graph illustrations were made by
-&lt;a href="https://commons.wikimedia.org/wiki/User:Koko90"&gt;koko90&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</guid><pubDate>Tue, 18 Mar 2014 20:05:00 GMT</pubDate></item></channel></rss>
+metrics.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</guid><pubDate>Mon, 07 Apr 2014 03:34:00 GMT</pubDate></item></channel></rss>
