@@ -1,7 +1,7 @@
 .. title: On multiplayer turn-based game mechanics
 .. slug: on-multiplayer-turn-based-game-mechanics
 .. date: 2014-10-26 09:00:02 UTC-07:00
-.. tags: hypercathexes game
+.. tags: hypercathexes, game
 .. link:
 .. description: Thoughts on turn-based mechanics in multiplayer games
 .. type: text
