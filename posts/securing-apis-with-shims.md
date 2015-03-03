@@ -2,7 +2,7 @@
 .. title: Securing APIs with shims
 .. slug: securing-apis-with-shims
 .. date: 2015-02-20 22:24:03 UTC-08:00
-.. tags: security crypto
+.. tags: security, crypto
 .. link:
 .. description:
 .. type: text

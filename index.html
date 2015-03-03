@@ -103,6 +103,57 @@
 <div class="postindex">
     <article class="h-entry post-text">
     <header>
+        <h1 class="p-name entry-title"><a href="posts/were-just-getting-started.html" class="u-url">We're just getting started</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/were-just-getting-started.html" rel="bookmark"><time class="published dt-published" datetime="2015-03-02T17:06:41-08:00" itemprop="datePublished" title="2015-03-02 17:06">2015-03-02 17:06</time></a></p>
+        </div>
+    </header>
+    <div class="e-content entry-content">
+    <div>
+<p>Most conference talks are transactional. The speaker has a point to
+make. After the presentation, it's "over"; only spoken about in
+perfect tenses. You've communicated your thoughts, perhaps had a
+conversation or two, but, mostly, moved on.</p>
+<p>I've given talks like these. However, about two years ago, I gave a
+talk that had a deep impact on my life. That talk was Crypto 101.</p>
+<p>Right before the presentation, cryptanalytic research was released
+that popped RC4. I couldn't have asked for a better setup. Turns out
+it wasn't <em>just</em> luck; eventually our systemic failure as an industry
+in taking security seriously was bound to catch up with us. Since
+then, the proverbial piper has been well-paid. We've seen a plethora
+of serious security bugs. Huge corporations have been the victims of
+attacks in the billions of dollars a pop. As I'm writing this blog
+post, there's an article on a new TLS attack in my reading list.</p>
+<p>It quickly became clear that this wasn't just a one-off thing. I
+started writing <a href="http://crypto101.github.io">Crypto 101, the book,</a> not too long after
+giving the talk. We were, unwittingly, at the crest of a wave that's
+still growing. Projects like PyCA and LibreSSL started fighting
+tirelessly to make the software we use better. Security talks became a
+mandatory part of the programming conference food pyramid. My friends
+Hynek and Ying gave fantastic talks. They, too, got "lucky" with a
+security bombshell: Heartbleed happened mere days before the
+conference.</p>
+<p>Last week, I presented Crypto 101 again at rax.io, Rackspace's
+internal conference. It was well-received, and I think I provided
+value for people's time. One thing, more than anything, it
+crystallized where we are. We're not done yet. There's still a huge
+audience left to reach. Interest in information security has done
+nothing but grow.  With a total of just over 100,000 downloads for the
+book and about half as many for the recording of the presentation,
+people are definitely listening. We've made real impact, and we have
+people's attention, but we need to keep going.</p>
+<p>One of the two talks I'll be giving at PyCon is a more high-level
+overview of how we can build secure systems. More friends of mine will
+talk in about TLS there too. Within Rackspace, I'm focusing on
+information security. There are awesome things brewing here, and I
+hope that we can continue the great work we've been doing so far.</p>
+<p>We've accomplished a lot, but we're just getting started.</p>
+</div>
+    </div>
+    </article>
+    <article class="h-entry post-text">
+    <header>
         <h1 class="p-name entry-title"><a href="posts/updated-gpg-key.html" class="u-url">Updated GPG key</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
@@ -1048,166 +1099,6 @@ you're on Windows, your options are looking a bit thin right now:</p>
 and then wait until someone actually writes the native LUKS support.</p>
 <p>Oh, and you should probably install GPG to encrypt some of those files
 stored on that encrypted volume.</p>
-</div>
-    </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2014/04/more-on-financial-aid-grant-optimization.html" class="u-url">More on financial aid grant optimization</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2014/04/more-on-financial-aid-grant-optimization.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-06T20:34:00-07:00" itemprop="datePublished" title="2014-04-06 20:34">2014-04-06 20:34</time></a></p>
-        </div>
-    </header>
-    <div class="e-content entry-content">
-    <div>
-<p>In <a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/">a previous post</a>, I talked about ways to optimize PyCon
-financial aid grants. This is a follow-up on those efforts. Quick
-recap:</p>
-<ul>
-<li>There is a fixed budget \(b\) available for grants, between 100k
-  and 200k USD.</li>
-<li>There are a number of people (approximately 300) requesting various
-  amounts \(r_i\) (approximately between 100 USD and 2000 USD) of
-  financial aid, and receive a grant \(g_i\) so that \(0 \le g_i
-  \le r_i\).</li>
-<li>Financial aid applicants can be assigned scores \(s_i\), a
-  relative value describing how much we'd like to have them at PyCon.</li>
-<li>PyCon wants to optimize the total expected value of scores. That
-  means getting as many people as possible to come, weighted by score.</li>
-<li>We've conjectured that we can estimate the probability \(p_i\)
-  that someone attends as either \(g_i/r_i\), or \((g_i/r_i)^2\).
-  The former prefers to spread the budget across a larger number of
-  smaller grants, whereas the latter prefers to focus the budget into
-  a smaller number of larger grants.</li>
-</ul>
-<p>If any of that doesn't make sense, you should read
-<a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/">the previous blog post</a> for more details.</p>
-<p>In short, we're trying to solve the optimization problem:</p>
-<p>$$\max \sum E[S_i] = \sum s_i \cdot p_i$$</p>
-<p>Since most optimization texts appear to prefer minimization,
-alternatively:</p>
-<p>$$\min - \sum s_i \cdot p_i$$</p>
-<p>Subject to a budget constraint and an individual grant constraint:</p>
-<p>$$\sum g_i \le b$$</p>
-<p>$$0 \le g_i \le r_i$$</p>
-<p>The greater-than-zero constraint for individual grants is fairly
-important, otherwise the algorithm might casually give you answers
-like:</p>
-<pre class="code literal-block">k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
-</pre>
-
-
-<p>That list in the middle are the per-person grants. Notice how the
-algorithm feels that the third person really ought to pony up some
-cash so that some of the other people can go to PyCon ;-)</p>
-<h3>Squared problems</h3>
-<p>In the <a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/">previous blog post</a> I ran into issues using a very
-generic constraint solver. I ended that post saying that I would try
-to remeedy that by applying a more specific solver that takes
-advantage of a particular structure of the problem.</p>
-<p>When you set \(p_i = g_i/r_i\), this turns into a linear programming
-problem, since \(r_i\) is a constant. When you set \(p_i =
-\left(g_i/r_i\right)^2\), it turns into a quadratic programming
-problem. Turns out there's two things I missed about the quadratic
-problem:</p>
-<ul>
-<li>The resulting problem is not convex. That means it's (probably)
-  difficult to solve.</li>
-<li>The estimated probability that someone will attend falls off sharply
-  as soon as they don't receive the full amount they requested. At 50%
-  of the requested grant, the estimated probability of attending is
-  only 25%; at 90%, it's 81%. This is the opposite of what we want.</li>
-</ul>
-<h3>Fixing the model</h3>
-<p>That doesn't mean we should put the \((g_i/r_i)^k\) out to pasture:
-it just means that I didn't pick the \(k\) I really wanted.
-Specifically, if I were to pick \(k=1/2\), I'd get:</p>
-<p>$$p_i = \left(\frac{g_i}{r_i}\right)^{1/2} = \sqrt{\frac{g_i}{r_i}}$$</p>
-<p>In general, if  \(k = 1/n\):</p>
-<p>$$p_i = \left(\frac{g_i}{r_i}\right)^{1/n} = \sqrt[n]{\frac{g_i}{r_i}}$$</p>
-<p>That problem <em>is</em> convex, but it isn't linear, quadratic, or some
-other easy specific problem. It's just constrained multivariate convex
-optimization. That's okay, there are still a couple of applicable
-optimization algorithms.</p>
-<p>Some of these algorithms require the derivative of the goal function
-with respect to a particular grant size \(g_j\) at a particular
-point. In case we don't have the real derivative, we can still provide
-a numerical approximation. In our case, we don't really need to
-approximate, since the derivatives are fairly easy to compute
-analytically:</p>
-<p>$$\frac{\partial}{\partial g_j} \sum_i s_i \cdot
-\sqrt[n]{\frac{g_i}{r_i}} = \frac{s_j \cdot {g_j}^{\frac{1}{n} -
-1}}{\sqrt[n]{r_j} \cdot n}$$</p>
-<h3>Finding a solution with Python</h3>
-<p>There are a few Python packages that contain optimization algorithms:</p>
-<ul>
-<li>SciPy</li>
-<li>cvxopt</li>
-<li>pyopt</li>
-</ul>
-<p>Someone originally pointed me towards cvxopt. While I'm sure it's
-excellent software, I already knew SciPy, so I went with that.</p>
-<p>SciPy's optimization module provides the following algorithms:</p>
-<ul>
-<li>
-<code>fmin_l_bfgs_b</code> - Zhu, Byrd, and Nocedal's constrained optimizer</li>
-<li>
-<code>fmin_tnc</code> - Truncated Newton code</li>
-<li>
-<code>fmin_cobyla</code> - Constrained optimization by linear approximation</li>
-<li>
-<code>fmin_slsqp</code> - Minimization using sequential least-squares programming</li>
-<li>
-<code>nnls</code> - Linear least-squares problem with non-negativity constraint</li>
-</ul>
-<p>The first two are not applicable because they only appear to support
-bounds on individual variables. I also need a constraint over the
-<em>sum</em> of variables for the budget:  \(\sum g_i \le b\). The last one
-isn't applicable because this isn't a linear least-squares problem.
-That leaves <code>cobyla</code> and <code>slsqp</code>.</p>
-<h3>Experimenting with linear approximation (COBYLA)</h3>
-<p>Making COBYLA work ended up being pretty easy. The only non-trivial
-part is expressing all your constraints as expressions greater than or
-equal to zero.</p>
-<p>I've uploaded my IPython notebook
-(<a href="http://nbviewer.ipython.org/gist/lvh/10107818">viewer</a>,
-<a href="https://gist.github.com/lvh/10107818">gist</a>).</p>
-<p>This produced the following results:</p>
-<pre class="code literal-block">scores: [1 1 1 2 3 5 5]
-requested: [10 20 30 30 50 10 50] total: 200, budget: 150
-k = 1/0.5: [ 10.  20.  30.  30.  50.  10.   0.], sum: 150.0
-k = 1/1: [ 10.  -0.   0.  30.  50.  10.  50.], sum: 150.0
-k = 1/2: [ 10.  10.   7.  27.  36.  10.  50.], sum: 150.0
-k = 1/3: [ 10.  11.   9.  25.  35.  10.  50.], sum: 150.0
-k = 1/5: [ 10.  11.  10.  24.  35.  10.  50.], sum: 150.0
-k = 1/10: [ 10.  11.  11.  23.  35.  10.  50.], sum: 150.0
-k = 1/100: [ 10.  11.  11.  23.  34.  10.  50.], sum: 150.0
-</pre>
-
-
-<p>Some takeaways:</p>
-<ul>
-<li>As predicted, as \(1/k\) increases, the optimization gradually
-  starts spreading the budget out more evenly; preferring to give many
-  partial grants rather than a few large ones.</li>
-<li>This effect is mostly only pronounced for \(1/k = 2, 3\); after
-  that, increasing \(1/k\) doesn't make much of a difference
-  anymore. This is what I'd expect when I visualize the \(p_i\)
-  functions in my head, but I haven't ruled out numerical instability.</li>
-<li>Even at high \(1/k\), the two high scorers get their full grant
-  amount. That's quite understandable for the one that's only asking
-  for 10, but even the one asking for a large grant gets it
-  unconditionally. This probably means that tweaking the scoring
-  functions is going to be very important.</li>
-<li>The linear version is apparently already quite brutal: the person
-  with score 3 requesting 50 simply gets it entirely, leaving no
-  budget left over for the people with score 1.</li>
-</ul>
-<p>Since I'm so pleased with these results, I'm skipping <code>slsqp</code> until I
-feel like it. Next up, I'll try to compare the COBYLA results above
-with the results of the greedy algorithm under various fitness
-metrics.</p>
 </div>
     </div>
     </article>

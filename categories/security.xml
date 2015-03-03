@@ -1,5 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 26 Feb 2015 10:36:22 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On discussing software security improvements</title><link>http://www.lvh.io/posts/on-discussing-software-security-improvements.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common criticism of information security folks is that they tend to
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 03 Mar 2015 12:44:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>We're just getting started</title><link>http://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
+make. After the presentation, it's "over"; only spoken about in
+perfect tenses. You've communicated your thoughts, perhaps had a
+conversation or two, but, mostly, moved on.&lt;/p&gt;
+&lt;p&gt;I've given talks like these. However, about two years ago, I gave a
+talk that had a deep impact on my life. That talk was Crypto 101.&lt;/p&gt;
+&lt;p&gt;Right before the presentation, cryptanalytic research was released
+that popped RC4. I couldn't have asked for a better setup. Turns out
+it wasn't &lt;em&gt;just&lt;/em&gt; luck; eventually our systemic failure as an industry
+in taking security seriously was bound to catch up with us. Since
+then, the proverbial piper has been well-paid. We've seen a plethora
+of serious security bugs. Huge corporations have been the victims of
+attacks in the billions of dollars a pop. As I'm writing this blog
+post, there's an article on a new TLS attack in my reading list.&lt;/p&gt;
+&lt;p&gt;It quickly became clear that this wasn't just a one-off thing. I
+started writing &lt;a href="http://crypto101.github.io"&gt;Crypto 101, the book,&lt;/a&gt; not too long after
+giving the talk. We were, unwittingly, at the crest of a wave that's
+still growing. Projects like PyCA and LibreSSL started fighting
+tirelessly to make the software we use better. Security talks became a
+mandatory part of the programming conference food pyramid. My friends
+Hynek and Ying gave fantastic talks. They, too, got "lucky" with a
+security bombshell: Heartbleed happened mere days before the
+conference.&lt;/p&gt;
+&lt;p&gt;Last week, I presented Crypto 101 again at rax.io, Rackspace's
+internal conference. It was well-received, and I think I provided
+value for people's time. One thing, more than anything, it
+crystallized where we are. We're not done yet. There's still a huge
+audience left to reach. Interest in information security has done
+nothing but grow.  With a total of just over 100,000 downloads for the
+book and about half as many for the recording of the presentation,
+people are definitely listening. We've made real impact, and we have
+people's attention, but we need to keep going.&lt;/p&gt;
+&lt;p&gt;One of the two talks I'll be giving at PyCon is a more high-level
+overview of how we can build secure systems. More friends of mine will
+talk in about TLS there too. Within Rackspace, I'm focusing on
+information security. There are awesome things brewing here, and I
+hope that we can continue the great work we've been doing so far.&lt;/p&gt;
+&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>http://www.lvh.io/posts/were-just-getting-started.html</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Securing APIs with shims</title><link>http://www.lvh.io/posts/securing-apis-with-shims.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
+the ability to perform a specific &lt;em&gt;action&lt;/em&gt;, it gave you the ability to
+perform a (limited) set of operations on a third party API,
+e.g. OpenStack. The capability URL wouldn't just be something you
+exercise or revoke; it'd be an API endpoint, mostly indistinguishable
+from the real API. Incoming requests would be inspected, and based on
+a set of rules, either be rejected or forwarded to the API being
+shimmed.&lt;/p&gt;
+&lt;h2&gt;Proof of concept&lt;/h2&gt;
+&lt;p&gt;At my day job, we had a programming task that I thought logic
+programming would be well-suited for. Unfortunately, logic programming
+is kind of weird and esoteric. Even programmers with otherwise broad
+experiences professed to not being quite sure how it worked, or what
+to do with it.&lt;/p&gt;
+&lt;p&gt;Therefore, I used up my hack day (a day where we get to hack on random
+projects) to cook up some cool stuff using logic programming. I demoed
+the usual suspects (&lt;a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/monkey.clj"&gt;the monkey with the banana&lt;/a&gt;, and a
+&lt;a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/sudoku.clj"&gt;sudoku solver&lt;/a&gt;), illustrating the difference between the
+relational nature of the logic programs and the imperative nature of
+the algorithms you might otherwise write to solve the same problems.
+Finally, I demoed the aforementioned proxying API shim. The proof of
+concept, codenamed shimmer, is &lt;a href="https://github.com/lvh/shimmer/"&gt;up on Github&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let's take a look at the handler function, which takes incoming
+requests and modifies them slightly so they can be passed on:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;build-handler&lt;/span&gt;
+  &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;target-host&lt;/span&gt; &lt;span class="nv"&gt;target-port&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;fn &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;match&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+      &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;let &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;modified-request&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;-&amp;gt; &lt;/span&gt;&lt;span class="nv"&gt;incoming-request&lt;/span&gt;
+                                 &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;dissoc &lt;/span&gt;&lt;span class="ss"&gt;:scheme&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;;; hack&lt;/span&gt;
+                                 &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;assoc &lt;/span&gt;&lt;span class="ss"&gt;:host&lt;/span&gt; &lt;span class="nv"&gt;target-host&lt;/span&gt;
+                                        &lt;span class="ss"&gt;:port&lt;/span&gt; &lt;span class="nv"&gt;target-port&lt;/span&gt;
+                                        &lt;span class="ss"&gt;:throw-exceptions&lt;/span&gt; &lt;span class="nv"&gt;false&lt;/span&gt;&lt;span class="p"&gt;))]&lt;/span&gt;
+        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;request&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="nv"&gt;modified-request&lt;/span&gt;&lt;span class="p"&gt;))))&lt;/span&gt;
+      &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:status&lt;/span&gt; &lt;span class="mi"&gt;403&lt;/span&gt; &lt;span class="c1"&gt;;; Forbidden&lt;/span&gt;
+       &lt;span class="ss"&gt;:headers&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;"content-type"&lt;/span&gt; &lt;span class="s"&gt;"text/plain"&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+       &lt;span class="ss"&gt;:body&lt;/span&gt; &lt;span class="s"&gt;"Doesn't match!"&lt;/span&gt;&lt;span class="p"&gt;})))&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;(Those &lt;code&gt;spy&lt;/code&gt; calls are from the excellent &lt;a href="https://github.com/ptaoussanis/timbre"&gt;&lt;code&gt;timbre&lt;/code&gt;&lt;/a&gt;
+library. They make it easy to log values without cluttering up your
+code; a godsend while developing with some libraries you're not
+terribly familiar with.)&lt;/p&gt;
+&lt;p&gt;The matching function looks like this:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;match&lt;/span&gt;
+  &lt;span class="s"&gt;"Checks if the request is allowed."&lt;/span&gt;
+  &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;req&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;not= &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/run&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/conde&lt;/span&gt;
+           &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:request-method&lt;/span&gt; &lt;span class="ss"&gt;:get&lt;/span&gt;&lt;span class="p"&gt;})]&lt;/span&gt;
+           &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:request-method&lt;/span&gt; &lt;span class="ss"&gt;:post&lt;/span&gt;
+                             &lt;span class="ss"&gt;:headers&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;"x-some-header"&lt;/span&gt;
+                                       &lt;span class="s"&gt;"the right header value"&lt;/span&gt;&lt;span class="p"&gt;}})]&lt;/span&gt;
+           &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:request-method&lt;/span&gt; &lt;span class="ss"&gt;:post&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+            &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:headers&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;"x-some-header"&lt;/span&gt;
+                                       &lt;span class="s"&gt;"another right header value"&lt;/span&gt;&lt;span class="p"&gt;}})]))&lt;/span&gt;
+        &lt;span class="o"&gt;'&lt;/span&gt;&lt;span class="p"&gt;()))&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;h2&gt;Future work&lt;/h2&gt;
+&lt;p&gt;Make this thing actually vaguely correct. That means e.g. also
+inspecting the body for URL references, and changing those to go
+through the proxy as well.&lt;/p&gt;
+&lt;p&gt;Start collecting a library of short hand notations for specific API
+functionality, e.g. if you're proxying an OpenStack API, you should be
+able to just say you want to allow server creation requests, without
+having to figure out exactly what those requests look like.&lt;/p&gt;
+&lt;p&gt;The spec is hard-coded, it should be specified at runtime. That was
+trickier than I had originally anticipated: the vast majority of
+&lt;code&gt;core.logic&lt;/code&gt; behavior uses macros. While some functionality is fairly
+easy to port, that's probably a red herring: I don't want to port a
+gazillion macros. As an example, here's &lt;code&gt;conds&lt;/code&gt;, which is just&lt;code&gt;conde&lt;/code&gt;
+as a function (except without support for logical conjunction per
+disjunctive set of goals):&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="ss"&gt;:private&lt;/span&gt; &lt;span class="nv"&gt;conds&lt;/span&gt;
+  &lt;span class="s"&gt;"Like conde, but a function."&lt;/span&gt;
+  &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;empty?&lt;/span&gt; &lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="nv"&gt;l/fail&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/conde&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;first &lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+             &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;conds&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;rest &lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;))])))&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;That's not the worst function, but let's just say I see a lot of
+&lt;code&gt;macroexpand&lt;/code&gt; in my future if I'm going to take this seriously.&lt;/p&gt;
+&lt;p&gt;URLs and bodies should be parsed, so that you can write assertions
+against structured data, or against URL patterns, instead of specific
+URLs.&lt;/p&gt;
+&lt;p&gt;If I ever end up letting any of this be a serious part of my day job,
+I'm going to invest a ton of time improving the documentation for both
+&lt;code&gt;core.logic&lt;/code&gt; and &lt;code&gt;core.typed&lt;/code&gt;. They're &lt;em&gt;fantastic&lt;/em&gt; projects, but
+they're harder to get started with than they could be, and that's a
+shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>http://www.lvh.io/posts/securing-apis-with-shims.html</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item><item><title>On discussing software security improvements</title><link>http://www.lvh.io/posts/on-discussing-software-security-improvements.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common criticism of information security folks is that they tend to
 advise people to not do any crypto. Through projects like &lt;a class="reference external" href="https://www.crypto101.io/"&gt;Crypto
 101&lt;/a&gt;, I've attempted to make a small contribution towards fixing
 that.&lt;/p&gt;

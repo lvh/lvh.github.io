@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 26 Feb 2015 11:14:08 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Updated GPG key</title><link>http://www.lvh.io/posts/updated-gpg-key.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This message is also available &lt;a href="https://gist.github.com/lvh/6adfe51aa42bb268a273"&gt;as a Gist&lt;/a&gt;. I have also updated
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 03 Mar 2015 12:44:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>We're just getting started</title><link>http://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
+make. After the presentation, it's "over"; only spoken about in
+perfect tenses. You've communicated your thoughts, perhaps had a
+conversation or two, but, mostly, moved on.&lt;/p&gt;
+&lt;p&gt;I've given talks like these. However, about two years ago, I gave a
+talk that had a deep impact on my life. That talk was Crypto 101.&lt;/p&gt;
+&lt;p&gt;Right before the presentation, cryptanalytic research was released
+that popped RC4. I couldn't have asked for a better setup. Turns out
+it wasn't &lt;em&gt;just&lt;/em&gt; luck; eventually our systemic failure as an industry
+in taking security seriously was bound to catch up with us. Since
+then, the proverbial piper has been well-paid. We've seen a plethora
+of serious security bugs. Huge corporations have been the victims of
+attacks in the billions of dollars a pop. As I'm writing this blog
+post, there's an article on a new TLS attack in my reading list.&lt;/p&gt;
+&lt;p&gt;It quickly became clear that this wasn't just a one-off thing. I
+started writing &lt;a href="http://crypto101.github.io"&gt;Crypto 101, the book,&lt;/a&gt; not too long after
+giving the talk. We were, unwittingly, at the crest of a wave that's
+still growing. Projects like PyCA and LibreSSL started fighting
+tirelessly to make the software we use better. Security talks became a
+mandatory part of the programming conference food pyramid. My friends
+Hynek and Ying gave fantastic talks. They, too, got "lucky" with a
+security bombshell: Heartbleed happened mere days before the
+conference.&lt;/p&gt;
+&lt;p&gt;Last week, I presented Crypto 101 again at rax.io, Rackspace's
+internal conference. It was well-received, and I think I provided
+value for people's time. One thing, more than anything, it
+crystallized where we are. We're not done yet. There's still a huge
+audience left to reach. Interest in information security has done
+nothing but grow.  With a total of just over 100,000 downloads for the
+book and about half as many for the recording of the presentation,
+people are definitely listening. We've made real impact, and we have
+people's attention, but we need to keep going.&lt;/p&gt;
+&lt;p&gt;One of the two talks I'll be giving at PyCon is a more high-level
+overview of how we can build secure systems. More friends of mine will
+talk in about TLS there too. Within Rackspace, I'm focusing on
+information security. There are awesome things brewing here, and I
+hope that we can continue the great work we've been doing so far.&lt;/p&gt;
+&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>http://www.lvh.io/posts/were-just-getting-started.html</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Updated GPG key</title><link>http://www.lvh.io/posts/updated-gpg-key.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This message is also available &lt;a href="https://gist.github.com/lvh/6adfe51aa42bb268a273"&gt;as a Gist&lt;/a&gt;. I have also updated
 &lt;a href="https://keybase.io/lvh"&gt;Keybase&lt;/a&gt; since writing the GPG signed message below.&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;-----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
@@ -138,7 +175,7 @@ URLs.&lt;/p&gt;
 I'm going to invest a ton of time improving the documentation for both
 &lt;code&gt;core.logic&lt;/code&gt; and &lt;code&gt;core.typed&lt;/code&gt;. They're &lt;em&gt;fantastic&lt;/em&gt; projects, but
 they're harder to get started with than they could be, and that's a
-shame.&lt;/p&gt;&lt;/div&gt;</description><category>security crypto</category><guid>http://www.lvh.io/posts/securing-apis-with-shims.html</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
+shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>http://www.lvh.io/posts/securing-apis-with-shims.html</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item><item><title>Reverse ungineering</title><link>http://www.lvh.io/posts/reverse-ungineering.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(Title with apologies to Glyph.)&lt;/p&gt;
 &lt;p&gt;Recently, some friends of mine suggested that "software engineer" is
 not a good job title. While they are of course free to call their
 profession whatever they like, I respectfully disagree: I think
@@ -413,7 +450,7 @@ time, why can't the enemy fire missiles? Either time is
 stopped, or it isn't. Sure, games can be abstract, but that
 feels like an undue inconsistency.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>hypercathexes game</category><guid>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
+&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hypercathexes</category><category>hypercathexis</category><guid>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
 hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
 excessive concentration of desire upon a particular object&lt;/blockquote&gt;
 &lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
@@ -799,145 +836,4 @@ you're on Windows, your options are looking a bit thin right now:&lt;/p&gt;
 &lt;p&gt;Personally, I think the first option is the most reasonable right now,
 and then wait until someone actually writes the native LUKS support.&lt;/p&gt;
 &lt;p&gt;Oh, and you should probably install GPG to encrypt some of those files
-stored on that encrypted volume.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>http://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</guid><pubDate>Thu, 29 May 2014 17:53:00 GMT</pubDate></item><item><title>More on financial aid grant optimization</title><link>http://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In &lt;a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;a previous post&lt;/a&gt;, I talked about ways to optimize PyCon
-financial aid grants. This is a follow-up on those efforts. Quick
-recap:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;There is a fixed budget \(b\) available for grants, between 100k
-  and 200k USD.&lt;/li&gt;
-&lt;li&gt;There are a number of people (approximately 300) requesting various
-  amounts \(r_i\) (approximately between 100 USD and 2000 USD) of
-  financial aid, and receive a grant \(g_i\) so that \(0 \le g_i
-  \le r_i\).&lt;/li&gt;
-&lt;li&gt;Financial aid applicants can be assigned scores \(s_i\), a
-  relative value describing how much we'd like to have them at PyCon.&lt;/li&gt;
-&lt;li&gt;PyCon wants to optimize the total expected value of scores. That
-  means getting as many people as possible to come, weighted by score.&lt;/li&gt;
-&lt;li&gt;We've conjectured that we can estimate the probability \(p_i\)
-  that someone attends as either \(g_i/r_i\), or \((g_i/r_i)^2\).
-  The former prefers to spread the budget across a larger number of
-  smaller grants, whereas the latter prefers to focus the budget into
-  a smaller number of larger grants.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If any of that doesn't make sense, you should read
-&lt;a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;the previous blog post&lt;/a&gt; for more details.&lt;/p&gt;
-&lt;p&gt;In short, we're trying to solve the optimization problem:&lt;/p&gt;
-&lt;p&gt;$$\max \sum E[S_i] = \sum s_i \cdot p_i$$&lt;/p&gt;
-&lt;p&gt;Since most optimization texts appear to prefer minimization,
-alternatively:&lt;/p&gt;
-&lt;p&gt;$$\min - \sum s_i \cdot p_i$$&lt;/p&gt;
-&lt;p&gt;Subject to a budget constraint and an individual grant constraint:&lt;/p&gt;
-&lt;p&gt;$$\sum g_i \le b$$&lt;/p&gt;
-&lt;p&gt;$$0 \le g_i \le r_i$$&lt;/p&gt;
-&lt;p&gt;The greater-than-zero constraint for individual grants is fairly
-important, otherwise the algorithm might casually give you answers
-like:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
-&lt;/pre&gt;
-
-
-&lt;p&gt;That list in the middle are the per-person grants. Notice how the
-algorithm feels that the third person really ought to pony up some
-cash so that some of the other people can go to PyCon ;-)&lt;/p&gt;
-&lt;h3&gt;Squared problems&lt;/h3&gt;
-&lt;p&gt;In the &lt;a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;previous blog post&lt;/a&gt; I ran into issues using a very
-generic constraint solver. I ended that post saying that I would try
-to remeedy that by applying a more specific solver that takes
-advantage of a particular structure of the problem.&lt;/p&gt;
-&lt;p&gt;When you set \(p_i = g_i/r_i\), this turns into a linear programming
-problem, since \(r_i\) is a constant. When you set \(p_i =
-\left(g_i/r_i\right)^2\), it turns into a quadratic programming
-problem. Turns out there's two things I missed about the quadratic
-problem:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The resulting problem is not convex. That means it's (probably)
-  difficult to solve.&lt;/li&gt;
-&lt;li&gt;The estimated probability that someone will attend falls off sharply
-  as soon as they don't receive the full amount they requested. At 50%
-  of the requested grant, the estimated probability of attending is
-  only 25%; at 90%, it's 81%. This is the opposite of what we want.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Fixing the model&lt;/h3&gt;
-&lt;p&gt;That doesn't mean we should put the \((g_i/r_i)^k\) out to pasture:
-it just means that I didn't pick the \(k\) I really wanted.
-Specifically, if I were to pick \(k=1/2\), I'd get:&lt;/p&gt;
-&lt;p&gt;$$p_i = \left(\frac{g_i}{r_i}\right)^{1/2} = \sqrt{\frac{g_i}{r_i}}$$&lt;/p&gt;
-&lt;p&gt;In general, if  \(k = 1/n\):&lt;/p&gt;
-&lt;p&gt;$$p_i = \left(\frac{g_i}{r_i}\right)^{1/n} = \sqrt[n]{\frac{g_i}{r_i}}$$&lt;/p&gt;
-&lt;p&gt;That problem &lt;em&gt;is&lt;/em&gt; convex, but it isn't linear, quadratic, or some
-other easy specific problem. It's just constrained multivariate convex
-optimization. That's okay, there are still a couple of applicable
-optimization algorithms.&lt;/p&gt;
-&lt;p&gt;Some of these algorithms require the derivative of the goal function
-with respect to a particular grant size \(g_j\) at a particular
-point. In case we don't have the real derivative, we can still provide
-a numerical approximation. In our case, we don't really need to
-approximate, since the derivatives are fairly easy to compute
-analytically:&lt;/p&gt;
-&lt;p&gt;$$\frac{\partial}{\partial g_j} \sum_i s_i \cdot
-\sqrt[n]{\frac{g_i}{r_i}} = \frac{s_j \cdot {g_j}^{\frac{1}{n} -
-1}}{\sqrt[n]{r_j} \cdot n}$$&lt;/p&gt;
-&lt;h3&gt;Finding a solution with Python&lt;/h3&gt;
-&lt;p&gt;There are a few Python packages that contain optimization algorithms:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;SciPy&lt;/li&gt;
-&lt;li&gt;cvxopt&lt;/li&gt;
-&lt;li&gt;pyopt&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Someone originally pointed me towards cvxopt. While I'm sure it's
-excellent software, I already knew SciPy, so I went with that.&lt;/p&gt;
-&lt;p&gt;SciPy's optimization module provides the following algorithms:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;fmin_l_bfgs_b&lt;/code&gt; - Zhu, Byrd, and Nocedal's constrained optimizer&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;fmin_tnc&lt;/code&gt; - Truncated Newton code&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;fmin_cobyla&lt;/code&gt; - Constrained optimization by linear approximation&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;fmin_slsqp&lt;/code&gt; - Minimization using sequential least-squares programming&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;nnls&lt;/code&gt; - Linear least-squares problem with non-negativity constraint&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The first two are not applicable because they only appear to support
-bounds on individual variables. I also need a constraint over the
-&lt;em&gt;sum&lt;/em&gt; of variables for the budget:  \(\sum g_i \le b\). The last one
-isn't applicable because this isn't a linear least-squares problem.
-That leaves &lt;code&gt;cobyla&lt;/code&gt; and &lt;code&gt;slsqp&lt;/code&gt;.&lt;/p&gt;
-&lt;h3&gt;Experimenting with linear approximation (COBYLA)&lt;/h3&gt;
-&lt;p&gt;Making COBYLA work ended up being pretty easy. The only non-trivial
-part is expressing all your constraints as expressions greater than or
-equal to zero.&lt;/p&gt;
-&lt;p&gt;I've uploaded my IPython notebook
-(&lt;a href="http://nbviewer.ipython.org/gist/lvh/10107818"&gt;viewer&lt;/a&gt;,
-&lt;a href="https://gist.github.com/lvh/10107818"&gt;gist&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;This produced the following results:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;scores: [1 1 1 2 3 5 5]
-requested: [10 20 30 30 50 10 50] total: 200, budget: 150
-k = 1/0.5: [ 10.  20.  30.  30.  50.  10.   0.], sum: 150.0
-k = 1/1: [ 10.  -0.   0.  30.  50.  10.  50.], sum: 150.0
-k = 1/2: [ 10.  10.   7.  27.  36.  10.  50.], sum: 150.0
-k = 1/3: [ 10.  11.   9.  25.  35.  10.  50.], sum: 150.0
-k = 1/5: [ 10.  11.  10.  24.  35.  10.  50.], sum: 150.0
-k = 1/10: [ 10.  11.  11.  23.  35.  10.  50.], sum: 150.0
-k = 1/100: [ 10.  11.  11.  23.  34.  10.  50.], sum: 150.0
-&lt;/pre&gt;
-
-
-&lt;p&gt;Some takeaways:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;As predicted, as \(1/k\) increases, the optimization gradually
-  starts spreading the budget out more evenly; preferring to give many
-  partial grants rather than a few large ones.&lt;/li&gt;
-&lt;li&gt;This effect is mostly only pronounced for \(1/k = 2, 3\); after
-  that, increasing \(1/k\) doesn't make much of a difference
-  anymore. This is what I'd expect when I visualize the \(p_i\)
-  functions in my head, but I haven't ruled out numerical instability.&lt;/li&gt;
-&lt;li&gt;Even at high \(1/k\), the two high scorers get their full grant
-  amount. That's quite understandable for the one that's only asking
-  for 10, but even the one asking for a large grant gets it
-  unconditionally. This probably means that tweaking the scoring
-  functions is going to be very important.&lt;/li&gt;
-&lt;li&gt;The linear version is apparently already quite brutal: the person
-  with score 3 requesting 50 simply gets it entirely, leaving no
-  budget left over for the people with score 1.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Since I'm so pleased with these results, I'm skipping &lt;code&gt;slsqp&lt;/code&gt; until I
-feel like it. Next up, I'll try to compare the COBYLA results above
-with the results of the greedy algorithm under various fitness
-metrics.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</guid><pubDate>Mon, 07 Apr 2014 03:34:00 GMT</pubDate></item></channel></rss>
+stored on that encrypted volume.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>http://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</guid><pubDate>Thu, 29 May 2014 17:53:00 GMT</pubDate></item></channel></rss>
