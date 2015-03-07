@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 03 Mar 2015 12:44:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>We're just getting started</title><link>http://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>This is a demo site for Nikola.</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 07 Mar 2015 15:41:36 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Conflicting threat models</title><link>http://www.lvh.io/posts/conflicting-threat-models.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;As I mentioned &lt;a href="http://www.lvh.io/posts/were-just-getting-started.html"&gt;in my previous post&lt;/a&gt;, we have a long way to go. I'll be presenting &lt;a href="https://us.pycon.org/2015/schedule/presentation/342/"&gt;a talk on building secure systems&lt;/a&gt; at PyCon 2015 next month.&lt;/p&gt;
+&lt;p&gt;I believe strongly in the importance of a threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.&lt;/p&gt;
+&lt;p&gt;Threat models often simply deal with how much effort you're willing to spend to prevent something from happening. In a world with finite resources, we have to make choices. Some models are unrealistic or prohibitively expensive to defend against. These questions are not all strictly technical. Perhaps some risk is adequately covered by insurance. Perhaps you have a legal or a compliance requirement to do something, even if the result is technically inferior. These questions are also not just about &lt;em&gt;how much&lt;/em&gt; you're going to do: different threat models can lead to opposing resolutions, all of which individually clear security wins.&lt;/p&gt;
+&lt;p&gt;Consider your smartphone. Our phones have a lot of important, private information; it makes sense to protect them. The iPhone 6 provides two options for the lock screen: a passcode, and a fingerprint sensor. Passcodes have been around for about as long as smartphones have, while fingerprint sensors are new and exciting. It's clear that either of them is more secure than not protecting your phone at all. But which one is more secure than the other?&lt;/p&gt;
+&lt;p&gt;Most people instinctively feel the fingerprint sensor is the way to go. Biometric devices feel advanced; up until recently, they only existed in Hollywood. Fingerprints have their share of issues. It's impossible to pick a new key or have separate keys for separate capabilities; you're stuck with the keys you have. A fingerprint is like a password that you involuntarily leave on everything you touch. That said, turning a fingerprint into something that will unlock your iPhone is out of reach for most attackers.&lt;/p&gt;
+&lt;p&gt;Passcodes aren't perfect either. People generally pick poor codes: important dates and years are common, but typically not kept secret in other contexts. If you know someone's birthday, there's a decent chance you can unlock their phone. At least with a passcode, you have the option of picking a good one. Even if you do, a passcode provides little protection against shoulder surfing. Most people unlock their phone dozens of times per day, and spend most of that day in the presence of other people. A lot of those people could see your passcode inconspicuously.&lt;/p&gt;
+&lt;p&gt;Two options. Neither is perfect. How do you pick one? To make an informed choice, you need to formalize your threat models.&lt;/p&gt;
+&lt;p&gt;In the United States, under the Fifth Amendment, you don't have to divulge information that might incriminate you. I am not a lawyer, and courts have provided conflicting rulings, &lt;a href="https://en.wikipedia.org/wiki/Fifth_Amendment_to_the_United_States_Constitution#Computer_passwords"&gt;but currently it appears that this includes computer passwords.&lt;/a&gt; &lt;a href="http://hamptonroads.com/2014/10/police-can-require-cellphone-fingerprint-not-pass-code?wpisrc=nl-swbd&amp;amp;wpmm=1#"&gt;However, a court has ruled that a fingerprint doesn't count as secret information.&lt;/a&gt; If you can unlock your phone with your fingerprint, they can force you to unlock it.&lt;/p&gt;
+&lt;p&gt;If your threat models include people snooping, the fingerprint sensor is superior. If your threat model includes law enforcement, the passcode is superior. So, which do you pick? It depends on your threat model.&lt;/p&gt;
+&lt;p&gt;Disclaimer: this is an illustration of how threat models can conflict. It is &lt;em&gt;not&lt;/em&gt; operational security advice; in which case I would point out other options. It is not legal advice, which I am not at all qualified to dispense.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>http://www.lvh.io/posts/conflicting-threat-models.html</guid><pubDate>Sat, 07 Mar 2015 16:56:05 GMT</pubDate></item><item><title>We're just getting started</title><link>http://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
 make. After the presentation, it's "over"; only spoken about in
 perfect tenses. You've communicated your thoughts, perhaps had a
 conversation or two, but, mostly, moved on.&lt;/p&gt;
@@ -698,142 +707,4 @@ than learning about A-grade Ruby developer installations.&lt;/li&gt;
 &lt;p&gt;Anyway, I'm on Nikola now. Pretty happy with it. I used
 &lt;a class="reference external" href="https://www.github.com/mikemccracken/nikola-octopress-import"&gt;nikola-octopress-import&lt;/a&gt;. Did most of what I wanted; I contributed
 some minor PRs so that it would also handle extended date formats
-(with seconds and timezones) and legacy HTML posts.&lt;/p&gt;&lt;/div&gt;</description><guid>http://www.lvh.io/posts/switched-to-nikola.html</guid><pubDate>Tue, 29 Jul 2014 06:46:16 GMT</pubDate></item><item><title>On TrueCrypt and full-disk encryption</title><link>http://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Since the early hours of May 29th (CEST), &lt;a href="https://www.truecrypt.org"&gt;the TrueCrypt website
-(&lt;code&gt;https://www.truecrypt.org&lt;/code&gt;)&lt;/a&gt; has pointed
-to &lt;code&gt;http://truecrypt.sourceforge.net/&lt;/code&gt;, with an ominous-looking error
-message:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;WARNING: Using TrueCrypt is not secure as it may contain unfixed
-security issues&lt;/p&gt;
-&lt;p&gt;This page exists only to help migrate existing data encrypted by
-TrueCrypt.&lt;/p&gt;
-&lt;p&gt;The development of TrueCrypt was ended in 5/2014 after Microsoft
-terminated support of Windows XP. Windows 8/7/Vista and later offer
-integrated support for encrypted disks and virtual disk images. Such
-integrated support is also available on other platforms (click here
-for more information). You should migrate any data encrypted by
-TrueCrypt to encrypted disks or virtual disk images supported on
-your platform.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;The website then explains how you can install BitLocker, a proprietary
-disk encryption system available in many versions of Windows, as well
-as how you could "rescue" existing TrueCrypt volumes.&lt;/p&gt;
-&lt;p&gt;People were pretty unhappy, for a variety of reasons:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Lack of trust in proprietary full-disk encryption software.&lt;/li&gt;
-&lt;li&gt;Many versions of Windows didn't even ship with BitLocker, only a few
-  "premium" versions did.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;As a proprietary system, BitLocker is not susceptible to the same
-amount of public scrutiny as a publicly available system. This is in
-stark contrast with TrueCrypt, where Matt Green recently raised around
-70k USD to perform an &lt;a href="http://istruecryptauditedyet.com/"&gt;audit&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;There are variety of scenarios that could've caused the TrueCypt
-website to suddenly sport that message. The live Internet audience has
-speculated wildly. I'll share my thoughts on that near the end of this
-post, but there are two points I'd like to make that I think are far
-more important:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Consider if full-disk encryption is really what you want.&lt;/li&gt;
-&lt;li&gt;If it is, consider if it should be TrueCrypt.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4&gt;Full-disk encryption&lt;/h4&gt;
-&lt;p&gt;Something I learned from the inimitable &lt;a href="https://zooko.com"&gt;Zooko&lt;/a&gt;:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Security isn't about perfect versus imperfect or about better versus
-worse, it's about &lt;em&gt;this&lt;/em&gt; attack surface versus &lt;em&gt;that&lt;/em&gt; attack
-surface.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;You can't just add more crypto junk to something and expect to somehow
-get better security. You have to consider what it is buying you, and
-what it's costing you.&lt;/p&gt;
-&lt;p&gt;Full-disk encryption buys you one simple thing: if someone steals your
-device while the encrypted volume is locked, they probably can't read
-it.&lt;/p&gt;
-&lt;p&gt;If the encrypted volume is unlocked, it's over; and that's the state
-it's probably usually in. If the key lives in RAM (it usually does),
-there's a variety of ways that can be extracted. There's devices that
-have complete direct memory access, including everything that speaks
-FireWire or has FireWire-compatibility built-in. Even if you shut off
-your machine, cold boot attacks mean that the key can be extracted for
-a limited about of time. Various jurisdictions can try to force you to
-hand over the keys.&lt;/p&gt;
-&lt;p&gt;If an attacker can write to the (encrypted!) volume, it's probably
-over. Virtually all sector-level full-disk encryption formats are
-unauthenticated (with good reason), they're all malleable and
-vulnerable to (adaptive) chosen-ciphertext attacks.&lt;/p&gt;
-&lt;p&gt;If you're encrypting files or blobs of data within other files, an
-authenticated encryption scheme like GPG is far more useful.&lt;/p&gt;
-&lt;p&gt;Don't get me wrong. Full-disk encryption is a good idea, and you
-should do it. I'm just saying that what it actually protects against
-is pretty limited. If there's files you want to keep secret, full-disk
-encryption is probably not enough.&lt;/p&gt;
-&lt;p&gt;For more details, try Thomas &amp;amp; Erin Ptacek's
-&lt;a href="http://sockpuppet.org/blog/2014/04/30/you-dont-want-xts/"&gt;blog post&lt;/a&gt;
-on why XTS isn't what you want. XTS is a way to build tweakable
-ciphers that can be used to create full-disk encryption; but the post
-applies to full-disk encryption generically as well.&lt;/p&gt;
-&lt;h4&gt;TrueCrypt as a full-disk encryption mechanism&lt;/h4&gt;
-&lt;p&gt;So, you probably want full-disk encryption, and you probably want to
-make sure that sensitive data is encrypted on top of that. Great. What
-full-disk encryption scheme do you use?&lt;/p&gt;
-&lt;p&gt;I don't want to bash TrueCrypt. It is (was, perhaps?) a great go-to
-project for full-disk encryption. It got a lot of things right. It
-also got a bunch of things wrong.&lt;/p&gt;
-&lt;p&gt;TrueCrypt was made by a bunch of people we don't know occasionally
-throwing a bunch of binaries over the wall. The source is available
-(under a non-OSI license), so you could audit that and compile your
-own binaries, but the truth is that the vast majority of TrueCrypt
-users never actually did that.&lt;/p&gt;
-&lt;p&gt;The TrueCrypt disk format and encryption standards are a bit iffy. It
-has terrible file system support. It has major performance issues,
-partially due to questionable cryptographic practices such as cipher
-cascades. It was great for when it was originally conceived and
-full-disk encryption was still new and exciting, it's still pretty
-decent now, but we can certainly do better.&lt;/p&gt;
-&lt;h4&gt;What actually happened to the website?&lt;/h4&gt;
-&lt;p&gt;We don't really know. There's a couple of guesses.&lt;/p&gt;
-&lt;p&gt;First of all, it looks like it are the original authors that folded:
-the key is the same one that was being used to sign releases months
-ago. Of course, that could mean that it was compromised or that they
-were forced to hand it over.&lt;/p&gt;
-&lt;p&gt;Since the DNS records changed, the e-mail server behavior changed, the
-same key was used, the Sourceforge client was involved, and fairly
-major changes to the source code were involved, it's unlikely that
-it's a simple defacement.&lt;/p&gt;
-&lt;p&gt;It's unlikely that they folded because they felt discovery of some
-backdoor was imminent. Folding wouldn't actually stop that discovery,
-because the source was already open.&lt;/p&gt;
-&lt;p&gt;It's strange that they would point to alternatives like Bitlocker for
-Windows and even more dubious alternatives for other operating
-systems. The authors certainly knew that this would not be an
-acceptable alternative for the vast majority of their users.&lt;/p&gt;
-&lt;p&gt;Additionally, the support window for XP ending isn't a particularly
-convincing impetus for migrating away from TrueCrypt &lt;em&gt;right now&lt;/em&gt;. This
-has lead some to believe that it's an automated release. Worse, it
-could be a gagged response: a big and powerful three-letter agency
-might be twisting their arm and forcing them to fold, in return for
-something else (like, say, not being thrown in a Gitmo cell and
-forgotten about). Again: pure speculation.&lt;/p&gt;
-&lt;p&gt;Another option is that some of the developers just really, genuinely
-folded. They felt that for atechnical users, BitLocker was good
-enough, while the particularly discerning TrueCrypt user would be able
-to find some other alternative.&lt;/p&gt;
-&lt;p&gt;Bottom line is that none of this really matters. What matters is what
-you should do next if you want to have full-disk encryption.&lt;/p&gt;
-&lt;h4&gt;So what do I do now?&lt;/h4&gt;
-&lt;p&gt;I think LUKS is probably the best system that we have right now, and
-one of the few that actually improves on TrueCrypt.&lt;/p&gt;
-&lt;p&gt;If you're on Linux, dm-crypt + cryptsetup + LUKS is probably what you
-want. If you're on OS X, FileVault 2 is probably what you want. If
-you're on Windows, your options are looking a bit thin right now:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Keep using old versions of TrueCrypt.&lt;/li&gt;
-&lt;li&gt;Give up and use BitLocker.&lt;/li&gt;
-&lt;li&gt;Use a Linux virtual machine to use dm-crypt/LUKS, eventually
-  migrating to native support.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Personally, I think the first option is the most reasonable right now,
-and then wait until someone actually writes the native LUKS support.&lt;/p&gt;
-&lt;p&gt;Oh, and you should probably install GPG to encrypt some of those files
-stored on that encrypted volume.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>http://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</guid><pubDate>Thu, 29 May 2014 17:53:00 GMT</pubDate></item></channel></rss>
+(with seconds and timezones) and legacy HTML posts.&lt;/p&gt;&lt;/div&gt;</description><guid>http://www.lvh.io/posts/switched-to-nikola.html</guid><pubDate>Tue, 29 Jul 2014 06:46:16 GMT</pubDate></item></channel></rss>
