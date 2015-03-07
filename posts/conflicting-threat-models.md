@@ -8,7 +8,7 @@
 .. type: text
 -->
 
-As I mentioned [in my previous post][prev], we have a long way to go. I'll be presenting [a talk on building secure systems][sec-talk] at PyCon 2015 next month.
+As I mentioned [in my previous post][prev], we have a long way to go when it comes to information security. I'll be presenting [a talk on building secure systems][sec-talk] at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.
 
 I believe strongly in the importance of a threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.
 
