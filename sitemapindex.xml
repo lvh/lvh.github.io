@@ -6,11 +6,11 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>http://www.lvh.io/categories/amp.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/clojure.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/crypto.xml</loc>
@@ -18,31 +18,31 @@
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/game.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/hex.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/hypercathexes.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/hypercathexis.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/mathjax.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/pycon.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/python.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/security.xml</loc>
@@ -50,11 +50,11 @@
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/svg.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/categories/twisted.xml</loc>
-  <lastmod>2015-03-03</lastmod>
+  <lastmod>2015-03-07</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://www.lvh.io/rss.xml</loc>
