@@ -43,7 +43,7 @@ it.
 [source repo](https://github.com/lvh/TwistedMixing). This is a
 full-length talk (30 minutes).
 
-Presented at: PyCon 2014
+Presented at PyCon 2014
 ([video](https://www.youtube.com/watch?v=A_NnHC2LcaE)) and Pykonik.
 
 ## Crypto 101
