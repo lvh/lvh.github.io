@@ -22,7 +22,7 @@ theory and practice.
 keynote-length talk (45 minutes).
 
 Presented at PyCon 2015
-([video](https://www.youtube.com/watch?v=YAFGQurdJ3U)) and Geekdom.
+([video](https://www.youtube.com/watch?v=YAFGQurdJ3U)).
 
 ## Clojure Intro
 
