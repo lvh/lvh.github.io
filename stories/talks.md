@@ -12,6 +12,18 @@ This is a list of some of my presentations and some of the places I've
 presented them. This list is woefully incomplete: if there's anything
 missing or you have some missing talk materials, please get in touch!
 
+## Distributed Systems 101
+
+An opinionated introduction to the basics of distributed systems
+theory and practice.
+
+[Slides (HTML)](//www.lvh.io/DistributedSystems101),
+[source repo](https://github.com/lvh/DistributedSystems101). This is a
+keynote-length talk (45 minutes).
+
+Presented at PyCon 2015
+([video](https://www.youtube.com/watch?v=YAFGQurdJ3U)) and Geekdom.
+
 ## Clojure Intro
 
 An introduction to Clojure, a pragmatic, modern Lisp for the JVM and
