@@ -12,6 +12,32 @@ This is a list of some of my presentations and some of the places I've
 presented them. This list is woefully incomplete: if there's anything
 missing or you have some missing talk materials, please get in touch!
 
+## Building Secure Software
+
+How do you build secure software? Why do we see bad security track
+records in projects that otherwise seem to tick all the right
+engineering boxes? Why is communicating about security issues so
+painful? More importantly: how can we do all of these things better?
+
+[Slides (HTML)](//www.lvh.io/BuildingSecureSoftware),
+[source repo](https://github.com/lvh/BuildingSecureSoftware). This is a
+full-length talk (30 minutes).
+
+Presented at PyCon 2015
+([video](https://www.youtube.com/watch?v=PjcTwqYSk-E)) and Geekdom.
+
+## Distributed Systems 101
+
+An opinionated introduction to the basics of distributed systems
+theory and practice.
+
+[Slides (HTML)](//www.lvh.io/DistributedSystems101),
+[source repo](https://github.com/lvh/DistributedSystems101). This is a
+keynote-length talk (45 minutes).
+
+Presented at PyCon 2015
+([video](https://www.youtube.com/watch?v=YAFGQurdJ3U)).
+
 ## Clojure Intro
 
 An introduction to Clojure, a pragmatic, modern Lisp for the JVM and
@@ -23,7 +49,8 @@ This lecture was part of Comparative Programming Languages
 (B-KUL-H0S01A), which is a part of the Master of Engineering degree.
 Thanks to professor [Frank Piessens](https://cs.kuleuven.be/~frank/)
 for the opportunity to give this lecture in his class, and Thomas
-Goossens of [BeClojure](http://beclojure.org/) for the organization.
+Goossens of [BeClojure](http://beclojure.org/) for organizing the
+event.
 
 [Slides (HTML)](//www.lvh.io/ClojureIntro),
 [source repo](https://github.com/lvh/ClojureIntro). This is a
@@ -42,7 +69,8 @@ it.
 [source repo](https://github.com/lvh/TwistedMixing). This is a
 full-length talk (30 minutes).
 
-Presented at: PyCon 2014 (soon!) and Pykonik.
+Presented at PyCon 2014
+([video](https://www.youtube.com/watch?v=A_NnHC2LcaE)) and Pykonik.
 
 ## Crypto 101
 
