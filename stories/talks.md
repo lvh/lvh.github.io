@@ -23,7 +23,8 @@ This lecture was part of Comparative Programming Languages
 (B-KUL-H0S01A), which is a part of the Master of Engineering degree.
 Thanks to professor [Frank Piessens](https://cs.kuleuven.be/~frank/)
 for the opportunity to give this lecture in his class, and Thomas
-Goossens of [BeClojure](http://beclojure.org/) for the organization.
+Goossens of [BeClojure](http://beclojure.org/) for organizing the
+event.
 
 [Slides (HTML)](//www.lvh.io/ClojureIntro),
 [source repo](https://github.com/lvh/ClojureIntro). This is a
