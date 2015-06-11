@@ -905,6 +905,7 @@ textarea {
 }
 a {
   color: #383234;
+  text-decoration: none;
 }
 a:hover,
 a:focus {
