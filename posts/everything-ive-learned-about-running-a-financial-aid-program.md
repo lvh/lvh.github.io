@@ -301,13 +301,13 @@ applicant's score maps to a fraction of the budget:
 
 $$f_i = \frac{s_i}{\sum_j s_j}$$
 
-Where $f_i$ is the fraction of the budget you're willing to assign to
-applicant $i$, $s_i$ is an applicant's score.
+Where \\(f_i\\) is the fraction of the budget you're willing to assign
+to applicant \\(i\\), \\(s_i\\) is an applicant's score.
 
 
-If $f_i \ge q \cdot r_i$ (where $q$ is the fraction of the grant
-you're willing to allocate and $r_i$ is what the applicant requested,
-you grant them $q \cdot r_i$; otherwise, grant them 0.
+If \\(f_i \ge q \cdot r_i\\) (where \\(q\\) is the fraction of the
+grant you're willing to allocate and \\(r_i\\) is what the applicant
+requested, you grant them \\(q \cdot r_i\\); otherwise, grant them 0.
 
 Some applicants will be below this fraction, some will be above. They
 could be below this fraction because they have a very high score
