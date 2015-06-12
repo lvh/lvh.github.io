@@ -39,7 +39,7 @@ consider, like "opportunity grants" and "diversity grants".
 
 ## Taking care of yourself
 
-Running a financially program is a lot of work. It scales linearly
+Running a financial aid program is a lot of work. It scales linearly
 with the number of applicants; it's your job to create a process that
 keeps the work per applicant small, so that you can make the number of
 applicants large. (You'll know you've succeeded when the fixed
@@ -351,16 +351,16 @@ to get stuck in spam filters.
 
 # Disbursement (giving out money)
 
-First off, talk to your treasure. Possibly talk to a lawyer, too. It's
-quite possible, particularly if you're in the United States, that
-giving out a bunch of money as a non-profit comes with some fairly
-complex strings attached. For example, you probably have certain
-standards in terms of what records you have to keep.
+First off, talk to your treasurer. Possibly talk to a lawyer,
+too. It's quite possible, particularly if you're in the United States,
+that giving out a bunch of money as a non-profit comes with some
+fairly complex strings attached. For example, you probably have
+certain standards in terms of what records you have to keep.
 
-As a European, it somewhat comical to still see checks in active use,
-but hey; it works. For many parts of the world (apparently not the
-United States, though) wire transfers are how you send money to
-people. PayPal seems to work better for larger, established
+As a European, I found it somewhat comical to still see checks in
+active use, but hey; it works. For many parts of the world (apparently
+not the United States, though) wire transfers are how you send money
+to people. PayPal seems to work better for larger, established
 organizations that use it often. There is less of a problem with the
 accounts or funds being frozen. It does actively restrict (or, perhaps
 more accurately, enforces restrictions on) sending funds to certain
