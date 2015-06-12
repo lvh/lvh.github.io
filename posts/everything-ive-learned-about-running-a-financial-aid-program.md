@@ -39,7 +39,7 @@ consider, like "opportunity grants" and "diversity grants".
 
 ## Taking care of yourself
 
-Running a financially program is a lot of work. It scales linearly
+Running a financial aid program is a lot of work. It scales linearly
 with the number of applicants; it's your job to create a process that
 keeps the work per applicant small, so that you can make the number of
 applicants large. (You'll know you've succeeded when the fixed
