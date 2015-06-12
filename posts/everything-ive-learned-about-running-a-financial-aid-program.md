@@ -373,7 +373,7 @@ At the end of the day, be pragmatic. Do whatever your recipients can
 accept. Be sure to ask ahead of time, as your financial aid programs
 may prove to be successful in bringing people in from very different
 countries, with very different cultures and very different means
-available to them for excepting your grant. This is the case for
+available to them for accepting your grant. This is the case for
 PyCon, but I consider that a superb problem to have.
 
 # Conclusion
