@@ -10,7 +10,7 @@
 
 As I mentioned [in my previous post][prev], we have a long way to go when it comes to information security. I'll be presenting [a talk on building secure systems][sec-talk] at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.
 
-I believe strongly in the importance of a threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.
+I'm a strong believer in the importance of threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.
 
 Threat models often simply deal with how much effort you're willing to spend to prevent something from happening. In a world with finite resources, we have to make choices. Some models are unrealistic or prohibitively expensive to defend against. These questions aren't all strictly technical: perhaps some risk is adequately covered by insurance. Perhaps you have a legal or a compliance requirement to do something, even if the result is technically inferior. These questions are also not just about *how much* you're going to do: different threat models can lead to mutually exclusive resolutions, each a clear security win.
 
