@@ -313,11 +313,11 @@ slightly if that allows you to provide more grants.</p>
 <p>We ended up going with a fairly simple "flood fill" algorithm. An
 applicant's score maps to a fraction of the budget:</p>
 <p>$$f_i = \frac{s_i}{\sum_j s_j}$$</p>
-<p>Where $f_i$ is the fraction of the budget you're willing to assign to
-applicant $i$, $s_i$ is an applicant's score.</p>
-<p>If $f_i \ge q \cdot r_i$ (where $q$ is the fraction of the grant
-you're willing to allocate and $r_i$ is what the applicant requested,
-you grant them $q \cdot r_i$; otherwise, grant them 0.</p>
+<p>Where \(f_i\) is the fraction of the budget you're willing to assign
+to applicant \(i\), \(s_i\) is an applicant's score.</p>
+<p>If \(f_i \ge q \cdot r_i\) (where \(q\) is the fraction of the
+grant you're willing to allocate and \(r_i\) is what the applicant
+requested, you grant them \(q \cdot r_i\); otherwise, grant them 0.</p>
 <p>Some applicants will be below this fraction, some will be above. They
 could be below this fraction because they have a very high score
 (e.g. they are a speaker), or because they're "low hanging fruit" and
