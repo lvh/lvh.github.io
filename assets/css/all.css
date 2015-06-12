@@ -429,10 +429,6 @@ table.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}
         #cboxClose{position:absolute; top:5px; right:5px; display:block; background:url(images/controls.png) no-repeat top center; width:38px; height:19px; text-indent:-9999px;}
         #cboxClose:hover{background-position:bottom center;}
 
-body {
-    margin-top: 60px;
-}
-
 #container {
     width: 960px;
     margin: 0 auto;
@@ -523,23 +519,6 @@ article.post-micro {
     font-size: 1.5em;
 }
 
-/* fix anchors for headers */
-h1, h2, h3 {
-    margin-top: -40px;
-    padding-top: 60px;
-}
-
-h4, h5, h6 {
-    margin-top: -50px;
-    padding-top: 60px;
-}
-
-h1.panel-title, h2.panel-title, h3.panel-title, h4.panel-title, h5.panel-title, h6.panel-title {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-}
-
 .image-block {
     display: inline-block;
 }
@@ -623,6 +602,11 @@ h1.panel-title, h2.panel-title, h3.panel-title, h4.panel-title, h5.panel-title, 
     margin: 0;
 }
 
+/* for alignment with Bootstrap's .entry-content styling */
+.entry-summary {
+  margin-top: 1em;
+}
+
 .body-content {
     text-align: justify;
 }
@@ -633,7 +617,9 @@ img#logo {
     right: 0;
     top: 80px;
 }
-
+.entry-content a[href] {
+  text-decoration: underline;
+}
 @media (max-width: 1024px) {
     img#logo {
         display: none;

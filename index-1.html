@@ -1,39 +1,22 @@
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
-    <head>
-    <meta charset="utf-8">
-    <meta name="description" content="This is a demo site for Nikola.">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>lvh (old posts, page 1) | lvh</title>
-
-    
-            <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-
-    
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
-
-      <link rel="canonical" href="http://www.lvh.io/index-1.html">
-
-
-
-        <link rel="prev" href="index-2.html" type="text/html">
-
-    
-        <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
-
-    
-
-
-
-
+<head>
+<meta charset="utf-8">
+<meta name="description" content="This is a demo site for Nikola.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lvh (old posts, page 1) | lvh</title>
+<link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<link rel="canonical" href="http://www.lvh.io/index-1.html">
+<link rel="prev" href="index-2.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -43,16 +26,13 @@
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://www.lvh.io/">
-                <img src="pinchy.svg" alt="lvh" id="logo">
-
-                <span id="blog-title">lvh</span>
+                <img src="pinchy.svg" alt="lvh" id="logo"><span id="blog-title">lvh</span>
             </a>
         </div>
 <!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                
-                <li>
+<li>
 <a href="archive.html">Archive</a>
                 </li>
 <li>
@@ -67,56 +47,39 @@
                 
             </li>
 </ul>
-                
-<!-- Custom search -->
-<form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
-<input type="hidden" name="sites" value="http://www.lvh.io/">
-<input type="hidden" name="k8" value="#444444">
-<input type="hidden" name="k9" value="#D51920">
-<input type="hidden" name="kt" value="h">
-<input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;">
-<input type="submit" value="DuckDuckGo Search" style="display: none;">
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
 </form>
 <!-- End of custom search -->
 
 
-            <ul class="nav navbar-nav navbar-right">
-                
-                
-                    
-                
-            </ul>
-        </div>
+            <ul class="nav navbar-nav navbar-right"></ul>
+</div>
 <!-- /.navbar-collapse -->
     </div>
 <!-- /.container -->
-</nav>
-
-<!-- End of Menubar -->
-
-<div class="container" id="content">
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
     <div class="body-content">
         <!--Body content-->
         <div class="row">
             
             
+
 <div class="postindex">
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/10/designing-a-continuous-deployment-system-cautious-deployment.html" class="u-url">Designing a continuous deployment system: cautious deployment</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/10/designing-a-continuous-deployment-system-cautious-deployment.html" class="u-url">Designing a continuous deployment system: cautious deployment</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/10/designing-a-continuous-deployment-system-cautious-deployment.html" rel="bookmark"><time class="published dt-published" datetime="2010-10-01T13:37:00-07:00" itemprop="datePublished" title="2010-10-01 13:37">2010-10-01 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/10/designing-a-continuous-deployment-system-cautious-deployment.html" rel="bookmark"><time class="published dt-published" datetime="2010-10-01T13:37:00-07:00" title="2010-10-01 13:37">2010-10-01 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <p>This article will be about a deployment scheduling technique which I call operationally cautious deployment. (I didn't pick the name so the acronym would end up being OCD! Honest! I swear!).</p>
 <p></p>
 <div>Note: This isn't <i>new</i>. I didn't invent it. The fact that a big number of people around the globe with similar problems have come up with this idea independently and that most of them are happy with the results speaks for itself: this is mostly just common sense thinking applied to fixing a real problem. It's one of those things that sound obvious when you have them explained to you, but you probably wouldn't come up with unless you spend quiet a bit of time pondering the problem.</div> <p></p>
 <div>So you have a wonderful continuous deployment system! Congratulations! You deploy a new version, monitor your cluster of hosts, and create wonderful graphs:</div>
 <p></p>
-<div>[[posterous-content:NBFS9fiUjfTCi8Xr5KIW]]<br> </div>
+<div>[[posterous-content:NBFS9fiUjfTCi8Xr5KIW]]<br>
+</div>
 <p></p>
 <div>Except, of course, it's not that simple. Your test suite, no matter how much you've honed and polished it, is imperfect. It will contain subtle assumptions that just aren't true in deployment. (When I say "subtle assumptions", I mean the kind that you don't know are assumptions until everything blows up.). If you're going to be deploying software all the time, deploying something that has a fatal mistake in it is a matter of when, not if. So one day, the real graph is going to look something like this:</div> <p></p>
 <div>[[posterous-content:5k8ymL4PxLDrYfbFgL8h]]<br>
@@ -136,16 +99,12 @@
 <div>The next article will be about another benefit of cautious deployment: continuous <i>availability</i>. That one is probably going to be halfway between an article about continuous deployment and a rant about how people need to learn more statistics.</div>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-deployment-formats-and-content.html" class="u-url">Designing a continuous deployment system: deployment formats and content</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-deployment-formats-and-content.html" class="u-url">Designing a continuous deployment system: deployment formats and content</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/designing-a-continuous-deployment-system-deployment-formats-and-content.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-30T13:37:00-07:00" itemprop="datePublished" title="2010-09-30 13:37">2010-09-30 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/designing-a-continuous-deployment-system-deployment-formats-and-content.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-30T13:37:00-07:00" title="2010-09-30 13:37">2010-09-30 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <div>Hi and welcome again to my articles on continuous deployment! In this article, I'm going to talk about <i>what</i> exactly I think you should deploy and what format you should use to deploy it in.</div>
 
@@ -166,16 +125,12 @@
 <div>I think I've got most of the annoying administrative stuff out of the way now, maybe we can move on to more interesting things that are actually specific to continuous deployment :-) That starts with the next article, which, as I've already hinted above, will be about "cautious deployment", a robust technique for scheduling deployment.</div>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/well-now-this-changes-everything-.html" class="u-url">Well now, this changes everything.</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/well-now-this-changes-everything-.html" class="u-url">Well now, this changes everything.</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/well-now-this-changes-everything-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" itemprop="datePublished" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/well-now-this-changes-everything-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <div>The previously planned crazy installment (I was going to install my own Launchpad instance) has been cancelled (or maybe deferred) to bring you this important announcement.</div>
 
@@ -197,16 +152,31 @@
 <div>Regardless of what happens to Bitbucket, I'd like to congratulate Jesper on Atlassian buying Bitbucket and wish him the best of luck in whatever he does next, be it Bitbucket or something else.</div>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" class="u-url">Designing a continuous deployment system: on being language agnostic</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" class="u-url">We now have an animal mascot!</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" itemprop="datePublished" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
+    <div>
+<div>(Sorry, I'll try to keep the unrelated chatter to a minimum and stick to tech stuff! But this is still pretty related.)</div>
+
+<p></p>
+<p>After a Django pony, testing goat, packaging pig, there is now also a <a href="http://twitter.com/deploymentduck">deployment duck</a>.</p>
+<p></p>
+<div>That means, of course, that continuous deployment looks somewhat like this:</div>
+<p></p>
+<div><img title="ducklings_ali_465x349.jpg" src="http://www.bbc.co.uk/devon/content/images/2007/03/12/ducklings_ali_465x349.jpg" alt="ducklings_ali_465x349.jpg"></div>
+<p></p>
+<div>Also, <a href="http://xkcd.com/537/">obligatory XKCD</a>.</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" class="u-url">Designing a continuous deployment system: on being language agnostic</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
     <div>
 <div>Hi, and welcome again to my series of rants about continuous deployment :) In the next few posts, I'll try to scope out what I think a hypothetical greenfielded continuous deployment system should and shouldn't do, and then get that down to what a <i>feasible</i> continuous deployment system should and shouldn't do. Hopefully there won't be too much cutting.</div>
 
@@ -224,16 +194,12 @@
 <div>The next article is going to be about <i>what</i> to deploy and the format to deploy it in.</div>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-rolling-your-own-development-stack.html" class="u-url">A continuous deployment interlude: rolling your own development stack</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-rolling-your-own-development-stack.html" class="u-url">A continuous deployment interlude: rolling your own development stack</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/a-continuous-deployment-interlude-rolling-your-own-development-stack.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" itemprop="datePublished" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/a-continuous-deployment-interlude-rolling-your-own-development-stack.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <p>Hi, and welcome to the second part to my ranting about development stacks. In my previous post, I talked about the issues with some of the popular hosted solutions (Github, Bitbucket and Launchpad). In this post, I'll try to roll my own dev stack that hopefully doesn't suck too much.</p>
 
@@ -265,39 +231,12 @@
 <div>Stay tuned for the next installment, where I try something totally crazy.</div>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" class="u-url">We now have an animal mascot!</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html" class="u-url">A continuous deployment interlude: picking a development stack</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" itemprop="datePublished" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-28T13:37:00-07:00" title="2010-09-28 13:37">2010-09-28 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
-    <div>
-<div>(Sorry, I'll try to keep the unrelated chatter to a minimum and stick to tech stuff! But this is still pretty related.)</div>
-
-<p></p>
-<p>After a Django pony, testing goat, packaging pig, there is now also a <a href="http://twitter.com/deploymentduck">deployment duck</a>.</p>
-<p></p>
-<div>That means, of course, that continuous deployment looks somewhat like this:</div>
-<p></p>
-<div><img title="ducklings_ali_465x349.jpg" src="http://www.bbc.co.uk/devon/content/images/2007/03/12/ducklings_ali_465x349.jpg" alt="ducklings_ali_465x349.jpg"></div>
-<p></p>
-<div>Also, <a href="http://xkcd.com/537/">obligatory XKCD</a>.</div>
-</div>
-    </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html" class="u-url">A continuous deployment interlude: picking a development stack</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-28T13:37:00-07:00" itemprop="datePublished" title="2010-09-28 13:37">2010-09-28 13:37</time></a></p>
-        </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <div>
 <div>At some point in time, you're going to have to pick a set of tools to do your dev work with. You probably want a bunch of things, including:</div>
@@ -332,16 +271,12 @@
 <div>In the next post, I'll talk about rolling your own development stack.</div>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" class="u-url">Building a continuous deployment system, part three, preparing for continuous deployment</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" class="u-url">Building a continuous deployment system, part three, preparing for continuous deployment</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-27T13:37:00-07:00" itemprop="datePublished" title="2010-09-27 13:37">2010-09-27 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-27T13:37:00-07:00" title="2010-09-27 13:37">2010-09-27 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <p>This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.</p>
 
@@ -355,7 +290,6 @@
 <li>integration tests (although these are generally part of my normal test suite and are ran together with unit tests, they're really quite different)</li>
 <li>user interface tests (if you're building a webapp, <a href="http://seleniumhq.org/">Selenium</a> is wonderful)</li>
 </ol>
-
 <p>Testing is very important, but it's hardly the whole story. Testing (with the minor exception of some forms of static analysis) make sure your code <em>works</em> -- it makes no guarantees about that code being any good. For now, computers aren't too great at judging code in such as subtle fashion, and you really want humans to do it for you. Especially in languages that let you do pretty much anything, code review is very important if you want to keep your code <em>sane</em>. Like test-driven development, a lot of people much smarter than me have driven this one home for a long time, so I won't try to convince you too much.</p>
 
 <p>Another advantage of code review is collective code ownership and a resulting increase in <a href="http://c2.com/cgi/wiki%24?BusNumber">bus number</a>. High bus numbers are very important, especially so when you're doing continuous deployment. You can't, or at least <em>shouldn't</em>, delay a release. Once something does go wrong, fixing the situation should be everyone's immediate priority. Only one person understanding how a particular part of the project works slows things down. That sounds like a restriction, and in some ways it is, but it's the kind of restriction that forces you to do the right thing.</p>
@@ -368,7 +302,6 @@
 <li>Someone who's not even a programmer (yep, "everybody writes code" works out great) will spot documentation issues</li>
 <li>... (this is not, by any means, an exhaustive list)</li>
 </ol>
-
 <p>Adding a form of code review takes a load off for all of the other forms of code review. The curve is sublinear: adding more code review doesn't make code review take proportionally longer (it won't make it shorter either, of course).</p>
 
 <p>A lot of people dislike being criticized about their code. <strong>Stamp this behavior out as soon as possible.</strong> Everyone's only human, and plenty of ugly, broken or otherwise inadequate code gets written. The point is to get it out, not berating the person that wrote it.</p>
@@ -376,16 +309,12 @@
 <p>Pressing the big red button once you're done will still be scary. You might even have a hiccup or two. But ideally, nothing will blow up. After a while (and probably in less time than you think it will), releases will become, as Timothy Fitz puts it, a non-event.</p>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html" class="u-url">Building a continuous deployment system, part two: what is it?</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html" class="u-url">Building a continuous deployment system, part two: what is it?</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-26T13:37:00-07:00" itemprop="datePublished" title="2010-09-26 13:37">2010-09-26 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-26T13:37:00-07:00" title="2010-09-26 13:37">2010-09-26 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <p>Hi! This is part two of my continuous deployment <span style="text-decoration: line-through;">rant</span>series which started <a href="http://lvh.posterous.com/building-a-continuous-deployment-system-part">here</a>. In this part, I'll try to explain what I'm talking about when I say continuous deployment.</p>
 
@@ -404,16 +333,12 @@
 <p> </p>
 </div>
     </div>
-    </article>
-    <article class="h-entry post-text">
-    <header>
-        <h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" class="u-url">Building a continuous deployment system, part one</a></h1>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" class="u-url">Building a continuous deployment system, part one</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-26T13:37:00-07:00" itemprop="datePublished" title="2010-09-26 13:37">2010-09-26 13:37</time></a></p>
+            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-26T13:37:00-07:00" title="2010-09-26 13:37">2010-09-26 13:37</time></a></p>
         </div>
-    </header>
-    <div class="e-content entry-content">
+    </header><div class="e-content entry-content">
     <div>
 <p>Lately, I've been thinking a lot about building a continuous deployment system.</p>
 
@@ -429,63 +354,25 @@
     </article>
 </div>
 
-        <nav class="postindexpager">
-        <ul class="pager">
-            <li class="previous">
+        <nav class="postindexpager"><ul class="pager">
+<li class="previous">
                 <a href="index-2.html" rel="prev">Newer posts</a>
             </li>
-        </ul>
-        </nav>
-
-
-
-
-
-
-        </div>
+        </ul></nav>
+</div>
         <!--End of body content-->
 
         <footer>
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
-    </div>
+</div>
 </div>
 
 
-            <script src="assets/js/all-nocdn.js"></script>
-    
-<!-- Social buttons -->
-<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
-<a class="addthis_button_more">Share</a>
-<ul>
-<li>
-<a class="addthis_button_facebook"></a>
-</li>
-<li>
-<a class="addthis_button_google_plusone_share"></a>
-</li>
-<li>
-<a class="addthis_button_linkedin"></a>
-</li>
-<li>
-<a class="addthis_button_twitter"></a>
-</li>
-</ul>
-</div>
-<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-<!-- End of social buttons -->
-
-
-    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
-    <!-- fancy dates -->
-    <script>
+            <script src="assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
     moment.locale("");
     fancydates(0, "YYYY-MM-DD HH:mm");
-    </script>
-    <!-- end fancy dates -->
-    
-
-
+    </script><!-- end fancy dates -->
 </body>
 </html>

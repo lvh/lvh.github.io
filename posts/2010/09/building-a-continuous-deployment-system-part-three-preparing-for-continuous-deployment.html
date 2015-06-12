@@ -1,56 +1,30 @@
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Building a continuous deployment system, part three, preparing for continuous deployment | lvh</title>
-
-    
-            <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-
-    
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.xml">
-
-      <link rel="canonical" href="http://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html">
-
-
-
-
-    
-        <!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]-->
-
-    
-
-
-    
-
-    <meta name="author" content="lvh">
-        <link rel="prev" href="building-a-continuous-deployment-system-part-two-what-is-it-.html" title="Building a continuous deployment system, part two: what is it?" type="text/html">
-        <link rel="next" href="a-continuous-deployment-interlude-picking-a-development-stack.html" title="A continuous deployment interlude: picking a development stack" type="text/html">
-    
-    <meta property="og:site_name" content="lvh">
-    <meta property="og:title" content="Building a continuous deployment system, part three, preparing for con">
-    <meta property="og:url" content="http://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html">
-    <meta property="og:description" content="This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building a continuous deployment system, part three, preparing for continuous deployment | lvh</title>
+<link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.xml">
+<link rel="canonical" href="http://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html">
+<!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<link rel="prev" href="building-a-continuous-deployment-system-part-two-what-is-it-.html" title="Building a continuous deployment system, part two: what is it?" type="text/html">
+<link rel="next" href="a-continuous-deployment-interlude-picking-a-development-stack.html" title="A continuous deployment interlude: picking a development stack" type="text/html">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Building a continuous deployment system, part three, preparing for con">
+<meta property="og:url" content="http://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html">
+<meta property="og:description" content="This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.
 
 Despite the ominous messages ">
-    <meta property="og:type" content="article">
-    <meta property="article:published_time" content="2010-09-27T13:37:00-07:00">
-
-    
-
-    
-
-
-
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2010-09-27T13:37:00-07:00">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -60,16 +34,13 @@ Despite the ominous messages ">
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://www.lvh.io/">
-                <img src="../../../pinchy.svg" alt="lvh" id="logo">
-
-                <span id="blog-title">lvh</span>
+                <img src="../../../pinchy.svg" alt="lvh" id="logo"><span id="blog-title">lvh</span>
             </a>
         </div>
 <!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                
-                <li>
+<li>
 <a href="../../../archive.html">Archive</a>
                 </li>
 <li>
@@ -84,48 +55,30 @@ Despite the ominous messages ">
                 
             </li>
 </ul>
-                
-<!-- Custom search -->
-<form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
-<input type="hidden" name="sites" value="http://www.lvh.io/">
-<input type="hidden" name="k8" value="#444444">
-<input type="hidden" name="k9" value="#D51920">
-<input type="hidden" name="kt" value="h">
-<input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;">
-<input type="submit" value="DuckDuckGo Search" style="display: none;">
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
 </form>
 <!-- End of custom search -->
 
 
             <ul class="nav navbar-nav navbar-right">
-                
-                
-                    
-    <li>
+<li>
     <a href="building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.md" id="sourcelink">Source</a>
     </li>
 
                 
             </ul>
-        </div>
+</div>
 <!-- /.navbar-collapse -->
     </div>
 <!-- /.container -->
-</nav>
-
-<!-- End of Menubar -->
-
-<div class="container" id="content">
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
     <div class="body-content">
         <!--Body content-->
         <div class="row">
             
             
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
-    
-    <header>
-        
-    <h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Building a continuous deployment system, part three, preparing for continuous deployment</a></h1>
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Building a continuous deployment system, part three, preparing for continuous deployment</a></h1>
 
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
@@ -136,9 +89,7 @@ Despite the ominous messages ">
         </div>
         
 
-    </header>
-
-    <div class="e-content entry-content" itemprop="articleBody text">
+    </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.</p>
 
@@ -152,7 +103,6 @@ Despite the ominous messages ">
 <li>integration tests (although these are generally part of my normal test suite and are ran together with unit tests, they're really quite different)</li>
 <li>user interface tests (if you're building a webapp, <a href="http://seleniumhq.org/">Selenium</a> is wonderful)</li>
 </ol>
-
 <p>Testing is very important, but it's hardly the whole story. Testing (with the minor exception of some forms of static analysis) make sure your code <em>works</em> -- it makes no guarantees about that code being any good. For now, computers aren't too great at judging code in such as subtle fashion, and you really want humans to do it for you. Especially in languages that let you do pretty much anything, code review is very important if you want to keep your code <em>sane</em>. Like test-driven development, a lot of people much smarter than me have driven this one home for a long time, so I won't try to convince you too much.</p>
 
 <p>Another advantage of code review is collective code ownership and a resulting increase in <a href="http://c2.com/cgi/wiki%24?BusNumber">bus number</a>. High bus numbers are very important, especially so when you're doing continuous deployment. You can't, or at least <em>shouldn't</em>, delay a release. Once something does go wrong, fixing the situation should be everyone's immediate priority. Only one person understanding how a particular part of the project works slows things down. That sounds like a restriction, and in some ways it is, but it's the kind of restriction that forces you to do the right thing.</p>
@@ -165,7 +115,6 @@ Despite the ominous messages ">
 <li>Someone who's not even a programmer (yep, "everybody writes code" works out great) will spot documentation issues</li>
 <li>... (this is not, by any means, an exhaustive list)</li>
 </ol>
-
 <p>Adding a form of code review takes a load off for all of the other forms of code review. The curve is sublinear: adding more code review doesn't make code review take proportionally longer (it won't make it shorter either, of course).</p>
 
 <p>A lot of people dislike being criticized about their code. <strong>Stamp this behavior out as soon as possible.</strong> Everyone's only human, and plenty of ugly, broken or otherwise inadequate code gets written. The point is to get it out, not berating the person that wrote it.</p>
@@ -173,72 +122,28 @@ Despite the ominous messages ">
 <p>Pressing the big red button once you're done will still be scary. You might even have a hiccup or two. But ideally, nothing will blow up. After a while (and probably in less time than you think it will), releases will become, as Timothy Fitz puts it, a non-event.</p>
 </div>
     </div>
-    <aside class="postpromonav">
-    <nav>
-    
-
-    
-        <ul class="pager">
-            <li class="previous">
+    <aside class="postpromonav"><nav><ul class="pager">
+<li class="previous">
                 <a href="building-a-continuous-deployment-system-part-two-what-is-it-.html" rel="prev" title="Building a continuous deployment system, part two: what is it?">Previous post</a>
             </li>
             <li class="next">
                 <a href="a-continuous-deployment-interlude-picking-a-development-stack.html" rel="next" title="A continuous deployment interlude: picking a development stack">Next post</a>
             </li>
-        </ul>
-
-    </nav>
-    </aside>
-    
-
-</article>
-
-
-
-        </div>
+        </ul></nav></aside></article>
+</div>
         <!--End of body content-->
 
         <footer>
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
-    </div>
+</div>
 </div>
 
 
-            <script src="../../../assets/js/all-nocdn.js"></script>
-    
-<!-- Social buttons -->
-<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
-<a class="addthis_button_more">Share</a>
-<ul>
-<li>
-<a class="addthis_button_facebook"></a>
-</li>
-<li>
-<a class="addthis_button_google_plusone_share"></a>
-</li>
-<li>
-<a class="addthis_button_linkedin"></a>
-</li>
-<li>
-<a class="addthis_button_twitter"></a>
-</li>
-</ul>
-</div>
-<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-<!-- End of social buttons -->
-
-
-    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
-    <!-- fancy dates -->
-    <script>
+            <script src="../../../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
     moment.locale("");
     fancydates(0, "YYYY-MM-DD HH:mm");
-    </script>
-    <!-- end fancy dates -->
-    
-
-
+    </script><!-- end fancy dates -->
 </body>
 </html>

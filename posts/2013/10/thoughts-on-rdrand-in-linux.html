@@ -1,58 +1,32 @@
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Thoughts on RDRAND in Linux | lvh</title>
-
-    
-            <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-
-    
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.xml">
-
-      <link rel="canonical" href="http://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html">
-
-
-
-
-    
-        <!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]-->
-
-    
-
-
-    
-
-    <meta name="author" content="lvh">
-        <link rel="prev" href="../01/securing-against-timing-attacks-with-twisted.html" title="Securing against timing attacks with Twisted" type="text/html">
-        <link rel="next" href="../11/using-protractor-with-angularjs-and-yeoman.html" title="Using protractor with AngularJS and Yeoman" type="text/html">
-    
-    <meta property="og:site_name" content="lvh">
-    <meta property="og:title" content="Thoughts on RDRAND in Linux">
-    <meta property="og:url" content="http://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html">
-    <meta property="og:description" content="This has been brewing since I read Linus' response to the petition to
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thoughts on RDRAND in Linux | lvh</title>
+<link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.xml">
+<link rel="canonical" href="http://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html">
+<!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<link rel="prev" href="../01/securing-against-timing-attacks-with-twisted.html" title="Securing against timing attacks with Twisted" type="text/html">
+<link rel="next" href="../11/using-protractor-with-angularjs-and-yeoman.html" title="Using protractor with AngularJS and Yeoman" type="text/html">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Thoughts on RDRAND in Linux">
+<meta property="og:url" content="http://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html">
+<meta property="og:description" content="This has been brewing since I read Linus' response to the petition to
 remove RDRAND from /dev/random.
 For those of you who don't know, RDRAND is a CPU instruction
 introduced by Intel on recent CPUs. I">
-    <meta property="og:type" content="article">
-    <meta property="article:published_time" content="2013-10-19T21:47:00-07:00">
-           <meta property="article:tag" content="crypto">
-
-    
-
-    
-
-
-
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-10-19T21:47:00-07:00">
+<meta property="article:tag" content="crypto">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -62,16 +36,13 @@ introduced by Intel on recent CPUs. I">
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://www.lvh.io/">
-                <img src="../../../pinchy.svg" alt="lvh" id="logo">
-
-                <span id="blog-title">lvh</span>
+                <img src="../../../pinchy.svg" alt="lvh" id="logo"><span id="blog-title">lvh</span>
             </a>
         </div>
 <!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                
-                <li>
+<li>
 <a href="../../../archive.html">Archive</a>
                 </li>
 <li>
@@ -86,48 +57,30 @@ introduced by Intel on recent CPUs. I">
                 
             </li>
 </ul>
-                
-<!-- Custom search -->
-<form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
-<input type="hidden" name="sites" value="http://www.lvh.io/">
-<input type="hidden" name="k8" value="#444444">
-<input type="hidden" name="k9" value="#D51920">
-<input type="hidden" name="kt" value="h">
-<input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;">
-<input type="submit" value="DuckDuckGo Search" style="display: none;">
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
 </form>
 <!-- End of custom search -->
 
 
             <ul class="nav navbar-nav navbar-right">
-                
-                
-                    
-    <li>
+<li>
     <a href="thoughts-on-rdrand-in-linux.md" id="sourcelink">Source</a>
     </li>
 
                 
             </ul>
-        </div>
+</div>
 <!-- /.navbar-collapse -->
     </div>
 <!-- /.container -->
-</nav>
-
-<!-- End of Menubar -->
-
-<div class="container" id="content">
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
     <div class="body-content">
         <!--Body content-->
         <div class="row">
             
             
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
-    
-    <header>
-        
-    <h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Thoughts on RDRAND in Linux</a></h1>
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Thoughts on RDRAND in Linux</a></h1>
 
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
@@ -138,9 +91,7 @@ introduced by Intel on recent CPUs. I">
         </div>
         
 
-    </header>
-
-    <div class="e-content entry-content" itemprop="articleBody text">
+    </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>This has been brewing since I read <a href="https://www.change.org/en-GB/petitions/linus-torvalds-remove-rdrand-from-dev-random-4/responses/9066">Linus' response to the petition to
 remove <code>RDRAND</code> from /dev/random</a>.</p>
@@ -248,75 +199,31 @@ remotely controlled.</li>
 <p>For what it's worth, it seems <a href="https://twitter.com/zooko/status/392334674690723840">Zooko agrees with me</a>.</p>
 </div>
     </div>
-    <aside class="postpromonav">
-    <nav>
-    
-        <ul itemprop="keywords" class="tags">
-           <li><a class="tag p-category" href="../../../categories/crypto.html" rel="tag">crypto</a></li>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../../categories/crypto.html" rel="tag">crypto</a></li>
         </ul>
-
-    
-        <ul class="pager">
-            <li class="previous">
+<ul class="pager">
+<li class="previous">
                 <a href="../01/securing-against-timing-attacks-with-twisted.html" rel="prev" title="Securing against timing attacks with Twisted">Previous post</a>
             </li>
             <li class="next">
                 <a href="../11/using-protractor-with-angularjs-and-yeoman.html" rel="next" title="Using protractor with AngularJS and Yeoman">Next post</a>
             </li>
-        </ul>
-
-    </nav>
-    </aside>
-    
-
-</article>
-
-
-
-        </div>
+        </ul></nav></aside></article>
+</div>
         <!--End of body content-->
 
         <footer>
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
-    </div>
+</div>
 </div>
 
 
-            <script src="../../../assets/js/all-nocdn.js"></script>
-    
-<!-- Social buttons -->
-<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
-<a class="addthis_button_more">Share</a>
-<ul>
-<li>
-<a class="addthis_button_facebook"></a>
-</li>
-<li>
-<a class="addthis_button_google_plusone_share"></a>
-</li>
-<li>
-<a class="addthis_button_linkedin"></a>
-</li>
-<li>
-<a class="addthis_button_twitter"></a>
-</li>
-</ul>
-</div>
-<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-<!-- End of social buttons -->
-
-
-    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
-    <!-- fancy dates -->
-    <script>
+            <script src="../../../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
     moment.locale("");
     fancydates(0, "YYYY-MM-DD HH:mm");
-    </script>
-    <!-- end fancy dates -->
-    
-
-
+    </script><!-- end fancy dates -->
 </body>
 </html>
