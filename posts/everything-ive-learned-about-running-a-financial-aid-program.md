@@ -351,11 +351,11 @@ to get stuck in spam filters.
 
 # Disbursement (giving out money)
 
-First off, talk to your treasure. Possibly talk to a lawyer, too. It's
-quite possible, particularly if you're in the United States, that
-giving out a bunch of money as a non-profit comes with some fairly
-complex strings attached. For example, you probably have certain
-standards in terms of what records you have to keep.
+First off, talk to your treasurer. Possibly talk to a lawyer,
+too. It's quite possible, particularly if you're in the United States,
+that giving out a bunch of money as a non-profit comes with some
+fairly complex strings attached. For example, you probably have
+certain standards in terms of what records you have to keep.
 
 As a European, it somewhat comical to still see checks in active use,
 but hey; it works. For many parts of the world (apparently not the
