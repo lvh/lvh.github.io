@@ -357,10 +357,10 @@ that giving out a bunch of money as a non-profit comes with some
 fairly complex strings attached. For example, you probably have
 certain standards in terms of what records you have to keep.
 
-As a European, it somewhat comical to still see checks in active use,
-but hey; it works. For many parts of the world (apparently not the
-United States, though) wire transfers are how you send money to
-people. PayPal seems to work better for larger, established
+As a European, I found it somewhat comical to still see checks in
+active use, but hey; it works. For many parts of the world (apparently
+not the United States, though) wire transfers are how you send money
+to people. PayPal seems to work better for larger, established
 organizations that use it often. There is less of a problem with the
 accounts or funds being frozen. It does actively restrict (or, perhaps
 more accurately, enforces restrictions on) sending funds to certain
