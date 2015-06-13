@@ -14,8 +14,8 @@ beard solves discrete logs in fields of small characteristic.
 I've been in a lot of places around the world, but these days I'm
 probably in San Francisco, Austin, San Antonio, or Chicago.
 
-I'm a Fellow of the `Python Software Foundation`_, and wear a number of
-hats at PyCon_. Not surprisingly, that's a consequence of writing a
+I'm a Fellow of the `Python Software Foundation`_, and wear a number
+of hats at PyCon_. Not surprisingly, that's a consequence of writing a
 good deal of Python. These days, I mostly write Clojure. I'm a big fan
 of Haskell and ML. I often have to write C in anger, and am really
 looking forward to the day where Rust means I will never have to do so
