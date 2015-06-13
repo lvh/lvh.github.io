@@ -26,7 +26,7 @@ SITE_URL = "http://www.lvh.io/"
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://www.lvh.io/"
 BLOG_EMAIL = "_@lvh.io"
-BLOG_DESCRIPTION = "This is a demo site for Nikola."  # (translatable)
+BLOG_DESCRIPTION = "lvh's blog"  # (translatable)
 
 # Nikola is multilingual!
 #
