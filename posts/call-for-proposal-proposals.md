@@ -34,8 +34,8 @@ therefore often subverted.
 I think I can make an interesting case for capability systems to any
 technical audience with some professional experience. Just talk about
 secret management, and how it's nearly always terrifying! This gives
-me an opportunity to talk about `icecap` and `shimmer`, my favorite
-pastimes.
+me an opportunity to talk about [`icecap`][icecap] and
+[`shimmer`][shimmer] (see [blog][shimmer-blog], my favorite pastimes.
 
 ## Putting a backdoor in `RDRAND`
 
@@ -92,6 +92,9 @@ people build secure software. Also, the other two will just make
 people feel sad. I feel like those points generalize to all attack
 talks; are they just not that useful?
 
+[shimmer]:https://github.com/lvh/shimmer
+[shimmer-blog]: https://www.lvh.io/posts/securing-apis-with-shims.html
+[icecap]: https://github.com/lvh/icecap
 [rdrand-blog]: https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html
 [tempest]: https://en.wikipedia.org/wiki/Tempest_%28codename%29
 [van-eck]: https://en.wikipedia.org/wiki/Van_Eck_phreaking
