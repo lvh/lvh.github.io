@@ -10,12 +10,13 @@
 -->
 
 I'm excited to announce that I was invited to speak at PyCon
-PL. Hence, I'm preparing to freshen up my arsenal of talks for this
-year.
+PL. Hence, I'm preparing to freshen up my arsenal of talks for the
+coming year. The organizers have very generously given me a lot of
+freedom regarding what to talk about.
 
-I'd like to do more security talks. Compared to previous talks, I'd
-like to shift focus towards a more technical audience, going more
-in-depth and touching on more advanced topics.
+I'd like to do more security talks as well as shift focus towards a
+more technical audience, going more in-depth and touching on more
+advanced topics.
 
 # Candidates
 
@@ -32,10 +33,9 @@ therefore often subverted.
 
 I think I can make an interesting case for capability systems to any
 technical audience with some professional experience. Just talk about
-secret management, and how it's nearly always terrifying!
-
-Of course, this gives me an opportunity to talk about `icecap` and
-`shimmer`, my favorite pastimes.
+secret management, and how it's nearly always terrifying! This gives
+me an opportunity to talk about `icecap` and `shimmer`, my favorite
+pastimes.
 
 ## Putting a backdoor in `RDRAND`
 
@@ -43,7 +43,7 @@ I've [blogged about this before][rdrand-blog] before, but I think I
 could turn it into a talk. The short version is that Linux's PRNG
 mixes in entropy from the `RDRAND` in a way that would allow a
 malicious implementation to control the output of the PRNG in ways
-that would be indistinguishable by a (motivated) observer.
+that would be indistinguishable to a (motivated) observer.
 
 As a proof of concept, I'd love to demo the attack, either in software
 (for example, with QEMU) or even in hardware with an open core. I
@@ -60,13 +60,11 @@ the reflection gets modulated based on what it's doing right now. The
 concept became known as [TEMPEST][tempest], an NSA program. So far,
 there's little public research on how feasible it is for your average
 motivated hacker. This is essentially [van Eck phreaking][van-eck],
-with 2015 tools. I imagine the biggest differences will be that it
-should be a lot easier to interpret digital devices.
+with 2015 tools. There's probably some interesting data to pick off of
+USB HIDs, and undoubtedly a myriad of interesting devices controlled
+by low-speed RS-232. Perhaps wireless JTAG debugging?
 
-Demo ideas: read a keyboard. Or "wirelessly JTAG-debugging a device
-which may or may not be yours" -- that'd be a catchy subtitle...
-
-# The draft bin
+# The unfinished draft bin
 
 ## Underhanded curve selection
 
