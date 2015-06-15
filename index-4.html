@@ -2,7 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="This is a demo site for Nikola.">
+<meta name="description" content="lvh's blog">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lvh (old posts, page 4) | lvh</title>
 <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -33,6 +33,9 @@
 <!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
+<li>
+<a href="about.html">About</a>
+                </li>
 <li>
 <a href="archive.html">Archive</a>
                 </li>
@@ -67,7 +70,148 @@
             
 
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/switched-to-nikola.html" class="u-url">Switched to Nikola</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/on-discussing-software-security-improvements.html" class="u-url">On discussing software security improvements</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/on-discussing-software-security-improvements.html" rel="bookmark"><time class="published dt-published" datetime="2014-07-28T23:58:27-07:00" title="2014-07-28 23:58">2014-07-28 23:58</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>A common criticism of information security folks is that they tend to
+advise people to not do any crypto. Through projects like <a class="reference external" href="https://www.crypto101.io/">Crypto
+101</a>, I've attempted to make a small contribution towards fixing
+that.</p>
+<p>In the open source world, various people often try to improve the
+security of a project. Because designing secure systems is pretty
+hard, they often produce flawed proposals. The aforemetioned tendency
+for infosec-conscious people to tell them to stop doing crypto is
+experienced as unwelcoming, even dismissive. Typically, the only thing
+that's accomplished is that a lot of feelings get hurt; it seems to
+only rarely result in improved software.</p>
+<p>I think that's quite unfortunate. I think open source is great, and we
+should be not just welcoming and inclusive, but aiming to produce
+secure software. Furthermore, even if a flawed proposal is
+unsalvageable, a clear description of <em>why</em> it is flawed will
+presumably result in fewer negative interactions. Best case scenario,
+the issues with a proposal can be discussed and potentially rectified.</p>
+<p>In an effort to improve this situation, I'm documenting what I believe
+to be a useful way to discuss security changes and their tradeoffs. As
+Zooko has taught me:</p>
+<blockquote>
+Security isn't about perfect versus imperfect or about better versus
+worse, it's about <em>this</em> attack surface versus <em>that</em> attack
+surface.</blockquote>
+<p>This document aims to be the equivalent of an <a class="reference external" href="http://www.sscce.org/">SSCCE</a> for generic bug
+reports: a blueprint for making suggestions likely to lead to
+productive discourse, as long as we can agree that we're trying to
+produce more secure software, as well as provide a welcoming
+development environment.</p>
+<div class="section" id="important-points">
+<h2>Important points</h2>
+<p>A good proposal should contain:</p>
+<ol class="arabic simple">
+<li>A brief description of what you're suggesting.</li>
+<li>A description of the attack model you're considering, why the
+current system does not address this issue, and why the suggested
+system <em>does</em> address this issue.</li>
+<li>A motivation of the attack model. Why is it important that this
+issue is actually addressed?</li>
+<li>How does this change affect the attack surface (i.e. all of the
+ways an attacker can attempt to attack a system)?</li>
+<li>What does the user experience for all users of the system look
+like? Many cryptosystems fall over because they're simply unusable
+for most users of the system.</li>
+</ol>
+</div>
+<div class="section" id="an-example">
+<h2>An example</h2>
+<p>Wul (the widely underestimated language, pronounced <em>/wool/</em>) is a
+general purpose programming language. It has a package repository,
+WuPI (the Wul package index, pronounced <em>/woopie/</em>), the de facto
+standard for distributing and installing Wul software.</p>
+<p>WuPI uses TLS as a secure transport. The WuF (Wul foundation,
+pronounced <em>/woof/</em>), maintains a root certificate, distributed with
+Wul. Thanks to a well-managed system of intermediary CAs run by a
+tireless army of volunteers, this means that both package authors and
+consumers know they're talking to the real WuPI.</p>
+<p>Alice is the WuPI BDFL. Bob is a Wul programmer, and would like to
+improve the security of WuPI.</p>
+<p>While consumers and authors know that they're talking to the real
+WuPI, there is no protection against a malicious WuPI endpoint. (This
+problem was recently made worse because WuPI introduced a CDN, greatly
+increasing the number of people who could own a node.). You know that
+you're talking to something with a WuF-signed certificate (presumably
+WuPI, provided the WuF has done a good job managing that certificate),
+but you have no idea if that thing is being honest about the packages
+it serves you.</p>
+<p>Bob believes WuPI could solve this by using GPG signatures.</p>
+<p>He starts with a brief description of the suggestion:</p>
+<blockquote>
+I would like to suggest that WuPI grows support for GPG signatures
+of packages. These signatures would be created when a package author
+uploads a package. They would optionally be verified when the user
+downloads a package.</blockquote>
+<p>He continues with the attack model being considered:</p>
+<blockquote>
+I believe this would secure WuPI consumers against a malicious WuPI
+endpoints. A malicious WuPI endpoint (assuming it acquires an
+appropriate certificate) is currently free to deliver whatever
+packages it wants.</blockquote>
+<p>He explains why the current model doesn't address this:</p>
+<blockquote>
+The current system assures authenticity and secrecy of the stream
+(through TLS), and it ensures that the server authenticates itself
+with a WuPI/WuF certificate. It does not ensure that the package is
+what the author uploaded.</blockquote>
+<p>He explains why he believes his model does address this:</p>
+<blockquote>
+Because the signatures are produced by the author's GPG key, a
+malicious WuPI endpoint would not be able to forge them. Therefore,
+a consumer is sure that a package with a valid signature is indeed
+from the author.</blockquote>
+<p>He explains why this attack model is important:</p>
+<blockquote>
+With the new CDN support, the number of people with access to such a
+certificate has greatly increased. While I certainly trust all of
+the volunteers involved, it would be nice if we didn't <em>have</em> to.
+Furthermore, the software on the servers can always be vulnerable to
+attack; as a high-value target, it certainly isn't inconceivable
+that an attacker would use an unknown vulnerability to take over a
+WuPI endpoint.</blockquote>
+<p>He (believes to) address the attack surface:</p>
+<blockquote>
+Because the signatures are optional, the attack surface remains the
+same.</blockquote>
+<p>Finally, he addresses the user experience:</p>
+<blockquote>
+<p>The weak point of this scheme is most likely the user experience,
+because users historically seem to dislike using GPG.</p>
+<p>I am hopeful that this increased value of participating in the GPG
+web of trust will mean that more people participate.</p>
+</blockquote>
+<p>Alice reviews this, and notes a flaw in the proposal:</p>
+<blockquote>
+This proposal aims to address a security flaw when the WuPI endpoint
+is malicious by adding signatures. However, a malicious WuPI
+endpoint can lie by omission, and claim a package was never signed
+by the author.</blockquote>
+<p>Bob now realizes this issue, and suggests an improvement:</p>
+<blockquote>
+This could be rectified if the user insists on a signature for
+packages they expect to be signed.</blockquote>
+<p>As a side note, Alice notes that the attack surface does increase:</p>
+<blockquote>
+This places trust in author's ability to manage private keys, which
+has historically been shown to be problematic. That introduces a new
+attack vector: an attacker can attempt to go after the author's
+private key.</blockquote>
+<p>Regardless of the outcome of this conversation, there actually was a
+conversation. I believe this to be an improvement over the overall
+status quo.</p>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/switched-to-nikola.html" class="u-url">Switched to Nikola</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
             <p class="dateline"><a href="posts/switched-to-nikola.html" rel="bookmark"><time class="published dt-published" datetime="2014-07-28T23:46:16-07:00" title="2014-07-28 23:46">2014-07-28 23:46</time></a></p>
