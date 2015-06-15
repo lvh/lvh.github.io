@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 15 Jun 2015 06:08:48 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Call for proposal proposals</title><link>http://www.lvh.io/posts/call-for-proposal-proposals.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm excited to announce that I was invited to speak at PyCon
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 15 Jun 2015 06:10:24 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Call for proposal proposals</title><link>http://www.lvh.io/posts/call-for-proposal-proposals.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm excited to announce that I was invited to speak at PyCon
 PL. Hence, I'm preparing to freshen up my arsenal of talks for the
 coming year. The organizers have very generously given me a lot of
 freedom regarding what to talk about.&lt;/p&gt;
@@ -19,8 +19,9 @@ therefore often subverted.&lt;/p&gt;
 &lt;p&gt;I think I can make an interesting case for capability systems to any
 technical audience with some professional experience. Just talk about
 secret management, and how it's nearly always terrifying! This gives
-me an opportunity to talk about &lt;a href="https://github.com/lvh/icecap"&gt;&lt;code&gt;icecap&lt;/code&gt;&lt;/a&gt; and
-&lt;a href="https://github.com/lvh/shimmer"&gt;&lt;code&gt;shimmer&lt;/code&gt;&lt;/a&gt; (see &lt;a href="https://www.lvh.io/posts/securing-apis-with-shims.html"&gt;blog&lt;/a&gt;, my favorite pastimes.&lt;/p&gt;
+me an opportunity to talk about &lt;a href="https://github.com/lvh/icecap"&gt;&lt;code&gt;icecap&lt;/code&gt;&lt;/a&gt;
+(&lt;a href="https://github.com/lvh/icecap/wiki/Introduction"&gt;docs&lt;/a&gt;) and &lt;a href="https://github.com/lvh/shimmer"&gt;&lt;code&gt;shimmer&lt;/code&gt;&lt;/a&gt; (&lt;a href="https://www.lvh.io/posts/securing-apis-with-shims.html"&gt;blog&lt;/a&gt;,
+my favorite pastimes.&lt;/p&gt;
 &lt;h3&gt;Putting a backdoor in &lt;code&gt;RDRAND&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;I've &lt;a href="https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html"&gt;blogged about this before&lt;/a&gt; before, but I think I
 could turn it into a talk. The short version is that Linux's PRNG
