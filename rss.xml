@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 15 Jun 2015 06:10:24 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Call for proposal proposals</title><link>http://www.lvh.io/posts/call-for-proposal-proposals.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm excited to announce that I was invited to speak at PyCon
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 02 Jul 2015 23:58:32 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>HTTPS requests with client certificates in Clojure</title><link>http://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate against the list of
+certificate authorities that it knows about. The client is typically
+authenticated, but over the inner HTTP connection, not at a TLS level.&lt;/p&gt;
+&lt;p&gt;That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.&lt;/p&gt;
+&lt;p&gt;One major library, &lt;a href="https://github.com/http-kit/http-kit"&gt;&lt;code&gt;http-kit&lt;/code&gt;&lt;/a&gt;, makes use of Java's
+&lt;code&gt;javax.net.ssl&lt;/code&gt;, notably &lt;code&gt;SSLContext&lt;/code&gt; and &lt;code&gt;SSLEngine&lt;/code&gt;. These Java APIs
+are exhaustive, and very... Java. While it's easy to make fun of these
+APIs, most other development environments leave you using OpenSSL,
+whose APIs are patently misanthropic. While some of these APIs do
+leave something to be desired, &lt;a href="https://aphyr.com/"&gt;aphyr&lt;/a&gt; has done a lot of the
+hard work of making them more palatable with
+&lt;a href="https://github.com/aphyr/less-awful-ssl"&gt;&lt;code&gt;less-awful-ssl&lt;/code&gt;&lt;/a&gt;. That gives you an
+&lt;code&gt;SSLContext&lt;/code&gt;. Request methods in &lt;code&gt;http-kit&lt;/code&gt; have an &lt;code&gt;opts&lt;/code&gt; map that
+you can pass a &lt;code&gt;:sslengine&lt;/code&gt; object to. Given an &lt;code&gt;SSLContext&lt;/code&gt;, you just
+need to do &lt;code&gt;(.createSSLEngine ctx)&lt;/code&gt; to get the engine object you want.&lt;/p&gt;
+&lt;p&gt;Another major library, &lt;a href="https://github.com/dakrone/clj-http"&gt;&lt;code&gt;clj-http&lt;/code&gt;&lt;/a&gt;, uses lower-level
+APIs. Specifically, it requires [&lt;code&gt;KeyStore&lt;/code&gt;][keystore] instances for
+its &lt;code&gt;:key-store&lt;/code&gt; and &lt;code&gt;:trust-store&lt;/code&gt; options. That requires diving deep
+into Java's cryptographic APIs, which, as mentioned before, might be
+something you want to avoid. While &lt;code&gt;clj-http&lt;/code&gt; is probably the most
+popular library, if you want to do fancy TLS tricks, you probably want
+to use &lt;code&gt;http-kit&lt;/code&gt; instead for now.&lt;/p&gt;
+&lt;p&gt;My favorite HTTP library is &lt;a href="http://aleph.io/"&gt;&lt;code&gt;aleph&lt;/code&gt;&lt;/a&gt; by
+&lt;a href="http://ideolalia.com/"&gt;Zach Tellman&lt;/a&gt;.  It uses Netty instead of the usual Java IO
+components. Fortunately, Netty's API is at least marginally friendlier
+than the one in &lt;code&gt;javax.net.ssl&lt;/code&gt;. Unfortunately, there's no
+&lt;code&gt;less-awful-ssl&lt;/code&gt; for Aleph. Plus, since I'm using &lt;a href="https://github.com/ptaoussanis/sente"&gt;&lt;code&gt;sente&lt;/code&gt;&lt;/a&gt; for
+asynchronous client-server communication, which doesn't have support
+for &lt;code&gt;aleph&lt;/code&gt; yet. So, I'm comfortably stuck with &lt;code&gt;http-kit&lt;/code&gt; for now.&lt;/p&gt;
+&lt;p&gt;In conclusion, API design &lt;em&gt;is&lt;/em&gt; UX design. The library that "won" for
+us was simply the one that was easiest to use.&lt;/p&gt;
+&lt;p&gt;For a deeper dive in how TLS and its building blocks work, you should
+watch my talk, &lt;a href="https://www.youtube.com/watch?v=3rmCGsCYJF8"&gt;Crypto 101&lt;/a&gt;, or the matching &lt;a href="https://www.crypto101.io"&gt;book&lt;/a&gt;. It's
+free! Oh, and if you're looking for information security positions
+(that includes entry-level!) in an inclusive and friendly environment
+that puts a heavy emphasis on teaching and personal development, you
+should get in touch with me at &lt;code&gt;_@lvh.io&lt;/code&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>http://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</guid><pubDate>Thu, 02 Jul 2015 15:53:20 GMT</pubDate></item><item><title>Call for proposal proposals</title><link>http://www.lvh.io/posts/call-for-proposal-proposals.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm excited to announce that I was invited to speak at PyCon
 PL. Hence, I'm preparing to freshen up my arsenal of talks for the
 coming year. The organizers have very generously given me a lot of
 freedom regarding what to talk about.&lt;/p&gt;
@@ -880,55 +923,4 @@ aren't, particularly when it comes to transforms. For example, Chrome
 would occasionally literally do the inverse of the scaling it was
 supposed to:&lt;/p&gt;
 &lt;img alt="Differences in scaling behavior across browsers" src="http://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
-&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item><item><title>What the heck is a clojure.lang.IFn$LO?</title><link>http://www.lvh.io/posts/what-the-heck-is-a-clojurelangifnlo.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;It's no secret that I love Clojure. Like any tool though, it isn't
-perfect. Today, I was trying to write unit tests that use
-&lt;tt class="docutils literal"&gt;clojure.core.async/timeout&lt;/tt&gt;, so I wrote a test double analogous to
-Twisted's &lt;tt class="docutils literal"&gt;Clock&lt;/tt&gt;. As I tried to &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;with-redefs&lt;/span&gt;&lt;/tt&gt; it in, I got the
-most inscrutable error message out: &lt;tt class="docutils literal"&gt;java.lang.ClassCastException:
-icecap.handlers.delay_test$fake_timeout$timeout__22934 cannot be cast
-to clojure.lang.IFn$LO&lt;/tt&gt;.&lt;/p&gt;
-&lt;p&gt;Wha? I know &lt;tt class="docutils literal"&gt;clojure.lang.IFn&lt;/tt&gt;, Clojure's function type, but what
-the heck is a &lt;tt class="docutils literal"&gt;clojure.lang.IFn$LO&lt;/tt&gt;?&lt;/p&gt;
-&lt;p&gt;Searching for the term didn't give any particularly useful results. It
-was clear this happened when I was redeffing the original &lt;tt class="docutils literal"&gt;timeout&lt;/tt&gt;,
-so I looked at its documentation:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-clojure.core.async/timeout
-([msecs])
-Returns a channel that will close after msecs
-&lt;/pre&gt;
-&lt;p&gt;Doesn't look too special to me. What's the type of that thing, anyway?
-Let's find out:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type timeout))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-&lt;/pre&gt;
-&lt;p&gt;Aha! So that is actually part of &lt;tt class="docutils literal"&gt;timeout&lt;/tt&gt;, not something else wonky
-going on. What does the source say? It's a pretty lame shim:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-(defn timeout
-"Returns a channel that will close after msecs"
-[^long msecs]
-(timers/timeout msecs))
-&lt;/pre&gt;
-&lt;p&gt;I mean, nothing interesting there, just a type hint.&lt;/p&gt;
-&lt;p&gt;Oh. Wait. That's not just a type hint. &lt;tt class="docutils literal"&gt;long&lt;/tt&gt; is a primitive.
-Testing:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type (fn [^long x] x)))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-&lt;/pre&gt;
-&lt;p&gt;Aha! Due to a JVM quirk, functions with a primitive type hint are
-special. That works for doubles, too:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type (fn [^double x] x)))
-#{clojure.lang.IFn$DO clojure.lang.AFunction}
-&lt;/pre&gt;
-&lt;p&gt;And multiple arguments:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type (fn [^double x ^double y] x)))
-#{clojure.lang.IFn$DDO clojure.lang.AFunction}
-&amp;gt; (parents (type (fn [^double x ^long y] x)))
-#{clojure.lang.IFn$DLO clojure.lang.AFunction}
-&lt;/pre&gt;
-&lt;p&gt;Adding a simple type hint to the function fixed it. Success!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><guid>http://www.lvh.io/posts/what-the-heck-is-a-clojurelangifnlo.html</guid><pubDate>Thu, 02 Oct 2014 13:15:17 GMT</pubDate></item></channel></rss>
+&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>

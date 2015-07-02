@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Fri, 12 Jun 2015 20:19:07 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Conflicting threat models</title><link>http://www.lvh.io/posts/conflicting-threat-models.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;As I mentioned &lt;a href="http://www.lvh.io/posts/were-just-getting-started.html"&gt;in my previous post&lt;/a&gt;, we have a long way to go when it comes to information security. I'll be presenting &lt;a href="https://us.pycon.org/2015/schedule/presentation/342/"&gt;a talk on building secure systems&lt;/a&gt; at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 02 Jul 2015 23:58:32 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>HTTPS requests with client certificates in Clojure</title><link>http://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate against the list of
+certificate authorities that it knows about. The client is typically
+authenticated, but over the inner HTTP connection, not at a TLS level.&lt;/p&gt;
+&lt;p&gt;That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.&lt;/p&gt;
+&lt;p&gt;One major library, &lt;a href="https://github.com/http-kit/http-kit"&gt;&lt;code&gt;http-kit&lt;/code&gt;&lt;/a&gt;, makes use of Java's
+&lt;code&gt;javax.net.ssl&lt;/code&gt;, notably &lt;code&gt;SSLContext&lt;/code&gt; and &lt;code&gt;SSLEngine&lt;/code&gt;. These Java APIs
+are exhaustive, and very... Java. While it's easy to make fun of these
+APIs, most other development environments leave you using OpenSSL,
+whose APIs are patently misanthropic. While some of these APIs do
+leave something to be desired, &lt;a href="https://aphyr.com/"&gt;aphyr&lt;/a&gt; has done a lot of the
+hard work of making them more palatable with
+&lt;a href="https://github.com/aphyr/less-awful-ssl"&gt;&lt;code&gt;less-awful-ssl&lt;/code&gt;&lt;/a&gt;. That gives you an
+&lt;code&gt;SSLContext&lt;/code&gt;. Request methods in &lt;code&gt;http-kit&lt;/code&gt; have an &lt;code&gt;opts&lt;/code&gt; map that
+you can pass a &lt;code&gt;:sslengine&lt;/code&gt; object to. Given an &lt;code&gt;SSLContext&lt;/code&gt;, you just
+need to do &lt;code&gt;(.createSSLEngine ctx)&lt;/code&gt; to get the engine object you want.&lt;/p&gt;
+&lt;p&gt;Another major library, &lt;a href="https://github.com/dakrone/clj-http"&gt;&lt;code&gt;clj-http&lt;/code&gt;&lt;/a&gt;, uses lower-level
+APIs. Specifically, it requires [&lt;code&gt;KeyStore&lt;/code&gt;][keystore] instances for
+its &lt;code&gt;:key-store&lt;/code&gt; and &lt;code&gt;:trust-store&lt;/code&gt; options. That requires diving deep
+into Java's cryptographic APIs, which, as mentioned before, might be
+something you want to avoid. While &lt;code&gt;clj-http&lt;/code&gt; is probably the most
+popular library, if you want to do fancy TLS tricks, you probably want
+to use &lt;code&gt;http-kit&lt;/code&gt; instead for now.&lt;/p&gt;
+&lt;p&gt;My favorite HTTP library is &lt;a href="http://aleph.io/"&gt;&lt;code&gt;aleph&lt;/code&gt;&lt;/a&gt; by
+&lt;a href="http://ideolalia.com/"&gt;Zach Tellman&lt;/a&gt;.  It uses Netty instead of the usual Java IO
+components. Fortunately, Netty's API is at least marginally friendlier
+than the one in &lt;code&gt;javax.net.ssl&lt;/code&gt;. Unfortunately, there's no
+&lt;code&gt;less-awful-ssl&lt;/code&gt; for Aleph. Plus, since I'm using &lt;a href="https://github.com/ptaoussanis/sente"&gt;&lt;code&gt;sente&lt;/code&gt;&lt;/a&gt; for
+asynchronous client-server communication, which doesn't have support
+for &lt;code&gt;aleph&lt;/code&gt; yet. So, I'm comfortably stuck with &lt;code&gt;http-kit&lt;/code&gt; for now.&lt;/p&gt;
+&lt;p&gt;In conclusion, API design &lt;em&gt;is&lt;/em&gt; UX design. The library that "won" for
+us was simply the one that was easiest to use.&lt;/p&gt;
+&lt;p&gt;For a deeper dive in how TLS and its building blocks work, you should
+watch my talk, &lt;a href="https://www.youtube.com/watch?v=3rmCGsCYJF8"&gt;Crypto 101&lt;/a&gt;, or the matching &lt;a href="https://www.crypto101.io"&gt;book&lt;/a&gt;. It's
+free! Oh, and if you're looking for information security positions
+(that includes entry-level!) in an inclusive and friendly environment
+that puts a heavy emphasis on teaching and personal development, you
+should get in touch with me at &lt;code&gt;_@lvh.io&lt;/code&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>http://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</guid><pubDate>Thu, 02 Jul 2015 15:53:20 GMT</pubDate></item><item><title>Conflicting threat models</title><link>http://www.lvh.io/posts/conflicting-threat-models.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;As I mentioned &lt;a href="http://www.lvh.io/posts/were-just-getting-started.html"&gt;in my previous post&lt;/a&gt;, we have a long way to go when it comes to information security. I'll be presenting &lt;a href="https://us.pycon.org/2015/schedule/presentation/342/"&gt;a talk on building secure systems&lt;/a&gt; at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.&lt;/p&gt;
 &lt;p&gt;I'm a strong believer in the importance of threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.&lt;/p&gt;
 &lt;p&gt;Threat models often simply deal with how much effort you're willing to spend to prevent something from happening. In a world with finite resources, we have to make choices. Some models are unrealistic or prohibitively expensive to defend against. These questions aren't all strictly technical: perhaps some risk is adequately covered by insurance. Perhaps you have a legal or a compliance requirement to do something, even if the result is technically inferior. These questions are also not just about &lt;em&gt;how much&lt;/em&gt; you're going to do: different threat models can lead to mutually exclusive resolutions, each a clear security win.&lt;/p&gt;
 &lt;p&gt;Consider your smartphone. Our phones have a lot of important, private information; it makes sense to protect them. The iPhone 6 provides two options for the lock screen: a passcode and a fingerprint sensor. Passcodes have been around for about as long as smartphones have, while fingerprint sensors are new and exciting. It's clear that either of them is more secure than not protecting your phone at all. But which one is more secure?&lt;/p&gt;

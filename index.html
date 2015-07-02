@@ -9,7 +9,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="http://www.lvh.io/index.html">
 <link rel="next" href="index-4.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/call-for-proposal-proposals.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/https-requests-with-client-certificates-in-clojure.html" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -69,7 +69,60 @@
             
 
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/call-for-proposal-proposals.html" class="u-url">Call for proposal proposals</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/https-requests-with-client-certificates-in-clojure.html" class="u-url">HTTPS requests with client certificates in Clojure</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/https-requests-with-client-certificates-in-clojure.html" rel="bookmark"><time class="published dt-published" datetime="2015-07-02T08:53:20-07:00" title="2015-07-02 08:53">2015-07-02 08:53</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate against the list of
+certificate authorities that it knows about. The client is typically
+authenticated, but over the inner HTTP connection, not at a TLS level.</p>
+<p>That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.</p>
+<p>One major library, <a href="https://github.com/http-kit/http-kit"><code>http-kit</code></a>, makes use of Java's
+<code>javax.net.ssl</code>, notably <code>SSLContext</code> and <code>SSLEngine</code>. These Java APIs
+are exhaustive, and very... Java. While it's easy to make fun of these
+APIs, most other development environments leave you using OpenSSL,
+whose APIs are patently misanthropic. While some of these APIs do
+leave something to be desired, <a href="https://aphyr.com/">aphyr</a> has done a lot of the
+hard work of making them more palatable with
+<a href="https://github.com/aphyr/less-awful-ssl"><code>less-awful-ssl</code></a>. That gives you an
+<code>SSLContext</code>. Request methods in <code>http-kit</code> have an <code>opts</code> map that
+you can pass a <code>:sslengine</code> object to. Given an <code>SSLContext</code>, you just
+need to do <code>(.createSSLEngine ctx)</code> to get the engine object you want.</p>
+<p>Another major library, <a href="https://github.com/dakrone/clj-http"><code>clj-http</code></a>, uses lower-level
+APIs. Specifically, it requires [<code>KeyStore</code>][keystore] instances for
+its <code>:key-store</code> and <code>:trust-store</code> options. That requires diving deep
+into Java's cryptographic APIs, which, as mentioned before, might be
+something you want to avoid. While <code>clj-http</code> is probably the most
+popular library, if you want to do fancy TLS tricks, you probably want
+to use <code>http-kit</code> instead for now.</p>
+<p>My favorite HTTP library is <a href="http://aleph.io/"><code>aleph</code></a> by
+<a href="http://ideolalia.com/">Zach Tellman</a>.  It uses Netty instead of the usual Java IO
+components. Fortunately, Netty's API is at least marginally friendlier
+than the one in <code>javax.net.ssl</code>. Unfortunately, there's no
+<code>less-awful-ssl</code> for Aleph. Plus, since I'm using <a href="https://github.com/ptaoussanis/sente"><code>sente</code></a> for
+asynchronous client-server communication, which doesn't have support
+for <code>aleph</code> yet. So, I'm comfortably stuck with <code>http-kit</code> for now.</p>
+<p>In conclusion, API design <em>is</em> UX design. The library that "won" for
+us was simply the one that was easiest to use.</p>
+<p>For a deeper dive in how TLS and its building blocks work, you should
+watch my talk, <a href="https://www.youtube.com/watch?v=3rmCGsCYJF8">Crypto 101</a>, or the matching <a href="https://www.crypto101.io">book</a>. It's
+free! Oh, and if you're looking for information security positions
+(that includes entry-level!) in an inclusive and friendly environment
+that puts a heavy emphasis on teaching and personal development, you
+should get in touch with me at <code>_@lvh.io</code>.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/call-for-proposal-proposals.html" class="u-url">Call for proposal proposals</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
             <p class="dateline"><a href="posts/call-for-proposal-proposals.html" rel="bookmark"><time class="published dt-published" datetime="2015-06-13T10:07:13-07:00" title="2015-06-13 10:07">2015-06-13 10:07</time></a></p>
@@ -1053,67 +1106,6 @@ aren't, particularly when it comes to transforms. For example, Chrome
 would occasionally literally do the inverse of the scaling it was
 supposed to:</p>
 <img alt="Differences in scaling behavior across browsers" src="img/HexGridCrossBrowserScalingIssues.png"><p>I guess trying to implement things in browsers was a mistake.</p>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/what-the-heck-is-a-clojurelangifnlo.html" class="u-url">What the heck is a clojure.lang.IFn$LO?</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/what-the-heck-is-a-clojurelangifnlo.html" rel="bookmark"><time class="published dt-published" datetime="2014-10-02T06:15:17-07:00" title="2014-10-02 06:15">2014-10-02 06:15</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>It's no secret that I love Clojure. Like any tool though, it isn't
-perfect. Today, I was trying to write unit tests that use
-<tt class="docutils literal">clojure.core.async/timeout</tt>, so I wrote a test double analogous to
-Twisted's <tt class="docutils literal">Clock</tt>. As I tried to <tt class="docutils literal"><span class="pre">with-redefs</span></tt> it in, I got the
-most inscrutable error message out: <tt class="docutils literal">java.lang.ClassCastException:
-icecap.handlers.delay_test$fake_timeout$timeout__22934 cannot be cast
-to clojure.lang.IFn$LO</tt>.</p>
-<p>Wha? I know <tt class="docutils literal">clojure.lang.IFn</tt>, Clojure's function type, but what
-the heck is a <tt class="docutils literal">clojure.lang.IFn$LO</tt>?</p>
-<p>Searching for the term didn't give any particularly useful results. It
-was clear this happened when I was redeffing the original <tt class="docutils literal">timeout</tt>,
-so I looked at its documentation:</p>
-<pre class="literal-block">
-clojure.core.async/timeout
-([msecs])
-Returns a channel that will close after msecs
-</pre>
-<p>Doesn't look too special to me. What's the type of that thing, anyway?
-Let's find out:</p>
-<pre class="literal-block">
-&gt; (parents (type timeout))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-</pre>
-<p>Aha! So that is actually part of <tt class="docutils literal">timeout</tt>, not something else wonky
-going on. What does the source say? It's a pretty lame shim:</p>
-<pre class="literal-block">
-(defn timeout
-"Returns a channel that will close after msecs"
-[^long msecs]
-(timers/timeout msecs))
-</pre>
-<p>I mean, nothing interesting there, just a type hint.</p>
-<p>Oh. Wait. That's not just a type hint. <tt class="docutils literal">long</tt> is a primitive.
-Testing:</p>
-<pre class="literal-block">
-&gt; (parents (type (fn [^long x] x)))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-</pre>
-<p>Aha! Due to a JVM quirk, functions with a primitive type hint are
-special. That works for doubles, too:</p>
-<pre class="literal-block">
-&gt; (parents (type (fn [^double x] x)))
-#{clojure.lang.IFn$DO clojure.lang.AFunction}
-</pre>
-<p>And multiple arguments:</p>
-<pre class="literal-block">
-&gt; (parents (type (fn [^double x ^double y] x)))
-#{clojure.lang.IFn$DDO clojure.lang.AFunction}
-&gt; (parents (type (fn [^double x ^long y] x)))
-#{clojure.lang.IFn$DLO clojure.lang.AFunction}
-</pre>
-<p>Adding a simple type hint to the function fixed it. Success!</p>
 </div>
     </div>
     </article>
