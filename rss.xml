@@ -1,5 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 02 Jul 2015 23:58:32 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>HTTPS requests with client certificates in Clojure</title><link>http://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The vast majority of TLS connections only authenticate the
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 05 Jul 2015 21:23:12 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>They do take security seriously</title><link>http://www.lvh.io/posts/they-do-take-security-seriously.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Earlier today, I read an &lt;a href="http://www.troyhunt.com/2015/07/we-take-security-seriously-otherwise.html"&gt;article&lt;/a&gt; about the plethora of
+information security breaches in recent history. Its title reads:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“We take security seriously”, otherwise known as “We didn’t take it
+seriously enough”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The article then lists a number of companies informing the public that
+they've been breached.&lt;/p&gt;
+&lt;p&gt;I think this article doesn't just blame the victims of those attacks,
+but subjects them to public ridicule. Neither helps anyone, least of
+all end users.&lt;/p&gt;
+&lt;p&gt;I'm surprised to hear such comments from Troy Hunt. He's certainly an
+accomplished professional with extensive security experience. This is
+not the first time people have expressed similar thoughts; the
+&lt;a href="https://news.ycombinator.com/item?id=9834099"&gt;HN thread&lt;/a&gt; for that article is rife with them.&lt;/p&gt;
+&lt;p&gt;The explicit assumption is that these companies wouldn't have gotten
+in trouble if only they had taken security more seriously. In a world
+where the information services store is increasingly valuable and
+software increasingly complex, breaches are going to happen. The idea
+that getting breached is their own darn fault is unrealistic.&lt;/p&gt;
+&lt;p&gt;This idea is also counterproductive. Firstly, there's one thing all of
+the victims being ostracized have in common: they disclosed the
+details of the breach. That is exactly what they should have done;
+punishing them creates a perverse incentive for victims to hide
+breaches in the future, a decidedly worse end-user outcome.&lt;/p&gt;
+&lt;p&gt;Secondly, if any breach is as bad as any other breach, there is no
+incentive to proactively mitigate damage from future breaches by
+hardening internal systems. Why encrypt records, invest in access
+control or keep sensitive information in a separate database with
+extensive audit logging? It might materially impact end-user security,
+but who cares -- all anyone is going to remember is that you got
+popped.&lt;/p&gt;
+&lt;p&gt;Finally, there's a subtle PR issue: how can the security industry
+build deep relationships with clients when we publicly ridicule them
+when the inevitable happens?&lt;/p&gt;
+&lt;p&gt;These commentators have presumably not been the victims of a breach
+themselves. I have trouble swallowing that anyone who's been through
+the terrifying experience of being breached, seeing a breach up close
+or even just witnessing a hairy situation being defused could air
+those thoughts.&lt;/p&gt;
+&lt;p&gt;If you haven't been the victim of an attack, and feel that your
+security posture is keeping you from becoming one, consider this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;What's your threat model?&lt;/li&gt;
+&lt;li&gt;How confident are you in your estimation of the capabilities of
+   attackers?&lt;/li&gt;
+&lt;li&gt;Would you still be okay if your database became three orders of
+   magnitude more valuable? Most personal data's value will scale
+   linearly with the number of people affected, so if you're a small
+   start-up with growth prospects, you'll either fail to execute, or
+   be subject to that scenario.&lt;/li&gt;
+&lt;li&gt;Would you still be okay if the attacker has a few 0-days?&lt;/li&gt;
+&lt;li&gt;What if the adversary is a nation-state?&lt;/li&gt;
+&lt;li&gt;How do you &lt;em&gt;know&lt;/em&gt; you haven't been breached?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That brings me to my final thesis: I contest the claim that all of the
+companies in the article didn't take security seriously. It is far
+more probable that all of the companies cited in the article have
+expended massive efforts to protect themselves, and, in doing so,
+foiled many attacks. It's also possible that they haven't; but the
+onus there is certainly on the accuser.&lt;/p&gt;
+&lt;p&gt;Clearly, that's a weak form of disagreement, since "taking something
+seriously" is entirely subjective. However, keep in mind that many
+targets &lt;em&gt;actually&lt;/em&gt; haven't taken security seriously, and would not
+even have the technical sophistication to detect an attack.&lt;/p&gt;
+&lt;p&gt;(By the way, if you too would like to help materially improve people's
+security, we're hiring. Contact me at &lt;code&gt;_@lvh.io&lt;/code&gt;.)&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>http://www.lvh.io/posts/they-do-take-security-seriously.html</guid><pubDate>Sun, 05 Jul 2015 20:17:18 GMT</pubDate></item><item><title>HTTPS requests with client certificates in Clojure</title><link>http://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The vast majority of TLS connections only authenticate the
 server. When the client opens the connection, the server sends its
 certificate. The client checks the certificate against the list of
 certificate authorities that it knows about. The client is typically
@@ -873,54 +939,4 @@ time, why can't the enemy fire missiles? Either time is
 stopped, or it isn't. Sure, games can be abstract, but that
 feels like an undue inconsistency.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hypercathexes</category><category>hypercathexis</category><guid>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
-hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
-excessive concentration of desire upon a particular object&lt;/blockquote&gt;
-&lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
-because then it can be about a hyper cat in a bunch of hexes.&lt;/p&gt;
-&lt;p&gt;The only real constraints I started with was that I wanted a
-simultaneous turn-based space game on a hex grid.&lt;/p&gt;
-&lt;p&gt;Amit Patel from &lt;a class="reference external" href="http://www.redblobgames.com"&gt;Red Blob Games&lt;/a&gt; has basically the awesomest page
-about &lt;a class="reference external" href="http://www.redblobgames.com/grids/hexagons/"&gt;hex grids&lt;/a&gt;, and a ton of awesome pages about many other areas
-of game development. I think it's a fantastic resource for programmers
-like myself who don't do game dev as a day job, but just want to make
-a little game on the side.&lt;/p&gt;
-&lt;p&gt;Simultaneous turn-based means that all players plan their moves
-simultaneously, and they are then also executed simultaneously. This
-has an interesting scaling effect. On the one hand, it clearly scales
-better to many players, because players "play" simultaneously. On the
-other hand, you start getting interesting problems. For example, clock
-synchronization. Does the entire world advance with the same tick-tock
-pattern? What happens when a player does &lt;em&gt;not&lt;/em&gt; make a move within the
-allotted time? If you allow different clocks in the world, does time
-advance faster if both players submit a move, or do you always wait
-until the maximum timeout?&lt;/p&gt;
-&lt;p&gt;I wanted an excuse to play with &lt;a class="reference external" href="https://github.com/swannodette/om"&gt;Om&lt;/a&gt; and found &lt;a class="reference external" href="https://github.com/plexus/chestnut"&gt;Chestnut&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The &lt;a class="reference external" href="https://github.com/lvh/hypercathexis/tree/d454da2b1d8c1cf491fc3cd7dba83ee1b2bd4c76"&gt;first version&lt;/a&gt; had a working hex grid, but displayed it using
-offset coordinates. I wanted to work using axial coordinates as much
-as possible, because it makes a lot of math so much easier. Axial
-coordinates work together with the "grain" of the hex map:&lt;/p&gt;
-&lt;object data="http://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
-axial base vectors&lt;/object&gt;
-&lt;p&gt;Second thing I did was move from individual &lt;tt class="docutils literal"&gt;&amp;lt;img&amp;gt;&lt;/tt&gt; tags produced by
-Om to a single &lt;tt class="docutils literal"&gt;&amp;lt;svg&amp;gt;&lt;/tt&gt; with hexes (&lt;tt class="docutils literal"&gt;&amp;lt;polygon&amp;gt;&lt;/tt&gt;) inside it. This
-fixed a number of annoying placement issues with CSS. CSS really wants
-to position things based on bounding box, not midpoints. That's great
-for web pages, not so much for my hex grid. I ran into a number of
-annoying issues where certain hex borders would be wider than others.
-Browsers aren't made to draw hex grids based on left/right offsets, I
-guess...&lt;/p&gt;
-&lt;p&gt;I started by expressing distances in the SVG in terms of the hex
-width, which would become my unit. The height would then be
-\(\sqrt{3}/2\). Then, I realized that I could make my life easier by
-expressing all x coordinates in terms of a single hex width, and all y
-coordinates in terms of a single hex height; then I could just scale
-differently across x and y at the end.&lt;/p&gt;
-&lt;img alt="Simple SVG hex grid" src="http://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
-&lt;p&gt;Developing in Firefox was mostly painless, but I discovered many
-discrepancies once trying it in Chrome. Things that should be the same
-aren't, particularly when it comes to transforms. For example, Chrome
-would occasionally literally do the inverse of the scaling it was
-supposed to:&lt;/p&gt;
-&lt;img alt="Differences in scaling behavior across browsers" src="http://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
-&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>
+&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hypercathexes</category><category>hypercathexis</category><guid>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item></channel></rss>
