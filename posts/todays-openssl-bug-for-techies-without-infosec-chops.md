@@ -105,7 +105,7 @@ The following distros are affected at present (non-exhaustive list):
 
 * OS X is by default not affected, because they still ship 0.9.8 by
   default. All bets are off if you got your OpenSSL from other places
-  like Homebrew; the current stable version shioped by homebrew is
+  like Homebrew; the current stable version shipped by homebrew is
   1.0.2c, which is affected.
 * [Ubuntu is mostly not affected][ubuntu]. The only affected version
   is the unreleased 15.10 (Wily), for which an update has already been
