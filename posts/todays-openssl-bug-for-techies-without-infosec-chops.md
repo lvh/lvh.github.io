@@ -97,7 +97,7 @@ easy-to-use automated testing tools for this kind of scenario.
 1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
 and 1.0.2d, were released today, on 9 Jul 2015.
 
-The "good news" is that that isn't too long ago. Most people who have
+The "good news" is that the bad releases are recent. Most people who have
 an affected version will be updating regularly, so the number of
 people affected is fairly small.
 
