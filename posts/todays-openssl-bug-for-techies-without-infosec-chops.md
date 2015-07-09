@@ -22,7 +22,7 @@ Specifically, this means that an attacker who has a valid certificate
 for any domain, can use that certificate to produce new
 certificates. Those normally wouldn't work, but the algorithm for
 finding the alternative trust chain doesn't check if the valid
-certificate is allowed to act as a certificate authority.
+certificate can act as a certificate authority.
 
 # What's a certificate (chain)?
 
@@ -41,9 +41,9 @@ In the ID analogy, your computer knows how to recognize photo IDs
 issued by e.g. California.
 
 The issue here is that in some cases, OpenSSL was willing to accept
-entities that should not have been allowed to act as a certificate
-authority. In the analogy, it would mean that it accepted CostCo
-cards, too.
+signatures authenticated by certificates that don't have certificate
+authority powers. In the analogy, it would mean that it accepted
+CostCo cards as valid ID, too.
 
 # Why did they say it wouldn't affect most users?
 
@@ -97,9 +97,9 @@ easy-to-use automated testing tools for this kind of scenario.
 1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
 and 1.0.2d, were released today, on 9 Jul 2015.
 
-The "good news" is that that isn't too long ago. Most people who have
-an affected version will be updating regularly, so the number of
-people affected is fairly small.
+The "good news" is that the bad releases are recent. Most people who
+have an affected version will be updating regularly, so the number of
+people affected is small.
 
 The following distros are affected at present (non-exhaustive list):
 
@@ -126,16 +126,16 @@ The following distros are affected at present (non-exhaustive list):
 
 # In conclusion
 
-The bug is really bad, but affects few people. If you're running
+The bug is disastrous, but affects few people. If you're running
 stable versions of your operating system, you're almost certainly
 safe.
 
-The biggest concern, in my opinion, is for software developers using
-OS X machines. Using OS X for HTTPS REST APIs is fairly common. OS X
-comes with 0.9.8zf by default now, which is a recent revision of a
-very old branch. Therefore, people have a strong motivation to get
-their OpenSSL from a third-party source. The most popular source is
-Homebrew, which currently ships 1.0.2c, and is affected.
-
-*UPDATE*: Homebrew has updated OpenSSL -- you should go update right
-now!
+The biggest concern is with software developers using OS X. That
+audience uses HTTPS APIs frequently, and the clients to connect to
+those APIs typically use OpenSSL. OS X comes with 0.9.8zf by default
+now, which is a recent revision of an ancient branch. Therefore,
+people have a strong motivation to get their OpenSSL from a
+third-party source. The most popular source is Homebrew, which up
+until earlier this morning shipped 1.0.2c. The bug affects that
+version. If you installed OpenSSL through Homebrew, you should go
+update right now.
