@@ -131,7 +131,7 @@ stable versions of your operating system, you're almost certainly
 safe.
 
 The biggest concern is with software developers using OS X. That
-audience uses HTTPS REST APIs frequently. OS X comes with 0.9.8zf by
+audience uses HTTPS APIs frequently. OS X comes with 0.9.8zf by
 default now, which is a recent revision of an ancient
 branch. Therefore, people have a strong motivation to get their
 OpenSSL from a third-party source. The most popular source is
