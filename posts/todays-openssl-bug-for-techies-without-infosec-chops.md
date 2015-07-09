@@ -76,6 +76,15 @@ called mutually authenticated TLS, because both peers authenticate
 each other. At Rackspace Managed Security, we use this for all
 communication between internal nodes. We also operate our own
 certificate authority to sign all of those certificates.
+
+# What's TLS?
+
+TLS is what SSL has been called for way over a decade. The old name
+stuck (particularly in the name "OpenSSL"), but you should probably
+stop using it when you're talking about the secure protocol, since all
+of the versions of the protocol that were called "SSL" have crippling
+security bugs.
+
 # Why wasn't this found by automated testing?
 
 I'm not sure. I wish automated testing this stuff was easier. Since
