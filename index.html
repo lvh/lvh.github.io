@@ -155,8 +155,12 @@ people affected is fairly small.</p>
 <a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html">Ubuntu is mostly not affected</a>. The only affected version
   is the unreleased 15.10 (Wily), for which an update has already been
   released.</li>
-<li>Fedora is mostly not affected (20, 21, 22). Rawhide is affected, and
-  <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1238619">so is backports</a>.</li>
+<li>Stable releases of Fedora are affected. I previously mistakenly
+  reported that they weren't, but that information was based on their
+  package version numbers, which did not match upstream. The faulty
+  logic was backported to 1.0.1k, which was available in Fedora 21
+  and 22. Patches have been released; see <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544">this ticket</a> for
+  details. Thanks to Major Hayden for the correction!</li>
 <li>Debian stable is not affected, but <a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl">testing and unstable are</a>.</li>
 <li>
 <a href="https://www.archlinux.org/packages/?sort=-last_update">ArchLinux testing</a> is affected.</li>

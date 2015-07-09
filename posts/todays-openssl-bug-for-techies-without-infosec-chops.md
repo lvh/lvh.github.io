@@ -110,15 +110,19 @@ The following distros are affected at present (non-exhaustive list):
 * [Ubuntu is mostly not affected][ubuntu]. The only affected version
   is the unreleased 15.10 (Wily), for which an update has already been
   released.
-* Fedora is mostly not affected (20, 21, 22). Rawhide is affected, and
-  [so is backports][fedora-bp].
+* Stable releases of Fedora are affected. I previously mistakenly
+  reported that they weren't, but that information was based on their
+  package version numbers, which did not match upstream. The faulty
+  logic was backported to 1.0.1k, which was available in Fedora 21
+  and 22. Patches have been released; see [this ticket][fedora] for
+  details. Thanks to Major Hayden for the correction!
 * Debian stable is not affected, but [testing and unstable are][debian].
 * [ArchLinux testing][arch] is affected.
 
 [ubuntu]: http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html
 [arch]: https://www.archlinux.org/packages/?sort=-last_update
 [debian]: https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl
-[fedora-bp]: https://bugzilla.redhat.com/show_bug.cgi?id=1238619
+[fedora]: https://bugzilla.redhat.com/show_bug.cgi?id=1241544
 
 # In conclusion
 
