@@ -22,7 +22,7 @@
  </url>
  <url>
   <loc>http://www.lvh.io/2015/index.html</loc>
-  <lastmod>2015-07-05</lastmod>
+  <lastmod>2015-07-09</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/about.html</loc>
@@ -78,7 +78,7 @@
  </url>
  <url>
   <loc>http://www.lvh.io/categories/security.html</loc>
-  <lastmod>2015-07-05</lastmod>
+  <lastmod>2015-07-09</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/categories/svg.html</loc>
@@ -102,11 +102,11 @@
  </url>
  <url>
   <loc>http://www.lvh.io/index-4.html</loc>
-  <lastmod>2015-07-05</lastmod>
+  <lastmod>2015-07-09</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/index.html</loc>
-  <lastmod>2015-07-05</lastmod>
+  <lastmod>2015-07-09</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html</loc>
@@ -270,7 +270,11 @@
  </url>
  <url>
   <loc>http://www.lvh.io/posts/they-do-take-security-seriously.html</loc>
-  <lastmod>2015-07-05</lastmod>
+  <lastmod>2015-07-09</lastmod>
+ </url>
+ <url>
+  <loc>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</loc>
+  <lastmod>2015-07-09</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/posts/updated-gpg-key.html</loc>

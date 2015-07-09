@@ -1,5 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 05 Jul 2015 21:23:12 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>They do take security seriously</title><link>http://www.lvh.io/posts/they-do-take-security-seriously.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Earlier today, I read an &lt;a href="http://www.troyhunt.com/2015/07/we-take-security-seriously-otherwise.html"&gt;article&lt;/a&gt; about the plethora of
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 09 Jul 2015 16:54:58 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
+&lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
+alternative certificate chain when the first one fails. The logic in
+that feature had a bug in it, such that it didn't properly verify if
+the certificates in the alternative chain had the appropriate
+permissions; specifically, it didn't check if those certificates are
+certificate authorities.&lt;/p&gt;
+&lt;p&gt;Specifically, this means that an attacker who has a valid certificate
+for any domain, can use that certificate to produce new
+certificates. Those normally wouldn't work, but the algorithm for
+finding the alternative trust chain doesn't check if the valid
+certificate is allowed to act as a certificate authority.&lt;/p&gt;
+&lt;h2&gt;How big is the window?&lt;/h2&gt;
+&lt;p&gt;1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
+and 1.0.2d, were released today, on 9 Jul 2015.&lt;/p&gt;
+&lt;p&gt;The "good news" is that that isn't too long ago. Most people who have
+an affected version will be updating regularly, so the number of
+people affected is fairly small.&lt;/p&gt;
+&lt;p&gt;The following distros are affected at present (non-exhaustive list):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;OS X is by default not affected, because they still ship 0.9.8 by
+  default. All bets are off if you got your OpenSSL from other places
+  like Homebrew; the current stable version shioped by homebrew is
+  1.0.2c, which is affected.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html"&gt;Ubuntu is mostly not affected&lt;/a&gt;. The only affected version
+  is the unreleased 15.10 (Wily), for which an update has already been
+  released.&lt;/li&gt;
+&lt;li&gt;Fedora is mostly not affected (20, 21, 22). Rawhide is affected, and
+  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1238619"&gt;so is backports&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Debian stable is not affected, but &lt;a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl"&gt;testing and unstable are&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.archlinux.org/packages/?sort=-last_update"&gt;ArchLinux testing&lt;/a&gt; is affected.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;What's a certificate (chain)?&lt;/h2&gt;
+&lt;p&gt;A certificate is a bit like an ID card: it has some information about
+you (like your name), and is authenticated by a certificate authority
+(in the case of an ID, usually your government).&lt;/p&gt;
+&lt;h2&gt;What's a certificate authority?&lt;/h2&gt;
+&lt;p&gt;A certificate authority is an entity that's allowed to authenticate
+certificates. Your computer typically ships with the identity of those
+certificate authorities, so it knows how to recognize certificates
+authorized by them.&lt;/p&gt;
+&lt;p&gt;In the ID analogy, your computer knows how to recognize photo IDs
+issued by e.g. California.&lt;/p&gt;
+&lt;p&gt;The issue here is that in some cases, OpenSSL was willing to accept
+entities that should not have been allowed to act as a certificate
+authority. In the analogy, it would mean that it accepted CostCo
+cards, too.&lt;/p&gt;
+&lt;h2&gt;Why did they say it wouldn't affect most users?&lt;/h2&gt;
+&lt;p&gt;This basically means "we're assuming most users are using OpenSSL for
+vanilla servers", which is probably true. Most servers do use OpenSSL,
+and most clients (browsers) don't.&lt;/p&gt;
+&lt;p&gt;The bug affects anyone trying to authenticate their peer. That
+includes regular clients, and servers doing client
+authentication. Regular servers aren't affected, because they don't
+authenticate their peer.&lt;/p&gt;
+&lt;p&gt;Servers doing client authentication are fairly rare. The biggest
+concern is with clients. While browsers typically don't use OpenSSL, a
+lot of API clients do. For those few people affected by the bug and
+with clients that use OpenSSL, the bug is catastrophic. (As argued
+above: the good news is that that number is probably pretty small.)&lt;/p&gt;
+&lt;h2&gt;Why wasn't this found by automated testing?&lt;/h2&gt;
+&lt;p&gt;I'm not sure. I wish automated testing this stuff was easier. Since
+I'm both a user and a big fan of client authentication, which is a
+pretty rare feature, I hope to spend more time in the future creating
+easy-to-use automated testing tools for this kind of scenario.&lt;/p&gt;
+&lt;h2&gt;In conclusion&lt;/h2&gt;
+&lt;p&gt;The bug is really bad, but affects few people. If you're running
+stable versions of your operating system, you're almost certainly
+safe.&lt;/p&gt;
+&lt;p&gt;The biggest concern, in my opinion, is for software developers using
+OS X machines. Using OS X for HTTPS REST APIs is fairly common. OS X
+comes with 0.9.8zf by default now, which is a recent revision of a
+very old branch. Therefore, people have a strong motivation to get
+their OpenSSL from a third-party source. The most popular source is
+Homebrew, which currently ships ships 1.0.2c, and is affected.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</guid><pubDate>Thu, 09 Jul 2015 15:26:58 GMT</pubDate></item><item><title>They do take security seriously</title><link>http://www.lvh.io/posts/they-do-take-security-seriously.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Earlier today, I read an &lt;a href="http://www.troyhunt.com/2015/07/we-take-security-seriously-otherwise.html"&gt;article&lt;/a&gt; about the plethora of
 information security breaches in recent history. Its title reads:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;“We take security seriously”, otherwise known as “We didn’t take it
@@ -848,95 +922,4 @@ The theory just wasn't there yet.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;!-- LocalWords:  engineeringest --&gt;
-&lt;/div&gt;&lt;/div&gt;</description><guid>http://www.lvh.io/posts/reverse-ungineering.html</guid><pubDate>Fri, 14 Nov 2014 09:44:39 GMT</pubDate></item><item><title>On multiplayer turn-based game mechanics</title><link>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
-V, are sequential in nature. A player makes a move, then the next
-player makes a move, and so on. The details can vary, for example:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;There could be two players, or multiple. This number is tightly
-bound for scaling reasons, which we'll discuss later.&lt;/li&gt;
-&lt;li&gt;The game could have perfect information, like chess, where all
-players see a move as soon as it is played. The game could also have
-imperfect information, like Civilization V, where players see part
-of a move, but the effets may be obscured by fog of war.&lt;/li&gt;
-&lt;li&gt;The players may play in a consistent order (chess, Civilization V),
-or in a somewhat random one (D&amp;amp;D's initiative system).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;All of those things are more or less orthogonal to the turn system.
-Players play turns sequentially, so I'm going to call these
-&lt;em&gt;sequential turn-based games&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Sequential turns make scaling the number of players up difficult. Even
-with only 8 players, any given player will spend most of their time
-waiting. While 8 players are a lot for most turn-based games, it's
-nothing compared to an MMORPG.&lt;/p&gt;
-&lt;p&gt;An alternative to &lt;em&gt;sequential&lt;/em&gt; turn-based play is &lt;em&gt;simultaneous&lt;/em&gt;
-turn-based play. In simultaneous turn-based play all players issue
-their moves at the same time, and all moves are played out at the same
-time. The simplest example is rock-paper-scissors, but Diplomacy works
-the same way. More recently, this system has been explored by the
-top-down tactical game &lt;a class="reference external" href="http://www.frozensynapse.com/"&gt;Frozen Synapse&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;While simultaneous turn-based play gets us closer to making massively
-multiplayer turn-based games feasible by turning a linear scaling
-problem into a constant time one, we're not quite out of the woods
-yet.&lt;/p&gt;
-&lt;p&gt;Consider what happens when a player does not make a move. There are a
-few reasons that might happen:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;The player is not playing the game right now.&lt;/li&gt;
-&lt;li&gt;The player has stopped playing the game altogether.&lt;/li&gt;
-&lt;li&gt;The player may be in a hopeless position, where stalling is better
-than losing. (Stalling may tie up lots of enemy resources.)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If you've ever gotten frustrated at a multiplayer game that has a
-"ready" system before you begin a game, but had to wait because one of
-the players disappeared; this is essentially the problem turn-based
-games face &lt;em&gt;every turn&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;There are a number of ways to mitigate this problem. Games can
-duplicate playing fields. That works for both sequential games like
-Hero Academy and simultaneous ones like Frozen Synapse. If a player
-doesn't make a move, that particular instance of the game world
-doesn't go anywhere; but you can play any number of games
-simultaneously.&lt;/p&gt;
-&lt;p&gt;For this strategy to work, the playing fields have to be independent.
-You don't lose heroes or soldiers because they're stuck on some stale
-game. The worst possible outcome is that your game statistics don't
-reflect reality.&lt;/p&gt;
-&lt;p&gt;That works, but rules out a permanent game world with shared
-resources. If there's a larger story being told, you would want these
-worlds to be linked somehow: be it through shared resources, or
-because they're literally the same game world.&lt;/p&gt;
-&lt;p&gt;There's a number of creative ways to get out from under that problem,
-usually by involving wall-clock time. For example, if a player doesn't
-respond within a fixed amount of time, they may forfeit their turn.
-Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference" href="http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#f1" id="id1"&gt;[1]&lt;/a&gt;
-There's a lot of degrees of freedom here. Do you use a global clock,
-or one local to a particular area?&lt;/p&gt;
-&lt;p&gt;A global clock is probably simpler, but poses some game play
-challenges. How long is the tick? Too fast, and a player may see their
-empire annihilated while they're sleeping. Too slow, and the most
-trivial action takes forever. There isn't necessarily one right
-answer, either. In an all-out cataclysmic struggle between two
-superpowers, a complete tactical battle plan may take a long time. Any
-timescale that isn't frustratingly short for that situation will be
-frustratingly long for anyone trying to guide their spaceship (or
-kodo, depending which universe you're in) across the Barrens.&lt;/p&gt;
-&lt;p&gt;Local clocks have their own share of difficulties. You still need to
-answer what happens for anything that isn't in a particular battle;
-you still need to answer what happens when battles merge or diverge.&lt;/p&gt;
-&lt;p&gt;I'm currently exploring the shared global clock. In order to mitigate
-the issues I described, I'm contemplating two ideas:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;Allow programmable units; a la Screeps, CodeWars...&lt;/li&gt;
-&lt;li&gt;Allow players to plan several turns ahead of time.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;These are, of course, not mutually exclusive.&lt;/p&gt;
-&lt;p class="rubric"&gt;Footnotes&lt;/p&gt;
-&lt;table class="docutils footnote" frame="void" id="f1" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't particularly like this, because it "breaks the fourth
-wall" in a sense. If my engines are still consuming fuel real
-time, why can't the enemy fire missiles? Either time is
-stopped, or it isn't. Sure, games can be abstract, but that
-feels like an undue inconsistency.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hypercathexes</category><category>hypercathexis</category><guid>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item></channel></rss>
+&lt;/div&gt;&lt;/div&gt;</description><guid>http://www.lvh.io/posts/reverse-ungineering.html</guid><pubDate>Fri, 14 Nov 2014 09:44:39 GMT</pubDate></item></channel></rss>
