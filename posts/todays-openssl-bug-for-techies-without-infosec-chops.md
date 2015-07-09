@@ -101,7 +101,8 @@ The "good news" is that the bad releases are recent. Most people who
 have an affected version will be updating regularly, so the number of
 people affected is small.
 
-The following distros are affected at present (non-exhaustive list):
+The bug affects following Linux distributions at present
+(non-exhaustive list):
 
 * OS X is by default not affected, because they still ship 0.9.8 by
   default. All bets are off if you got your OpenSSL from other places
