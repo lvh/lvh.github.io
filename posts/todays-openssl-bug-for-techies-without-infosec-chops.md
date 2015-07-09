@@ -41,9 +41,9 @@ In the ID analogy, your computer knows how to recognize photo IDs
 issued by e.g. California.
 
 The issue here is that in some cases, OpenSSL was willing to accept
-entities that should not have been allowed to act as a certificate
-authority. In the analogy, it would mean that it accepted CostCo
-cards, too.
+signatures authenticated by certificates that don't have certificate
+authority powers. In the analogy, it would mean that it accepted
+CostCo cards as valid ID, too.
 
 # Why did they say it wouldn't affect most users?
 
