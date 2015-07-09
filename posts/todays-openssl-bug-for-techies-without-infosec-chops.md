@@ -131,10 +131,11 @@ stable versions of your operating system, you're almost certainly
 safe.
 
 The biggest concern is with software developers using OS X. That
-audience uses HTTPS APIs frequently. OS X comes with 0.9.8zf by
-default now, which is a recent revision of an ancient
-branch. Therefore, people have a strong motivation to get their
-OpenSSL from a third-party source. The most popular source is
-Homebrew, which up until earlier this morning shipped 1.0.2c. The bug
-affects that version. If you installed OpenSSL through Homebrew, you
-should go update right now.
+audience uses HTTPS APIs frequently, and the clients to connect to
+those APIs typically use OpenSSL. OS X comes with 0.9.8zf by default
+now, which is a recent revision of an ancient branch. Therefore,
+people have a strong motivation to get their OpenSSL from a
+third-party source. The most popular source is Homebrew, which up
+until earlier this morning shipped 1.0.2c. The bug affects that
+version. If you installed OpenSSL through Homebrew, you should go
+update right now.
