@@ -22,7 +22,7 @@ Specifically, this means that an attacker who has a valid certificate
 for any domain, can use that certificate to produce new
 certificates. Those normally wouldn't work, but the algorithm for
 finding the alternative trust chain doesn't check if the valid
-certificate is allowed to act as a certificate authority.
+certificate can act as a certificate authority.
 
 # What's a certificate (chain)?
 
