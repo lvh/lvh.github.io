@@ -132,3 +132,6 @@ comes with 0.9.8zf by default now, which is a recent revision of a
 very old branch. Therefore, people have a strong motivation to get
 their OpenSSL from a third-party source. The most popular source is
 Homebrew, which currently ships ships 1.0.2c, and is affected.
+
+*UPDATE*: Homebrew has updated OpenSSL -- you should go update right
+now!
