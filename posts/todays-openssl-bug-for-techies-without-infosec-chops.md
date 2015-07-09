@@ -130,12 +130,11 @@ The bug is disastrous, but affects few people. If you're running
 stable versions of your operating system, you're almost certainly
 safe.
 
-The biggest concern, in my opinion, is for software developers using
-OS X machines. Using OS X for HTTPS REST APIs is fairly common. OS X
-comes with 0.9.8zf by default now, which is a recent revision of a
-very old branch. Therefore, people have a strong motivation to get
-their OpenSSL from a third-party source. The most popular source is
-Homebrew, which currently ships 1.0.2c, and is affected.
-
-*UPDATE*: Homebrew has updated OpenSSL -- you should go update right
-now!
+The biggest concern is with software developers using OS X. That
+audience uses HTTPS REST APIs frequently. OS X comes with 0.9.8zf by
+default now, which is a recent revision of an ancient
+branch. Therefore, people have a strong motivation to get their
+OpenSSL from a third-party source. The most popular source is
+Homebrew, which up until earlier this morning shipped 1.0.2c. The bug
+affects that version. If you installed OpenSSL through Homebrew, you
+should go update right now.
