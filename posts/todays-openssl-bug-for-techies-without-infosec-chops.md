@@ -24,34 +24,6 @@ certificates. Those normally wouldn't work, but the algorithm for
 finding the alternative trust chain doesn't check if the valid
 certificate is allowed to act as a certificate authority.
 
-# How big is the window?
-
-1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
-and 1.0.2d, were released today, on 9 Jul 2015.
-
-The "good news" is that that isn't too long ago. Most people who have
-an affected version will be updating regularly, so the number of
-people affected is fairly small.
-
-The following distros are affected at present (non-exhaustive list):
-
-* OS X is by default not affected, because they still ship 0.9.8 by
-  default. All bets are off if you got your OpenSSL from other places
-  like Homebrew; the current stable version shioped by homebrew is
-  1.0.2c, which is affected.
-* [Ubuntu is mostly not affected][ubuntu]. The only affected version
-  is the unreleased 15.10 (Wily), for which an update has already been
-  released.
-* Fedora is mostly not affected (20, 21, 22). Rawhide is affected, and
-  [so is backports][fedora-bp].
-* Debian stable is not affected, but [testing and unstable are][debian].
-* [ArchLinux testing][arch] is affected.
-
-[ubuntu]: http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html
-[arch]: https://www.archlinux.org/packages/?sort=-last_update
-[debian]: https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl
-[fedora-bp]: https://bugzilla.redhat.com/show_bug.cgi?id=1238619
-
 # What's a certificate (chain)?
 
 A certificate is a bit like an ID card: it has some information about
@@ -95,6 +67,34 @@ I'm not sure. I wish automated testing this stuff was easier. Since
 I'm both a user and a big fan of client authentication, which is a
 pretty rare feature, I hope to spend more time in the future creating
 easy-to-use automated testing tools for this kind of scenario.
+
+# How big is the window?
+
+1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
+and 1.0.2d, were released today, on 9 Jul 2015.
+
+The "good news" is that that isn't too long ago. Most people who have
+an affected version will be updating regularly, so the number of
+people affected is fairly small.
+
+The following distros are affected at present (non-exhaustive list):
+
+* OS X is by default not affected, because they still ship 0.9.8 by
+  default. All bets are off if you got your OpenSSL from other places
+  like Homebrew; the current stable version shioped by homebrew is
+  1.0.2c, which is affected.
+* [Ubuntu is mostly not affected][ubuntu]. The only affected version
+  is the unreleased 15.10 (Wily), for which an update has already been
+  released.
+* Fedora is mostly not affected (20, 21, 22). Rawhide is affected, and
+  [so is backports][fedora-bp].
+* Debian stable is not affected, but [testing and unstable are][debian].
+* [ArchLinux testing][arch] is affected.
+
+[ubuntu]: http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html
+[arch]: https://www.archlinux.org/packages/?sort=-last_update
+[debian]: https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl
+[fedora-bp]: https://bugzilla.redhat.com/show_bug.cgi?id=1238619
 
 # In conclusion
 
