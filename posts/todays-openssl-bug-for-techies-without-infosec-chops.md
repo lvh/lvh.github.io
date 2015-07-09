@@ -101,23 +101,24 @@ The "good news" is that the bad releases are recent. Most people who
 have an affected version will be updating regularly, so the number of
 people affected is small.
 
-The following distros are affected at present (non-exhaustive list):
+The bug affected following platforms (non-exhaustive):
 
-* OS X is by default not affected, because they still ship 0.9.8 by
-  default. All bets are off if you got your OpenSSL from other places
-  like Homebrew; the current stable version shipped by homebrew is
-  1.0.2c, which is affected.
+* It did not affect OS X by default, because they still ship
+  0.9.8. However, the bug does affect a stable version shipped through
+  Homebrew (1.0.2c).
 * [Ubuntu is mostly not affected][ubuntu]. The only affected version
-  is the unreleased 15.10 (Wily), for which an update has already been
-  released.
-* Stable releases of Fedora are affected. I previously mistakenly
-  reported that they weren't, but that information was based on their
-  package version numbers, which did not match upstream. The faulty
-  logic was backported to 1.0.1k, which was available in Fedora 21
-  and 22. Patches have been released; see [this ticket][fedora] for
-  details. Thanks to Major Hayden for the correction!
-* Debian stable is not affected, but [testing and unstable are][debian].
-* [ArchLinux testing][arch] is affected.
+  is the unreleased 15.10 (Wily). Ubuntu has already released an
+  update for it.
+* The bug affects stable releases of Fedora. I previously mistakenly
+  reported that the contrary, but that information was based on their
+  package version numbers, which did not match upstream. Fedora
+  backported the faulty logic to their version of 1.0.1k, which was
+  available in Fedora 21 and 22. They have since released patches; see
+  [this ticket][fedora] for details. Thanks to Major Hayden for the
+  correction!
+* The bug does not affect Debian stable, but it does affect
+  [testing and unstable][debian].
+* The bug affects [ArchLinux testing][arch].
 
 [ubuntu]: http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html
 [arch]: https://www.archlinux.org/packages/?sort=-last_update

@@ -145,25 +145,25 @@ and 1.0.2d, were released today, on 9 Jul 2015.</p>
 <p>The "good news" is that the bad releases are recent. Most people who
 have an affected version will be updating regularly, so the number of
 people affected is small.</p>
-<p>The following distros are affected at present (non-exhaustive list):</p>
+<p>The bug affected following platforms (non-exhaustive):</p>
 <ul>
-<li>OS X is by default not affected, because they still ship 0.9.8 by
-  default. All bets are off if you got your OpenSSL from other places
-  like Homebrew; the current stable version shipped by homebrew is
-  1.0.2c, which is affected.</li>
+<li>It did not affect OS X by default, because they still ship
+  0.9.8. However, the bug does affect a stable version shipped through
+  Homebrew (1.0.2c).</li>
 <li>
 <a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html">Ubuntu is mostly not affected</a>. The only affected version
-  is the unreleased 15.10 (Wily), for which an update has already been
-  released.</li>
-<li>Stable releases of Fedora are affected. I previously mistakenly
-  reported that they weren't, but that information was based on their
-  package version numbers, which did not match upstream. The faulty
-  logic was backported to 1.0.1k, which was available in Fedora 21
-  and 22. Patches have been released; see <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544">this ticket</a> for
-  details. Thanks to Major Hayden for the correction!</li>
-<li>Debian stable is not affected, but <a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl">testing and unstable are</a>.</li>
-<li>
-<a href="https://www.archlinux.org/packages/?sort=-last_update">ArchLinux testing</a> is affected.</li>
+  is the unreleased 15.10 (Wily). Ubuntu has already released an
+  update for it.</li>
+<li>The bug affects stable releases of Fedora. I previously mistakenly
+  reported that the contrary, but that information was based on their
+  package version numbers, which did not match upstream. Fedora
+  backported the faulty logic to their version of 1.0.1k, which was
+  available in Fedora 21 and 22. They have since released patches; see
+  <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544">this ticket</a> for details. Thanks to Major Hayden for the
+  correction!</li>
+<li>The bug does not affect Debian stable, but it does affect
+  <a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl">testing and unstable</a>.</li>
+<li>The bug affects <a href="https://www.archlinux.org/packages/?sort=-last_update">ArchLinux testing</a>.</li>
 </ul>
 <h2>In conclusion</h2>
 <p>The bug is disastrous, but affects few people. If you're running
