@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 09 Jul 2015 16:54:59 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 09 Jul 2015 17:00:13 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
 &lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
 alternative certificate chain when the first one fails. The logic in
 that feature had a bug in it, such that it didn't properly verify if
@@ -57,8 +57,7 @@ authenticate their peer.&lt;/p&gt;
 &lt;p&gt;Servers doing client authentication are fairly rare. The biggest
 concern is with clients. While browsers typically don't use OpenSSL, a
 lot of API clients do. For those few people affected by the bug and
-with clients that use OpenSSL, the bug is catastrophic. (As argued
-above: the good news is that that number is probably pretty small.)&lt;/p&gt;
+with clients that use OpenSSL, the bug is catastrophic.&lt;/p&gt;
 &lt;h2&gt;Why wasn't this found by automated testing?&lt;/h2&gt;
 &lt;p&gt;I'm not sure. I wish automated testing this stuff was easier. Since
 I'm both a user and a big fan of client authentication, which is a

@@ -87,8 +87,7 @@ authenticate their peer.
 Servers doing client authentication are fairly rare. The biggest
 concern is with clients. While browsers typically don't use OpenSSL, a
 lot of API clients do. For those few people affected by the bug and
-with clients that use OpenSSL, the bug is catastrophic. (As argued
-above: the good news is that that number is probably pretty small.)
+with clients that use OpenSSL, the bug is catastrophic.
 
 # Why wasn't this found by automated testing?
 
