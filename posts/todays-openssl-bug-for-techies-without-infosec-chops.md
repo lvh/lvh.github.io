@@ -126,7 +126,7 @@ The following distros are affected at present (non-exhaustive list):
 
 # In conclusion
 
-The bug is really bad, but affects few people. If you're running
+The bug is disastrous, but affects few people. If you're running
 stable versions of your operating system, you're almost certainly
 safe.
 
