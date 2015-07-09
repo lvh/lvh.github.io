@@ -61,6 +61,21 @@ concern is with clients. While browsers typically don't use OpenSSL, a
 lot of API clients do. For those few people affected by the bug and
 with clients that use OpenSSL, the bug is catastrophic.
 
+# What's client authentication?
+
+The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate chain against the list
+of certificate authorities that it knows about. The client is
+typically authenticated, but over the protocol spoken inside of TLS
+(usually HTTP), not at a TLS level.
+
+That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.
 # Why wasn't this found by automated testing?
 
 I'm not sure. I wish automated testing this stuff was easier. Since
