@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 09 Jul 2015 17:00:13 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 09 Jul 2015 17:05:58 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
 &lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
 alternative certificate chain when the first one fails. The logic in
 that feature had a bug in it, such that it didn't properly verify if
@@ -11,26 +11,6 @@ for any domain, can use that certificate to produce new
 certificates. Those normally wouldn't work, but the algorithm for
 finding the alternative trust chain doesn't check if the valid
 certificate is allowed to act as a certificate authority.&lt;/p&gt;
-&lt;h2&gt;How big is the window?&lt;/h2&gt;
-&lt;p&gt;1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
-and 1.0.2d, were released today, on 9 Jul 2015.&lt;/p&gt;
-&lt;p&gt;The "good news" is that that isn't too long ago. Most people who have
-an affected version will be updating regularly, so the number of
-people affected is fairly small.&lt;/p&gt;
-&lt;p&gt;The following distros are affected at present (non-exhaustive list):&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;OS X is by default not affected, because they still ship 0.9.8 by
-  default. All bets are off if you got your OpenSSL from other places
-  like Homebrew; the current stable version shioped by homebrew is
-  1.0.2c, which is affected.&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html"&gt;Ubuntu is mostly not affected&lt;/a&gt;. The only affected version
-  is the unreleased 15.10 (Wily), for which an update has already been
-  released.&lt;/li&gt;
-&lt;li&gt;Fedora is mostly not affected (20, 21, 22). Rawhide is affected, and
-  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1238619"&gt;so is backports&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Debian stable is not affected, but &lt;a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl"&gt;testing and unstable are&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.archlinux.org/packages/?sort=-last_update"&gt;ArchLinux testing&lt;/a&gt; is affected.&lt;/li&gt;
-&lt;/ul&gt;
 &lt;h2&gt;What's a certificate (chain)?&lt;/h2&gt;
 &lt;p&gt;A certificate is a bit like an ID card: it has some information about
 you (like your name), and is authenticated by a certificate authority
@@ -58,11 +38,50 @@ authenticate their peer.&lt;/p&gt;
 concern is with clients. While browsers typically don't use OpenSSL, a
 lot of API clients do. For those few people affected by the bug and
 with clients that use OpenSSL, the bug is catastrophic.&lt;/p&gt;
+&lt;h2&gt;What's client authentication?&lt;/h2&gt;
+&lt;p&gt;The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate chain against the list
+of certificate authorities that it knows about. The client is
+typically authenticated, but over the protocol spoken inside of TLS
+(usually HTTP), not at a TLS level.&lt;/p&gt;
+&lt;p&gt;That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.&lt;/p&gt;
+&lt;h2&gt;What's TLS?&lt;/h2&gt;
+&lt;p&gt;TLS is what SSL has been called for way over a decade. The old name
+stuck (particularly in the name "OpenSSL"), but you should probably
+stop using it when you're talking about the secure protocol, since all
+of the versions of the protocol that were called "SSL" have crippling
+security bugs.&lt;/p&gt;
 &lt;h2&gt;Why wasn't this found by automated testing?&lt;/h2&gt;
 &lt;p&gt;I'm not sure. I wish automated testing this stuff was easier. Since
 I'm both a user and a big fan of client authentication, which is a
 pretty rare feature, I hope to spend more time in the future creating
 easy-to-use automated testing tools for this kind of scenario.&lt;/p&gt;
+&lt;h2&gt;How big is the window?&lt;/h2&gt;
+&lt;p&gt;1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
+and 1.0.2d, were released today, on 9 Jul 2015.&lt;/p&gt;
+&lt;p&gt;The "good news" is that that isn't too long ago. Most people who have
+an affected version will be updating regularly, so the number of
+people affected is fairly small.&lt;/p&gt;
+&lt;p&gt;The following distros are affected at present (non-exhaustive list):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;OS X is by default not affected, because they still ship 0.9.8 by
+  default. All bets are off if you got your OpenSSL from other places
+  like Homebrew; the current stable version shioped by homebrew is
+  1.0.2c, which is affected.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html"&gt;Ubuntu is mostly not affected&lt;/a&gt;. The only affected version
+  is the unreleased 15.10 (Wily), for which an update has already been
+  released.&lt;/li&gt;
+&lt;li&gt;Fedora is mostly not affected (20, 21, 22). Rawhide is affected, and
+  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1238619"&gt;so is backports&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Debian stable is not affected, but &lt;a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl"&gt;testing and unstable are&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.archlinux.org/packages/?sort=-last_update"&gt;ArchLinux testing&lt;/a&gt; is affected.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2&gt;In conclusion&lt;/h2&gt;
 &lt;p&gt;The bug is really bad, but affects few people. If you're running
 stable versions of your operating system, you're almost certainly
