@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (css)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/css.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Fri, 21 Aug 2015 20:33:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+find one or more elements matching a CSS selector. I'm assuming basic
+familiarity with CSS selectors: how you select elements, classes and ids. If
+you haven't used them, start with the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors"&gt;MDN introduction&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Imagine the following HTML page:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"outside"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"my-id"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"inside"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"lonely"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"outer"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"inner"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;document.querySelectorAll("div")&lt;/code&gt; returns a &lt;code&gt;NodeList&lt;/code&gt; of all of the &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt;
+elements on the page. &lt;code&gt;document.querySelector("div.lonely")&lt;/code&gt; returns that
+single lonely div.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;document&lt;/code&gt; supports both &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"&gt;&lt;code&gt;querySelector&lt;/code&gt;&lt;/a&gt; and
+&lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"&gt;&lt;code&gt;querySelectorAll&lt;/code&gt;&lt;/a&gt;, letting you find elements in the entire
+document. Elements themselves also support both &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector"&gt;&lt;code&gt;querySelector&lt;/code&gt;&lt;/a&gt; and
+&lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;querySelectorAll&lt;/code&gt;&lt;/a&gt;, letting you query elements that are children of a
+given element.  &lt;code&gt;document.querySelector("#my-id").querySelectorAll("img")&lt;/code&gt;
+will find images that are children of &lt;code&gt;#my-id&lt;/code&gt;. In the sample HTML page above,
+it will find &lt;code&gt;&amp;lt;img id="inside"&amp;gt;&lt;/code&gt; but not &lt;code&gt;&amp;lt;img id="outside"&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With that in mind, what do you think these two lines might do?&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;You might reasonably expect them to be the same. After all, one asks &lt;code&gt;div&lt;/code&gt;
+elements inside &lt;code&gt;div&lt;/code&gt; elements inside &lt;code&gt;#my-id&lt;/code&gt;, and the other asks for &lt;code&gt;div&lt;/code&gt;
+elements inside &lt;code&gt;div&lt;/code&gt; elements that are &lt;em&gt;children&lt;/em&gt; of &lt;code&gt;#my-id&lt;/code&gt;. I certainly
+expected them to be the same. However, when you look at &lt;a href="http://jsbin.com/hineco/edit?html,js,output"&gt;this JSbin&lt;/a&gt;
+you'll see that they're not:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id div div"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"div div"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;What the heck is going on here?&lt;/p&gt;
+&lt;p&gt;It turns out that &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;element.querySelectorAll&lt;/code&gt;&lt;/a&gt; doesn't start matching
+elements from &lt;code&gt;element&lt;/code&gt;. Instead, it searches the &lt;code&gt;document&lt;/code&gt; for elements
+matching the query, and &lt;em&gt;then&lt;/em&gt; filters for elements that are children of the
+element. So, we're seeing three &lt;code&gt;div&lt;/code&gt; elements: &lt;code&gt;div.lonely&lt;/code&gt;, &lt;code&gt;div.outer&lt;/code&gt;,
+&lt;code&gt;div.inner&lt;/code&gt;; because they match the &lt;code&gt;div div&lt;/code&gt; selector and because they're all
+descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The trick to remembering this is that CSS selectors for &lt;code&gt;querySelector(All)&lt;/code&gt;
+always start from the document, never from an element.&lt;/p&gt;
+&lt;p&gt;I think this API is surprising, and the front-end engineers I've asked seem to
+agree with me. This is, however, not a bug; it's definitely how the spec
+claims it should work, and how it works in Firefox, Chrome and Safari.&lt;/p&gt;&lt;/div&gt;</description><category>css</category><guid>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item></channel></rss>

@@ -103,7 +103,7 @@ people affected is small.
 
 The bug affected following platforms (non-exhaustive):
 
-* It did not affect OS X by default, because they still ship
+* It did not affect stock OS X, because they still ship
   0.9.8. However, the bug does affect a stable version shipped through
   Homebrew (1.0.2c).
 * [Ubuntu is mostly not affected][ubuntu]. The only affected version

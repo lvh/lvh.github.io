@@ -9,7 +9,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="http://www.lvh.io/index.html">
 <link rel="next" href="index-4.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -69,7 +69,75 @@
             
 
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" class="u-url">querySelectorAll from an element probably doesn't do what you think it does</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" rel="bookmark"><time class="published dt-published" datetime="2015-08-21T12:11:23-07:00" title="2015-08-21 12:11">2015-08-21 12:11</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Modern browsers have APIs called <code>querySelector</code> and <code>querySelectorAll</code>. They
+find one or more elements matching a CSS selector. I'm assuming basic
+familiarity with CSS selectors: how you select elements, classes and ids. If
+you haven't used them, start with the <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors">MDN introduction</a>.</p>
+<p>Imagine the following HTML page:</p>
+<pre class="code literal-block"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;img</span> <span class="na">id=</span><span class="s">"outside"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"my-id"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">id=</span><span class="s">"inside"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"lonely"</span><span class="nt">&gt;&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"outer"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner"</span><span class="nt">&gt;&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+
+
+<p><code>document.querySelectorAll("div")</code> returns a <code>NodeList</code> of all of the <code>&lt;div&gt;</code>
+elements on the page. <code>document.querySelector("div.lonely")</code> returns that
+single lonely div.</p>
+<p><code>document</code> supports both <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"><code>querySelector</code></a> and
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"><code>querySelectorAll</code></a>, letting you find elements in the entire
+document. Elements themselves also support both <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector"><code>querySelector</code></a> and
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>querySelectorAll</code></a>, letting you query elements that are children of a
+given element.  <code>document.querySelector("#my-id").querySelectorAll("img")</code>
+will find images that are children of <code>#my-id</code>. In the sample HTML page above,
+it will find <code>&lt;img id="inside"&gt;</code> but not <code>&lt;img id="outside"&gt;</code>.</p>
+<p>With that in mind, what do you think these two lines might do?</p>
+<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">);</span>
+</pre>
+
+
+<p>You might reasonably expect them to be the same. After all, one asks <code>div</code>
+elements inside <code>div</code> elements inside <code>#my-id</code>, and the other asks for <code>div</code>
+elements inside <code>div</code> elements that are <em>children</em> of <code>#my-id</code>. I certainly
+expected them to be the same. However, when you look at <a href="http://jsbin.com/hineco/edit?html,js,output">this JSbin</a>
+you'll see that they're not:</p>
+<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">3</span><span class="p">;</span>
+</pre>
+
+
+<p>What the heck is going on here?</p>
+<p>It turns out that <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>element.querySelectorAll</code></a> doesn't start matching
+elements from <code>element</code>. Instead, it searches the <code>document</code> for elements
+matching the query, and <em>then</em> filters for elements that are children of the
+element. So, we're seeing three <code>div</code> elements: <code>div.lonely</code>, <code>div.outer</code>,
+<code>div.inner</code>; because they match the <code>div div</code> selector and because they're all
+descendants of <code>#my-id</code>.</p>
+<p>The trick to remembering this is that CSS selectors for <code>querySelector(All)</code>
+always start from the document, never from an element.</p>
+<p>I think this API is surprising, and the front-end engineers I've asked seem to
+agree with me. This is, however, not a bug; it's definitely how the spec
+claims it should work, and how it works in Firefox, Chrome and Safari.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
             <p class="dateline"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" rel="bookmark"><time class="published dt-published" datetime="2015-07-09T08:26:58-07:00" title="2015-07-09 08:26">2015-07-09 08:26</time></a></p>
@@ -147,7 +215,7 @@ have an affected version will be updating regularly, so the number of
 people affected is small.</p>
 <p>The bug affected following platforms (non-exhaustive):</p>
 <ul>
-<li>It did not affect OS X by default, because they still ship
+<li>It did not affect stock OS X, because they still ship
   0.9.8. However, the bug does affect a stable version shipped through
   Homebrew (1.0.2c).</li>
 <li>
@@ -924,212 +992,6 @@ I'm going to invest a ton of time improving the documentation for both
 <code>core.logic</code> and <code>core.typed</code>. They're <em>fantastic</em> projects, but
 they're harder to get started with than they could be, and that's a
 shame.</p>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/reverse-ungineering.html" class="u-url">Reverse ungineering</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/reverse-ungineering.html" rel="bookmark"><time class="published dt-published" datetime="2014-11-14T02:44:39-07:00" title="2014-11-14 02:44">2014-11-14 02:44</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>(Title with apologies to Glyph.)</p>
-<p>Recently, some friends of mine suggested that "software engineer" is
-not a good job title. While they are of course free to call their
-profession whatever they like, I respectfully disagree: I think
-"engineer" is a perfectly cromulent description of what we do.</p>
-<p>This is an opinion piece. Despite arriving at opposite conclusions,
-the disagreement is feathery at best.</p>
-<div class="section" id="what-if-buildings-failed-as-often-as-software-projects">
-<h2>What if buildings failed as often as software projects?</h2>
-<p>To illustrate the differences between software development and other
-engineering disciplines, Glyph compares software to civil engineering.</p>
-<p>For example, when it comes to getting things done, we're just not very
-good:</p>
-<blockquote>
-Most software projects fail; as of 2009, 44% are late, over budget,
-or out of specification, and an additional 24% are canceled
-entirely. Only a third of projects succeed according to those
-criteria of being under budget, within specification, and complete.</blockquote>
-<p>Such shenanigans would never be accepted in a Serious Engineering
-Discipline, like civil engineering:</p>
-<blockquote>
-Would you want to live in a city where almost a quarter of all the
-buildings were simply abandoned half-constructed, or fell down
-during construction? Where almost half of the buildings were missing
-floors, had rents in the millions of dollars, or both?</blockquote>
-<p>I certainly wouldn't.</p>
-<p>Computers are terrible, but not quite <em>that</em> bad, as Glyph points
-out. "Failure" simply means something different for software projects
-than it does for construction projects. Many of those "failed"
-software projects were quite successful by other measures; the problem
-isn't with software projects, it's with applying civil engineering
-standards to a project that isn't.</p>
-<p>Software projects aren't civil engineering projects.  Attempts to
-treat them as such have done much more harm than good. That said, that
-doesn't mean that software development isn't engineering.</p>
-<p>Firstly, civil engineering is the outlier here. Other engineering
-disciplines don't do well according to the civil engineering success
-yardstick either. The few engineering endeavors that do are usually
-civil engineering in disguise, such as the construction of nuclear and
-chemical plants.  Rank-and-file projects in most fields of engineering
-operate a lot more like a software project than the construction of a
-skyscraper. Projects are late and over budget, often highly
-experimental in nature, and in many cases also subject to changing
-requirements. It's true that we just can't plan ahead in software, but
-we're not the only ones.</p>
-<p>Secondly, we may be confounding cause and effect, even if we overlook
-that not all engineering is civil engineering. Are software projects
-unable to stick to these standards because it's not engineering, or is
-civil engineering the only thing that sticks to them because <em>they
-have no other choice</em>? Conversely, do we fail early and often because
-we're not engineering, or because, unlike civil engineering projects,
-we <em>can</em>? <a class="footnote-reference" href="posts/reverse-ungineering.html#anthropic" id="id1">[1]</a></p>
-<p>Finally, software has existed for decades, but buildings have for
-millennia. Bridges used to collapse all the time. Tacoma Narrows
-wasn't so long ago. If the tour guide on my trip to Paris is to be
-believed, one of those bridges has collapsed four times already.</p>
-</div>
-<div class="section" id="but-this-isn-t-science">
-<h2>But this isn't science!</h2>
-<p>Supposedly, software engineering isn't "real" engineering because,
-unlike "real" engineering, it is not backed by "real" science or math.
-This statement is usually paired with a dictionary definition of the
-word "engineering".</p>
-<p>I feel this characterization is incongruent with the daily reality of
-engineering.</p>
-<p>Consider the civil engineer, presumably the engineeringest engineer
-there is. <a class="footnote-reference" href="posts/reverse-ungineering.html#civil" id="id2">[2]</a> If you ask me to dimension an I-beam for
-you, I would:</p>
-<ul class="simple">
-<li>spitball the load,</li>
-<li>draw a free-body diagram,</li>
-<li>probably draw a shear and moment diagram,</li>
-<li>and pick the smallest standard beam that'll do what you want.</li>
-</ul>
-<p>If you want to know how far that beam is going to go, I'll draw you
-some conjugate beams. I would also definitely <em>not</em> use the
-moment-area theorem, even though it wouldn't be too difficult for the
-reasonable uses of an I-beam.</p>
-<p>Once upon a time, someone inflicted a variety of theories on me.
-Euler-Bernouilli beam theory, for example. Very heavy textbooks with
-very heavy math. Neither my physical therapist nor my regular one
-expect me to ever <em>truly</em> recover. Nonetheless, area moments and
-section moduli are the only way to understand where the <tt class="docutils literal">I</tt> in
-I-beam comes from.</p>
-<p>Nasty math didn't prevent me from dimensioning that I-beam. And I do
-really mean <em>math</em>, not physics: Euler-Bernouilli is a math hack. You
-get it by taking Hooke's law and throwing some calculus at it. Hooke's
-law itself is more math than physics, too: it's a first-order
-approximation based only on the observation that stuff stretches when
-you pull it. It's wrong all the time, even for fairly germane objects
-like rubber bands. Both theories were put together long before we had
-materials science. We use them because they (mostly) work, not because
-they are a consequence of a physical model.</p>
-<p>That was just one example from a single discipline, but it holds more
-generally, too. I analyze circuits by recognizing subsections. If you
-show me a piece that looks like a low-pass filter, I am not distracted
-by Maxwell's equations to figure out what that little capacitor is
-doing.  I could certainly derive its behavior that way; in fact,
-someone made me do that once, and it was quite instructive. But I'm
-not bothered with the electrodynamics of a capacitor right now; I'm
-just trying to understand this circuit!</p>
-<p>This isn't just how engineers happen to do their jobs in practice,
-either. Engineering breakthroughs live on both sides of science's
-cutting edge. When Shockley et al. first managed to get a transistor
-to work, we didn't really understand what was going on. <a class="footnote-reference" href="posts/reverse-ungineering.html#tor" id="id3">[3]</a> Carnot
-was building engines long before anyone realized he had stumbled upon
-one of the most fundamental properties of the universe. Nobody was
-doing metaphysics. Sadi wanted a better steam engine.</p>
-<p>To me, saying that I-beam was dimensioned with the help of beam theory
-is about as far from the truth as saying that a software project was
-built with the help of category theory. I'm sure that there's some way
-that that thing I just wrote is a covariant functor and you can
-co-Yoneda your way to proving natural isomorphism, but I don't <em>have</em>
-to care in order to successfully produce some software. It's easy to
-reduce an applied field to <em>just</em> the application of that field, but
-that doesn't make it so; especially if we haven't even really figured
-out the field yet.</p>
-<p>So, even if the math and science behind computer engineering is
-somehow less real than that other math and science, I think that
-difference is immaterial, and certainly not enough to make us an
-entirely different profession.</p>
-</div>
-<div class="section" id="but-that-isn-t-art">
-<h2>But <em>that</em> isn't art!</h2>
-<p>Many people smarter than I have made the argument that programming is
-art, not dissimilar from painting, music or even cooking. I'm
-inclined to agree: many talented programmers are also very talented
-artists in other fields. However, I do disagree that those things are
-art-like <em>unlike</em> engineering, which is supposedly just cold, hard
-science.</p>
-<p>There's a not-so-old adage that science is everything we understand
-well enough to explain to a computer, and art is everything else. If
-that's true, there's definitely plenty of art to be found in
-engineering. (That was a little tongue-in-cheek. Nobody wants to get
-dragged into a semantic argument about what art <em>is</em>.)</p>
-<p>Even with a much narrower view of art, engineers do plenty of it, as
-I've tried to argue before. Not all engineering calls are direct
-consequences of relativity, thermodynamics or quantum
-mechanics. Sometimes, it is really just down to what the engineer
-finds most palatable. Even civil engineers, the gray predictable
-stalwarts of our story, care about making beautiful things. The Burj
-Khalifa wasn't a consequence of a human following an algorithm.</p>
-</div>
-<div class="section" id="conclusion">
-<h2>Conclusion</h2>
-<p>I think the similarities run deep. I hope we don't throw that away
-essentially just because our field is a little younger. We're all
-hackers here; and we're all engineers, too.</p>
-<p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="anthropic" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="posts/reverse-ungineering.html#id1">[1]</a></td>
-<td>I suppose this is really analogous to the anthropic
-principle, except applied to engineering disciplines
-instead of humans.</td>
-</tr></tbody>
-</table>
-<table class="docutils footnote" frame="void" id="civil" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="posts/reverse-ungineering.html#id2">[2]</a></td>
-<td>I'm using civil engineer here in the strict American sense
-of person who builds targets, as opposed to the military
-engineer, who builds weapons. Jokes aside, perhaps this is
-related to the disagreement. Where I come from, "civil
-engineer" means "advanced engineering degree", and
-encompasses many disciplines, including architectural (for
-lack of better word; I mean the American "civil engineer"
-here), chemical, electrical, and yes, computer.</td>
-</tr></tbody>
-</table>
-<table class="docutils footnote" frame="void" id="tor" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="posts/reverse-ungineering.html#id3">[3]</a></td>
-<td>While it is very easy to make up a sensible-sounding
-narrative time line after the fact for the breakthroughs in
-physics and engineering that eventually made the transistor
-possible, this ignores the strong disagreements between
-theoretical predictions and practical measurements of the
-time. Regardless of their cause, it would be foolish to
-assume that Shockley just sat down and applied some theory.
-The theory just wasn't there yet.</td>
-</tr></tbody>
-</table>
-<!-- LocalWords:  engineeringest -->
-</div>
 </div>
     </div>
     </article>
