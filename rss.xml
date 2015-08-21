@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Fri, 21 Aug 2015 20:33:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>http://www.lvh.io/</link><description>lvh's blog</description><atom:link href="http://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Fri, 21 Aug 2015 21:21:37 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, start with the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors"&gt;MDN introduction&lt;/a&gt;.&lt;/p&gt;
@@ -53,11 +53,31 @@ matching the query, and &lt;em&gt;then&lt;/em&gt; filters for elements that are 
 element. So, we're seeing three &lt;code&gt;div&lt;/code&gt; elements: &lt;code&gt;div.lonely&lt;/code&gt;, &lt;code&gt;div.outer&lt;/code&gt;,
 &lt;code&gt;div.inner&lt;/code&gt;; because they match the &lt;code&gt;div div&lt;/code&gt; selector and because they're all
 descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The trick to remembering this is that CSS selectors for &lt;code&gt;querySelector(All)&lt;/code&gt;
-always start from the document, never from an element.&lt;/p&gt;
+&lt;p&gt;The trick to remembering this is that CSS selectors are absolute; not relative
+to any particular element, not even the element you're calling
+&lt;code&gt;querySelectorAll&lt;/code&gt; on.&lt;/p&gt;
+&lt;p&gt;This even works with elements &lt;em&gt;outside&lt;/em&gt; the element you're calling
+&lt;code&gt;querySelectorAll&lt;/code&gt; on. For example
+&lt;code&gt;document.querySelector("#my-id").querySelector("div div div")&lt;/code&gt; matches the
+inner &lt;code&gt;div&lt;/code&gt; in this snippet (&lt;a href="http://jsbin.com/woropuc/edit?html,js,output"&gt;JSbin&lt;/a&gt;):&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"my-id"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"inner"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
 &lt;p&gt;I think this API is surprising, and the front-end engineers I've asked seem to
 agree with me. This is, however, not a bug; it's definitely how the spec
-claims it should work, and how it works in Firefox, Chrome and Safari.&lt;/p&gt;&lt;/div&gt;</description><category>css</category><guid>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
+claims it should work, and how it works in Firefox, Chrome and Safari. Looking
+at it from the perspective of a browser, it makes sense: you have a CSS
+selector, you want the elements that match it, and then apply some styles.&lt;/p&gt;&lt;/div&gt;</description><category>css</category><guid>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>http://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
 &lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
 alternative certificate chain when the first one fails. The logic in
 that feature had a bug in it, such that it didn't properly verify if

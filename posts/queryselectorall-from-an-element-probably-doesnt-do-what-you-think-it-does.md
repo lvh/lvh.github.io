@@ -71,12 +71,33 @@ element. So, we're seeing three `div` elements: `div.lonely`, `div.outer`,
 `div.inner`; because they match the `div div` selector and because they're all
 descendants of `#my-id`.
 
-The trick to remembering this is that CSS selectors for `querySelector(All)`
-always start from the document, never from an element.
+The trick to remembering this is that CSS selectors are absolute; not relative
+to any particular element, not even the element you're calling
+`querySelectorAll` on.
+
+This even works with elements *outside* the element you're calling
+`querySelectorAll` on. For example
+`document.querySelector("#my-id").querySelector("div div div")` matches the
+inner `div` in this snippet ([JSbin][jsbin2]):
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <div>
+      <div id="my-id">
+        <div class="inner"></div>
+      </div>
+    </div>
+  </body>
+</html>
+```
 
 I think this API is surprising, and the front-end engineers I've asked seem to
 agree with me. This is, however, not a bug; it's definitely how the spec
-claims it should work, and how it works in Firefox, Chrome and Safari.
+claims it should work, and how it works in Firefox, Chrome and Safari. Looking
+at it from the perspective of a browser, it makes sense: you have a CSS
+selector, you want the elements that match it, and then apply some styles.
 
 [csssel]: https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors
 [dqs]: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
@@ -84,4 +105,5 @@ claims it should work, and how it works in Firefox, Chrome and Safari.
 [eqs]: https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector
 [eqsa]: https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll
 [jsbin]: http://jsbin.com/hineco/edit?html,js,output
+[jsbin2]: http://jsbin.com/woropuc/edit?html,js,output
 [spec]: https://dom.spec.whatwg.org/#dom-parentnode-queryselectorall

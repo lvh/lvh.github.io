@@ -148,11 +148,31 @@ matching the query, and <em>then</em> filters for elements that are children of 
 element. So, we're seeing three <code>div</code> elements: <code>div.lonely</code>, <code>div.outer</code>,
 <code>div.inner</code>; because they match the <code>div div</code> selector and because they're all
 descendants of <code>#my-id</code>.</p>
-<p>The trick to remembering this is that CSS selectors for <code>querySelector(All)</code>
-always start from the document, never from an element.</p>
+<p>The trick to remembering this is that CSS selectors are absolute; not relative
+to any particular element, not even the element you're calling
+<code>querySelectorAll</code> on.</p>
+<p>This even works with elements <em>outside</em> the element you're calling
+<code>querySelectorAll</code> on. For example
+<code>document.querySelector("#my-id").querySelector("div div div")</code> matches the
+inner <code>div</code> in this snippet (<a href="http://jsbin.com/woropuc/edit?html,js,output">JSbin</a>):</p>
+<pre class="code literal-block"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"my-id"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner"</span><span class="nt">&gt;&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+
+
 <p>I think this API is surprising, and the front-end engineers I've asked seem to
 agree with me. This is, however, not a bug; it's definitely how the spec
-claims it should work, and how it works in Firefox, Chrome and Safari.</p>
+claims it should work, and how it works in Firefox, Chrome and Safari. Looking
+at it from the perspective of a browser, it makes sense: you have a CSS
+selector, you want the elements that match it, and then apply some styles.</p>
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
