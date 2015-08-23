@@ -23,7 +23,7 @@
  </url>
  <url>
   <loc>http://www.lvh.io/2015/index.html</loc>
-  <lastmod>2015-08-23T19:44:00Z</lastmod>
+  <lastmod>2015-08-23T23:09:00Z</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/about.html</loc>
@@ -46,8 +46,16 @@
   <lastmod>2015-08-23T19:44:00Z</lastmod>
  </url>
  <url>
+  <loc>http://www.lvh.io/categories/css-webdev-dom.html</loc>
+  <lastmod>2015-08-23T19:51:00Z</lastmod>
+ </url>
+ <url>
   <loc>http://www.lvh.io/categories/css.html</loc>
-  <lastmod>2015-08-23T19:44:00Z</lastmod>
+  <lastmod>2015-08-23T23:09:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://www.lvh.io/categories/dom.html</loc>
+  <lastmod>2015-08-23T23:09:00Z</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/categories/game.html</loc>
@@ -67,7 +75,7 @@
  </url>
  <url>
   <loc>http://www.lvh.io/categories/index.html</loc>
-  <lastmod>2015-08-23T19:44:00Z</lastmod>
+  <lastmod>2015-08-23T19:52:00Z</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/categories/mathjax.html</loc>
@@ -94,6 +102,10 @@
   <lastmod>2015-08-23T19:44:00Z</lastmod>
  </url>
  <url>
+  <loc>http://www.lvh.io/categories/webdev.html</loc>
+  <lastmod>2015-08-23T23:09:00Z</lastmod>
+ </url>
+ <url>
   <loc>http://www.lvh.io/index-1.html</loc>
   <lastmod>2015-08-23T19:44:00Z</lastmod>
  </url>
@@ -111,7 +123,7 @@
  </url>
  <url>
   <loc>http://www.lvh.io/index.html</loc>
-  <lastmod>2015-08-23T19:44:00Z</lastmod>
+  <lastmod>2015-08-23T23:09:00Z</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html</loc>
@@ -263,7 +275,7 @@
  </url>
  <url>
   <loc>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</loc>
-  <lastmod>2015-08-23T19:44:00Z</lastmod>
+  <lastmod>2015-08-23T23:09:00Z</lastmod>
  </url>
  <url>
   <loc>http://www.lvh.io/posts/reverse-ungineering.html</loc>

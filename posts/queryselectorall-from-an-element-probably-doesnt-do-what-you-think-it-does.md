@@ -2,7 +2,7 @@
 .. title: querySelectorAll from an element probably doesn't do what you think it does
 .. slug: queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does
 .. date: 2015-08-21 12:11:23 UTC-07:00
-.. tags: css
+.. tags: css, webdev, dom
 .. category:
 .. link:
 .. description:
@@ -44,18 +44,18 @@ given element.  `document.querySelector("#my-id").querySelectorAll("img")`
 will find images that are children of `#my-id`. In the sample HTML page above,
 it will find `<img id="inside">` but not `<img id="outside">`.
 
-With that in mind, what do you think these two lines might do?
+With that in mind, what do you think these two lines do?
 
 ```javascript
 document.querySelectorAll("#my-id div div");
 document.querySelector("#my-id").querySelectorAll("div div");
 ```
 
-You might reasonably expect them to be the same. After all, one asks `div`
-elements inside `div` elements inside `#my-id`, and the other asks for `div`
-elements inside `div` elements that are *children* of `#my-id`. I certainly
-expected them to be the same. However, when you look at [this JSbin][jsbin]
-you'll see that they're not:
+You might reasonably expect them to be equivalent. After all, one asks
+`div` elements inside `div` elements inside `#my-id`, and the other
+asks for `div` elements inside `div` elements that are *descendants*
+of `#my-id`. However, when you look at [this JSbin][jsbin] you'll see
+that they produce very different results:
 
 ```javascript
 document.querySelectorAll("#my-id div div").length === 1;
@@ -68,17 +68,21 @@ It turns out that [`element.querySelectorAll`][eqsa] doesn't match
 elements starting from `element`. Instead, it matches elements
 matching the query that are also descendants of `element`. Therefore,
 we're seeing three `div` elements: `div.lonely`, `div.outer`,
-`div.inner`; because they both match the `div div` selector and
-are all descendants of `#my-id`.
+`div.inner`. We're seeing them because they both match the `div div`
+selector and are all descendants of `#my-id`.
 
 The trick to remembering this is that CSS selectors are absolute; not
 relative to any particular element, not even the element you're
 calling `querySelectorAll` on.
 
 This even works with elements *outside* the element you're calling
-`querySelectorAll` on. For example
-`document.querySelector("#my-id").querySelector("div div div")` matches the
-inner `div` in this snippet ([JSbin][jsbin2]):
+`querySelectorAll` on. For example, this selector:
+
+```javascript
+document.querySelector("#my-id").querySelector("div div div")`
+```
+
+... matches `div.inner` in this snippet ([JSbin][jsbin2]):
 
 ```html
 <!DOCTYPE html>
@@ -96,17 +100,17 @@ inner `div` in this snippet ([JSbin][jsbin2]):
 I think this API is surprising, and the front-end engineers I've asked
 seem to agree with me. This is, however, not a bug; it's definitely
 how the spec claims it should work, and how it works in Firefox,
-Chrome and Safari. [John Resig][jresig] commented back when the spec
-came out that this was quite confusing.
+Chrome and Safari. [John Resig commented][jresig] how he and others
+felt this behavior was quite confusing back when the spec came out.
 
 There are two suggested ways to get the other behavior: the `:scope`
-CSS pseudo-selector, and the `query(All)` methods added by DOM4.
+CSS pseudo-selector, and `query`/`queryAll`.
 
 The `:scope` pseudo-selector matches against the current scope. The
 name comes from the [CSS scoping][scope-spec], which limits the scope
 of styles to part of the document. The element we're calling
 `querySelectorAll` on also counts as a scope, which means that the
-following expression matches what you may have hoped:
+following expression only matches `div.inner`:
 
 ```javascript
 document.querySelector("#my-id").querySelectorAll(":scope div div");
@@ -114,18 +118,18 @@ document.querySelector("#my-id").querySelectorAll(":scope div div");
 
 Unfortunately, [browser support][scope-compat] for scoped CSS and the
 `:scope` pseudo-selector is extremely limited. Only recent versions of
-Firefox support it by default. In Chrome, it requires a well-hidden
-experimental features flag to be turned on. Safari supports it, but
-with bugs. Internet Explorer and Opera don't support it at all.
+Firefox support it by default. Chrome requires the well-hidden
+experimental features flag to be turned on. Safari has a buggy
+implementation, while Internet Explorer and Opera don't support it at
+all.
 
 The other alternative is `element.query(All)`. Unfortunately, it's
-even more obscure. I was unable to find any reference to it on either
-the Mozilla Developer Network or on CanIUse. It is not specified in
-the [W3C Last Call Working Draft for DOM4][dom4-query], dated 18
-June 2015. The only reference I was able to find is from an
-[older Last Call Working Draft for DOM 4][older-dom4], dated 4
-February 2014. However, this method has been implemented by at least
-two polyfills:
+even more obscure. It is not referenced on MDN or caniuse.com, and is
+missing from the [current DOM4 working draft][dom4-query], dated 18
+June 2015. It was still present in
+[an older version of the same draft][older-dom4], dated 4 February
+2014, as well as the [WHATWG Living Document][living-dom] version of
+the spec. It has also been implemented by at least two polyfills:
 
 * [Dom4][dom4-polyfill]
 * [dom-elements][dom-elements-polyfill]
@@ -146,3 +150,4 @@ two polyfills:
 [older-dom4]: http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode
 [dom4-polyfill]: https://webreflection.github.io/dom4/
 [dom-elements-polyfill]: https://github.com/barberboy/dom-elements
+[living-dom]: https://dom.spec.whatwg.org/#interface-parentnode
