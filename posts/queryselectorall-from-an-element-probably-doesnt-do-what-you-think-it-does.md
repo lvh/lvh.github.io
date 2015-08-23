@@ -93,11 +93,42 @@ inner `div` in this snippet ([JSbin][jsbin2]):
 </html>
 ```
 
-I think this API is surprising, and the front-end engineers I've asked seem to
-agree with me. This is, however, not a bug; it's definitely how the spec
-claims it should work, and how it works in Firefox, Chrome and Safari. Looking
-at it from the perspective of a browser, it makes sense: you have a CSS
-selector, you want the elements that match it, and then apply some styles.
+I think this API is surprising, and the front-end engineers I've asked
+seem to agree with me. This is, however, not a bug; it's definitely
+how the spec claims it should work, and how it works in Firefox,
+Chrome and Safari. [John Resig][jresig] commented back when the spec
+came out that this was quite confusing.
+
+There are two suggested ways to get the other behavior: the `:scope`
+CSS pseudo-selector, and the `query(All)` methods added by DOM4.
+
+The `:scope` pseudo-selector matches against the current scope. The
+name comes from the [CSS scoping][scope-spec], which limits the scope
+of styles to part of the document. The element we're calling
+`querySelectorAll` on also counts as a scope, which means that the
+following expression matches what you may have hoped:
+
+```javascript
+document.querySelector("#my-id").querySelectorAll(":scope div div");
+```
+
+Unfortunately, [browser support][scope-compat] for scoped CSS and the
+`:scope` pseudo-selector is extremely limited. Only recent versions of
+Firefox support it by default. In Chrome, it requires a well-hidden
+experimental features flag to be turned on. Safari supports it, but
+with bugs. Internet Explorer and Opera don't support it at all.
+
+The other alternative is `element.query(All)`. Unfortunately, it's
+even more obscure. I was unable to find any reference to it on either
+the Mozilla Developer Network or on CanIUse. It is not specified in
+the [W3C Last Call Working Draft for DOM4][dom4-query], dated 18
+June 2015. The only reference I was able to find is from an
+[older Last Call Working Draft for DOM 4][older-dom4], dated 4
+February 2014. However, this method has been implemented by at least
+two polyfills:
+
+* [Dom4][dom4-polyfill]
+* [dom-elements][dom-elements-polyfill]
 
 [csssel]: https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors
 [dqs]: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
@@ -107,3 +138,11 @@ selector, you want the elements that match it, and then apply some styles.
 [jsbin]: http://jsbin.com/hineco/edit?html,js,output
 [jsbin2]: http://jsbin.com/woropuc/edit?html,js,output
 [spec]: https://dom.spec.whatwg.org/#dom-parentnode-queryselectorall
+[jresig]: http://ejohn.org/blog/thoughts-on-queryselectorall/
+[scope-spec]: https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped
+[scope]: https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope
+[scope-compat]: https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility
+[dom4-query]: http://www.w3.org/TR/dom/#interface-parentnode
+[older-dom4]: http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode
+[dom4-polyfill]: https://webreflection.github.io/dom4/
+[dom-elements-polyfill]: https://github.com/barberboy/dom-elements
