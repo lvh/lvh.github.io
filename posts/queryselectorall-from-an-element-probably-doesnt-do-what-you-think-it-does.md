@@ -64,12 +64,12 @@ document.querySelector("#my-id").querySelectorAll("div div").length === 3;
 
 What the heck is going on here?
 
-It turns out that [`element.querySelectorAll`][eqsa] doesn't start matching
-elements from `element`. Instead, it searches the `document` for elements
-matching the query, and *then* filters for elements that are children of the
-element. So, we're seeing three `div` elements: `div.lonely`, `div.outer`,
-`div.inner`; because they match the `div div` selector and because they're all
-descendants of `#my-id`.
+It turns out that [`element.querySelectorAll`][eqsa] doesn't match
+elements starting from `element`. Instead, it matches elements
+matching the query that are also descendants of `element`. Therefore,
+we're seeing three `div` elements: `div.lonely`, `div.outer`,
+`div.inner`; because they both match the `div div` selector and
+are all descendants of `#my-id`.
 
 The trick to remembering this is that CSS selectors are absolute; not relative
 to any particular element, not even the element you're calling
