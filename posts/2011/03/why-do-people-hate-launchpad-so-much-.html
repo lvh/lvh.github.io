@@ -2,6 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
+<base href="http://www.lvh.io/posts/2011/03/why-do-people-hate-launchpad-so-much-.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Why do people hate Launchpad so much? | lvh</title>
 <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -22,10 +23,10 @@
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -36,7 +37,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../../../about.html">About</a>
@@ -95,7 +96,7 @@
 <p>Following a discussing on Convore recently, I noticed some people (names withheld to protect the guilty -- I'm sure they will speak up if they feel like it) strongly dislike Launchpad. Apparently they dislike it so much they would rather use a different project if they find something that uses it.</p>
 <p></p> I don't get it.<p></p>First off, lI'm not trying to make this a git vs hg vs bzr vs whatever discussion, except perhaps to the extent that those tools shape their respective hosting system. Not that I think those discussions have to devolve into religious wars (<a href="http://b.lvh.cc/religious-wars-considered-harmful-considered">a subject on which I have blogged recently</a>), it's just that I'd like to limit the scope so we end with a bunch of things that can actually be improved.<p></p> My main problem with <a href="https://github.com/">the 500lb gorilla in the room</a> is its issue tracker. I know, it's a simple feature tacked on later, and all in all the ability to link to branches and revisions and to be able to close tickets from commit messages ain't so bad.<p></p> One particular unfortunate choice is that they decided to make pull requests issue tracker artifacts. I'm convinced it should be an attachment to one, instead. Pull requests are about merging code. There must be a reason to do that -- that reason is a ticket. That means if you use pull requests as a mechanism for code review (which they seem to be marketed as), ergo having all code be added using them, all changes to trunk have at least two issue tracker artifacts: the ticket describing the change, and the pull request carrying the code that does it. I think that's a bit silly. Pull requests hence often become somewhat of a ticket in their own right, which works well for one-time contributions which are typically limited in scope, but it seems this results in an inconsistent workflow which is a bit more annoying for things that actually do require a ticket.<p></p> Launchpad's issue tracker, on the other hand, is one I particularly like.<p></p>It's unique in the sense that it lets you track the state of bugs in different parts of downstream. Additionally, bugs aren't unique to a project -- allowing people from different groups to collaborate on the same issue. It lets me assign bugs to a person: a feature I sorely miss in Github. The equivalent of Github Issue's voting feature is just a "this affects me" link: similar to Google Code's starring idea. The goal is always the same: measure the importance of a bug without getting the noise of a million "me, too" messages. (Github and Launchpad's way of doing it seems more effective, though.)<p></p> Launchpad's alternative to pull requests, called merge proposals, are quite similar to Github's pull requests 2.0. The main difference is the bug tracker interaction: like I've described above, they <i>attach</i> to issues, instead of being them themselves.<p></p> A complain I often hear yet don't quite grok is the apparent difficulty of getting to code. Personally, I don't quite see the problem. The main branch (lp:projectname) and its contents are one click away from the front page. All of the branches of a project (from everyone! not just the project leads), are visible with a single click from the project front page, under the "Code" menu. I must admit I rarely use that web UI: instead, I just bzr co lp:projectname if I want to take a look.<p></p> The contributor story is also fairly pleasant, in my opinion. I don't even need to fork anything (at least not explicitly): just get the branch, make some changes, push them to lp:~lvh/projectname/mybranch and done. That magic syntax isn't Launchpad-specific: that's called <a href="https://code.launchpad.net/bzr-bookmarks">a bookmark</a>, and you can just as well have your own if you don't use Launchpad.<p></p> So what exactly is the problem? I'm planning on moving a project from Fossil to something else at Pycon -- but if everyone hates it so much, I'm willing to reconsider. For example: I'd use Github if I can find a useful issue tracker to go with it. I'd use bitbucket if there's some reasonable way to have in-repo pull requests (like Github pull requests 2.0 or Launchpad merge proposals).</div>
     </div>
-    <aside class="postpromonav"><nav><ul class="pager">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="religious-wars-considered-harmful-considered-harmful.html" rel="prev" title="Religious wars considered harmful considered harmful">Previous post</a>
             </li>
@@ -106,7 +107,7 @@
 </div>
         <!--End of body content-->
 
-        <footer>
+        <footer id="footer">
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>

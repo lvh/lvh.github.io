@@ -2,6 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
+<base href="http://www.lvh.io/posts/2011/05/i-don-t-understand-rest-pagination.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I don't understand REST pagination | lvh</title>
 <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -22,10 +23,10 @@
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -36,7 +37,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../../../about.html">About</a>
@@ -97,7 +98,7 @@
 <br>So, in <a href="https://github.com/lvh/txyoga">txYoga</a>, in implemented pagination in terms of query parameters to a collection. If you want to access the range of elements [100, 110), you would say: <span style="font-family: courier new,monospace;"><a href="http://whatever/collection?start=100;stop=110">http://whatever/collection?start=100;stop=110</a></span>. The feature here is that pages give you the link to the next and previous page. The response (JSON) looks something like <span style="font-family: courier new,monospace;">{"results": [...], "next": nextURL, "prev": prevURL}</span>. That way, you pretty much just have to follow URLs to walk down the collection as a doubly  linked list of pages. The supposed feature is that I can change how my pages work, and users hopefully won't notice, since they shouldn't be building their own URLs anyway.<p></p> Now, at the same time, I'm looking at <a href="http://dojotoolkit.org/reference-guide/dojo/store/JsonRest.html">dojo's JsonRest API</a>. It's suggesting that I use the Range and Content-Range headers for pagination support. It also has a single JSON array as a response (so, [{...}, ...]) instead of my JSON object. I started RFC diving and hey look, they're right, HTTP understands <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.12">ranges with arbitrary units</a>. So, are my URLs wrong? Are people supposed to conjure Range URLs themselves? Why are these darned ranges inclusive? Another problem is that the specification doesn't really seem to support non-numeric ranges, whereas to txYoga, that's not really a problem as long as the underlying collection understands it.<p></p> Isn't REST supposed to be hypertext-driven? Aren't people basically supposed to never construct URLs, and rely on me to provide them to them? Where am I supposed to put those URLs? Yaaargh.<p></p> <br>cheers<div>lvh</div>
 </div>
     </div>
-    <aside class="postpromonav"><nav><ul class="pager">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="crowdsourcing-opinions-on-a-rest-api-post-put-or-both-.html" rel="prev" title="Crowdsourcing opinions on a REST API: POST, PUT or both?">Previous post</a>
             </li>
@@ -108,7 +109,7 @@
 </div>
         <!--End of body content-->
 
-        <footer>
+        <footer id="footer">
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>

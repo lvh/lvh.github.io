@@ -2,6 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
+<base href="http://www.lvh.io/posts/securing-apis-with-shims.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Securing APIs with shims | lvh</title>
 <link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -27,10 +28,10 @@ e.g">
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -41,7 +42,7 @@ e.g">
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../about.html">About</a>
@@ -199,7 +200,7 @@ shame.</p>
 <li><a class="tag p-category" href="../categories/crypto.html" rel="tag">crypto</a></li>
             <li><a class="tag p-category" href="../categories/security.html" rel="tag">security</a></li>
         </ul>
-<ul class="pager">
+<ul class="pager hidden-print">
 <li class="previous">
                 <a href="reverse-ungineering.html" rel="prev" title="Reverse ungineering">Previous post</a>
             </li>
@@ -210,7 +211,7 @@ shame.</p>
 </div>
         <!--End of body content-->
 
-        <footer>
+        <footer id="footer">
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>

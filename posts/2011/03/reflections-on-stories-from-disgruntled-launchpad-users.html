@@ -2,6 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
+<base href="http://www.lvh.io/posts/2011/03/reflections-on-stories-from-disgruntled-launchpad-users.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reflections on stories from (disgruntled) Launchpad users | lvh</title>
 <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -22,10 +23,10 @@
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -36,7 +37,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../../../about.html">About</a>
@@ -101,7 +102,7 @@
 <br>Case in point: merge proposals. Apparently they had an in-page diff. I had no idea.<p></p>Github users use Github to do things. Launchpad users use Launchpad as branch storage + metadata (bug tracker, merge proposals, primarily) so they can convince bzr to do things. When Github users go to Launchpad, perhaps without truly trying to use it, they see the prospect of using something like Github but worse. When Launchpad users go to Github, they see the prospect of getting to use git for everything instead of bzr. (And, let's be honest -- if you're diffing between remotes all day, Github is more pleasant than plain git, and bzr is too.)<p></p> cheers<div>lvh</div>
 </div>
     </div>
-    <aside class="postpromonav"><nav><ul class="pager">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="on-sysadmins-programmers-and-reconciliation-a-response-to-zed-shaw-s-post-.html" rel="prev" title="On sysadmins, programmers, and reconciliation (a response to Zed Shaw's post)">Previous post</a>
             </li>
@@ -112,7 +113,7 @@
 </div>
         <!--End of body content-->
 
-        <footer>
+        <footer id="footer">
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>

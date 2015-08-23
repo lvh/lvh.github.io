@@ -2,6 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
+<base href="http://www.lvh.io/posts/2011/03/bridging-the-gap-between-launchpad-and-github.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bridging the gap between Launchpad and Github | lvh</title>
 <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -22,10 +23,10 @@
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -36,7 +37,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../../../about.html">About</a>
@@ -102,7 +103,7 @@
 </ul> (The latter is preferable because it preserves commit structure. The former is probably easier to implement and less hairy to implement/maintain due to impedance mismatches.)<p></p>Either way, a new branch is created with the same name as the Github branch. Ideally, the merge proposal is linked to the appropriate bug. That means the branch should contain information about the bug it relates to (possibly in the name, eg 54321-fixQuantumTransmogrifier), since, as far as I know, git has no equivalent to bzr commit's --fixes. The pull request gets a link to the merge proposal. All review-related work happens in Launchpad, not Github. Based on the second premise, this is acceptable.<p></p> The obvious problem here is that Github users can't really monitor what's going on in terms of development in Launchpadland and vice-versa. A solution may be to push more branches, but I dislike doing that. Perhaps using their respective APIs, the data can be syndicated into a common source. Ideas welcome.<p></p> cheers<div>lvh</div>
 </div>
     </div>
-    <aside class="postpromonav"><nav><ul class="pager">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="a-compiled-list-of-launchpad-s-perceived-flaws.html" rel="prev" title="A compiled list of Launchpad's perceived flaws">Previous post</a>
             </li>
@@ -113,7 +114,7 @@
 </div>
         <!--End of body content-->
 
-        <footer>
+        <footer id="footer">
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>

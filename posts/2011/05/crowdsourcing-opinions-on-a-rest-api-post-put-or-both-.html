@@ -2,6 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
+<base href="http://www.lvh.io/posts/2011/05/crowdsourcing-opinions-on-a-rest-api-post-put-or-both-.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crowdsourcing opinions on a REST API: POST, PUT or both? | lvh</title>
 <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -22,10 +23,10 @@
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation"><div class="container">
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
 <!-- This keeps the margins nice -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -36,7 +37,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../../../about.html">About</a>
@@ -103,7 +104,7 @@
 </li>
 </ol>One of the fundamental differences between POST and PUT is that PUT is idempotent, but POST is not. If you send me the same PUT request once, twice or ten times, you'll end up with the same state. POSTing to the collection might work once (or pretty much indefinitely, if you're producing objects with an UUID identifier for example).<p></p> This is because in txYoga, each element has exactly one identifying attribute (which is the thing that's used to access the element). That's what makes PUT feels so awkward: what you're putting contains the information to decide what the name of the object is (since it has to have the identifying attribute), but the object doesn't know what name it's going to be put under (since that name only exists after the object is created), so you have to repeat yourself. With POST, you don't really care.<p></p> Additionally, you'd be using the same thing for updating and creating new elements, which I guess sort-of makes sense, but reminds me of Perl's autovivification and not in a good way.<p></p>The question is: should I support both PUT and POST for creating elements? On the one hand, There should be one-- and preferably only one --obvious way to do it. On the other, this is what REST pretty much does -- and practicality beats purity (although this isn't very practical for me...).</div>
     </div>
-    <aside class="postpromonav"><nav><ul class="pager">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="../03/reflections-on-stories-from-disgruntled-launchpad-users.html" rel="prev" title="Reflections on stories from (disgruntled) Launchpad users">Previous post</a>
             </li>
@@ -114,7 +115,7 @@
 </div>
         <!--End of body content-->
 
-        <footer>
+        <footer id="footer">
             Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
