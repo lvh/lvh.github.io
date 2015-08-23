@@ -54,9 +54,8 @@ document.querySelector("#my-id").querySelectorAll("div div");
 You might reasonably expect them to be equivalent. After all, one asks
 `div` elements inside `div` elements inside `#my-id`, and the other
 asks for `div` elements inside `div` elements that are *descendants*
-of `#my-id`. I certainly expected them to be the same. However, when
-you look at [this JSbin][jsbin] you'll see that they're quite
-different:
+of `#my-id`. However, when you look at [this JSbin][jsbin] you'll see
+that they produce very different results:
 
 ```javascript
 document.querySelectorAll("#my-id div div").length === 1;
@@ -77,9 +76,13 @@ relative to any particular element, not even the element you're
 calling `querySelectorAll` on.
 
 This even works with elements *outside* the element you're calling
-`querySelectorAll` on. For example
-`document.querySelector("#my-id").querySelector("div div div")` matches the
-inner `div` in this snippet ([JSbin][jsbin2]):
+`querySelectorAll` on. For example, this selector:
+
+```javascript
+document.querySelector("#my-id").querySelector("div div div")`
+```
+
+... matches `div.inner` in this snippet ([JSbin][jsbin2]):
 
 ```html
 <!DOCTYPE html>
