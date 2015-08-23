@@ -62,7 +62,7 @@ document.querySelectorAll("#my-id div div").length === 1;
 document.querySelector("#my-id").querySelectorAll("div div").length === 3;
 ```
 
-What the heck is going on here?
+What is going on here?
 
 It turns out that [`element.querySelectorAll`][eqsa] doesn't match
 elements starting from `element`. Instead, it matches elements
