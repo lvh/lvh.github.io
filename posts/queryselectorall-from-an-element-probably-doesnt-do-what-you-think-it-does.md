@@ -71,9 +71,9 @@ we're seeing three `div` elements: `div.lonely`, `div.outer`,
 `div.inner`; because they both match the `div div` selector and
 are all descendants of `#my-id`.
 
-The trick to remembering this is that CSS selectors are absolute; not relative
-to any particular element, not even the element you're calling
-`querySelectorAll` on.
+The trick to remembering this is that CSS selectors are absolute; not
+relative to any particular element, not even the element you're
+calling `querySelectorAll` on.
 
 This even works with elements *outside* the element you're calling
 `querySelectorAll` on. For example
