@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (hex)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/hex.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 19:44:22 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>hypercathexis dev notes part 1</title><link>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (hex)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/hex.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 23:18:02 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
 hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
 excessive concentration of desire upon a particular object&lt;/blockquote&gt;
 &lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
@@ -26,7 +26,7 @@ until the maximum timeout?&lt;/p&gt;
 offset coordinates. I wanted to work using axial coordinates as much
 as possible, because it makes a lot of math so much easier. Axial
 coordinates work together with the "grain" of the hex map:&lt;/p&gt;
-&lt;object data="http://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
+&lt;object data="https://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
 axial base vectors&lt;/object&gt;
 &lt;p&gt;Second thing I did was move from individual &lt;tt class="docutils literal"&gt;&amp;lt;img&amp;gt;&lt;/tt&gt; tags produced by
 Om to a single &lt;tt class="docutils literal"&gt;&amp;lt;svg&amp;gt;&lt;/tt&gt; with hexes (&lt;tt class="docutils literal"&gt;&amp;lt;polygon&amp;gt;&lt;/tt&gt;) inside it. This
@@ -42,11 +42,11 @@ width, which would become my unit. The height would then be
 expressing all x coordinates in terms of a single hex width, and all y
 coordinates in terms of a single hex height; then I could just scale
 differently across x and y at the end.&lt;/p&gt;
-&lt;img alt="Simple SVG hex grid" src="http://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
+&lt;img alt="Simple SVG hex grid" src="https://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
 &lt;p&gt;Developing in Firefox was mostly painless, but I discovered many
 discrepancies once trying it in Chrome. Things that should be the same
 aren't, particularly when it comes to transforms. For example, Chrome
 would occasionally literally do the inverse of the scaling it was
 supposed to:&lt;/p&gt;
-&lt;img alt="Differences in scaling behavior across browsers" src="http://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
-&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>
+&lt;img alt="Differences in scaling behavior across browsers" src="https://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
+&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>

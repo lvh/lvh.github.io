@@ -1,2 +1,2 @@
-Sitemap: http://www.lvh.io/sitemapindex.xml
+Sitemap: https://www.lvh.io/sitemapindex.xml
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (hypercathexis)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/hypercathexis.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 19:44:22 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (hypercathexis)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/hypercathexis.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 23:18:01 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
 V, are sequential in nature. A player makes a move, then the next
 player makes a move, and so on. The details can vary, for example:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -58,7 +58,7 @@ because they're literally the same game world.&lt;/p&gt;
 &lt;p&gt;There's a number of creative ways to get out from under that problem,
 usually by involving wall-clock time. For example, if a player doesn't
 respond within a fixed amount of time, they may forfeit their turn.
-Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference" href="http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#f1" id="id1"&gt;[1]&lt;/a&gt;
+Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#f1" id="id1"&gt;[1]&lt;/a&gt;
 There's a lot of degrees of freedom here. Do you use a global clock,
 or one local to a particular area?&lt;/p&gt;
 &lt;p&gt;A global clock is probably simpler, but poses some game play
@@ -84,13 +84,13 @@ the issues I described, I'm contemplating two ideas:&lt;/p&gt;
 &lt;table class="docutils footnote" frame="void" id="f1" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't particularly like this, because it "breaks the fourth
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't particularly like this, because it "breaks the fourth
 wall" in a sense. If my engines are still consuming fuel real
 time, why can't the enemy fire missiles? Either time is
 stopped, or it isn't. Sure, games can be abstract, but that
 feels like an undue inconsistency.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hypercathexes</category><category>hypercathexis</category><guid>http://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
+&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hypercathexes</category><category>hypercathexis</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
 hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
 excessive concentration of desire upon a particular object&lt;/blockquote&gt;
 &lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
@@ -117,7 +117,7 @@ until the maximum timeout?&lt;/p&gt;
 offset coordinates. I wanted to work using axial coordinates as much
 as possible, because it makes a lot of math so much easier. Axial
 coordinates work together with the "grain" of the hex map:&lt;/p&gt;
-&lt;object data="http://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
+&lt;object data="https://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
 axial base vectors&lt;/object&gt;
 &lt;p&gt;Second thing I did was move from individual &lt;tt class="docutils literal"&gt;&amp;lt;img&amp;gt;&lt;/tt&gt; tags produced by
 Om to a single &lt;tt class="docutils literal"&gt;&amp;lt;svg&amp;gt;&lt;/tt&gt; with hexes (&lt;tt class="docutils literal"&gt;&amp;lt;polygon&amp;gt;&lt;/tt&gt;) inside it. This
@@ -133,11 +133,11 @@ width, which would become my unit. The height would then be
 expressing all x coordinates in terms of a single hex width, and all y
 coordinates in terms of a single hex height; then I could just scale
 differently across x and y at the end.&lt;/p&gt;
-&lt;img alt="Simple SVG hex grid" src="http://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
+&lt;img alt="Simple SVG hex grid" src="https://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
 &lt;p&gt;Developing in Firefox was mostly painless, but I discovered many
 discrepancies once trying it in Chrome. Things that should be the same
 aren't, particularly when it comes to transforms. For example, Chrome
 would occasionally literally do the inverse of the scaling it was
 supposed to:&lt;/p&gt;
-&lt;img alt="Differences in scaling behavior across browsers" src="http://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
-&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>
+&lt;img alt="Differences in scaling behavior across browsers" src="https://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
+&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>

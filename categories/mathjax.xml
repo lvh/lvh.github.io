@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (mathjax)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 19:44:22 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Everything I've learned about running a financial aid program</title><link>http://www.lvh.io/posts/everything-ive-learned-about-running-a-financial-aid-program.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;For the past two years, I've been running PyCon's financial aid
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (mathjax)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 23:18:01 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Everything I've learned about running a financial aid program</title><link>https://www.lvh.io/posts/everything-ive-learned-about-running-a-financial-aid-program.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;For the past two years, I've been running PyCon's financial aid
 program. Starting this year, the event coordinator has asked all staff
 members to document what they do for PyCon. Firstly, this helps to
 objectively recognize the hard work done by our (volunteer) staff, and
@@ -305,7 +305,7 @@ PyCon, but I consider that a superb problem to have.&lt;/p&gt;
 &lt;li&gt;Ewa Jodlowska, for managing PyCon and being the love of my life&lt;/li&gt;
 &lt;li&gt;Van Lindberg, for continuously inspiring me to serve&lt;/li&gt;
 &lt;li&gt;Diana Clarke, for Charing PyCon US in Montreal&lt;/li&gt;
-&lt;/ul&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/everything-ive-learned-about-running-a-financial-aid-program.html</guid><pubDate>Sun, 26 Apr 2015 04:08:36 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>https://www.lvh.io/posts/everything-ive-learned-about-running-a-financial-aid-program.html</guid><pubDate>Sun, 26 Apr 2015 04:08:36 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
 hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
 excessive concentration of desire upon a particular object&lt;/blockquote&gt;
 &lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
@@ -332,7 +332,7 @@ until the maximum timeout?&lt;/p&gt;
 offset coordinates. I wanted to work using axial coordinates as much
 as possible, because it makes a lot of math so much easier. Axial
 coordinates work together with the "grain" of the hex map:&lt;/p&gt;
-&lt;object data="http://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
+&lt;object data="https://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
 axial base vectors&lt;/object&gt;
 &lt;p&gt;Second thing I did was move from individual &lt;tt class="docutils literal"&gt;&amp;lt;img&amp;gt;&lt;/tt&gt; tags produced by
 Om to a single &lt;tt class="docutils literal"&gt;&amp;lt;svg&amp;gt;&lt;/tt&gt; with hexes (&lt;tt class="docutils literal"&gt;&amp;lt;polygon&amp;gt;&lt;/tt&gt;) inside it. This
@@ -348,14 +348,14 @@ width, which would become my unit. The height would then be
 expressing all x coordinates in terms of a single hex width, and all y
 coordinates in terms of a single hex height; then I could just scale
 differently across x and y at the end.&lt;/p&gt;
-&lt;img alt="Simple SVG hex grid" src="http://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
+&lt;img alt="Simple SVG hex grid" src="https://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
 &lt;p&gt;Developing in Firefox was mostly painless, but I discovered many
 discrepancies once trying it in Chrome. Things that should be the same
 aren't, particularly when it comes to transforms. For example, Chrome
 would occasionally literally do the inverse of the scaling it was
 supposed to:&lt;/p&gt;
-&lt;img alt="Differences in scaling behavior across browsers" src="http://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
-&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>http://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item><item><title>More on financial aid grant optimization</title><link>http://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In &lt;a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;a previous post&lt;/a&gt;, I talked about ways to optimize PyCon
+&lt;img alt="Differences in scaling behavior across browsers" src="https://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
+&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>hypercathexis</category><category>mathjax</category><category>svg</category><guid>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item><item><title>More on financial aid grant optimization</title><link>https://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In &lt;a href="http://www.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;a previous post&lt;/a&gt;, I talked about ways to optimize PyCon
 financial aid grants. This is a follow-up on those efforts. Quick
 recap:&lt;/p&gt;
 &lt;ul&gt;
@@ -496,7 +496,7 @@ k = 1/100: [ 10.  11.  11.  23.  34.  10.  50.], sum: 150.0
 &lt;p&gt;Since I'm so pleased with these results, I'm skipping &lt;code&gt;slsqp&lt;/code&gt; until I
 feel like it. Next up, I'll try to compare the COBYLA results above
 with the results of the greedy algorithm under various fitness
-metrics.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</guid><pubDate>Mon, 07 Apr 2014 03:34:00 GMT</pubDate></item><item><title>Optimal hotel room pairing</title><link>http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The greedy hotel pairing algorithm from my &lt;a href="http://blog.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;previous post&lt;/a&gt;
+metrics.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>https://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</guid><pubDate>Mon, 07 Apr 2014 03:34:00 GMT</pubDate></item><item><title>Optimal hotel room pairing</title><link>https://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The greedy hotel pairing algorithm from my &lt;a href="http://blog.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/"&gt;previous post&lt;/a&gt;
 gives good solutions. If you make some fairly reasonable-sounding
 assumptions about the problem, &lt;em&gt;very&lt;/em&gt; good solutions. At any rate
 nicer than forcing a human to drudge through it; both in terms of
@@ -550,7 +550,7 @@ that does have &lt;a href="http://networkx.lanl.gov/reference/generated/networkx
 out I was wrong, and shoving me in the direction of the answers.&lt;/p&gt;
 &lt;p&gt;In this blog post I used several freely available graph illustrations
 from Wikipedia. The complete graph illustrations were made by
-&lt;a href="https://commons.wikimedia.org/wiki/User:Koko90"&gt;koko90&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</guid><pubDate>Tue, 18 Mar 2014 20:05:00 GMT</pubDate></item><item><title>Optimization problems and PyCon financial aid</title><link>http://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This year, I have partly taken on some new responsibilities in
+&lt;a href="https://commons.wikimedia.org/wiki/User:Koko90"&gt;koko90&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>https://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</guid><pubDate>Tue, 18 Mar 2014 20:05:00 GMT</pubDate></item><item><title>Optimization problems and PyCon financial aid</title><link>https://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This year, I have partly taken on some new responsibilities in
 organizing PyCon. Specifically, I've done some work on financial aid.
 (Next year, I will be taking on the position of financial aid chair.)
 There have been some challenges that I've thrown some code at. Some of
@@ -798,4 +798,4 @@ for a &lt;em&gt;good&lt;/em&gt; one.&lt;/p&gt;
    for a &lt;em&gt;decent&lt;/em&gt; solution. You can do that with algorithms like tabu
    search or simulated annealing.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;I will be elaborating on these problems in a future blog post.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>http://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html</guid><pubDate>Mon, 10 Mar 2014 23:47:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;I will be elaborating on these problems in a future blog post.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><category>pycon</category><guid>https://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html</guid><pubDate>Mon, 10 Mar 2014 23:47:00 GMT</pubDate></item></channel></rss>
