@@ -121,13 +121,12 @@ implementation, while Internet Explorer and Opera don't support it at
 all.
 
 The other alternative is `element.query(All)`. Unfortunately, it's
-even more obscure. I was unable to find any reference to it on either
-the Mozilla Developer Network or on CanIUse. It is not specified in
-the [W3C Last Call Working Draft for DOM4][dom4-query], dated 18
-June 2015. The only reference I was able to find is from an
-[older Last Call Working Draft for DOM 4][older-dom4], dated 4
-February 2014. However, this method has been implemented by at least
-two polyfills:
+even more obscure. It is not referenced on MDN or caniuse.com, and is
+missing from the [current DOM4 working draft][dom4-query], dated 18
+June 2015. It was still present in
+[an older version of the same draft][older-dom4], dated 4 February
+2014, as well as the [WHATWG Living Document][living-dom] version of
+the spec. It has also been implemented by at least two polyfills:
 
 * [Dom4][dom4-polyfill]
 * [dom-elements][dom-elements-polyfill]
@@ -148,3 +147,4 @@ two polyfills:
 [older-dom4]: http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode
 [dom4-polyfill]: https://webreflection.github.io/dom4/
 [dom-elements-polyfill]: https://github.com/barberboy/dom-elements
+[living-dom]: https://dom.spec.whatwg.org/#interface-parentnode
