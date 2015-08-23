@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (css)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/css.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Fri, 21 Aug 2015 21:21:37 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (css)</title><link>http://www.lvh.io/</link><description></description><atom:link href="http://www.lvh.io/categories/css.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 19:43:29 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, start with the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors"&gt;MDN introduction&lt;/a&gt;.&lt;/p&gt;
@@ -47,15 +47,15 @@ you'll see that they're not:&lt;/p&gt;
 
 
 &lt;p&gt;What the heck is going on here?&lt;/p&gt;
-&lt;p&gt;It turns out that &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;element.querySelectorAll&lt;/code&gt;&lt;/a&gt; doesn't start matching
-elements from &lt;code&gt;element&lt;/code&gt;. Instead, it searches the &lt;code&gt;document&lt;/code&gt; for elements
-matching the query, and &lt;em&gt;then&lt;/em&gt; filters for elements that are children of the
-element. So, we're seeing three &lt;code&gt;div&lt;/code&gt; elements: &lt;code&gt;div.lonely&lt;/code&gt;, &lt;code&gt;div.outer&lt;/code&gt;,
-&lt;code&gt;div.inner&lt;/code&gt;; because they match the &lt;code&gt;div div&lt;/code&gt; selector and because they're all
-descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The trick to remembering this is that CSS selectors are absolute; not relative
-to any particular element, not even the element you're calling
-&lt;code&gt;querySelectorAll&lt;/code&gt; on.&lt;/p&gt;
+&lt;p&gt;It turns out that &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;element.querySelectorAll&lt;/code&gt;&lt;/a&gt; doesn't match
+elements starting from &lt;code&gt;element&lt;/code&gt;. Instead, it matches elements
+matching the query that are also descendants of &lt;code&gt;element&lt;/code&gt;. Therefore,
+we're seeing three &lt;code&gt;div&lt;/code&gt; elements: &lt;code&gt;div.lonely&lt;/code&gt;, &lt;code&gt;div.outer&lt;/code&gt;,
+&lt;code&gt;div.inner&lt;/code&gt;; because they both match the &lt;code&gt;div div&lt;/code&gt; selector and
+are all descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The trick to remembering this is that CSS selectors are absolute; not
+relative to any particular element, not even the element you're
+calling &lt;code&gt;querySelectorAll&lt;/code&gt; on.&lt;/p&gt;
 &lt;p&gt;This even works with elements &lt;em&gt;outside&lt;/em&gt; the element you're calling
 &lt;code&gt;querySelectorAll&lt;/code&gt; on. For example
 &lt;code&gt;document.querySelector("#my-id").querySelector("div div div")&lt;/code&gt; matches the
@@ -73,8 +73,36 @@ inner &lt;code&gt;div&lt;/code&gt; in this snippet (&lt;a href="http://jsbin.com
 &lt;/pre&gt;
 
 
-&lt;p&gt;I think this API is surprising, and the front-end engineers I've asked seem to
-agree with me. This is, however, not a bug; it's definitely how the spec
-claims it should work, and how it works in Firefox, Chrome and Safari. Looking
-at it from the perspective of a browser, it makes sense: you have a CSS
-selector, you want the elements that match it, and then apply some styles.&lt;/p&gt;&lt;/div&gt;</description><category>css</category><guid>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item></channel></rss>
+&lt;p&gt;I think this API is surprising, and the front-end engineers I've asked
+seem to agree with me. This is, however, not a bug; it's definitely
+how the spec claims it should work, and how it works in Firefox,
+Chrome and Safari. &lt;a href="http://ejohn.org/blog/thoughts-on-queryselectorall/"&gt;John Resig&lt;/a&gt; commented back when the spec
+came out that this was quite confusing.&lt;/p&gt;
+&lt;p&gt;There are two suggested ways to get the other behavior: the &lt;code&gt;:scope&lt;/code&gt;
+CSS pseudo-selector, and the &lt;code&gt;query(All)&lt;/code&gt; methods added by DOM4.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;:scope&lt;/code&gt; pseudo-selector matches against the current scope. The
+name comes from the &lt;a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped"&gt;CSS scoping&lt;/a&gt;, which limits the scope
+of styles to part of the document. The element we're calling
+&lt;code&gt;querySelectorAll&lt;/code&gt; on also counts as a scope, which means that the
+following expression matches what you may have hoped:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;":scope div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Unfortunately, &lt;a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility"&gt;browser support&lt;/a&gt; for scoped CSS and the
+&lt;code&gt;:scope&lt;/code&gt; pseudo-selector is extremely limited. Only recent versions of
+Firefox support it by default. In Chrome, it requires a well-hidden
+experimental features flag to be turned on. Safari supports it, but
+with bugs. Internet Explorer and Opera don't support it at all.&lt;/p&gt;
+&lt;p&gt;The other alternative is &lt;code&gt;element.query(All)&lt;/code&gt;. Unfortunately, it's
+even more obscure. I was unable to find any reference to it on either
+the Mozilla Developer Network or on CanIUse. It is not specified in
+the &lt;a href="http://www.w3.org/TR/dom/#interface-parentnode"&gt;W3C Last Call Working Draft for DOM4&lt;/a&gt;, dated 18
+June 2015. The only reference I was able to find is from an
+&lt;a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode"&gt;older Last Call Working Draft for DOM 4&lt;/a&gt;, dated 4
+February 2014. However, this method has been implemented by at least
+two polyfills:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://webreflection.github.io/dom4/"&gt;Dom4&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/barberboy/dom-elements"&gt;dom-elements&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><category>css</category><guid>http://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item></channel></rss>

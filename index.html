@@ -124,15 +124,15 @@ you'll see that they're not:</p>
 
 
 <p>What the heck is going on here?</p>
-<p>It turns out that <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>element.querySelectorAll</code></a> doesn't start matching
-elements from <code>element</code>. Instead, it searches the <code>document</code> for elements
-matching the query, and <em>then</em> filters for elements that are children of the
-element. So, we're seeing three <code>div</code> elements: <code>div.lonely</code>, <code>div.outer</code>,
-<code>div.inner</code>; because they match the <code>div div</code> selector and because they're all
-descendants of <code>#my-id</code>.</p>
-<p>The trick to remembering this is that CSS selectors are absolute; not relative
-to any particular element, not even the element you're calling
-<code>querySelectorAll</code> on.</p>
+<p>It turns out that <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>element.querySelectorAll</code></a> doesn't match
+elements starting from <code>element</code>. Instead, it matches elements
+matching the query that are also descendants of <code>element</code>. Therefore,
+we're seeing three <code>div</code> elements: <code>div.lonely</code>, <code>div.outer</code>,
+<code>div.inner</code>; because they both match the <code>div div</code> selector and
+are all descendants of <code>#my-id</code>.</p>
+<p>The trick to remembering this is that CSS selectors are absolute; not
+relative to any particular element, not even the element you're
+calling <code>querySelectorAll</code> on.</p>
 <p>This even works with elements <em>outside</em> the element you're calling
 <code>querySelectorAll</code> on. For example
 <code>document.querySelector("#my-id").querySelector("div div div")</code> matches the
@@ -150,11 +150,39 @@ inner <code>div</code> in this snippet (<a href="http://jsbin.com/woropuc/edit?h
 </pre>
 
 
-<p>I think this API is surprising, and the front-end engineers I've asked seem to
-agree with me. This is, however, not a bug; it's definitely how the spec
-claims it should work, and how it works in Firefox, Chrome and Safari. Looking
-at it from the perspective of a browser, it makes sense: you have a CSS
-selector, you want the elements that match it, and then apply some styles.</p>
+<p>I think this API is surprising, and the front-end engineers I've asked
+seem to agree with me. This is, however, not a bug; it's definitely
+how the spec claims it should work, and how it works in Firefox,
+Chrome and Safari. <a href="http://ejohn.org/blog/thoughts-on-queryselectorall/">John Resig</a> commented back when the spec
+came out that this was quite confusing.</p>
+<p>There are two suggested ways to get the other behavior: the <code>:scope</code>
+CSS pseudo-selector, and the <code>query(All)</code> methods added by DOM4.</p>
+<p>The <code>:scope</code> pseudo-selector matches against the current scope. The
+name comes from the <a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped">CSS scoping</a>, which limits the scope
+of styles to part of the document. The element we're calling
+<code>querySelectorAll</code> on also counts as a scope, which means that the
+following expression matches what you may have hoped:</p>
+<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">":scope div div"</span><span class="p">);</span>
+</pre>
+
+
+<p>Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility">browser support</a> for scoped CSS and the
+<code>:scope</code> pseudo-selector is extremely limited. Only recent versions of
+Firefox support it by default. In Chrome, it requires a well-hidden
+experimental features flag to be turned on. Safari supports it, but
+with bugs. Internet Explorer and Opera don't support it at all.</p>
+<p>The other alternative is <code>element.query(All)</code>. Unfortunately, it's
+even more obscure. I was unable to find any reference to it on either
+the Mozilla Developer Network or on CanIUse. It is not specified in
+the <a href="http://www.w3.org/TR/dom/#interface-parentnode">W3C Last Call Working Draft for DOM4</a>, dated 18
+June 2015. The only reference I was able to find is from an
+<a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode">older Last Call Working Draft for DOM 4</a>, dated 4
+February 2014. However, this method has been implemented by at least
+two polyfills:</p>
+<ul>
+<li><a href="https://webreflection.github.io/dom4/">Dom4</a></li>
+<li><a href="https://github.com/barberboy/dom-elements">dom-elements</a></li>
+</ul>
 </div>
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
