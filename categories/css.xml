@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (css)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/css.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 24 Aug 2015 16:13:15 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (css)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/css.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 24 Aug 2015 16:23:05 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, start with the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors"&gt;MDN introduction&lt;/a&gt;.&lt;/p&gt;
@@ -94,10 +94,10 @@ following expression only matches &lt;code&gt;div.inner&lt;/code&gt;:&lt;/p&gt;
 
 &lt;p&gt;Unfortunately, &lt;a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility"&gt;browser support&lt;/a&gt; for scoped CSS and the
 &lt;code&gt;:scope&lt;/code&gt; pseudo-selector is extremely limited. Only recent versions of
-Firefox support it by default. Chrome requires the well-hidden
-experimental features flag to be turned on. Safari has a buggy
-implementation, while Internet Explorer and Opera don't support it at
-all.&lt;/p&gt;
+Firefox support it by default. Blink-based browsers like Chrome and
+Opera require the well-hidden experimental features flag to be turned
+on. Safari has a buggy implementation. Internet Explorer doesn't
+support it at all.&lt;/p&gt;
 &lt;p&gt;The other alternative is &lt;code&gt;element.query&lt;/code&gt;/&lt;code&gt;queryAll&lt;/code&gt;. Unfortunately,
 it's even more obscure. It is not referenced on MDN or caniuse.com,
 and is missing from the &lt;a href="http://www.w3.org/TR/dom/#interface-parentnode"&gt;current DOM4 working draft&lt;/a&gt;,

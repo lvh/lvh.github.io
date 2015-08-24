@@ -192,10 +192,10 @@ following expression only matches <code>div.inner</code>:</p>
 
 <p>Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility">browser support</a> for scoped CSS and the
 <code>:scope</code> pseudo-selector is extremely limited. Only recent versions of
-Firefox support it by default. Chrome requires the well-hidden
-experimental features flag to be turned on. Safari has a buggy
-implementation, while Internet Explorer and Opera don't support it at
-all.</p>
+Firefox support it by default. Blink-based browsers like Chrome and
+Opera require the well-hidden experimental features flag to be turned
+on. Safari has a buggy implementation. Internet Explorer doesn't
+support it at all.</p>
 <p>The other alternative is <code>element.query</code>/<code>queryAll</code>. Unfortunately,
 it's even more obscure. It is not referenced on MDN or caniuse.com,
 and is missing from the <a href="http://www.w3.org/TR/dom/#interface-parentnode">current DOM4 working draft</a>,

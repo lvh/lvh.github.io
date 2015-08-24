@@ -118,10 +118,10 @@ document.querySelector("#my-id").querySelectorAll(":scope div div");
 
 Unfortunately, [browser support][scope-compat] for scoped CSS and the
 `:scope` pseudo-selector is extremely limited. Only recent versions of
-Firefox support it by default. Chrome requires the well-hidden
-experimental features flag to be turned on. Safari has a buggy
-implementation, while Internet Explorer and Opera don't support it at
-all.
+Firefox support it by default. Blink-based browsers like Chrome and
+Opera require the well-hidden experimental features flag to be turned
+on. Safari has a buggy implementation. Internet Explorer doesn't
+support it at all.
 
 The other alternative is `element.query`/`queryAll`. Unfortunately,
 it's even more obscure. It is not referenced on MDN or caniuse.com,
