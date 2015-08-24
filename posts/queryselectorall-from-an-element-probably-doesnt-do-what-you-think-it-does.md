@@ -42,7 +42,7 @@ single lonely div.
 document. Elements themselves also support both [`querySelector`][eqs] and
 [`querySelectorAll`][eqsa], letting you query for elements that are
 descendants of that element. For example, the following expression will find
-images that are descendants of `#my-id`.
+images that are descendants of `#my-id`:
 
 ```javascript
 document.querySelector("#my-id").querySelectorAll("img")
