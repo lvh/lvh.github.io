@@ -79,7 +79,7 @@ This even works with elements *outside* the element you're calling
 `querySelectorAll` on. For example, this selector:
 
 ```javascript
-document.querySelector("#my-id").querySelector("div div div")`
+document.querySelector("#my-id").querySelector("div div div")
 ```
 
 ... matches `div.inner` in this snippet ([JSbin][jsbin2]):
