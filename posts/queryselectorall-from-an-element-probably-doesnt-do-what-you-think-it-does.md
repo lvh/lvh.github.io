@@ -62,7 +62,7 @@ document.querySelectorAll("#my-id div div").length === 1;
 document.querySelector("#my-id").querySelectorAll("div div").length === 3;
 ```
 
-What the heck is going on here?
+What is going on here?
 
 It turns out that [`element.querySelectorAll`][eqsa] doesn't match
 elements starting from `element`. Instead, it matches elements
@@ -123,10 +123,10 @@ experimental features flag to be turned on. Safari has a buggy
 implementation, while Internet Explorer and Opera don't support it at
 all.
 
-The other alternative is `element.query(All)`. Unfortunately, it's
-even more obscure. It is not referenced on MDN or caniuse.com, and is
-missing from the [current DOM4 working draft][dom4-query], dated 18
-June 2015. It was still present in
+The other alternative is `element.query`/`queryAll`. Unfortunately,
+it's even more obscure. It is not referenced on MDN or caniuse.com,
+and is missing from the [current DOM4 working draft][dom4-query],
+dated 18 June 2015. It was still present in
 [an older version of the same draft][older-dom4], dated 4 February
 2014, as well as the [WHATWG Living Document][living-dom] version of
 the spec. It has also been implemented by at least two polyfills:

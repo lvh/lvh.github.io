@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (webdev)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/webdev.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 23:18:02 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (webdev)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/webdev.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 24 Aug 2015 16:13:15 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, start with the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors"&gt;MDN introduction&lt;/a&gt;.&lt;/p&gt;
@@ -46,7 +46,7 @@ that they produce very different results:&lt;/p&gt;
 &lt;/pre&gt;
 
 
-&lt;p&gt;What the heck is going on here?&lt;/p&gt;
+&lt;p&gt;What is going on here?&lt;/p&gt;
 &lt;p&gt;It turns out that &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;element.querySelectorAll&lt;/code&gt;&lt;/a&gt; doesn't match
 elements starting from &lt;code&gt;element&lt;/code&gt;. Instead, it matches elements
 matching the query that are also descendants of &lt;code&gt;element&lt;/code&gt;. Therefore,
@@ -98,10 +98,10 @@ Firefox support it by default. Chrome requires the well-hidden
 experimental features flag to be turned on. Safari has a buggy
 implementation, while Internet Explorer and Opera don't support it at
 all.&lt;/p&gt;
-&lt;p&gt;The other alternative is &lt;code&gt;element.query(All)&lt;/code&gt;. Unfortunately, it's
-even more obscure. It is not referenced on MDN or caniuse.com, and is
-missing from the &lt;a href="http://www.w3.org/TR/dom/#interface-parentnode"&gt;current DOM4 working draft&lt;/a&gt;, dated 18
-June 2015. It was still present in
+&lt;p&gt;The other alternative is &lt;code&gt;element.query&lt;/code&gt;/&lt;code&gt;queryAll&lt;/code&gt;. Unfortunately,
+it's even more obscure. It is not referenced on MDN or caniuse.com,
+and is missing from the &lt;a href="http://www.w3.org/TR/dom/#interface-parentnode"&gt;current DOM4 working draft&lt;/a&gt;,
+dated 18 June 2015. It was still present in
 &lt;a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode"&gt;an older version of the same draft&lt;/a&gt;, dated 4 February
 2014, as well as the &lt;a href="https://dom.spec.whatwg.org/#interface-parentnode"&gt;WHATWG Living Document&lt;/a&gt; version of
 the spec. It has also been implemented by at least two polyfills:&lt;/p&gt;
