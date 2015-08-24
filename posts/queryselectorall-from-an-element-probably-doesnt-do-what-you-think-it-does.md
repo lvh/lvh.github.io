@@ -40,12 +40,18 @@ single lonely div.
 `document` supports both [`querySelector`][dqs] and
 [`querySelectorAll`][dqsa], letting you find elements in the entire
 document. Elements themselves also support both [`querySelector`][eqs] and
-[`querySelectorAll`][eqsa], letting you query elements that are children of a
-given element.  `document.querySelector("#my-id").querySelectorAll("img")`
-will find images that are children of `#my-id`. In the sample HTML page above,
-it will find `<img id="inside">` but not `<img id="outside">`.
+[`querySelectorAll`][eqsa], letting you query for elements that are
+descendants of that element. For example, the following expression will find
+images that are descendants of `#my-id`.
 
-With that in mind, what do you think these two lines do?
+```javascript
+document.querySelector("#my-id").querySelectorAll("img")
+```
+
+In the sample HTML page above, it will find `<img id="inside">` but not `<img
+id="outside">`.
+
+With that in mind, what do these two expressions do?
 
 ```javascript
 document.querySelectorAll("#my-id div div");
@@ -65,16 +71,15 @@ document.querySelector("#my-id").querySelectorAll("div div").length === 3;
 
 What is going on here?
 
-It turns out that [`element.querySelectorAll`][eqsa] doesn't match
-elements starting from `element`. Instead, it matches elements
-matching the query that are also descendants of `element`. Therefore,
-we're seeing three `div` elements: `div.lonely`, `div.outer`,
-`div.inner`. We're seeing them because they both match the `div div`
-selector and are all descendants of `#my-id`.
+It turns out that [`element.querySelectorAll`][eqsa] doesn't match elements
+starting from `element`. Instead, it matches elements matching the query that
+are also descendants of `element`. Therefore, we're seeing three `div`
+elements: `div.lonely`, `div.outer`, `div.inner`. We're seeing them because
+they both match the `div div` selector and are all descendants of `#my-id`.
 
-The trick to remembering this is that CSS selectors are absolute; not
-relative to any particular element, not even the element you're
-calling `querySelectorAll` on.
+The trick to remembering this is that CSS selectors are absolute; not relative
+to any particular element, not even the element you're calling
+`querySelectorAll` on.
 
 This even works with elements *outside* the element you're calling
 `querySelectorAll` on. For example, this selector:

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (css)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/css.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 24 Aug 2015 21:28:51 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (css)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/css.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 24 Aug 2015 21:43:23 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, the Mozilla Developer Network has an excellent
@@ -27,11 +27,16 @@ single lonely div.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;document&lt;/code&gt; supports both &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"&gt;&lt;code&gt;querySelector&lt;/code&gt;&lt;/a&gt; and
 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"&gt;&lt;code&gt;querySelectorAll&lt;/code&gt;&lt;/a&gt;, letting you find elements in the entire
 document. Elements themselves also support both &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector"&gt;&lt;code&gt;querySelector&lt;/code&gt;&lt;/a&gt; and
-&lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;querySelectorAll&lt;/code&gt;&lt;/a&gt;, letting you query elements that are children of a
-given element.  &lt;code&gt;document.querySelector("#my-id").querySelectorAll("img")&lt;/code&gt;
-will find images that are children of &lt;code&gt;#my-id&lt;/code&gt;. In the sample HTML page above,
-it will find &lt;code&gt;&amp;lt;img id="inside"&amp;gt;&lt;/code&gt; but not &lt;code&gt;&amp;lt;img id="outside"&amp;gt;&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;With that in mind, what do you think these two lines do?&lt;/p&gt;
+&lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;querySelectorAll&lt;/code&gt;&lt;/a&gt;, letting you query for elements that are
+descendants of that element. For example, the following expression will find
+images that are descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"img"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;In the sample HTML page above, it will find &lt;code&gt;&amp;lt;img id="inside"&amp;gt;&lt;/code&gt; but not &lt;code&gt;&amp;lt;img
+id="outside"&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With that in mind, what do these two expressions do?&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;
@@ -48,15 +53,14 @@ that they produce very different results:&lt;/p&gt;
 
 
 &lt;p&gt;What is going on here?&lt;/p&gt;
-&lt;p&gt;It turns out that &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;element.querySelectorAll&lt;/code&gt;&lt;/a&gt; doesn't match
-elements starting from &lt;code&gt;element&lt;/code&gt;. Instead, it matches elements
-matching the query that are also descendants of &lt;code&gt;element&lt;/code&gt;. Therefore,
-we're seeing three &lt;code&gt;div&lt;/code&gt; elements: &lt;code&gt;div.lonely&lt;/code&gt;, &lt;code&gt;div.outer&lt;/code&gt;,
-&lt;code&gt;div.inner&lt;/code&gt;. We're seeing them because they both match the &lt;code&gt;div div&lt;/code&gt;
-selector and are all descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The trick to remembering this is that CSS selectors are absolute; not
-relative to any particular element, not even the element you're
-calling &lt;code&gt;querySelectorAll&lt;/code&gt; on.&lt;/p&gt;
+&lt;p&gt;It turns out that &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;element.querySelectorAll&lt;/code&gt;&lt;/a&gt; doesn't match elements
+starting from &lt;code&gt;element&lt;/code&gt;. Instead, it matches elements matching the query that
+are also descendants of &lt;code&gt;element&lt;/code&gt;. Therefore, we're seeing three &lt;code&gt;div&lt;/code&gt;
+elements: &lt;code&gt;div.lonely&lt;/code&gt;, &lt;code&gt;div.outer&lt;/code&gt;, &lt;code&gt;div.inner&lt;/code&gt;. We're seeing them because
+they both match the &lt;code&gt;div div&lt;/code&gt; selector and are all descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The trick to remembering this is that CSS selectors are absolute; not relative
+to any particular element, not even the element you're calling
+&lt;code&gt;querySelectorAll&lt;/code&gt; on.&lt;/p&gt;
 &lt;p&gt;This even works with elements &lt;em&gt;outside&lt;/em&gt; the element you're calling
 &lt;code&gt;querySelectorAll&lt;/code&gt; on. For example, this selector:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"div div div"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;

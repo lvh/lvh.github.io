@@ -105,11 +105,16 @@ single lonely div.</p>
 <p><code>document</code> supports both <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"><code>querySelector</code></a> and
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"><code>querySelectorAll</code></a>, letting you find elements in the entire
 document. Elements themselves also support both <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector"><code>querySelector</code></a> and
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>querySelectorAll</code></a>, letting you query elements that are children of a
-given element.  <code>document.querySelector("#my-id").querySelectorAll("img")</code>
-will find images that are children of <code>#my-id</code>. In the sample HTML page above,
-it will find <code>&lt;img id="inside"&gt;</code> but not <code>&lt;img id="outside"&gt;</code>.</p>
-<p>With that in mind, what do you think these two lines do?</p>
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>querySelectorAll</code></a>, letting you query for elements that are
+descendants of that element. For example, the following expression will find
+images that are descendants of <code>#my-id</code>.</p>
+<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"img"</span><span class="p">)</span>
+</pre>
+
+
+<p>In the sample HTML page above, it will find <code>&lt;img id="inside"&gt;</code> but not <code>&lt;img
+id="outside"&gt;</code>.</p>
+<p>With that in mind, what do these two expressions do?</p>
 <pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">);</span>
 <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">);</span>
 </pre>
@@ -126,15 +131,14 @@ that they produce very different results:</p>
 
 
 <p>What is going on here?</p>
-<p>It turns out that <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>element.querySelectorAll</code></a> doesn't match
-elements starting from <code>element</code>. Instead, it matches elements
-matching the query that are also descendants of <code>element</code>. Therefore,
-we're seeing three <code>div</code> elements: <code>div.lonely</code>, <code>div.outer</code>,
-<code>div.inner</code>. We're seeing them because they both match the <code>div div</code>
-selector and are all descendants of <code>#my-id</code>.</p>
-<p>The trick to remembering this is that CSS selectors are absolute; not
-relative to any particular element, not even the element you're
-calling <code>querySelectorAll</code> on.</p>
+<p>It turns out that <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>element.querySelectorAll</code></a> doesn't match elements
+starting from <code>element</code>. Instead, it matches elements matching the query that
+are also descendants of <code>element</code>. Therefore, we're seeing three <code>div</code>
+elements: <code>div.lonely</code>, <code>div.outer</code>, <code>div.inner</code>. We're seeing them because
+they both match the <code>div div</code> selector and are all descendants of <code>#my-id</code>.</p>
+<p>The trick to remembering this is that CSS selectors are absolute; not relative
+to any particular element, not even the element you're calling
+<code>querySelectorAll</code> on.</p>
 <p>This even works with elements <em>outside</em> the element you're calling
 <code>querySelectorAll</code> on. For example, this selector:</p>
 <pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"div div div"</span><span class="p">)</span>
