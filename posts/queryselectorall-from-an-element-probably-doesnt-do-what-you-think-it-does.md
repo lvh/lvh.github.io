@@ -109,8 +109,8 @@ CSS pseudo-selector, and `query`/`queryAll`.
 The `:scope` pseudo-selector matches against the current scope. The
 name comes from the [CSS scoping][scope-spec], which limits the scope
 of styles to part of the document. The element we're calling
-`querySelectorAll` on also counts as a scope, which means that the
-following expression only matches `div.inner`:
+`querySelectorAll` on also counts as a scope, so this expression only
+matches `div.inner`:
 
 ```javascript
 document.querySelector("#my-id").querySelectorAll(":scope div div");

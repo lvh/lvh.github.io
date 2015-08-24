@@ -184,8 +184,8 @@ CSS pseudo-selector, and <code>query</code>/<code>queryAll</code>.</p>
 <p>The <code>:scope</code> pseudo-selector matches against the current scope. The
 name comes from the <a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped">CSS scoping</a>, which limits the scope
 of styles to part of the document. The element we're calling
-<code>querySelectorAll</code> on also counts as a scope, which means that the
-following expression only matches <code>div.inner</code>:</p>
+<code>querySelectorAll</code> on also counts as a scope, so this expression only
+matches <code>div.inner</code>:</p>
 <pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">":scope div div"</span><span class="p">);</span>
 </pre>
 

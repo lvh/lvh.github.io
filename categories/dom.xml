@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (dom)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/dom.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 24 Aug 2015 16:23:04 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (dom)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/dom.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 24 Aug 2015 16:58:47 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, start with the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors"&gt;MDN introduction&lt;/a&gt;.&lt;/p&gt;
@@ -86,8 +86,8 @@ CSS pseudo-selector, and &lt;code&gt;query&lt;/code&gt;/&lt;code&gt;queryAll&lt;
 &lt;p&gt;The &lt;code&gt;:scope&lt;/code&gt; pseudo-selector matches against the current scope. The
 name comes from the &lt;a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped"&gt;CSS scoping&lt;/a&gt;, which limits the scope
 of styles to part of the document. The element we're calling
-&lt;code&gt;querySelectorAll&lt;/code&gt; on also counts as a scope, which means that the
-following expression only matches &lt;code&gt;div.inner&lt;/code&gt;:&lt;/p&gt;
+&lt;code&gt;querySelectorAll&lt;/code&gt; on also counts as a scope, so this expression only
+matches &lt;code&gt;div.inner&lt;/code&gt;:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;":scope div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;
 
