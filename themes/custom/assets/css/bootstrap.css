@@ -106,7 +106,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, monospace;
+  font-family: Menlo, monospace;
   font-size: 1em;
 }
 button,
@@ -1338,9 +1338,9 @@ samp {
 }
 code {
   padding: 2px 4px;
-  font-size: 90%;
-  color: #c7254e;
-  background-color: #f9f2f4;
+  font-size: 15px;
+  color: #373233;
+  background-color: #f8f8f8;
   border-radius: 4px;
 }
 kbd {
