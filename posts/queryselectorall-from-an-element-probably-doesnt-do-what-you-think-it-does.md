@@ -12,7 +12,8 @@
 Modern browsers have APIs called `querySelector` and `querySelectorAll`. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
-you haven't used them, start with the [MDN introduction][csssel].
+you haven't used them, the Mozilla Developer Network has an excellent
+[introduction][csssel].
 
 Imagine the following HTML page:
 
