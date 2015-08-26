@@ -71,7 +71,112 @@
             
 
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/reverse-ungineering.html" class="u-url">Reverse ungineering</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/securing-apis-with-shims.html" class="u-url">Securing APIs with shims</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/securing-apis-with-shims.html" rel="bookmark"><time class="published dt-published" datetime="2015-02-20T22:24:03-08:00" title="2015-02-20 22:24">2015-02-20 22:24</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Imagine that you had a capability URL, except instead of giving you
+the ability to perform a specific <em>action</em>, it gave you the ability to
+perform a (limited) set of operations on a third party API,
+e.g. OpenStack. The capability URL wouldn't just be something you
+exercise or revoke; it'd be an API endpoint, mostly indistinguishable
+from the real API. Incoming requests would be inspected, and based on
+a set of rules, either be rejected or forwarded to the API being
+shimmed.</p>
+<h2>Proof of concept</h2>
+<p>At my day job, we had a programming task that I thought logic
+programming would be well-suited for. Unfortunately, logic programming
+is kind of weird and esoteric. Even programmers with otherwise broad
+experiences professed to not being quite sure how it worked, or what
+to do with it.</p>
+<p>Therefore, I used up my hack day (a day where we get to hack on random
+projects) to cook up some cool stuff using logic programming. I demoed
+the usual suspects (<a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/monkey.clj">the monkey with the banana</a>, and a
+<a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/sudoku.clj">sudoku solver</a>), illustrating the difference between the
+relational nature of the logic programs and the imperative nature of
+the algorithms you might otherwise write to solve the same problems.
+Finally, I demoed the aforementioned proxying API shim. The proof of
+concept, codenamed shimmer, is <a href="https://github.com/lvh/shimmer/">up on Github</a>.</p>
+<p>Let's take a look at the handler function, which takes incoming
+requests and modifies them slightly so they can be passed on:</p>
+<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="nv">build-handler</span>
+  <span class="p">[</span><span class="nv">target-host</span> <span class="nv">target-port</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">incoming-request</span><span class="p">]</span>
+    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">match</span> <span class="p">(</span><span class="nf">spy</span> <span class="nv">incoming-request</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">modified-request</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">incoming-request</span>
+                                 <span class="p">(</span><span class="nb">dissoc </span><span class="ss">:scheme</span><span class="p">)</span> <span class="c1">;; hack</span>
+                                 <span class="p">(</span><span class="nb">assoc </span><span class="ss">:host</span> <span class="nv">target-host</span>
+                                        <span class="ss">:port</span> <span class="nv">target-port</span>
+                                        <span class="ss">:throw-exceptions</span> <span class="nv">false</span><span class="p">))]</span>
+        <span class="p">(</span><span class="nf">spy</span> <span class="p">(</span><span class="nf">request</span> <span class="p">(</span><span class="nf">spy</span> <span class="nv">modified-request</span><span class="p">))))</span>
+      <span class="p">{</span><span class="ss">:status</span> <span class="mi">403</span> <span class="c1">;; Forbidden</span>
+       <span class="ss">:headers</span> <span class="p">{</span><span class="s">"content-type"</span> <span class="s">"text/plain"</span><span class="p">}</span>
+       <span class="ss">:body</span> <span class="s">"Doesn't match!"</span><span class="p">})))</span>
+</pre>
+
+
+<p>(Those <code>spy</code> calls are from the excellent <a href="https://github.com/ptaoussanis/timbre"><code>timbre</code></a>
+library. They make it easy to log values without cluttering up your
+code; a godsend while developing with some libraries you're not
+terribly familiar with.)</p>
+<p>The matching function looks like this:</p>
+<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="nv">match</span>
+  <span class="s">"Checks if the request is allowed."</span>
+  <span class="p">[</span><span class="nv">req</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">not= </span><span class="p">(</span><span class="nf">l/run</span> <span class="mi">1</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+          <span class="p">(</span><span class="nf">l/conde</span>
+           <span class="p">[(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:request-method</span> <span class="ss">:get</span><span class="p">})]</span>
+           <span class="p">[(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:request-method</span> <span class="ss">:post</span>
+                             <span class="ss">:headers</span> <span class="p">{</span><span class="s">"x-some-header"</span>
+                                       <span class="s">"the right header value"</span><span class="p">}})]</span>
+           <span class="p">[(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:request-method</span> <span class="ss">:post</span><span class="p">})</span>
+            <span class="p">(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:headers</span> <span class="p">{</span><span class="s">"x-some-header"</span>
+                                       <span class="s">"another right header value"</span><span class="p">}})]))</span>
+        <span class="o">'</span><span class="p">()))</span>
+</pre>
+
+
+<h2>Future work</h2>
+<p>Make this thing actually vaguely correct. That means e.g. also
+inspecting the body for URL references, and changing those to go
+through the proxy as well.</p>
+<p>Start collecting a library of short hand notations for specific API
+functionality, e.g. if you're proxying an OpenStack API, you should be
+able to just say you want to allow server creation requests, without
+having to figure out exactly what those requests look like.</p>
+<p>The spec is hard-coded, it should be specified at runtime. That was
+trickier than I had originally anticipated: the vast majority of
+<code>core.logic</code> behavior uses macros. While some functionality is fairly
+easy to port, that's probably a red herring: I don't want to port a
+gazillion macros. As an example, here's <code>conds</code>, which is just<code>conde</code>
+as a function (except without support for logical conjunction per
+disjunctive set of goals):</p>
+<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">conds</span>
+  <span class="s">"Like conde, but a function."</span>
+  <span class="p">[</span><span class="nv">goals</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">empty?</span> <span class="nv">goals</span><span class="p">)</span>
+    <span class="nv">l/fail</span>
+    <span class="p">(</span><span class="nf">l/conde</span> <span class="p">[(</span><span class="nb">first </span><span class="nv">goals</span><span class="p">)]</span>
+             <span class="p">[(</span><span class="nf">conds</span> <span class="p">(</span><span class="nb">rest </span><span class="nv">goals</span><span class="p">))])))</span>
+</pre>
+
+
+<p>That's not the worst function, but let's just say I see a lot of
+<code>macroexpand</code> in my future if I'm going to take this seriously.</p>
+<p>URLs and bodies should be parsed, so that you can write assertions
+against structured data, or against URL patterns, instead of specific
+URLs.</p>
+<p>If I ever end up letting any of this be a serious part of my day job,
+I'm going to invest a ton of time improving the documentation for both
+<code>core.logic</code> and <code>core.typed</code>. They're <em>fantastic</em> projects, but
+they're harder to get started with than they could be, and that's a
+shame.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/reverse-ungineering.html" class="u-url">Reverse ungineering</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
             <p class="dateline"><a href="posts/reverse-ungineering.html" rel="bookmark"><time class="published dt-published" datetime="2014-11-14T02:44:39-07:00" title="2014-11-14 02:44">2014-11-14 02:44</time></a></p>
@@ -684,7 +789,7 @@ some minor PRs so that it would also handle extended date formats
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2016         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

@@ -7,306 +7,314 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://www.lvh.io/2010/index.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2011/index.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2013/index.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2014/index.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2015/index.html</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/about.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/archive.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T23:25:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/amp.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/clojure.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/crypto.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/css.html</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://www.lvh.io/categories/docker.html</loc>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/dom.html</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/game.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/hex.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/hypercathexes.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/hypercathexis.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/index.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/mathjax.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/pycon.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/python.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/security.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/svg.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/twisted.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/webdev.html</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/index-1.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/index-2.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/index-3.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/index-4.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T23:25:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/index.html</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T23:25:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-rolling-your-own-development-stack.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-one.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/designing-a-continuous-deployment-system-deployment-formats-and-content.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/we-now-have-an-animal-mascot-.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/well-now-this-changes-everything-.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/10/cautious-deployment-for-continuous-availability.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/10/designing-a-continuous-deployment-system-cautious-deployment.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/10/pycon-us-talk.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/03/a-compiled-list-of-launchpad-s-perceived-flaws.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/03/bridging-the-gap-between-launchpad-and-github.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/03/on-sysadmins-programmers-and-reconciliation-a-response-to-zed-shaw-s-post-.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/03/reflections-on-stories-from-disgruntled-launchpad-users.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/03/religious-wars-considered-harmful-considered-harmful.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/03/why-do-people-hate-launchpad-so-much-.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/05/crowdsourcing-opinions-on-a-rest-api-post-put-or-both-.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/05/i-don-t-understand-rest-pagination.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2011/11/designing-a-rest-api-logging-in.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2013/01/moving-to-octopress-on-github-pages.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2013/01/securing-against-timing-attacks-with-twisted.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2013/11/using-protractor-with-angularjs-and-yeoman.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2013/12/external-drive-lossage-on-mavericks.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2014/04/more-on-financial-aid-grant-optimization.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/call-for-proposal-proposals.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/conflicting-threat-models.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</loc>
+  <lastmod>2016-03-12T23:25:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/everything-ive-learned-about-running-a-financial-aid-program.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/on-discussing-software-security-improvements.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/reverse-ungineering.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/securing-apis-with-shims.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/switched-to-nikola.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/they-do-take-security-seriously.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/updated-gpg-key.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/were-just-getting-started.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/what-the-heck-is-a-clojurelangifnlo.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/talks.html</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2016-03-12T22:40:00Z</lastmod>
  </url>
 </urlset>

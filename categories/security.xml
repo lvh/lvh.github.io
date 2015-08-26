@@ -1,5 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 23 Aug 2015 23:18:01 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 24 Sep 2015 00:55:06 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
+called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
+effectively having root access. Any process that can write to the
+&lt;code&gt;dockerd&lt;/code&gt; socket &lt;em&gt;also&lt;/em&gt; effectively has root access.&lt;/p&gt;
+&lt;p&gt;This is no big secret. Docker clearly documents this in a bunch of
+places, including the introductory documentation. It's an excellent
+reason to use Docker Machine for development purposes, even on
+Linux. If your regular user can write to the &lt;code&gt;dockerd&lt;/code&gt; socket, then
+every code execution vulnerability comes with a free privilege
+escalation.&lt;/p&gt;
+&lt;p&gt;The warnings around the Docker socket typically come with a (sometimes
+implicit) context of being on the host to begin with. Write access to
+the socket as an unprivileged user on the host may mean privileged
+access to the host, but there seems to be some confusion about what
+happens when you get write access to the socket &lt;em&gt;from a
+container&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The two most common misconceptions seem to be that it either doesn't
+grant elevated privileges at all, or that it grants you privileged
+access within the container (and without a way to break out). This is
+false; write access to the Docker socket is root on the host,
+regardless on where that write comes from. This is different from
+&lt;a href="https://github.com/jpetazzo/dind"&gt;Jerome Pettazoni's &lt;code&gt;dind&lt;/code&gt;&lt;/a&gt;, which gives you Docker-in-Docker;
+we're talking about access to the host's Docker socket.&lt;/p&gt;
+&lt;p&gt;The process works like this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The Docker container gets a &lt;code&gt;docker&lt;/code&gt; client of its own, pointed at
+   the &lt;code&gt;/var/run/docker.sock&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The Docker container launches a new container mounting &lt;code&gt;/&lt;/code&gt; on
+   &lt;code&gt;/host&lt;/code&gt;. This is the &lt;em&gt;host&lt;/em&gt; root filesystem, not the first
+   container.&lt;/li&gt;
+&lt;li&gt;The second container chroots to &lt;code&gt;/host&lt;/code&gt;, and is now effectively
+   root on the host. (There are a few differences between this and a
+   clean login shell; for example, &lt;code&gt;/proc/self/cgroups&lt;/code&gt; will still show
+   Docker cgroups. However, the attacker has all of the permissions
+   necessary to work around this.)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is identical to the process you'd use to escalate from outside of
+a container. Write access to the Docker socket is root on the host,
+full stop; who's writing, or where they're writing from, doesn't
+matter.&lt;/p&gt;
+&lt;p&gt;Unfortunately, there are plenty of development teams unaware of this
+property. I recently came across one, and ended up making a screencast
+to unambiguously demonstrate the flaw in their setup (which involved a
+container with write access to the Docker socket).&lt;/p&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/CB9Aa6QeRaI" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;This isn't new; it's been a known property of the way Docker works
+ever since the (unfortunately trivially cross-site scriptable) REST
+API listening on a local TCP port was replaced with the
+&lt;code&gt;/var/run/docker.sock&lt;/code&gt; UNIX domain socket.&lt;/p&gt;&lt;/div&gt;</description><category>docker</category><category>security</category><guid>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</guid><pubDate>Wed, 23 Sep 2015 21:54:24 GMT</pubDate></item><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
 &lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
 alternative certificate chain when the first one fails. The logic in
 that feature had a bug in it, such that it didn't properly verify if

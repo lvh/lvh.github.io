@@ -19,11 +19,15 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/css.xml</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2015-08-28T18:48:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://www.lvh.io/categories/docker.xml</loc>
+  <lastmod>2015-09-24T00:55:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/dom.xml</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2015-08-28T18:48:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/game.xml</loc>
@@ -55,7 +59,7 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/security.xml</loc>
-  <lastmod>2015-08-23T23:18:00Z</lastmod>
+  <lastmod>2015-09-24T00:55:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/svg.xml</loc>
@@ -67,14 +71,14 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/webdev.xml</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2015-08-28T18:48:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/rss.xml</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T23:25:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/sitemap.xml</loc>
-  <lastmod>2015-08-24T21:43:00Z</lastmod>
+  <lastmod>2016-03-12T23:48:00Z</lastmod>
  </sitemap>
 </sitemapindex>

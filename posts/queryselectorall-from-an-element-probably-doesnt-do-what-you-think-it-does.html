@@ -10,6 +10,7 @@
 <link rel="canonical" href="https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html">
 <!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
 <link rel="prev" href="todays-openssl-bug-for-techies-without-infosec-chops.html" title="Today's OpenSSL bug (for techies without infosec chops)" type="text/html">
+<link rel="next" href="dont-expose-the-docker-socket-not-even-to-a-container.html" title="Don't expose the Docker socket (not even to a container)" type="text/html">
 <meta property="og:site_name" content="lvh">
 <meta property="og:title" content="querySelectorAll from an element probably doesn't do what you think it">
 <meta property="og:url" content="https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html">
@@ -140,11 +141,11 @@ id="outside"&gt;</code>.</p>
 </pre>
 
 
-<p>You might reasonably expect them to be equivalent. After all, one asks
-<code>div</code> elements inside <code>div</code> elements inside <code>#my-id</code>, and the other
-asks for <code>div</code> elements inside <code>div</code> elements that are <em>descendants</em>
-of <code>#my-id</code>. However, when you look at <a href="http://jsbin.com/hineco/edit?html,js,output">this JSbin</a> you'll see
-that they produce very different results:</p>
+<p>You might reasonably expect them to be equivalent. After all, one asks for
+<code>div</code> elements inside <code>div</code> elements inside <code>#my-id</code>, and the other asks for
+<code>div</code> elements inside <code>div</code> elements that are <em>descendants</em> of
+<code>#my-id</code>. However, when you look at <a href="http://jsbin.com/hineco/edit?html,js,output">this JSbin</a>, you'll see that they
+produce very different results:</p>
 <pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
 <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">3</span><span class="p">;</span>
 </pre>
@@ -156,8 +157,8 @@ starting from <code>element</code>. Instead, it matches elements matching the qu
 are also descendants of <code>element</code>. Therefore, we're seeing three <code>div</code>
 elements: <code>div.lonely</code>, <code>div.outer</code>, <code>div.inner</code>. We're seeing them because
 they both match the <code>div div</code> selector and are all descendants of <code>#my-id</code>.</p>
-<p>The trick to remembering this is that CSS selectors are absolute; not relative
-to any particular element, not even the element you're calling
+<p>The trick to remembering this is that CSS selectors are absolute. They are not
+relative to any particular element, not even the element you're calling
 <code>querySelectorAll</code> on.</p>
 <p>This even works with elements <em>outside</em> the element you're calling
 <code>querySelectorAll</code> on. For example, this selector:</p>
@@ -179,13 +180,14 @@ to any particular element, not even the element you're calling
 </pre>
 
 
-<p>I think this API is surprising, and the front-end engineers I've asked
-seem to agree with me. This is, however, not a bug; it's definitely
-how the spec claims it should work, and how it works in Firefox,
-Chrome and Safari. <a href="http://ejohn.org/blog/thoughts-on-queryselectorall/">John Resig commented</a> how he and others
-felt this behavior was quite confusing back when the spec came out.</p>
-<p>There are two suggested ways to get the other behavior: the <code>:scope</code>
-CSS pseudo-selector, and <code>query</code>/<code>queryAll</code>.</p>
+<p>I think this API is surprising, and the front-end engineers I've asked seem to
+agree with me. This is, however, not a bug. It's how the spec defines it to
+work, and browsers consistently implement it that way.
+Safari. <a href="http://ejohn.org/blog/thoughts-on-queryselectorall/">John Resig commented</a> how he and others felt this behavior
+was quite confusing back when the spec came out.</p>
+<p>If you can't easily rewrite the selector to be absolute like we did above,
+there are two alternatives: the <code>:scope</code> CSS pseudo-selector, and
+<code>query</code>/<code>queryAll</code>.</p>
 <p>The <code>:scope</code> pseudo-selector matches against the current scope. The
 name comes from the <a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped">CSS scoping</a>, which limits the scope
 of styles to part of the document. The element we're calling
@@ -195,23 +197,30 @@ matches <code>div.inner</code>:</p>
 </pre>
 
 
-<p>Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility">browser support</a> for scoped CSS and the
-<code>:scope</code> pseudo-selector is extremely limited. Only recent versions of
-Firefox support it by default. Blink-based browsers like Chrome and
-Opera require the well-hidden experimental features flag to be turned
-on. Safari has a buggy implementation. Internet Explorer doesn't
-support it at all.</p>
-<p>The other alternative is <code>element.query</code>/<code>queryAll</code>. Unfortunately,
-it's even more obscure. It is not referenced on MDN or caniuse.com,
-and is missing from the <a href="http://www.w3.org/TR/dom/#interface-parentnode">current DOM4 working draft</a>,
-dated 18 June 2015. It was still present in
-<a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode">an older version of the same draft</a>, dated 4 February
-2014, as well as the <a href="https://dom.spec.whatwg.org/#interface-parentnode">WHATWG Living Document</a> version of
-the spec. It has also been implemented by at least two polyfills:</p>
+<p>Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility">browser support</a> for scoped CSS and the <code>:scope</code>
+pseudo-selector is extremely limited. Only recent versions of Firefox support
+it by default. Blink-based browsers like Chrome and Opera require the
+well-hidden experimental features flag to be turned on. Safari has a buggy
+implementation. Internet Explorer doesn't support it at all.</p>
+<p>The other alternative is <code>element.query</code>/<code>queryAll</code>. These are alternative
+methods to <code>querySelector</code> and <code>querySelectorAll</code> that exist on DOM parent
+nodes. They also take selectors, except these selectors are interpreted
+relative to the element being queried from.  Unfortunately, these methods are
+even more obscure: they are not referenced on MDN or <code>caniuse.com</code>, and are
+missing from the <a href="http://www.w3.org/TR/dom/#interface-parentnode">current DOM4 working draft</a>, dated 18
+June 2015. They were still present in <a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode">an older version</a>, dated 4
+February 2014, as well as in the <a href="https://dom.spec.whatwg.org/#interface-parentnode">WHATWG Living Document</a> version
+of the spec. They have also been implemented by at least two polyfills:</p>
 <ul>
 <li><a href="https://webreflection.github.io/dom4/">Dom4</a></li>
 <li><a href="https://github.com/barberboy/dom-elements">dom-elements</a></li>
 </ul>
+<p>In conclusion, the DOM spec doesn't always necessarily do the most obvious
+thing. It's important to know pitfalls like these, because they're difficult
+to discover from just the behavior. Fortunately, you can often rewrite your
+selector so that it isn't a problem. If you can't, there's always a polyfill
+to give you the modern API you want. Alternatively, libraries like jQuery can
+also help you get a consistent, friendly interface for querying the DOM.</p>
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
@@ -223,12 +232,15 @@ the spec. It has also been implemented by at least two polyfills:</p>
 <li class="previous">
                 <a href="todays-openssl-bug-for-techies-without-infosec-chops.html" rel="prev" title="Today's OpenSSL bug (for techies without infosec chops)">Previous post</a>
             </li>
+            <li class="next">
+                <a href="dont-expose-the-docker-socket-not-even-to-a-container.html" rel="next" title="Don't expose the Docker socket (not even to a container)">Next post</a>
+            </li>
         </ul></nav></aside></article>
 </div>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2016         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

@@ -10,7 +10,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://www.lvh.io/index.html">
 <link rel="next" href="index-4.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/dont-expose-the-docker-socket-not-even-to-a-container.html" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -70,7 +70,67 @@
             
 
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" class="u-url">querySelectorAll from an element probably doesn't do what you think it does</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container.html" class="u-url">Don't expose the Docker socket (not even to a container)</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
+            <p class="dateline"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container.html" rel="bookmark"><time class="published dt-published" datetime="2015-09-23T14:54:24-07:00" title="2015-09-23 14:54">2015-09-23 14:54</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Docker primarily works as a client that communicates with a daemon
+process (<code>dockerd</code>). Typically that socket is a UNIX domain socket
+called <code>/var/run/docker.sock</code>. That daemon is highly privileged;
+effectively having root access. Any process that can write to the
+<code>dockerd</code> socket <em>also</em> effectively has root access.</p>
+<p>This is no big secret. Docker clearly documents this in a bunch of
+places, including the introductory documentation. It's an excellent
+reason to use Docker Machine for development purposes, even on
+Linux. If your regular user can write to the <code>dockerd</code> socket, then
+every code execution vulnerability comes with a free privilege
+escalation.</p>
+<p>The warnings around the Docker socket typically come with a (sometimes
+implicit) context of being on the host to begin with. Write access to
+the socket as an unprivileged user on the host may mean privileged
+access to the host, but there seems to be some confusion about what
+happens when you get write access to the socket <em>from a
+container</em>.</p>
+<p>The two most common misconceptions seem to be that it either doesn't
+grant elevated privileges at all, or that it grants you privileged
+access within the container (and without a way to break out). This is
+false; write access to the Docker socket is root on the host,
+regardless on where that write comes from. This is different from
+<a href="https://github.com/jpetazzo/dind">Jerome Pettazoni's <code>dind</code></a>, which gives you Docker-in-Docker;
+we're talking about access to the host's Docker socket.</p>
+<p>The process works like this:</p>
+<ol>
+<li>The Docker container gets a <code>docker</code> client of its own, pointed at
+   the <code>/var/run/docker.sock</code>.</li>
+<li>The Docker container launches a new container mounting <code>/</code> on
+   <code>/host</code>. This is the <em>host</em> root filesystem, not the first
+   container.</li>
+<li>The second container chroots to <code>/host</code>, and is now effectively
+   root on the host. (There are a few differences between this and a
+   clean login shell; for example, <code>/proc/self/cgroups</code> will still show
+   Docker cgroups. However, the attacker has all of the permissions
+   necessary to work around this.)</li>
+</ol>
+<p>This is identical to the process you'd use to escalate from outside of
+a container. Write access to the Docker socket is root on the host,
+full stop; who's writing, or where they're writing from, doesn't
+matter.</p>
+<p>Unfortunately, there are plenty of development teams unaware of this
+property. I recently came across one, and ended up making a screencast
+to unambiguously demonstrate the flaw in their setup (which involved a
+container with write access to the Docker socket).</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CB9Aa6QeRaI" frameborder="0" allowfullscreen></iframe>
+
+<p>This isn't new; it's been a known property of the way Docker works
+ever since the (unfortunately trivially cross-site scriptable) REST
+API listening on a local TCP port was replaced with the
+<code>/var/run/docker.sock</code> UNIX domain socket.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" class="u-url">querySelectorAll from an element probably doesn't do what you think it does</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
             <p class="dateline"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" rel="bookmark"><time class="published dt-published" datetime="2015-08-21T12:11:23-07:00" title="2015-08-21 12:11">2015-08-21 12:11</time></a></p>
@@ -120,11 +180,11 @@ id="outside"&gt;</code>.</p>
 </pre>
 
 
-<p>You might reasonably expect them to be equivalent. After all, one asks
-<code>div</code> elements inside <code>div</code> elements inside <code>#my-id</code>, and the other
-asks for <code>div</code> elements inside <code>div</code> elements that are <em>descendants</em>
-of <code>#my-id</code>. However, when you look at <a href="http://jsbin.com/hineco/edit?html,js,output">this JSbin</a> you'll see
-that they produce very different results:</p>
+<p>You might reasonably expect them to be equivalent. After all, one asks for
+<code>div</code> elements inside <code>div</code> elements inside <code>#my-id</code>, and the other asks for
+<code>div</code> elements inside <code>div</code> elements that are <em>descendants</em> of
+<code>#my-id</code>. However, when you look at <a href="http://jsbin.com/hineco/edit?html,js,output">this JSbin</a>, you'll see that they
+produce very different results:</p>
 <pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
 <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">3</span><span class="p">;</span>
 </pre>
@@ -136,8 +196,8 @@ starting from <code>element</code>. Instead, it matches elements matching the qu
 are also descendants of <code>element</code>. Therefore, we're seeing three <code>div</code>
 elements: <code>div.lonely</code>, <code>div.outer</code>, <code>div.inner</code>. We're seeing them because
 they both match the <code>div div</code> selector and are all descendants of <code>#my-id</code>.</p>
-<p>The trick to remembering this is that CSS selectors are absolute; not relative
-to any particular element, not even the element you're calling
+<p>The trick to remembering this is that CSS selectors are absolute. They are not
+relative to any particular element, not even the element you're calling
 <code>querySelectorAll</code> on.</p>
 <p>This even works with elements <em>outside</em> the element you're calling
 <code>querySelectorAll</code> on. For example, this selector:</p>
@@ -159,13 +219,14 @@ to any particular element, not even the element you're calling
 </pre>
 
 
-<p>I think this API is surprising, and the front-end engineers I've asked
-seem to agree with me. This is, however, not a bug; it's definitely
-how the spec claims it should work, and how it works in Firefox,
-Chrome and Safari. <a href="http://ejohn.org/blog/thoughts-on-queryselectorall/">John Resig commented</a> how he and others
-felt this behavior was quite confusing back when the spec came out.</p>
-<p>There are two suggested ways to get the other behavior: the <code>:scope</code>
-CSS pseudo-selector, and <code>query</code>/<code>queryAll</code>.</p>
+<p>I think this API is surprising, and the front-end engineers I've asked seem to
+agree with me. This is, however, not a bug. It's how the spec defines it to
+work, and browsers consistently implement it that way.
+Safari. <a href="http://ejohn.org/blog/thoughts-on-queryselectorall/">John Resig commented</a> how he and others felt this behavior
+was quite confusing back when the spec came out.</p>
+<p>If you can't easily rewrite the selector to be absolute like we did above,
+there are two alternatives: the <code>:scope</code> CSS pseudo-selector, and
+<code>query</code>/<code>queryAll</code>.</p>
 <p>The <code>:scope</code> pseudo-selector matches against the current scope. The
 name comes from the <a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped">CSS scoping</a>, which limits the scope
 of styles to part of the document. The element we're calling
@@ -175,23 +236,30 @@ matches <code>div.inner</code>:</p>
 </pre>
 
 
-<p>Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility">browser support</a> for scoped CSS and the
-<code>:scope</code> pseudo-selector is extremely limited. Only recent versions of
-Firefox support it by default. Blink-based browsers like Chrome and
-Opera require the well-hidden experimental features flag to be turned
-on. Safari has a buggy implementation. Internet Explorer doesn't
-support it at all.</p>
-<p>The other alternative is <code>element.query</code>/<code>queryAll</code>. Unfortunately,
-it's even more obscure. It is not referenced on MDN or caniuse.com,
-and is missing from the <a href="http://www.w3.org/TR/dom/#interface-parentnode">current DOM4 working draft</a>,
-dated 18 June 2015. It was still present in
-<a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode">an older version of the same draft</a>, dated 4 February
-2014, as well as the <a href="https://dom.spec.whatwg.org/#interface-parentnode">WHATWG Living Document</a> version of
-the spec. It has also been implemented by at least two polyfills:</p>
+<p>Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility">browser support</a> for scoped CSS and the <code>:scope</code>
+pseudo-selector is extremely limited. Only recent versions of Firefox support
+it by default. Blink-based browsers like Chrome and Opera require the
+well-hidden experimental features flag to be turned on. Safari has a buggy
+implementation. Internet Explorer doesn't support it at all.</p>
+<p>The other alternative is <code>element.query</code>/<code>queryAll</code>. These are alternative
+methods to <code>querySelector</code> and <code>querySelectorAll</code> that exist on DOM parent
+nodes. They also take selectors, except these selectors are interpreted
+relative to the element being queried from.  Unfortunately, these methods are
+even more obscure: they are not referenced on MDN or <code>caniuse.com</code>, and are
+missing from the <a href="http://www.w3.org/TR/dom/#interface-parentnode">current DOM4 working draft</a>, dated 18
+June 2015. They were still present in <a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode">an older version</a>, dated 4
+February 2014, as well as in the <a href="https://dom.spec.whatwg.org/#interface-parentnode">WHATWG Living Document</a> version
+of the spec. They have also been implemented by at least two polyfills:</p>
 <ul>
 <li><a href="https://webreflection.github.io/dom4/">Dom4</a></li>
 <li><a href="https://github.com/barberboy/dom-elements">dom-elements</a></li>
 </ul>
+<p>In conclusion, the DOM spec doesn't always necessarily do the most obvious
+thing. It's important to know pitfalls like these, because they're difficult
+to discover from just the behavior. Fortunately, you can often rewrite your
+selector so that it isn't a problem. If you can't, there's always a polyfill
+to give you the modern API you want. Alternatively, libraries like jQuery can
+also help you get a consistent, friendly interface for querying the DOM.</p>
 </div>
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
@@ -946,111 +1014,6 @@ De57mY9RnWwt5fy6AWd1
 </pre>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/securing-apis-with-shims.html" class="u-url">Securing APIs with shims</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">lvh</span></p>
-            <p class="dateline"><a href="posts/securing-apis-with-shims.html" rel="bookmark"><time class="published dt-published" datetime="2015-02-20T22:24:03-08:00" title="2015-02-20 22:24">2015-02-20 22:24</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>Imagine that you had a capability URL, except instead of giving you
-the ability to perform a specific <em>action</em>, it gave you the ability to
-perform a (limited) set of operations on a third party API,
-e.g. OpenStack. The capability URL wouldn't just be something you
-exercise or revoke; it'd be an API endpoint, mostly indistinguishable
-from the real API. Incoming requests would be inspected, and based on
-a set of rules, either be rejected or forwarded to the API being
-shimmed.</p>
-<h2>Proof of concept</h2>
-<p>At my day job, we had a programming task that I thought logic
-programming would be well-suited for. Unfortunately, logic programming
-is kind of weird and esoteric. Even programmers with otherwise broad
-experiences professed to not being quite sure how it worked, or what
-to do with it.</p>
-<p>Therefore, I used up my hack day (a day where we get to hack on random
-projects) to cook up some cool stuff using logic programming. I demoed
-the usual suspects (<a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/monkey.clj">the monkey with the banana</a>, and a
-<a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/sudoku.clj">sudoku solver</a>), illustrating the difference between the
-relational nature of the logic programs and the imperative nature of
-the algorithms you might otherwise write to solve the same problems.
-Finally, I demoed the aforementioned proxying API shim. The proof of
-concept, codenamed shimmer, is <a href="https://github.com/lvh/shimmer/">up on Github</a>.</p>
-<p>Let's take a look at the handler function, which takes incoming
-requests and modifies them slightly so they can be passed on:</p>
-<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="nv">build-handler</span>
-  <span class="p">[</span><span class="nv">target-host</span> <span class="nv">target-port</span><span class="p">]</span>
-  <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">incoming-request</span><span class="p">]</span>
-    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">match</span> <span class="p">(</span><span class="nf">spy</span> <span class="nv">incoming-request</span><span class="p">))</span>
-      <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">modified-request</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">incoming-request</span>
-                                 <span class="p">(</span><span class="nb">dissoc </span><span class="ss">:scheme</span><span class="p">)</span> <span class="c1">;; hack</span>
-                                 <span class="p">(</span><span class="nb">assoc </span><span class="ss">:host</span> <span class="nv">target-host</span>
-                                        <span class="ss">:port</span> <span class="nv">target-port</span>
-                                        <span class="ss">:throw-exceptions</span> <span class="nv">false</span><span class="p">))]</span>
-        <span class="p">(</span><span class="nf">spy</span> <span class="p">(</span><span class="nf">request</span> <span class="p">(</span><span class="nf">spy</span> <span class="nv">modified-request</span><span class="p">))))</span>
-      <span class="p">{</span><span class="ss">:status</span> <span class="mi">403</span> <span class="c1">;; Forbidden</span>
-       <span class="ss">:headers</span> <span class="p">{</span><span class="s">"content-type"</span> <span class="s">"text/plain"</span><span class="p">}</span>
-       <span class="ss">:body</span> <span class="s">"Doesn't match!"</span><span class="p">})))</span>
-</pre>
-
-
-<p>(Those <code>spy</code> calls are from the excellent <a href="https://github.com/ptaoussanis/timbre"><code>timbre</code></a>
-library. They make it easy to log values without cluttering up your
-code; a godsend while developing with some libraries you're not
-terribly familiar with.)</p>
-<p>The matching function looks like this:</p>
-<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="nv">match</span>
-  <span class="s">"Checks if the request is allowed."</span>
-  <span class="p">[</span><span class="nv">req</span><span class="p">]</span>
-  <span class="p">(</span><span class="nb">not= </span><span class="p">(</span><span class="nf">l/run</span> <span class="mi">1</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
-          <span class="p">(</span><span class="nf">l/conde</span>
-           <span class="p">[(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:request-method</span> <span class="ss">:get</span><span class="p">})]</span>
-           <span class="p">[(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:request-method</span> <span class="ss">:post</span>
-                             <span class="ss">:headers</span> <span class="p">{</span><span class="s">"x-some-header"</span>
-                                       <span class="s">"the right header value"</span><span class="p">}})]</span>
-           <span class="p">[(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:request-method</span> <span class="ss">:post</span><span class="p">})</span>
-            <span class="p">(</span><span class="nf">l/featurec</span> <span class="nv">req</span> <span class="p">{</span><span class="ss">:headers</span> <span class="p">{</span><span class="s">"x-some-header"</span>
-                                       <span class="s">"another right header value"</span><span class="p">}})]))</span>
-        <span class="o">'</span><span class="p">()))</span>
-</pre>
-
-
-<h2>Future work</h2>
-<p>Make this thing actually vaguely correct. That means e.g. also
-inspecting the body for URL references, and changing those to go
-through the proxy as well.</p>
-<p>Start collecting a library of short hand notations for specific API
-functionality, e.g. if you're proxying an OpenStack API, you should be
-able to just say you want to allow server creation requests, without
-having to figure out exactly what those requests look like.</p>
-<p>The spec is hard-coded, it should be specified at runtime. That was
-trickier than I had originally anticipated: the vast majority of
-<code>core.logic</code> behavior uses macros. While some functionality is fairly
-easy to port, that's probably a red herring: I don't want to port a
-gazillion macros. As an example, here's <code>conds</code>, which is just<code>conde</code>
-as a function (except without support for logical conjunction per
-disjunctive set of goals):</p>
-<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">conds</span>
-  <span class="s">"Like conde, but a function."</span>
-  <span class="p">[</span><span class="nv">goals</span><span class="p">]</span>
-  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">empty?</span> <span class="nv">goals</span><span class="p">)</span>
-    <span class="nv">l/fail</span>
-    <span class="p">(</span><span class="nf">l/conde</span> <span class="p">[(</span><span class="nb">first </span><span class="nv">goals</span><span class="p">)]</span>
-             <span class="p">[(</span><span class="nf">conds</span> <span class="p">(</span><span class="nb">rest </span><span class="nv">goals</span><span class="p">))])))</span>
-</pre>
-
-
-<p>That's not the worst function, but let's just say I see a lot of
-<code>macroexpand</code> in my future if I'm going to take this seriously.</p>
-<p>URLs and bodies should be parsed, so that you can write assertions
-against structured data, or against URL patterns, instead of specific
-URLs.</p>
-<p>If I ever end up letting any of this be a serious part of my day job,
-I'm going to invest a ton of time improving the documentation for both
-<code>core.logic</code> and <code>core.typed</code>. They're <em>fantastic</em> projects, but
-they're harder to get started with than they could be, and that's a
-shame.</p>
-</div>
-    </div>
     </article>
 </div>
 
@@ -1064,7 +1027,7 @@ shame.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2015         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2016         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>
