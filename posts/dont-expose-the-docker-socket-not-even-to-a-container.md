@@ -58,7 +58,7 @@ matter.
 Unfortunately, there are plenty of development teams unaware of this
 property. I recently came across one, and ended up making a screencast
 to unambiguously demonstrate the flaw in their setup (which involved a
-container with write access to the Docker socket). You can see the
+container with write access to the Docker socket).
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/CB9Aa6QeRaI" frameborder="0" allowfullscreen></iframe>
 
