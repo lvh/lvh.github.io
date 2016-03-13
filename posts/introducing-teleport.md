@@ -34,14 +34,12 @@ a compromise in production. It automatically maintains clear audit logs: who
 logged in, when and where they logged in, and what they did once they got
 there.
 
-Teleport comes with a beautiful, usable UI. This makes it easy to connect to
-clusters of computers, while letting you associate live persistent chat with
-your sessions. This is great for providing logs about what you changed and
-why, or to help on-board new team members. The UI is optional: many system
-administrators will prefer to use their existing SSH client, and Teleport
-supports that natively.  Because it implements the `SSH_AUTH_SOCK` protocol,
-integrating your current CLI workflow is a simple matter of setting a single
-environment variable.
+Teleport comes with a beautiful, usable UI, making it easy to visualize
+different clusters and the available machines within them. The UI is optional:
+many system administrators will prefer to use their existing SSH client, and
+Teleport supports that natively.  Because it implements the `SSH_AUTH_SOCK`
+protocol, integrating your current CLI workflow is a simple matter of setting
+a single environment variable.
 
 As someone with an open-source background, I'm glad to see this software
 released and developed out in the open. A decent SSH key management story
