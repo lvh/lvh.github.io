@@ -66,7 +66,7 @@ it's ready for motivated individuals to start experimenting with it.
 
 Some people might feel that a better SSH story means you're solving the wrong
 problem. It seems at odds with the ideas behind immutable infrastructure and
-treating server as [cattle, not pets][cattle]. I don't think that's
+treating servers as [cattle, not pets][cattle]. I don't think that's
 true. Firstly, even with immutable infrastructure, being able to SSH into a
 box to debug and monitor is still incredibly important. Being able to rapidly
 deploy a bunch of fixed images quickly may be good, but you still have to know
