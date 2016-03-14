@@ -12,7 +12,7 @@
 I'm happy to introduce [Teleport][teleport], a new open source platform for
 managing SSH infrastructure. Teleport is built by [Gravitational][grav], a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
-Gravitational, I have been consulting for the Teleport project.
+Gravitational, I have been advising them on the Teleport project.
 
 The authentication story at most teams just isn't very good. Some teams rely
 on passing passwords around haphazardly, while others rely on copying
