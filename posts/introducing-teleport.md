@@ -14,14 +14,14 @@ managing SSH infrastructure. Teleport is built by [Gravitational][grav], a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
 Gravitational, I have been advising them on the Teleport project.
 
-The authentication story at most teams just isn't very good. Some teams rely
-on passing passwords around haphazardly, while others rely on copying
-everyone's `~/.ssh/id_rsa.pub` to every new box. More complex homegrown
-systems exist, but they quickly become unwieldy. These methods are problematic
-both operationally and from a security perspective: when security and
-usability are at odds, at some point security will lose out. For a lot of
-teams, a single compromised key off of a developer machine spells disaster,
-on-boarding new team members is painful, and key rotation doesn't happen.
+Most teams don't have a great authentication story. Some rely on passing
+passwords around haphazardly, while others rely on copying everyone's
+`~/.ssh/id_rsa.pub` to every new box. More complex homegrown systems quickly
+become unwieldy. These methods are problematic both operationally and from a
+security perspective: when security and usability are at odds, security tends
+to lose out. For a lot of teams, a single compromised key off of a developer
+machine spells disaster, on-boarding new team members is painful, and key
+rotation doesn't happen.
 
 In the last few years, strong multi-factor authentication has become the
 norm. Tokens are only valid for a brief period of time, use challenge-response
@@ -43,16 +43,14 @@ a single environment variable.
 
 As someone with an open-source background, I'm glad to see this software
 released and developed out in the open. A decent SSH key management story
-should be available to everyone, and that's what Teleport does. A handful of
-commercial systems with the same core functionality exist, but they are only
-used in a fraction of environments, and don't always have the same feature
-set. Making this technology more accessible is an important step in the right
-direction for everyone. That includes commercial vendors; democratizing a good
-infrastructure management story helps shift their product from an esoteric
-security gadget to the battle-hardened and commercially supported version of
-best practice. As a principal engineer at [Rackspace Managed Security][rms],
-I'm excited to start working towards better authentication stories, both
-internally and for our customers, with Teleport as the new baseline.
+should be available to everyone, and that's what Teleport does. I believe
+making this technology more accessible is good for everyone, including
+commercial vendors. Democratizing a decent DIY story helps turn their product
+into the battle-hardened and commercially supported version of industry best
+practice; and as such, I hope this helps grow that market. As a principal
+engineer at [Rackspace Managed Security][rms], I'm excited to start working
+towards better authentication stories, both internally and for our customers,
+with Teleport as the new baseline.
 
 Releasing early and often is also an important part of open source
 culture. That can be at odds with doing due diligence when releasing
