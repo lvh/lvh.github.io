@@ -7,23 +7,20 @@
 .. description:
 .. type: text
 
-Hi! I'm ``lvh``. I'm a software engineer, doing information security
-(particularly cryptography) and distributed systems at Rackspace_. My
-beard solves discrete logs in fields of small characteristic.
+Hi! I'm ``lvh``, principal engineer at `Rackspace Managed Security`_, working
+on information security (particularly cryptography) and distributed
+systems. My beard solves discrete logs in fields of small characteristic.
 
-I've been in a lot of places around the world, but these days I'm
-probably in San Francisco, Austin, San Antonio, or Chicago.
+I'm a Fellow of the `Python Software Foundation`_, and wear a number of hats
+at PyCon_. These days, I mostly write Clojure. I'm a big fan of Haskell
+and ML. I write C in anger, and am really looking forward to the day where
+Rust means I will never have to do so again.
 
-I'm a Fellow of the `Python Software Foundation`_, and wear a number
-of hats at PyCon_. Not surprisingly, that's a consequence of writing a
-good deal of Python. These days, I mostly write Clojure. I'm a big fan
-of Haskell and ML. I often have to write C in anger, and am really
-looking forward to the day where Rust means I will never have to do so
-again.
+I'm not looking for a new team to be a part of, but I am *definitely* looking
+for great people to be a part of my team. If working on customer-facing
+security seems interesting to you, `contact me`_.
 
-I'm not looking for a new team to be a part of, but I am *definitely*
-looking for great people to be a part of my team.
-
-.. _Rackspace: http://www.rackspace.com/
+.. _`Rackspace Managed Security`: http://www.rackspace.com/security
 .. _`Python Software Foundation`: https://www.python.org/psf/
 .. _PyCon: https://us.pycon.org/
+.. _`contact me`: mailto:lvh@rackspace.com
