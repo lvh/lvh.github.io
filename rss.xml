@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 12 Mar 2016 23:25:24 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 24 Mar 2016 20:05:45 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
+managing SSH infrastructure. Teleport is built by &lt;a href="http://www.gravitational.com/"&gt;Gravitational&lt;/a&gt;, a Y
+Combinator company that ships SaaS on any platform. While I'm not a part of
+Gravitational, I have been advising them on the Teleport project.&lt;/p&gt;
+&lt;p&gt;Most teams don't have a great authentication story. Some rely on passing
+passwords around haphazardly, while others rely on copying everyone's
+&lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt; to every new box. More complex homegrown systems quickly
+become unwieldy. These methods are problematic both operationally and from a
+security perspective: when security and usability are at odds, security tends
+to lose out. For a lot of teams, a single compromised key off of a developer
+machine spells disaster, on-boarding new team members is painful, and key
+rotation doesn't happen.&lt;/p&gt;
+&lt;p&gt;In the last few years, strong multi-factor authentication has become the
+norm. Tokens are only valid for a brief period of time, use challenge-response
+protocols, or both. Teleport helps bring the same level of sophistication to
+infrastructure. It helps system administrators leverage the security benefits
+of short-lived certificates, while keeping the operational benefits of
+decoupling server authentication from user authentication. It lets you run
+isolated clusters, so that a compromise of staging credentials doesn't lead to
+a compromise in production. It automatically maintains clear audit logs: who
+logged in, when and where they logged in, and what they did once they got
+there.&lt;/p&gt;
+&lt;p&gt;Teleport comes with a beautiful, usable UI, making it easy to visualize
+different clusters and the available machines within them. The UI is optional:
+many system administrators will prefer to use their existing SSH client, and
+Teleport supports that natively.  Because it implements the &lt;code&gt;SSH_AUTH_SOCK&lt;/code&gt;
+protocol, integrating your current CLI workflow is a simple matter of setting
+a single environment variable.&lt;/p&gt;
+&lt;p&gt;As someone with an open-source background, I'm glad to see this software
+released and developed out in the open. A decent SSH key management story
+should be available to everyone, and that's what Teleport does. I believe
+making this technology more accessible is good for everyone, including
+commercial vendors. Democratizing a decent DIY story helps turn their product
+into the battle-hardened and commercially supported version of industry best
+practice; and as such, I hope this helps grow that market. As a principal
+engineer at &lt;a href="https://www.rackspace.com/security/"&gt;Rackspace Managed Security&lt;/a&gt;, I'm excited to start working
+towards better authentication stories, both internally and for our customers,
+with Teleport as the new baseline.&lt;/p&gt;
+&lt;p&gt;Releasing early and often is also an important part of open source
+culture. That can be at odds with doing due diligence when releasing
+security-critical systems like Teleport, especially when those systems have
+non-trivial cryptographic components. We feel Teleport is ready to show to the
+public now. To make sure we act as responsibly as possible, I've helped the
+Teleport team to join forces with a competent independent third-party
+auditor. We're not recommending that you bet the farm on Teleport by running
+it in production as your only authentication method just yet, but we do think
+it's ready for motivated individuals to start experimenting with it.&lt;/p&gt;
+&lt;p&gt;Some people might feel that a better SSH story means you're solving the wrong
+problem. It seems at odds with the ideas behind immutable infrastructure and
+treating servers as &lt;a href="https://blog.engineyard.com/2014/pets-vs-cattle"&gt;cattle, not pets&lt;/a&gt;. I don't think that's
+true. Firstly, even with immutable infrastructure, being able to SSH into a
+box to debug and monitor is still incredibly important. Being able to rapidly
+deploy a bunch of fixed images quickly may be good, but you still have to know
+what to fix first. Secondly, existing systems don't always work that way. It
+may not be possible, let alone economically rational, to "port" them
+effectively. It's easy to think of existing systems as legacy eyesores that
+only exist until you can eradicate them, but they do exist, they're typically
+here to stay, and they need a real security story, too.&lt;/p&gt;
+&lt;p&gt;Teleport is still in its early stages. It's usable today, and I'm convinced it
+has a bright future ahead of it. It's written in a beautiful, hackable Go
+codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport.html</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
 process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
 called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
 effectively having root access. Any process that can write to the
@@ -797,48 +857,4 @@ overview of how we can build secure systems. More friends of mine will
 talk in about TLS there too. Within Rackspace, I'm focusing on
 information security. There are awesome things brewing here, and I
 hope that we can continue the great work we've been doing so far.&lt;/p&gt;
-&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/were-just-getting-started.html</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Updated GPG key</title><link>https://www.lvh.io/posts/updated-gpg-key.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This message is also available &lt;a href="https://gist.github.com/lvh/6adfe51aa42bb268a273"&gt;as a Gist&lt;/a&gt;. I have also updated
-&lt;a href="https://keybase.io/lvh"&gt;Keybase&lt;/a&gt; since writing the GPG signed message below.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;-----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
-
-I am cycling my GPG key.
-
-My old key has fingerprint:
-
-D9DC 4315 772F 8E91 DD22 B153 DFD1 3DF7 A8DD 569B
-
-My new key has fingerprint:
-
-45DC 13EB 6A01 21E8 5219 8C09 8763 869B E2B2 663E
-
-(If you're looking for the key ID, that's the last 8 hex characters of
-the fingerprint.)
-
-While my new key may superficially seem less secure, since I have gone
-from a 4096 bit RSA key to a 3072 bit one, the new one has the
-wonderful advantage of living on a smart card.
-
-I have no reason to presume my old key to be compromised.  I have
-changed the expiration date of my old key to March 7th of this year. I
-have signed the new key with the old one.
-
-I am in the process of updating https://keybase.io/lvh.
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - https://gpgtools.org
-
-iQIcBAEBCgAGBQJU54Q5AAoJEISZopctIA+8JqYP/2agk8RHNklaPqQ6JHdK7Rtu
-ehtok2X7wcirWAridRK/l0Tfjl5x2lFJitb+rP5X3k30qw2FvoLF9YOvbQBzezR+
-ma9S050GPlvs2knmRQb9f53KmjlmC9DLHT40f3BUJtUteH5X8KgEy2YfbThN2B4C
-Z6P30w03gqMkOu5vpaUTe6wkTMpMeGfQz240Kwa3N84UkzzAP3dTBOkm1AiHDUeJ
-yj4a9zz+qzayVGI0A1W5W8zd4+GK7Pant7I/lRd02jRQHoHtnbgiBm+5PbGvihFp
-zdtrd9YDIhWJzo84qSawQCVAuhy+8CGMFqOHBtTo/BV6HklVLUuOdrfy+IwpV9Jh
-cj2Cc5AauFYcWYzJkYL9MHj0b6UI4Uxx1OiAq7onBsajaIE97nLbt1j9A4I4Pb4d
-7ub6YmTnwA5aLwqPbfl/egX5xKEIXq/TGcVnbpxY65fw4GsG/hJyq5JHrW43ATqX
-sSTdnmIbjyw/PQFr+U0ddUfOnbITJKUElZnCami/JnZV6jDUOPY/Kn48nsxF6bk2
-UatqaXpR7yQAvzHz9Yl2sZHcMw/TguumqwuYUQWLFUVZJmmc3iunCfFDVD9tiEz1
-00M4PZxhIZt8zKDKIb0PSVa46yHt+kSlgtdgwIvvbuZn9TokXdp/n/DXvBkqohQg
-De57mY9RnWwt5fy6AWd1
-=lzks
------END PGP SIGNATURE-----
-&lt;/pre&gt;&lt;/div&gt;</description><guid>https://www.lvh.io/posts/updated-gpg-key.html</guid><pubDate>Thu, 26 Feb 2015 17:07:17 GMT</pubDate></item></channel></rss>
+&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/were-just-getting-started.html</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item></channel></rss>

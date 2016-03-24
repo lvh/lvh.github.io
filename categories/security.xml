@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 24 Sep 2015 00:55:06 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 24 Mar 2016 20:05:45 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
+managing SSH infrastructure. Teleport is built by &lt;a href="http://www.gravitational.com/"&gt;Gravitational&lt;/a&gt;, a Y
+Combinator company that ships SaaS on any platform. While I'm not a part of
+Gravitational, I have been advising them on the Teleport project.&lt;/p&gt;
+&lt;p&gt;Most teams don't have a great authentication story. Some rely on passing
+passwords around haphazardly, while others rely on copying everyone's
+&lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt; to every new box. More complex homegrown systems quickly
+become unwieldy. These methods are problematic both operationally and from a
+security perspective: when security and usability are at odds, security tends
+to lose out. For a lot of teams, a single compromised key off of a developer
+machine spells disaster, on-boarding new team members is painful, and key
+rotation doesn't happen.&lt;/p&gt;
+&lt;p&gt;In the last few years, strong multi-factor authentication has become the
+norm. Tokens are only valid for a brief period of time, use challenge-response
+protocols, or both. Teleport helps bring the same level of sophistication to
+infrastructure. It helps system administrators leverage the security benefits
+of short-lived certificates, while keeping the operational benefits of
+decoupling server authentication from user authentication. It lets you run
+isolated clusters, so that a compromise of staging credentials doesn't lead to
+a compromise in production. It automatically maintains clear audit logs: who
+logged in, when and where they logged in, and what they did once they got
+there.&lt;/p&gt;
+&lt;p&gt;Teleport comes with a beautiful, usable UI, making it easy to visualize
+different clusters and the available machines within them. The UI is optional:
+many system administrators will prefer to use their existing SSH client, and
+Teleport supports that natively.  Because it implements the &lt;code&gt;SSH_AUTH_SOCK&lt;/code&gt;
+protocol, integrating your current CLI workflow is a simple matter of setting
+a single environment variable.&lt;/p&gt;
+&lt;p&gt;As someone with an open-source background, I'm glad to see this software
+released and developed out in the open. A decent SSH key management story
+should be available to everyone, and that's what Teleport does. I believe
+making this technology more accessible is good for everyone, including
+commercial vendors. Democratizing a decent DIY story helps turn their product
+into the battle-hardened and commercially supported version of industry best
+practice; and as such, I hope this helps grow that market. As a principal
+engineer at &lt;a href="https://www.rackspace.com/security/"&gt;Rackspace Managed Security&lt;/a&gt;, I'm excited to start working
+towards better authentication stories, both internally and for our customers,
+with Teleport as the new baseline.&lt;/p&gt;
+&lt;p&gt;Releasing early and often is also an important part of open source
+culture. That can be at odds with doing due diligence when releasing
+security-critical systems like Teleport, especially when those systems have
+non-trivial cryptographic components. We feel Teleport is ready to show to the
+public now. To make sure we act as responsibly as possible, I've helped the
+Teleport team to join forces with a competent independent third-party
+auditor. We're not recommending that you bet the farm on Teleport by running
+it in production as your only authentication method just yet, but we do think
+it's ready for motivated individuals to start experimenting with it.&lt;/p&gt;
+&lt;p&gt;Some people might feel that a better SSH story means you're solving the wrong
+problem. It seems at odds with the ideas behind immutable infrastructure and
+treating servers as &lt;a href="https://blog.engineyard.com/2014/pets-vs-cattle"&gt;cattle, not pets&lt;/a&gt;. I don't think that's
+true. Firstly, even with immutable infrastructure, being able to SSH into a
+box to debug and monitor is still incredibly important. Being able to rapidly
+deploy a bunch of fixed images quickly may be good, but you still have to know
+what to fix first. Secondly, existing systems don't always work that way. It
+may not be possible, let alone economically rational, to "port" them
+effectively. It's easy to think of existing systems as legacy eyesores that
+only exist until you can eradicate them, but they do exist, they're typically
+here to stay, and they need a real security story, too.&lt;/p&gt;
+&lt;p&gt;Teleport is still in its early stages. It's usable today, and I'm convinced it
+has a bright future ahead of it. It's written in a beautiful, hackable Go
+codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport.html</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
 process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
 called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
 effectively having root access. Any process that can write to the
