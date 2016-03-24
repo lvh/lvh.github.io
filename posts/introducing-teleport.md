@@ -2,7 +2,7 @@
 .. title: Introducing Teleport
 .. slug: introducing-teleport
 .. date: 2016-03-12 09:35:56 UTC-08:00
-.. tags: private,security
+.. tags: security
 .. category:
 .. link:
 .. description: Teleport is modern SSH infrastructure management.
