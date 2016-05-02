@@ -181,10 +181,10 @@ Roughly speaking, a secret key is an isogeny, and a private key is an elliptic
 curve. The protocol fixes a supersingular curve E and four points on that
 curve: PA, QA, PB, QB.
 
-Alice picks two random points, mA and nA. She takes a linear combination of
-those two points with PA and QA to produce a random point RA. That random
-point, through the isogeny formulas I talked about above, defines Alice's
-secret isogeny. The codomain of that isogeny forms Alice's public curve. Alice
+Alice picks two random integers, mA and nA. She takes a linear combination of
+those two integers with PA and QA to produce a random point RA. That random
+point, defines Alice's secret isogeny through the isogeny formulas I talked
+about above. The codomain of that isogeny forms Alice's public curve. Alice
 transforms points PB and QB with the isogeny. Alice sends Bob her public
 curve, and the two transformed points.
 
