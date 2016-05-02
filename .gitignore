@@ -2,3 +2,4 @@ cache/*
 output/*
 *.py[co]
 *.db
+.DS_Store
