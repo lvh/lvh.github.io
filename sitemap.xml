@@ -7,11 +7,11 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://www.lvh.io/2010/index.html</loc>
-  <lastmod>2016-05-02T00:17:00Z</lastmod>
+  <lastmod>2016-05-02T21:29:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2011/index.html</loc>
-  <lastmod>2016-05-02T00:17:00Z</lastmod>
+  <lastmod>2016-05-02T21:29:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2013/index.html</loc>
@@ -84,10 +84,6 @@
  <url>
   <loc>https://www.lvh.io/categories/mathjax.html</loc>
   <lastmod>2016-04-30T16:10:00Z</lastmod>
- </url>
- <url>
-  <loc>https://www.lvh.io/categories/private-crypto-security.html</loc>
-  <lastmod>2016-05-02T00:14:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/pycon.html</loc>
