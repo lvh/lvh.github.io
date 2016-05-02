@@ -177,8 +177,11 @@ such an isogeny is the curve you give it; its codomain is a new curve.
 
 **OK, so explain how SIDH works again.**
 
-Roughly speaking, a secret key is an isogeny, and a private key is an elliptic
-curve. The protocol fixes a supersingular curve E and four points on that
+Roughly speaking, a secret key is an isogeny, and a public key is an elliptic
+curve.
+
+
+The protocol fixes a supersingular curve E and four points on that
 curve: PA, QA, PB, QB.
 
 Alice picks two random integers, mA and nA. She takes a linear combination of
