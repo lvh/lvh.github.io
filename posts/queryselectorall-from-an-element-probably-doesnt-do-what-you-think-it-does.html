@@ -107,19 +107,19 @@ familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, the Mozilla Developer Network has an excellent
 <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors">introduction</a>.</p>
 <p>Imagine the following HTML page:</p>
-<pre class="code literal-block"><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-<span class="nt">&lt;body&gt;</span>
-    <span class="nt">&lt;img</span> <span class="na">id=</span><span class="s">"outside"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"my-id"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;img</span> <span class="na">id=</span><span class="s">"inside"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"lonely"</span><span class="nt">&gt;&lt;/div&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"outer"</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner"</span><span class="nt">&gt;&lt;/div&gt;</span>
-        <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
+<pre class="code literal-block"><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">img</span> <span class="na">id</span><span class="o">=</span><span class="s">"outside"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"my-id"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">img</span> <span class="na">id</span><span class="o">=</span><span class="s">"inside"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"lonely"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"outer"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"inner"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </pre>
 
 
@@ -132,14 +132,14 @@ document. Elements themselves also support both <a href="https://developer.mozil
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>querySelectorAll</code></a>, letting you query for elements that are
 descendants of that element. For example, the following expression will find
 images that are descendants of <code>#my-id</code>:</p>
-<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"img"</span><span class="p">)</span>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"img"</span><span class="p">)</span>
 </pre>
 
 
 <p>In the sample HTML page above, it will find <code>&lt;img id="inside"&gt;</code> but not <code>&lt;img
 id="outside"&gt;</code>.</p>
 <p>With that in mind, what do these two expressions do?</p>
-<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">);</span>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">);</span>
 <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">);</span>
 </pre>
 
@@ -149,7 +149,7 @@ id="outside"&gt;</code>.</p>
 <code>div</code> elements inside <code>div</code> elements that are <em>descendants</em> of
 <code>#my-id</code>. However, when you look at <a href="http://jsbin.com/hineco/edit?html,js,output">this JSbin</a>, you'll see that they
 produce very different results:</p>
-<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
 <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">3</span><span class="p">;</span>
 </pre>
 
@@ -165,21 +165,21 @@ relative to any particular element, not even the element you're calling
 <code>querySelectorAll</code> on.</p>
 <p>This even works with elements <em>outside</em> the element you're calling
 <code>querySelectorAll</code> on. For example, this selector:</p>
-<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"div div div"</span><span class="p">)</span>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"div div div"</span><span class="p">)</span>
 </pre>
 
 
 <p>... matches <code>div.inner</code> in this snippet (<a href="http://jsbin.com/woropuc/edit?html,js,output">JSbin</a>):</p>
-<pre class="code literal-block"><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-  <span class="nt">&lt;body&gt;</span>
-    <span class="nt">&lt;div&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"my-id"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner"</span><span class="nt">&gt;&lt;/div&gt;</span>
-      <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
+<pre class="code literal-block"><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"my-id"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"inner"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </pre>
 
 
@@ -196,7 +196,7 @@ name comes from the <a href="https://html.spec.whatwg.org/multipage/semantics.ht
 of styles to part of the document. The element we're calling
 <code>querySelectorAll</code> on also counts as a scope, so this expression only
 matches <code>div.inner</code>:</p>
-<pre class="code literal-block"><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">":scope div div"</span><span class="p">);</span>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">":scope div div"</span><span class="p">);</span>
 </pre>
 
 

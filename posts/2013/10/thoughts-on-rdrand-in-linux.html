@@ -126,7 +126,7 @@ Linus' tree</a>.</p>
 Linus is far more familiar with it than I am. I'd love to be proven
 wrong. I'm just taking his advice and reading some code.</p>
 <p>The function I'm interested in is <code>extract_buf</code>:</p>
-<pre class="code literal-block">    <span class="cm">/*</span>
+<pre class="code literal-block"><span></span>    <span class="cm">/*</span>
 <span class="cm">     * If we have a architectural hardware random number</span>
 <span class="cm">     * generator, mix that in, too.</span>
 <span class="cm">     */</span>
@@ -150,7 +150,7 @@ one of its entropy sources (which we think is impossible), versus
 being able to see what you're about to be XORed with. The latter seems
 a lot closer to the realm of stuff a microcode instruction can do.</p>
 <p>To put it into Python:</p>
-<pre class="code literal-block"><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">getrandbits</span>
 
 <span class="k">def</span> <span class="nf">extract_buf</span><span class="p">():</span>
@@ -174,10 +174,10 @@ a lot closer to the realm of stuff a microcode instruction can do.</p>
     <span class="sd">"""</span>
 <span class="sd">    A malicious hardware instruction.</span>
 <span class="sd">    """</span>
-    <span class="n">pool_bits</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="s">"pool_bits"</span><span class="p">]</span>
+    <span class="n">pool_bits</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="s2">"pool_bits"</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">pool_bits</span> <span class="o">^</span> <span class="mh">0xabad1dea</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">extract_buf</span><span class="p">()</span> <span class="o">==</span> <span class="mh">0xabad1dea</span>
 </pre>
 

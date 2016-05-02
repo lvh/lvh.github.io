@@ -112,7 +112,7 @@ probably an upgrade :-)</p>
 <li>In the root of your app, install protractor and the Selenium
    standalone server.</li>
 </ol>
-<pre class="code literal-block">npm install --save-dev protractor
+<pre class="code literal-block"><span></span>npm install --save-dev protractor
 ./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
@@ -130,7 +130,7 @@ probably an upgrade :-)</p>
    This uses Chrome instead.</p>
 </li>
 </ol>
-<pre class="code literal-block"><span class="nx">exports</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+<pre class="code literal-block"><span></span><span class="nx">exports</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">seleniumAddress</span><span class="o">:</span> <span class="s1">'http://localhost:4444/wd/hub'</span><span class="p">,</span>
   <span class="nx">specs</span><span class="o">:</span> <span class="p">[</span>
     <span class="c1">// To run plain JS files, uncomment the following line:</span>
@@ -156,7 +156,7 @@ probably an upgrade :-)</p>
 <li>If you're using Coffeescript, change your Gruntfile to build your
    integration tests:</li>
 </ol>
-<pre class="code literal-block">  grunt.initConfig({
+<pre class="code literal-block"><span></span>  grunt.initConfig({
     // ...
     coffee: {
       // ...
@@ -185,12 +185,12 @@ probably an upgrade :-)</p>
 <p>You can now manually run your tests. First run Selenium:</p>
 </li>
 </ol>
-<pre class="code literal-block">./node_modules/protractor/bin/install_selenium_standalone
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
 
 <p>Then run your tests:</p>
-<pre class="code literal-block">./node_modules/protractor/bin/protractor protractor.conf.js
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/protractor protractor.conf.js
 </pre>
 
 

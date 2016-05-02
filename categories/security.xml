@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 24 Mar 2016 20:05:45 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" rel="self" href="https://www.lvh.io/categories/security.xml"></atom:link><language>en</language><lastBuildDate>Sat, 30 Apr 2016 16:10:21 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
 managing SSH infrastructure. Teleport is built by &lt;a href="http://www.gravitational.com/"&gt;Gravitational&lt;/a&gt;, a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
 Gravitational, I have been advising them on the Teleport project.&lt;/p&gt;
@@ -388,7 +388,7 @@ Finally, I demoed the aforementioned proxying API shim. The proof of
 concept, codenamed shimmer, is &lt;a href="https://github.com/lvh/shimmer/"&gt;up on Github&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Let's take a look at the handler function, which takes incoming
 requests and modifies them slightly so they can be passed on:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;build-handler&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;build-handler&lt;/span&gt;
   &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;target-host&lt;/span&gt; &lt;span class="nv"&gt;target-port&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;fn &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;match&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
@@ -409,7 +409,7 @@ library. They make it easy to log values without cluttering up your
 code; a godsend while developing with some libraries you're not
 terribly familiar with.)&lt;/p&gt;
 &lt;p&gt;The matching function looks like this:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;match&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;match&lt;/span&gt;
   &lt;span class="s"&gt;"Checks if the request is allowed."&lt;/span&gt;
   &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;req&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;not= &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/run&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -440,7 +440,7 @@ easy to port, that's probably a red herring: I don't want to port a
 gazillion macros. As an example, here's &lt;code&gt;conds&lt;/code&gt;, which is just&lt;code&gt;conde&lt;/code&gt;
 as a function (except without support for logical conjunction per
 disjunctive set of goals):&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="ss"&gt;:private&lt;/span&gt; &lt;span class="nv"&gt;conds&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="ss"&gt;:private&lt;/span&gt; &lt;span class="nv"&gt;conds&lt;/span&gt;
   &lt;span class="s"&gt;"Like conde, but a function."&lt;/span&gt;
   &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;empty?&lt;/span&gt; &lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -603,7 +603,7 @@ fine system.&lt;/p&gt;
 comparisons in many langauge implementations, including all
 implementations of Python I know of, short-circuit. They work roughly
 like this:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;strcmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;strcmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c2&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -648,7 +648,7 @@ you have to do.&lt;/p&gt;
 &lt;p&gt;Since I was using &lt;a href="http://twistedmatrix.com"&gt;Twisted&lt;/a&gt; and
 &lt;a href="http://amp-protocol.net/"&gt;AMP&lt;/a&gt;, this was actually quite easy. I wrote
 a decorator for AMP responder functions that does exactly that:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_immediateResponder&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_immediateResponder&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;"""&lt;/span&gt;
 &lt;span class="sd"&gt;    A decorator for responder functions that should return immediately and&lt;/span&gt;
 &lt;span class="sd"&gt;    execute asynchronously, as a defense against timing attacks.&lt;/span&gt;

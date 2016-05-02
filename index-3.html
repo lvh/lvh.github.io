@@ -265,7 +265,7 @@ alternatively:</p>
 <p>The greater-than-zero constraint for individual grants is fairly
 important, otherwise the algorithm might casually give you answers
 like:</p>
-<pre class="code literal-block">k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
+<pre class="code literal-block"><span></span>k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
 </pre>
 
 
@@ -345,7 +345,7 @@ equal to zero.</p>
 (<a href="http://nbviewer.ipython.org/gist/lvh/10107818">viewer</a>,
 <a href="https://gist.github.com/lvh/10107818">gist</a>).</p>
 <p>This produced the following results:</p>
-<pre class="code literal-block">scores: [1 1 1 2 3 5 5]
+<pre class="code literal-block"><span></span>scores: [1 1 1 2 3 5 5]
 requested: [10 20 30 30 50 10 50] total: 200, budget: 150
 k = 1/0.5: [ 10.  20.  30.  30.  50.  10.   0.], sum: 150.0
 k = 1/1: [ 10.  -0.   0.  30.  50.  10.  50.], sum: 150.0
@@ -640,14 +640,14 @@ above: under the square model, the concentrated grants, trying harder
 to give high-scoring applications the amount they requested. The
 linear model spread money out more evenly. That is, with the following
 applications:</p>
-<pre class="code literal-block"><span class="p">(</span><span class="k">def </span><span class="nv">alice</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Alice"</span>, <span class="ss">:score</span> <span class="mi">5</span>, <span class="ss">:requested</span> <span class="mi">120</span><span class="p">})</span>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">alice</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Alice"</span>, <span class="ss">:score</span> <span class="mi">5</span>, <span class="ss">:requested</span> <span class="mi">120</span><span class="p">})</span>
 <span class="p">(</span><span class="k">def </span><span class="nv">bob</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Bob"</span>, <span class="ss">:score</span> <span class="mi">4</span>, <span class="ss">:requested</span> <span class="mi">100</span><span class="p">})</span>
 <span class="p">(</span><span class="k">def </span><span class="nv">carol</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Carol"</span>, <span class="ss">:score</span> <span class="mi">3</span>, <span class="ss">:requested</span> <span class="mi">80</span><span class="p">})</span>
 </pre>
 
 
 <p>In a linear model, it comes up with:</p>
-<pre class="code literal-block"><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
+<pre class="code literal-block"><span></span><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
  <span class="nv">bob</span> <span class="mi">80</span>
  <span class="nv">carol</span> <span class="mi">0</span><span class="p">}</span>
 </pre>
@@ -655,7 +655,7 @@ applications:</p>
 
 <p>However, in the quadratic model, the optimizer rather gives Carol (who
 has a lower score) a complete grant than give Bob a partial one:</p>
-<pre class="code literal-block"><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
+<pre class="code literal-block"><span></span><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
  <span class="nv">bob</span> <span class="mi">0</span>
  <span class="nv">carol</span> <span class="mi">80</span><span class="p">}</span>
 </pre>
@@ -770,7 +770,7 @@ probably an upgrade :-)</p>
 <li>In the root of your app, install protractor and the Selenium
    standalone server.</li>
 </ol>
-<pre class="code literal-block">npm install --save-dev protractor
+<pre class="code literal-block"><span></span>npm install --save-dev protractor
 ./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
@@ -788,7 +788,7 @@ probably an upgrade :-)</p>
    This uses Chrome instead.</p>
 </li>
 </ol>
-<pre class="code literal-block"><span class="nx">exports</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+<pre class="code literal-block"><span></span><span class="nx">exports</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">seleniumAddress</span><span class="o">:</span> <span class="s1">'http://localhost:4444/wd/hub'</span><span class="p">,</span>
   <span class="nx">specs</span><span class="o">:</span> <span class="p">[</span>
     <span class="c1">// To run plain JS files, uncomment the following line:</span>
@@ -814,7 +814,7 @@ probably an upgrade :-)</p>
 <li>If you're using Coffeescript, change your Gruntfile to build your
    integration tests:</li>
 </ol>
-<pre class="code literal-block">  grunt.initConfig({
+<pre class="code literal-block"><span></span>  grunt.initConfig({
     // ...
     coffee: {
       // ...
@@ -843,12 +843,12 @@ probably an upgrade :-)</p>
 <p>You can now manually run your tests. First run Selenium:</p>
 </li>
 </ol>
-<pre class="code literal-block">./node_modules/protractor/bin/install_selenium_standalone
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
 
 <p>Then run your tests:</p>
-<pre class="code literal-block">./node_modules/protractor/bin/protractor protractor.conf.js
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/protractor protractor.conf.js
 </pre>
 
 
@@ -891,7 +891,7 @@ Linus' tree</a>.</p>
 Linus is far more familiar with it than I am. I'd love to be proven
 wrong. I'm just taking his advice and reading some code.</p>
 <p>The function I'm interested in is <code>extract_buf</code>:</p>
-<pre class="code literal-block">    <span class="cm">/*</span>
+<pre class="code literal-block"><span></span>    <span class="cm">/*</span>
 <span class="cm">     * If we have a architectural hardware random number</span>
 <span class="cm">     * generator, mix that in, too.</span>
 <span class="cm">     */</span>
@@ -915,7 +915,7 @@ one of its entropy sources (which we think is impossible), versus
 being able to see what you're about to be XORed with. The latter seems
 a lot closer to the realm of stuff a microcode instruction can do.</p>
 <p>To put it into Python:</p>
-<pre class="code literal-block"><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">getrandbits</span>
 
 <span class="k">def</span> <span class="nf">extract_buf</span><span class="p">():</span>
@@ -939,10 +939,10 @@ a lot closer to the realm of stuff a microcode instruction can do.</p>
     <span class="sd">"""</span>
 <span class="sd">    A malicious hardware instruction.</span>
 <span class="sd">    """</span>
-    <span class="n">pool_bits</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="s">"pool_bits"</span><span class="p">]</span>
+    <span class="n">pool_bits</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="s2">"pool_bits"</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">pool_bits</span> <span class="o">^</span> <span class="mh">0xabad1dea</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">extract_buf</span><span class="p">()</span> <span class="o">==</span> <span class="mh">0xabad1dea</span>
 </pre>
 
@@ -993,7 +993,7 @@ fine system.</p>
 comparisons in many langauge implementations, including all
 implementations of Python I know of, short-circuit. They work roughly
 like this:</p>
-<pre class="code literal-block"><span class="k">def</span> <span class="nf">strcmp</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">strcmp</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s2</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">False</span>
     <span class="k">for</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
@@ -1038,7 +1038,7 @@ you have to do.</p>
 <p>Since I was using <a href="http://twistedmatrix.com">Twisted</a> and
 <a href="http://amp-protocol.net/">AMP</a>, this was actually quite easy. I wrote
 a decorator for AMP responder functions that does exactly that:</p>
-<pre class="code literal-block"><span class="k">def</span> <span class="nf">_immediateResponder</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">_immediateResponder</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    A decorator for responder functions that should return immediately and</span>
 <span class="sd">    execute asynchronously, as a defense against timing attacks.</span>

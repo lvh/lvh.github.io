@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (pycon)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/pycon.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 24 Mar 2016 20:05:45 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Everything I've learned about running a financial aid program</title><link>https://www.lvh.io/posts/everything-ive-learned-about-running-a-financial-aid-program.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;For the past two years, I've been running PyCon's financial aid
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (pycon)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" rel="self" href="https://www.lvh.io/categories/pycon.xml"></atom:link><language>en</language><lastBuildDate>Sat, 30 Apr 2016 16:10:21 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Everything I've learned about running a financial aid program</title><link>https://www.lvh.io/posts/everything-ive-learned-about-running-a-financial-aid-program.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;For the past two years, I've been running PyCon's financial aid
 program. Starting this year, the event coordinator has asked all staff
 members to document what they do for PyCon. Firstly, this helps to
 objectively recognize the hard work done by our (volunteer) staff, and
@@ -338,7 +338,7 @@ alternatively:&lt;/p&gt;
 &lt;p&gt;The greater-than-zero constraint for individual grants is fairly
 important, otherwise the algorithm might casually give you answers
 like:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
 &lt;/pre&gt;
 
 
@@ -413,7 +413,7 @@ equal to zero.&lt;/p&gt;
 (&lt;a href="http://nbviewer.ipython.org/gist/lvh/10107818"&gt;viewer&lt;/a&gt;,
 &lt;a href="https://gist.github.com/lvh/10107818"&gt;gist&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;This produced the following results:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;scores: [1 1 1 2 3 5 5]
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;scores: [1 1 1 2 3 5 5]
 requested: [10 20 30 30 50 10 50] total: 200, budget: 150
 k = 1/0.5: [ 10.  20.  30.  30.  50.  10.   0.], sum: 150.0
 k = 1/1: [ 10.  -0.   0.  30.  50.  10.  50.], sum: 150.0
@@ -682,14 +682,14 @@ above: under the square model, the concentrated grants, trying harder
 to give high-scoring applications the amount they requested. The
 linear model spread money out more evenly. That is, with the following
 applications:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:name&lt;/span&gt; &lt;span class="s"&gt;"Alice"&lt;/span&gt;, &lt;span class="ss"&gt;:score&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;, &lt;span class="ss"&gt;:requested&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:name&lt;/span&gt; &lt;span class="s"&gt;"Alice"&lt;/span&gt;, &lt;span class="ss"&gt;:score&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;, &lt;span class="ss"&gt;:requested&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;bob&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:name&lt;/span&gt; &lt;span class="s"&gt;"Bob"&lt;/span&gt;, &lt;span class="ss"&gt;:score&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;, &lt;span class="ss"&gt;:requested&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;carol&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:name&lt;/span&gt; &lt;span class="s"&gt;"Carol"&lt;/span&gt;, &lt;span class="ss"&gt;:score&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;, &lt;span class="ss"&gt;:requested&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;In a linear model, it comes up with:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;
  &lt;span class="nv"&gt;bob&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;
  &lt;span class="nv"&gt;carol&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;
@@ -697,7 +697,7 @@ applications:&lt;/p&gt;
 
 &lt;p&gt;However, in the quadratic model, the optimizer rather gives Carol (who
 has a lower score) a complete grant than give Bob a partial one:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;alice&lt;/span&gt; &lt;span class="mi"&gt;120&lt;/span&gt;
  &lt;span class="nv"&gt;bob&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
  &lt;span class="nv"&gt;carol&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;

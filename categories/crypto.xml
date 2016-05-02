@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/crypto.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 24 Mar 2016 20:05:45 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>We're just getting started</title><link>https://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" rel="self" href="https://www.lvh.io/categories/crypto.xml"></atom:link><language>en</language><lastBuildDate>Sat, 30 Apr 2016 16:10:21 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>We're just getting started</title><link>https://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
 make. After the presentation, it's "over"; only spoken about in
 perfect tenses. You've communicated your thoughts, perhaps had a
 conversation or two, but, mostly, moved on.&lt;/p&gt;
@@ -60,7 +60,7 @@ Finally, I demoed the aforementioned proxying API shim. The proof of
 concept, codenamed shimmer, is &lt;a href="https://github.com/lvh/shimmer/"&gt;up on Github&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Let's take a look at the handler function, which takes incoming
 requests and modifies them slightly so they can be passed on:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;build-handler&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;build-handler&lt;/span&gt;
   &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;target-host&lt;/span&gt; &lt;span class="nv"&gt;target-port&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;fn &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;match&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
@@ -81,7 +81,7 @@ library. They make it easy to log values without cluttering up your
 code; a godsend while developing with some libraries you're not
 terribly familiar with.)&lt;/p&gt;
 &lt;p&gt;The matching function looks like this:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;match&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;match&lt;/span&gt;
   &lt;span class="s"&gt;"Checks if the request is allowed."&lt;/span&gt;
   &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;req&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;not= &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/run&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -112,7 +112,7 @@ easy to port, that's probably a red herring: I don't want to port a
 gazillion macros. As an example, here's &lt;code&gt;conds&lt;/code&gt;, which is just&lt;code&gt;conde&lt;/code&gt;
 as a function (except without support for logical conjunction per
 disjunctive set of goals):&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="ss"&gt;:private&lt;/span&gt; &lt;span class="nv"&gt;conds&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="ss"&gt;:private&lt;/span&gt; &lt;span class="nv"&gt;conds&lt;/span&gt;
   &lt;span class="s"&gt;"Like conde, but a function."&lt;/span&gt;
   &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;empty?&lt;/span&gt; &lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -426,7 +426,7 @@ Linus' tree&lt;/a&gt;.&lt;/p&gt;
 Linus is far more familiar with it than I am. I'd love to be proven
 wrong. I'm just taking his advice and reading some code.&lt;/p&gt;
 &lt;p&gt;The function I'm interested in is &lt;code&gt;extract_buf&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;    &lt;span class="cm"&gt;/*&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class="cm"&gt;/*&lt;/span&gt;
 &lt;span class="cm"&gt;     * If we have a architectural hardware random number&lt;/span&gt;
 &lt;span class="cm"&gt;     * generator, mix that in, too.&lt;/span&gt;
 &lt;span class="cm"&gt;     */&lt;/span&gt;
@@ -450,7 +450,7 @@ one of its entropy sources (which we think is impossible), versus
 being able to see what you're about to be XORed with. The latter seems
 a lot closer to the realm of stuff a microcode instruction can do.&lt;/p&gt;
 &lt;p&gt;To put it into Python:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;inspect&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;currentframe&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;inspect&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;currentframe&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;getrandbits&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;extract_buf&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
@@ -474,10 +474,10 @@ a lot closer to the realm of stuff a microcode instruction can do.&lt;/p&gt;
     &lt;span class="sd"&gt;"""&lt;/span&gt;
 &lt;span class="sd"&gt;    A malicious hardware instruction.&lt;/span&gt;
 &lt;span class="sd"&gt;    """&lt;/span&gt;
-    &lt;span class="n"&gt;pool_bits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;currentframe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f_back&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f_locals&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;"pool_bits"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;pool_bits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;currentframe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f_back&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f_locals&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;"pool_bits"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pool_bits&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mh"&gt;0xabad1dea&lt;/span&gt;
 
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;extract_buf&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mh"&gt;0xabad1dea&lt;/span&gt;
 &lt;/pre&gt;
 

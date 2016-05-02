@@ -125,7 +125,7 @@ Finally, I demoed the aforementioned proxying API shim. The proof of
 concept, codenamed shimmer, is <a href="https://github.com/lvh/shimmer/">up on Github</a>.</p>
 <p>Let's take a look at the handler function, which takes incoming
 requests and modifies them slightly so they can be passed on:</p>
-<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="nv">build-handler</span>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">build-handler</span>
   <span class="p">[</span><span class="nv">target-host</span> <span class="nv">target-port</span><span class="p">]</span>
   <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">incoming-request</span><span class="p">]</span>
     <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">match</span> <span class="p">(</span><span class="nf">spy</span> <span class="nv">incoming-request</span><span class="p">))</span>
@@ -146,7 +146,7 @@ library. They make it easy to log values without cluttering up your
 code; a godsend while developing with some libraries you're not
 terribly familiar with.)</p>
 <p>The matching function looks like this:</p>
-<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="nv">match</span>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">match</span>
   <span class="s">"Checks if the request is allowed."</span>
   <span class="p">[</span><span class="nv">req</span><span class="p">]</span>
   <span class="p">(</span><span class="nb">not= </span><span class="p">(</span><span class="nf">l/run</span> <span class="mi">1</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
@@ -177,7 +177,7 @@ easy to port, that's probably a red herring: I don't want to port a
 gazillion macros. As an example, here's <code>conds</code>, which is just<code>conde</code>
 as a function (except without support for logical conjunction per
 disjunctive set of goals):</p>
-<pre class="code literal-block"><span class="p">(</span><span class="kd">defn </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">conds</span>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defn </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">conds</span>
   <span class="s">"Like conde, but a function."</span>
   <span class="p">[</span><span class="nv">goals</span><span class="p">]</span>
   <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">empty?</span> <span class="nv">goals</span><span class="p">)</span>

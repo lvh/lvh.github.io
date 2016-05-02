@@ -282,14 +282,14 @@ above: under the square model, the concentrated grants, trying harder
 to give high-scoring applications the amount they requested. The
 linear model spread money out more evenly. That is, with the following
 applications:</p>
-<pre class="code literal-block"><span class="p">(</span><span class="k">def </span><span class="nv">alice</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Alice"</span>, <span class="ss">:score</span> <span class="mi">5</span>, <span class="ss">:requested</span> <span class="mi">120</span><span class="p">})</span>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">alice</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Alice"</span>, <span class="ss">:score</span> <span class="mi">5</span>, <span class="ss">:requested</span> <span class="mi">120</span><span class="p">})</span>
 <span class="p">(</span><span class="k">def </span><span class="nv">bob</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Bob"</span>, <span class="ss">:score</span> <span class="mi">4</span>, <span class="ss">:requested</span> <span class="mi">100</span><span class="p">})</span>
 <span class="p">(</span><span class="k">def </span><span class="nv">carol</span> <span class="p">{</span><span class="ss">:name</span> <span class="s">"Carol"</span>, <span class="ss">:score</span> <span class="mi">3</span>, <span class="ss">:requested</span> <span class="mi">80</span><span class="p">})</span>
 </pre>
 
 
 <p>In a linear model, it comes up with:</p>
-<pre class="code literal-block"><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
+<pre class="code literal-block"><span></span><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
  <span class="nv">bob</span> <span class="mi">80</span>
  <span class="nv">carol</span> <span class="mi">0</span><span class="p">}</span>
 </pre>
@@ -297,7 +297,7 @@ applications:</p>
 
 <p>However, in the quadratic model, the optimizer rather gives Carol (who
 has a lower score) a complete grant than give Bob a partial one:</p>
-<pre class="code literal-block"><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
+<pre class="code literal-block"><span></span><span class="p">{</span><span class="nv">alice</span> <span class="mi">120</span>
  <span class="nv">bob</span> <span class="mi">0</span>
  <span class="nv">carol</span> <span class="mi">80</span><span class="p">}</span>
 </pre>

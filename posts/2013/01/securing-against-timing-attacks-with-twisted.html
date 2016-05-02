@@ -115,7 +115,7 @@ fine system.</p>
 comparisons in many langauge implementations, including all
 implementations of Python I know of, short-circuit. They work roughly
 like this:</p>
-<pre class="code literal-block"><span class="k">def</span> <span class="nf">strcmp</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">strcmp</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s2</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">False</span>
     <span class="k">for</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
@@ -160,7 +160,7 @@ you have to do.</p>
 <p>Since I was using <a href="http://twistedmatrix.com">Twisted</a> and
 <a href="http://amp-protocol.net/">AMP</a>, this was actually quite easy. I wrote
 a decorator for AMP responder functions that does exactly that:</p>
-<pre class="code literal-block"><span class="k">def</span> <span class="nf">_immediateResponder</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">_immediateResponder</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    A decorator for responder functions that should return immediately and</span>
 <span class="sd">    execute asynchronously, as a defense against timing attacks.</span>
