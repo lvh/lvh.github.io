@@ -11,7 +11,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://www.lvh.io/index.html">
 <link rel="next" href="index-4.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/introducing-teleport.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/supersingular-isogeny-diffie-hellman-101.html" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -72,7 +72,254 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport.html" class="u-url">Introducing Teleport</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/supersingular-isogeny-diffie-hellman-101.html" class="u-url">Supersingular isogeny Diffie-Hellman 101</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/supersingular-isogeny-diffie-hellman-101.html" rel="bookmark"><time class="published dt-published" datetime="2016-04-30T09:00:28-07:00" title="2016-04-30 09:00">2016-04-30 09:00</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+Microsoft Research, recently published a <a href="https://eprint.iacr.org/2016/413">paper</a> on supersingular
+isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
+community and even made it to the front page of Hacker News. Most of the
+discussion around it seemed to be how no-one understands isogenies, even
+within cryptography-literate communities. This article aims to give you a
+high-level understanding of what this cryptosystem is and why it works.</p>
+<p>This post assumes that you already know how Diffie-Hellman works in the
+abstract, and that you know elliptic curves are a mathematical construct that
+you can use to perform Diffie-Hellman operations, just like you can with the
+integers <em>mod p</em> (that would be "regular" Diffie-Hellman). If that was
+gibberish to you and you'd like to know more, check out <a href="https://www.crypto101.io">Crypto 101</a>, my
+free introductory book on cryptography. You don't need a math background to
+understand those concepts at a high level. The main difference is that Crypto
+101 sticks to production cryptography, while this is still experimental.</p>
+<p>It's not surprising that isogeny-based cryptography is so confusing. Up until
+recently, it was unambiguously in the realm of research, not even close to
+being practically applicable. Its mathematical underpinnings are much more
+complex than regular elliptic curves, let alone integers <em>mod p</em>. It also
+looks superficially similar to elliptic curve Diffie-Hellman, which only adds
+to the confusion.</p>
+<p>With that, let's begin!</p>
+<p><strong>What is this paper about?</strong></p>
+<p>Supersingular isogeny Diffie-Hellman (SIDH) is one of a handful of
+"post-quantum" cryptosystems. Those are cryptosystems that will remain secure
+even if the attacker has access to a large quantum computer. This has nothing
+to do with quantum cryptography (for example, quantum key distribution)
+beyond their shared quantum mechanical underpinning.</p>
+<p><strong>Why should I care about quantum computers?</strong></p>
+<p>General quantum computers are not useful as general-purpose computing devices,
+but they can solve some problems much faster than classical
+computers. Classical computers can emulate quantum computers, but only with
+exponential slowdown. A sufficiently large quantum computer could break most
+production cryptography, including cryptosystems based on the difficulty of
+factoring large numbers (like RSA), taking discrete logs over the integers
+<em>mod p</em> (like regular DH), or taking discrete logs over elliptic curves (like
+ECDH and ECDSA). To quantify that, consider the following table:</p>
+<p><img alt="quantum computer attack cost versus classical" src="img/post-quantum/quantum-computer-relative-cost.png"></p>
+<p>In this table, n refers to the modulus size for RSA, and the field size for
+ECC. Look at the rightmost column, which represents time taken by the
+classical algorithm, and compare it to the "time" columns, which represent how
+much a quantum computer would take. As <em>n</em> increases, the amount of time the
+quantum computer would take stays in the same ballpark, whereas for a
+classical computer it increases (almost) exponentially. Therefore, increasing
+n is an effective strategy for keeping up with ever-faster classical
+computers, but it is ineffective at increasing the run time for a quantum
+computer.</p>
+<p><strong>Aah! Why isn't everyone panicking about this?!</strong></p>
+<p>The good news is that these large quantum computers don't exist yet.</p>
+<p>If you look at the qubits column, you'll see that these attacks require large
+universal quantum computers. The state of the art in those only has a handful
+of qubits. In 2011, IBM successfully factored 143 using a 4-qubit quantum
+computer. Scaling the number of qubits up is troublesome. In that light,
+larger key sizes may prove effective after all; we simply don't know yet how
+hard it is to build quantum computers that big.</p>
+<p>D-wave, a quantum computing company, has produced computers with 128 and 512
+qubits and even &gt;1000 qubits. While there is some discussion if D-waves
+provide quantum speedup or are even real quantum computers at all; there is no
+discussion that they are not <em>universal</em> quantum computers. Specifically, they
+only claim to solve one particular problem called quantum annealing. The 1000
+qubit D-Wave 2X cannot factor RSA moduli of ~512 bits or solve discrete logs
+on curves of ~120 bits.</p>
+<p>The systems at risk implement asymmetric encryption, signatures, and
+Diffie-Hellman key exchanges. That's no accident: all post-quantum
+alternatives are asymmetric algorithms. Post-quantum secure symmetric
+cryptography is easier: we can just use bigger key sizes, which are still
+small enough to be practical and result in fast primitives. Quantum computers
+simply halve the security level, so all we need to do to maintain a 128 bit
+security level is to use ciphers with 256 bit keys, like Salsa20.</p>
+<p>Quantum computers also have an advantage against SIDH, but both are still
+exponential in the field size. The SIDH scheme in the new paper has 192 bits
+of security against a classical attacker, but still has 128 bits of security
+against a quantum attacker. That's in the same ballpark as most symmetric
+cryptography, and better than the 2048-bit RSA certificates that underpin the
+security of the Internet.</p>
+<p><strong>What makes this paper special?</strong></p>
+<p>Post-quantum cryptography has been firmly in the realm of academic research
+and experiments. This paper makes significant advancements in how practically
+applicable SIDH is.</p>
+<p><strong>Being future-proof sounds good. If this makes it practical, why don't we
+start using it right now?</strong></p>
+<p>SIDH is a young cryptosystem in a young field, and hasn't had the same level
+of scrutiny as some of the other post-quantum cryptosystems, let alone the
+"regular" cryptosystems we use daily. Attacks only get better, they never get
+worse. It's possible that SIDH is insecure and we just don't know how to break
+it yet. It does have a good argument for why quantum algorithms wouldn't be
+able to crack it (more on that later), but that's a hypothesis, not a proof.</p>
+<p>The new performance figures from this paper are impressive, but this system is
+still much slower than the ones we use today. Key generation and key exchange
+take a good 50 million cycles or so each. That's about a thousand times slower
+than Curve25519, a curve designed about 10 years ago. Key sizes are also much
+larger: SIDH public keys are 751 bytes, whereas Curve25519 keys are only 32
+bytes. For on-line protocols like HTTPS operating over TCP, that's a
+significant cost.</p>
+<p>Finally, there are issues with implementing SIDH safely. Systems like
+Diffie-Hellman over integers <em>mod p</em> are much less complex than elliptic curve
+Diffie-Hellman (ECDH), let alone SIDH. With ECDH and ECC in general, we've
+seen new implementation difficulties, especially with early curves. Point
+addition formulas would work, unless you were adding a point to itself. You
+have to check that input points are on the curve, or leak the secret key
+modulo some small order. These are real implementation problems, even though
+we know how to solve them.</p>
+<p>This is nothing compared to the difficulties implementing SIDH. Currently,
+SIDH security arguments rely on honest peers. A peer that gives you a
+pathological input can utterly break the security of the scheme. To make
+matters worse, while we understand how to verify inputs for elliptic curve
+Diffie-Hellman, we don't have a way to verify inputs for isogeny-based
+cryptography at all. We don't have much research to fall back on here
+either. This isn't a SIDH-specific problem; post-quantum cryptography isn't
+mature enough yet to have implementation issues like these nailed down
+yet. (For an example from lattice-based cryptography, see the recent paper by
+<a href="https://eprint.iacr.org/2016/415">Bindel et al</a>.)</p>
+<p>I don't want to diminish the importance of this paper in any way!  Just
+because it's not something that your browser is going to be doing tomorrow
+doesn't mean it's not an impressive accomplishment. It's just a step on the
+path that might lead to production crypto one day.</p>
+<p><strong>OK, fine. Why is this so different from elliptic curve Diffie-Hellman?</strong></p>
+<p>While SIDH and ECDH both use elliptic curves, they're different beasts. SIDH
+generates new curves to perform a DH exchange, whereas ECDH uses points on one
+fixed curve. These supersingular curves also have different properties from
+regular curves. Using a supersingular curve for regular elliptic curve
+operations would be horribly insecure. If you have some background in elliptic
+curves: supersingular curves have a tiny embedding degree, meaning that
+solving the ECDLP over <code>F(p)</code> can easily be transformed into solving the DLP
+over <code>F(p^n)</code> where <code>n</code> is that small embedding degree. Most curves have large
+embedding degrees, meaning that solving the ECDLP directly is easier than
+translating it into a DLP and then solving that.  You generally have to go out
+of your way to find a curve with a small embedding degree. That is only done
+in specialized systems, like for pairing-based cryptography, or, as in this
+case, supersingular isogeny-based Diffie-Hellman.</p>
+<p>Let's recap ECDH. Public keys are points on a curve, and secret keys are
+numbers. Alice and Bob agree on the parameters of the exchange ahead of time,
+such as the curve <em>E</em> and a generator point <em>P</em> on that curve. Alice picks a
+secret integer <em>a</em> and computes her public key <em>aP</em>. Bob picks a secret
+integer <em>b</em> and computes his public key <em>bP</em>. Alice and Bob send each other
+their public keys, and multiply their secret key by the other peer's public
+key. Since <em>abP = baP</em>, they compute the same secret. Since an attacker has
+neither secret key, they can't compute the shared secret.</p>
+<p>SIDH is different. Secret keys are isogenies...</p>
+<p><strong>Whoa whoa whoa. What the heck are isogenies?</strong></p>
+<p>An isogeny between elliptic curves is a function from one elliptic curve to
+another that preserves base points. That means it takes points on one curve
+and returns points on the other curve. Every point on the input curve will map
+to a point on the output curve; but multiple points may map to the same
+point. Formally speaking, the isogeny is surjective. An isogeny is also a
+homomorphism, that is, it preserves the structure of the curve. For any two
+points P and Q, <code>phi(P + Q) = phi(P) + phi(Q)</code>.</p>
+<p>We have a bunch of formulas for generating isogenies from a curve and a
+point. You might remember that the set of values a function takes is its
+"domain", and the set of values it returns is called its "codomain". The
+domain of such an isogeny is the curve you give it; its codomain might be the
+same curve, or it might be a different one. In general, for SIDH, we care
+about the case where it produces a new curve.</p>
+<p><strong>OK, so explain how SIDH works again.</strong></p>
+<p>Roughly speaking, a secret key is an isogeny, and a public key is an elliptic
+curve. By "mixing" their isogeny with the peer's public curve, each peer
+generates a secret curve. The two peers will generally generate different
+curves, but those curves will have the same j-invariant.</p>
+<p><strong>Wait, what's a j-invariant?</strong></p>
+<p>The j-invariant is a number you can compute for a particular curve. Perhaps
+the best analogy would be the discriminant for quadratic equation you might
+remember from high school math; it's a single number that tells you something
+interesting about the underlying curve. There are different formulas for
+curves in different forms. For example, for a curve in short Weierstrass form
+<code>y^2 = x^3 + ax + b</code>, the j-invariant is:</p>
+<pre class="code literal-block"><span></span>j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
+</pre>
+
+
+<p>The j-invariant has a few cool properties: for example, while this is the
+formula for the short Weierstrass form, the value of j doesn't change if you
+put the same curve in a different form. Also, all curves with the same
+j-invariant are isomorphic. However, for SIDH you don't really care about
+these properties; you just care that the j-invariant is a number you can
+compute and it'll be the same for the two secret curves that are generated by
+the DH exchange.</p>
+<p><strong>OK, try explaining SIDH again.</strong></p>
+<p>The protocol fixes a supersingular curve E and four points on that
+curve: PA, QA, PB, QB.</p>
+<p>Alice picks two random integers, mA and nA. She takes a linear combination of
+those two integers with PA and QA to produce a random point RA, so:</p>
+<pre class="code literal-block"><span></span>RA = nA * PA + mA * QA
+</pre>
+
+
+<p>That random point defines Alice's secret isogeny through the isogeny formulas
+I talked about above. The codomain of that isogeny forms Alice's public
+curve. Alice transforms points PB and QB with the isogeny. She sends Bob her
+public curve, and the two transformed points.</p>
+<p>Bob does the same thing, except with A and B swapped.</p>
+<p>Once Alice gets Bob's public key, she applies mA and nA again to the
+corresponding transformed points she got from Bob. She generates a new isogeny
+phiBA from the resulting point just like she did before to generate her
+private key. That isogeny's codomain will be an elliptic curve EBA.</p>
+<p>When Bob performs his side of the exchange, he'll produce a different isogeny
+and a different elliptic curve EAB; but it will have the same j-invariant as
+the curve Alice computed.  That j-invariant is the shared key.</p>
+<p>I've compiled a <a href="https://dl.dropboxusercontent.com/u/38476311/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf">transcript</a> of a Diffie-Hellman exchange using
+Sage so you can see a (toy!) demo in action.</p>
+<p><strong>I know a little about elliptic curves. I thought they were always
+non-singular. What's a supersingular elliptic curve but a contradiction in
+terms?</strong></p>
+<p>You're right! Supersingular elliptic curves are somewhat confusingly
+named. Supersingular elliptic curves are still elliptic curves, and they are
+non-singular just like all other elliptic curves. The "supersingular" refers
+to the singular values of the j-invariant. Equivalently, the Hasse-Witt matrix
+will be singular as well (and therefore the Hasse invariant will be 0).</p>
+<p><strong>So, why does it matter that the curve is supersingular?</strong></p>
+<p>Firstly, computing the isogeny is much easier on supersingular curves than on
+ordinary (not supersingular) elliptic curves. Secondly, if the curve is
+ordinary, the scheme can be broken in subexponential time by a quantum
+attacker.</p>
+<p>Isogeny-based cryptography using ordinary curves was considered as a
+post-quantum secure cryptosystem before SIDH. However, Childs et al. showed a
+subexponential quantum algorithm in 2010. This paper appeared to have ended
+isogeny-based cryptography: it was already slower than other post-quantum
+systems, and now it was shown that it wasn't even post-quantum secure.</p>
+<p>Because supersingular curves are rare, they had not previously been considered
+for isogeny-based cryptography. However, the paper itself suggested that
+supersingular curves might be worth examining, so it ended up pushing research
+in a new direction rather than ending it.</p>
+<p>Explaining why the supersingular curve makes the problem quantum-hard is
+tricky without being thoroughly familiar with isogenies and quantum
+computing. If you're really interested, <a href="https://arxiv.org/pdf/1012.4019v2.pdf">the Childs paper</a> explains
+how the quantum attack in the ordinary case works. Informally, in the ordinary
+case, there is a group action (the <em>isogeny star operator</em>) of the ideal class
+group onto the set of isomorphism classes of isogenous curves with the same
+endomorphism ring. That can be shown to be a special case of the abelian group
+hidden shift problem, which can be solved quickly on a quantum computer. In
+the supersingular case, there is no such group action to exploit. (If you're
+trying to solve for this at home; this is why SIDH needs to define the 4
+points PA, PB, QA, QB.)</p>
+<p><em>I would like to thank Thomas Ptacek for reviewing this blog post and bearing
+with me as I struggle through trying to come up with human-readable
+explanations for all of this stuff; and Sean Devlin for reminding me that Sage
+is an excellent educational tool.</em></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport.html" class="u-url">Introducing Teleport</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
                 lvh
@@ -1001,55 +1248,6 @@ PyCon, but I consider that a superb problem to have.</p>
 <p>In the United States, under the Fifth Amendment, you don't have to divulge information that might incriminate you. I am not a lawyer, and courts have provided conflicting rulings, <a href="https://en.wikipedia.org/wiki/Fifth_Amendment_to_the_United_States_Constitution#Computer_passwords">but currently it appears that this includes computer passwords.</a> <a href="http://hamptonroads.com/2014/10/police-can-require-cellphone-fingerprint-not-pass-code?wpisrc=nl-swbd&amp;wpmm=1#">However, a court has ruled that a fingerprint doesn't count as secret information.</a> If you can unlock your phone with your fingerprint, they can force you to unlock it.</p>
 <p>If your threat models include people snooping, the fingerprint sensor is superior. If your threat model includes law enforcement, the passcode is superior. So, which do you pick? It depends on your threat model.</p>
 <p>Disclaimer: this is an illustration of how threat models can conflict. It is <em>not</em> operational security advice; in which case I would point out other options. It is not legal advice, which I am not at all qualified to dispense.</p>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/were-just-getting-started.html" class="u-url">We're just getting started</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/were-just-getting-started.html" rel="bookmark"><time class="published dt-published" datetime="2015-03-02T17:06:41-08:00" title="2015-03-02 17:06">2015-03-02 17:06</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>Most conference talks are transactional. The speaker has a point to
-make. After the presentation, it's "over"; only spoken about in
-perfect tenses. You've communicated your thoughts, perhaps had a
-conversation or two, but, mostly, moved on.</p>
-<p>I've given talks like these. However, about two years ago, I gave a
-talk that had a deep impact on my life. That talk was Crypto 101.</p>
-<p>Right before the presentation, cryptanalytic research was released
-that popped RC4. I couldn't have asked for a better setup. Turns out
-it wasn't <em>just</em> luck; eventually our systemic failure as an industry
-in taking security seriously was bound to catch up with us. Since
-then, the proverbial piper has been well-paid. We've seen a plethora
-of serious security bugs. Huge corporations have been the victims of
-attacks in the billions of dollars a pop. As I'm writing this blog
-post, there's an article on a new TLS attack in my reading list.</p>
-<p>It quickly became clear that this wasn't just a one-off thing. I
-started writing <a href="http://crypto101.github.io">Crypto 101, the book,</a> not too long after
-giving the talk. We were, unwittingly, at the crest of a wave that's
-still growing. Projects like PyCA and LibreSSL started fighting
-tirelessly to make the software we use better. Security talks became a
-mandatory part of the programming conference food pyramid. My friends
-Hynek and Ying gave fantastic talks. They, too, got "lucky" with a
-security bombshell: Heartbleed happened mere days before the
-conference.</p>
-<p>Last week, I presented Crypto 101 again at rax.io, Rackspace's
-internal conference. It was well-received, and I think I provided
-value for people's time. One thing, more than anything, it
-crystallized where we are. We're not done yet. There's still a huge
-audience left to reach. Interest in information security has done
-nothing but grow.  With a total of just over 100,000 downloads for the
-book and about half as many for the recording of the presentation,
-people are definitely listening. We've made real impact, and we have
-people's attention, but we need to keep going.</p>
-<p>One of the two talks I'll be giving at PyCon is a more high-level
-overview of how we can build secure systems. More friends of mine will
-talk in about TLS there too. Within Rackspace, I'm focusing on
-information security. There are awesome things brewing here, and I
-hope that we can continue the great work we've been doing so far.</p>
-<p>We've accomplished a lot, but we're just getting started.</p>
 </div>
     </div>
     </article>
