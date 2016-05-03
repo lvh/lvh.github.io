@@ -246,9 +246,11 @@ point. Formally speaking, the isogeny is surjective. An isogeny is also a
 homomorphism, that is, it preserves the structure of the curve. For any two
 points P and Q, <code>phi(P + Q) = phi(P) + phi(Q)</code>.</p>
 <p>We have a bunch of formulas for generating isogenies from a curve and a
-point. You might remember that the kinds of values a function takes is its
-"domain", and the kinds of values it returns is it's "codomain". The domain of
-such an isogeny is the curve you give it; its codomain is a new curve.</p>
+point. You might remember that the set of values a function takes is its
+"domain", and the set of values it returns is called its "codomain". The
+domain of such an isogeny is the curve you give it; its codomain might be the
+same curve, or it might be a different one. In general, for SIDH, we care
+about the case where it produces a new curve.</p>
 <p><strong>OK, so explain how SIDH works again.</strong></p>
 <p>Roughly speaking, a secret key is an isogeny, and a public key is an elliptic
 curve. By "mixing" their isogeny with the peer's public curve, each peer
