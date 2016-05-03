@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link rel="self" type="application/rss+xml" href="https://www.lvh.io/categories/security.xml"></atom:link><language>en</language><lastBuildDate>Tue, 03 May 2016 16:38:21 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 03 May 2016 17:51:22 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a &lt;a href="https://eprint.iacr.org/2016/413"&gt;paper&lt;/a&gt; on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
@@ -204,8 +204,8 @@ terms?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;You're right! Supersingular elliptic curves are somewhat confusingly
 named. Supersingular elliptic curves are still elliptic curves, and they are
 non-singular just like all other elliptic curves. The "supersingular" refers
-to the singular values of the j-invariant. Equivalently, the Hasse-Witt matrix
-will be singular as well (and therefore the Hasse invariant will be 0).&lt;/p&gt;
+to the singular values of the j-invariant. Equivalently, the Hasse invariant
+will be 0.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;So, why does it matter that the curve is supersingular?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Firstly, computing the isogeny is much easier on supersingular curves than on
 ordinary (not supersingular) elliptic curves. Secondly, if the curve is
@@ -233,8 +233,9 @@ trying to solve for this at home; this is why SIDH needs to define the 4
 points PA, PB, QA, QB.)&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;I would like to thank Thomas Ptacek for reviewing this blog post and bearing
 with me as I struggle through trying to come up with human-readable
-explanations for all of this stuff; and Sean Devlin for reminding me that Sage
-is an excellent educational tool.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
+explanations for all of this stuff; Sean Devlin for reminding me that Sage is
+an excellent educational tool; and Watson Ladd for pointing out a correction
+w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not singular.)&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
 managing SSH infrastructure. Teleport is built by &lt;a href="http://www.gravitational.com/"&gt;Gravitational&lt;/a&gt;, a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
 Gravitational, I have been advising them on the Teleport project.&lt;/p&gt;

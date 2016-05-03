@@ -7,11 +7,11 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://www.lvh.io/2010/index.html</loc>
-  <lastmod>2016-05-03T16:38:00Z</lastmod>
+  <lastmod>2016-05-03T17:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2011/index.html</loc>
-  <lastmod>2016-05-03T16:38:00Z</lastmod>
+  <lastmod>2016-05-03T17:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2013/index.html</loc>
@@ -27,7 +27,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/2016/index.html</loc>
-  <lastmod>2016-05-03T16:38:00Z</lastmod>
+  <lastmod>2016-05-03T17:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/about.html</loc>
@@ -47,7 +47,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/categories/crypto.html</loc>
-  <lastmod>2016-05-03T16:38:00Z</lastmod>
+  <lastmod>2016-05-03T17:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/css.html</loc>
@@ -95,7 +95,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/categories/security.html</loc>
-  <lastmod>2016-05-03T16:38:00Z</lastmod>
+  <lastmod>2016-05-03T17:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/svg.html</loc>
@@ -127,7 +127,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/index.html</loc>
-  <lastmod>2016-05-03T16:38:00Z</lastmod>
+  <lastmod>2016-05-03T17:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html</loc>
@@ -299,7 +299,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</loc>
-  <lastmod>2016-05-03T16:38:00Z</lastmod>
+  <lastmod>2016-05-03T17:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/switched-to-nikola.html</loc>
