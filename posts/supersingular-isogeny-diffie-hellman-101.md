@@ -114,31 +114,35 @@ of scrutiny as some of the other post-quantum cryptosystems, let alone the
 "regular" cryptosystems we use daily. Attacks only get better, they never get
 worse. It's possible that SIDH is insecure and we just don't know how to break
 it yet. It does have a good argument for why quantum algorithms wouldn't be
-able to crack it (noncommutativity and a lack of internal structure to
-exploit), but that's a hypothesis, not a proof.
+able to crack it (more on that later), but that's a hypothesis, not a proof.
 
-The new performance figures from this paper are impressive, but they're still
-much slower than the systems we use today. Key generation and key exchange
+The new performance figures from this paper are impressive, but this system is
+still much slower than the ones we use today. Key generation and key exchange
 take a good 50 million cycles or so each. That's about a thousand times slower
 than Curve25519, a curve designed about 10 years ago. Key sizes are also much
 larger: SIDH public keys are 751 bytes, whereas Curve25519 keys are only 32
-bytes. For on-line protocols like HTTPS, that's a significant cost.
+bytes. For on-line protocols like HTTPS operating over TCP, that's a
+significant cost.
 
 Finally, there are issues with implementing SIDH safely. Systems like
 Diffie-Hellman over integers *mod p* are much less complex than elliptic curve
-Diffie-Hellman (ECDH), let alone SIDH. With ECDH and ECC in general, we
-started seeing implementation difficulties, especially with early
-curves. Point addition formulas would work, unless you were adding a point to
-itself. You have to check that input points are on the curve or leak the
-secret key modulo some small order. These are real implementation problems,
-even though we know how to solve them.
+Diffie-Hellman (ECDH), let alone SIDH. With ECDH and ECC in general, we've
+seen new implementation difficulties, especially with early curves. Point
+addition formulas would work, unless you were adding a point to itself. You
+have to check that input points are on the curve, or leak the secret key
+modulo some small order. These are real implementation problems, even though
+we know how to solve them.
 
 This is nothing compared to the difficulties implementing SIDH. Currently,
 SIDH security arguments rely on honest peers. A peer that gives you a
 pathological input can utterly break the security of the scheme. To make
 matters worse, while we understand how to solve these problems for elliptic
 curve Diffie-Hellman, we don't have a way to verify inputs for isogeny-based
-cryptography at all. We don't have much research to fall back on here either.
+cryptography at all. We don't have much research to fall back on here
+either. This isn't a SIDH-specific problem; post-quantum cryptography isn't
+mature enough yet to have implementation issues like these nailed down
+yet. (For an example from lattice-based cryptography, see the recent paper by
+[Bindel et al][bindel].)
 
 I don't want to diminish the importance of this paper in any way!  Just
 because it's not something that your browser is going to be doing tomorrow
@@ -296,5 +300,6 @@ is an excellent educational tool.*
 
 [c101]: https://www.crypto101.io
 [costello]: https://eprint.iacr.org/2016/413
+[bindel]: https://eprint.iacr.org/2016/415
 [transcript]: https://dl.dropboxusercontent.com/u/38476311/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf
 [childs]: https://arxiv.org/pdf/1012.4019v2.pdf
