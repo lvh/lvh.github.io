@@ -183,16 +183,9 @@ An isogeny between elliptic curves is a function from one elliptic curve to
 another that preserves base points. That means it takes points on one curve
 and returns points on the other curve. Every point on the input curve will map
 to a point on the output curve; but multiple points may map to the same
-point. Formally speaking, the isogeny is surjective. This is equivalent to
-saying that an isogeny `phi` is just a map between two curves E1, E2 for
-which:
-
-
-```
-phi(P + Q) = phi(P) + phi(Q)
-```
-
-... for all P's and Q's.
+point. Formally speaking, the isogeny is surjective. An isogeny is also a
+homomorphism, that is, it preserves the structure of the curve. For any two
+points P and Q, `phi(P + Q) = phi(P) + phi(Q)`.
 
 We have a bunch of formulas for generating isogenies from a curve and a
 point. You might remember that the kinds of values a function takes is its
