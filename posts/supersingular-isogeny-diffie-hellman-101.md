@@ -158,11 +158,13 @@ fixed curve. These supersingular curves also have different properties from
 regular curves. Using a supersingular curve for regular elliptic curve
 operations would be horribly insecure. If you have some background in elliptic
 curves: supersingular curves have a tiny embedding degree, meaning that
-solving the ECDLP can easily be transformed into a (solvable) DLP. Most curves
-have large embedding degrees; you generally have to go out of your way to find
-a curve with a small embedding degree. That is only done in specialized
-systems, like for pairing-based cryptography, or, as in this case,
-supersingular isogeny-based Diffie-Hellman.
+solving the ECDLP over `F(p)` can easily be transformed into solving the DLP
+over `F(p^n)` where `n` is that small embedding degree. Most curves have large
+embedding degrees, meaning that solving the ECDLP directly is easier than
+translating it into a DLP and then solving that.  You generally have to go out
+of your way to find a curve with a small embedding degree. That is only done
+in specialized systems, like for pairing-based cryptography, or, as in this
+case, supersingular isogeny-based Diffie-Hellman.
 
 Let's recap ECDH. Public keys are points on a curve, and secret keys are
 numbers. Alice and Bob agree on the parameters of the exchange ahead of time,
