@@ -40,8 +40,8 @@ With that, let's begin!
 Supersingular isogeny Diffie-Hellman (SIDH) is one of a handful of
 "post-quantum" cryptosystems. Those are cryptosystems that will remain secure
 even if the attacker has access to a large quantum computer. This has nothing
-to do with quantum cryptography, like quantum key distribution, beyond their
-shared quantum mechanical underpinning.
+to do with quantum cryptography (for example, quantum key distribution)
+beyond their shared quantum mechanical underpinning.
 
 **Why should I care about quantum computers?**
 
