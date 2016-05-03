@@ -188,9 +188,11 @@ homomorphism, that is, it preserves the structure of the curve. For any two
 points P and Q, `phi(P + Q) = phi(P) + phi(Q)`.
 
 We have a bunch of formulas for generating isogenies from a curve and a
-point. You might remember that the kinds of values a function takes is its
-"domain", and the kinds of values it returns is it's "codomain". The domain of
-such an isogeny is the curve you give it; its codomain is a new curve.
+point. You might remember that the set of values a function takes is its
+"domain", and the set of values it returns is called its "codomain". The
+domain of such an isogeny is the curve you give it; its codomain might be the
+same curve, or it might be a different one. In general, for SIDH, we care
+about the case where it produces a new curve.
 
 **OK, so explain how SIDH works again.**
 
