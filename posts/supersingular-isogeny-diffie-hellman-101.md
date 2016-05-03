@@ -210,8 +210,8 @@ The j-invariant is a number you can compute for a particular curve. Perhaps
 the best analogy would be the discriminant for quadratic equation you might
 remember from high school math; it's a single number that tells you something
 interesting about the underlying curve. There are different formulas for
-curves in different forms. For example, for a curve in Weierstrass form, the
-j-invariant is:
+curves in different forms. For example, for a curve in short Weierstrass form
+`y^2 = x^3 + ax + b`, the j-invariant is:
 
 ```
 j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
