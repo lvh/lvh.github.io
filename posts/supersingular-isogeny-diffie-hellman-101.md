@@ -83,7 +83,7 @@ qubits and even >1000 qubits. While there is some discussion if D-waves
 provide quantum speedup or are even real quantum computers at all; there is no
 discussion that they are not *universal* quantum computers. Specifically, they
 only claim to solve one particular problem called quantum annealing. The 1000
-qubit D-Wave 2X can not factor RSA moduli of ~512 bits or solve discrete logs
+qubit D-Wave 2X cannot factor RSA moduli of ~512 bits or solve discrete logs
 on curves of ~120 bits.
 
 The systems at risk implement asymmetric encryption, signatures, and
