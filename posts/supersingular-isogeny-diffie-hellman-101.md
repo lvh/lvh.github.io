@@ -260,8 +260,8 @@ terms?**
 You're right! Supersingular elliptic curves are somewhat confusingly
 named. Supersingular elliptic curves are still elliptic curves, and they are
 non-singular just like all other elliptic curves. The "supersingular" refers
-to the singular values of the j-invariant. Equivalently, the Hasse-Witt matrix
-will be singular as well (and therefore the Hasse invariant will be 0).
+to the singular values of the j-invariant. Equivalently, the Hasse invariant
+will be 0.
 
 **So, why does it matter that the curve is supersingular?**
 
@@ -295,8 +295,9 @@ points PA, PB, QA, QB.)
 
 *I would like to thank Thomas Ptacek for reviewing this blog post and bearing
 with me as I struggle through trying to come up with human-readable
-explanations for all of this stuff; and Sean Devlin for reminding me that Sage
-is an excellent educational tool.*
+explanations for all of this stuff; Sean Devlin for reminding me that Sage is
+an excellent educational tool; and Watson Ladd for pointing out a correction
+w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not singular.)*
 
 [c101]: https://www.crypto101.io
 [costello]: https://eprint.iacr.org/2016/413
