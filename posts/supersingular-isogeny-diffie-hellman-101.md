@@ -14,8 +14,8 @@ Microsoft Research, recently published a [paper][costello] on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
 discussion around it seemed to be how no-one understands isogenies, even
-within cryptography-literate communities. This article aims to make that a
-little bit better.
+within cryptography-literate communities. This article aims to give you a
+high-level understanding of what this cryptosystem is and why it works.
 
 This post assumes that you already know how Diffie-Hellman works in the
 abstract, and that you know elliptic curves are a mathematical construct that
@@ -90,8 +90,8 @@ Diffie-Hellman key exchanges. That's no accident: all post-quantum
 alternatives are asymmetric algorithms. Post-quantum secure symmetric
 cryptography is easier: we can just use bigger key sizes, which are still
 small enough to be practical and result in fast primitives. Quantum computers
-simply halve the security level, so all we need to do is use secure ciphers
-with 256 bit keys, like Salsa20.
+simply halve the security level, so all we need to do to maintain a 128 bit
+security level is to use ciphers with 256 bit keys, like Salsa20.
 
 Quantum computers also have an advantage against SIDH, but both are still
 exponential in the field size. The SIDH scheme in the new paper has 192 bits
@@ -145,13 +145,19 @@ because it's not something that your browser is going to be doing tomorrow
 doesn't mean it's not an impressive accomplishment. It's just a step on the
 path that might lead to production crypto one day.
 
-**OK, fine. Why is this so different from Diffie-Hellman?**
+**OK, fine. Why is this so different from elliptic curve Diffie-Hellman?**
 
-While SIDH and ECDH both use elliptic curves, they're different beasts. As
-I've mentioned before, their superficial similarities probably does more to
-confuse than to help. SIDH generates new curves as a matter of course within a
-single DH exchange. With ECDH, that only happens during an attack. These
-supersingular curves also have different properties from regular curves.
+While SIDH and ECDH both use elliptic curves, they're different beasts. SIDH
+generates new curves to perform a DH exchange, whereas ECDH uses points on one
+fixed curve. These supersingular curves also have different properties from
+regular curves. Using a supersingular curve for regular elliptic curve
+operations would be horribly insecure. If you have some background in elliptic
+curves: supersingular curves have a tiny embedding degree, meaning that
+solving the ECDLP can easily be transformed into a (solvable) DLP. Most curves
+have large embedding degrees; you generally have to go out of your way to find
+a curve with a small embedding degree. That is only done in specialized
+systems, like for pairing-based cryptography, or, as in this case,
+supersingular isogeny-based Diffie-Hellman.
 
 Let's recap ECDH. Public keys are points on a curve, and secret keys are
 numbers. Alice and Bob agree on the parameters of the exchange ahead of time,
@@ -166,9 +172,20 @@ SIDH is different. Secret keys are isogenies...
 
 **Whoa whoa whoa. What the heck are isogenies?**
 
-An isogeny between elliptic curves is a dense morphism (think "function") from
-one elliptic curve to another that preserves base points. That means it takes
-points on one curve and returns points on the other curve.
+An isogeny between elliptic curves is a function from one elliptic curve to
+another that preserves base points. That means it takes points on one curve
+and returns points on the other curve. Every point on the input curve will map
+to a point on the output curve; but multiple points may map to the same
+point. Formally speaking, the isogeny is surjective. This is equivalent to
+saying that an isogeny `phi` is just a map between two curves E1, E2 for
+which:
+
+
+```
+phi(P + Q) = phi(P) + phi(Q)
+```
+
+... for all P's and Q's.
 
 We have a bunch of formulas for generating isogenies from a curve and a
 point. You might remember that the kinds of values a function takes is its
@@ -242,6 +259,42 @@ non-singular just like all other elliptic curves. The "supersingular" refers
 to the singular values of the j-invariant. Equivalently, the Hasse-Witt matrix
 will be singular as well (and therefore the Hasse invariant will be 0).
 
+**So, why does it matter that the curve is supersingular?**
+
+Firstly, computing the isogeny is much easier on supersingular curves than on
+ordinary (not supersingular) elliptic curves. Secondly, if the curve is
+ordinary, the scheme can be broken in subexponential time by a quantum
+attacker.
+
+Isogeny-based cryptography using ordinary curves was considered as a
+post-quantum secure cryptosystem before SIDH. However, Childs et al. showed a
+subexponential quantum algorithm in 2010. This paper appeared to have ended
+isogeny-based cryptography: it was already slower than other post-quantum
+systems, and now it was shown that it wasn't even post-quantum secure.
+
+Because supersingular curves are rare, they had not previously been considered
+for isogeny-based cryptography. However, the paper itself suggested that
+supersingular curves might be worth examining, so it ended up pushing research
+in a new direction rather than ending it.
+
+Explaining why the supersingular curve makes the problem quantum-hard is
+tricky without being thoroughly familiar with isogenies and quantum
+computing. If you're really interested, [the Childs paper][childs] explains
+how the quantum attack in the ordinary case works. Informally, in the ordinary
+case, there is a group action (the *isogeny star operator*) of the ideal class
+group onto the set of isomorphism classes of isogenous curves with the same
+endomorphism ring. That can be shown to be a special case of the abelian group
+hidden shift problem, which can be solved quickly on a quantum computer. In
+the supersingular case, there is no such group action to exploit. (If you're
+trying to solve for this at home; this is why SIDH needs to define the 4
+points PA, PB, QA, QB.)
+
+*I would like to thank Thomas Ptacek for reviewing this blog post and bearing
+with me as I struggle through trying to come up with human-readable
+explanations for all of this stuff; and Sean Devlin for reminding me that Sage
+is an excellent educational tool.*
+
 [c101]: https://www.crypto101.io
 [costello]: https://eprint.iacr.org/2016/413
 [transcript]: https://dl.dropboxusercontent.com/u/38476311/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf
+[childs]: https://arxiv.org/pdf/1012.4019v2.pdf
