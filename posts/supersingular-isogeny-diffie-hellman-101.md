@@ -297,7 +297,10 @@ points PA, PB, QA, QB.)
 with me as I struggle through trying to come up with human-readable
 explanations for all of this stuff; Sean Devlin for reminding me that Sage is
 an excellent educational tool; and Watson Ladd for pointing out a correction
-w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not singular.)*
+w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
+singular.). Finally, I'd like to thank all the people who reviewed drafts of
+this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
+Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.*
 
 [c101]: https://www.crypto101.io
 [costello]: https://eprint.iacr.org/2016/413
