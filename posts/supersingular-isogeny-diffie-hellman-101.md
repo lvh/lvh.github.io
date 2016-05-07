@@ -225,29 +225,29 @@ the DH exchange.
 **OK, try explaining SIDH again.**
 
 The protocol fixes a supersingular curve E and four points on that
-curve: PA, QA, PB, QB.
+curve: P_A, Q_A, P_B, Q_B.
 
-Alice picks two random integers, mA and nA. She takes a linear combination of
-those two integers with PA and QA to produce a random point RA, so:
+Alice picks two random integers, m_A and n_A. She takes a linear combination
+of those two integers with P_A and Q_A to produce a random point R_A, so:
 
 ```
-RA = nA * PA + mA * QA
+R_A = n_A * P_A + m_A * Q_A
 ```
 
 That random point defines Alice's secret isogeny through the isogeny formulas
 I talked about above. The codomain of that isogeny forms Alice's public
-curve. Alice transforms points PB and QB with the isogeny. She sends Bob her
+curve. Alice transforms points P_B and Q_B with the isogeny. She sends Bob her
 public curve, and the two transformed points.
 
 Bob does the same thing, except with A and B swapped.
 
-Once Alice gets Bob's public key, she applies mA and nA again to the
+Once Alice gets Bob's public key, she applies m_A and n_A again to the
 corresponding transformed points she got from Bob. She generates a new isogeny
 phiBA from the resulting point just like she did before to generate her
-private key. That isogeny's codomain will be an elliptic curve EBA.
+private key. That isogeny's codomain will be an elliptic curve E_BA.
 
 When Bob performs his side of the exchange, he'll produce a different isogeny
-and a different elliptic curve EAB; but it will have the same j-invariant as
+and a different elliptic curve E_AB; but it will have the same j-invariant as
 the curve Alice computed.  That j-invariant is the shared key.
 
 I've compiled a [transcript][transcript] of a Diffie-Hellman exchange using
@@ -291,7 +291,7 @@ endomorphism ring. That can be shown to be a special case of the abelian group
 hidden shift problem, which can be solved quickly on a quantum computer. In
 the supersingular case, there is no such group action to exploit. (If you're
 trying to solve for this at home; this is why SIDH needs to define the 4
-points PA, PB, QA, QB.)
+points P_A, P_B, Q_A, Q_B.)
 
 *I would like to thank Thomas Ptacek for reviewing this blog post and bearing
 with me as I struggle through trying to come up with human-readable
