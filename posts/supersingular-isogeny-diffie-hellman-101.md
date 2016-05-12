@@ -113,9 +113,10 @@ start using it right now?**
 SIDH is a young cryptosystem in a young field, and hasn't had the same level
 of scrutiny as some of the other post-quantum cryptosystems, let alone the
 "regular" cryptosystems we use daily. Attacks only get better, they never get
-worse. It's possible that SIDH is insecure and we just don't know how to break
-it yet. It does have a good argument for why quantum algorithms wouldn't be
-able to crack it (more on that later), but that's a hypothesis, not a proof.
+worse. It's possible that SIDH is insecure, and we just don't know how to
+break it yet. It does have a good argument for why quantum algorithms wouldn't
+be able to crack it (more on that later), but that's a hypothesis, not a
+proof.
 
 The new performance figures from this paper are impressive, but this system is
 still much slower than the ones we use today. Key generation and key exchange
@@ -184,7 +185,7 @@ another that preserves base points. That means it takes points on one curve
 and returns points on the other curve. Every point on the input curve will map
 to a point on the output curve; but multiple points may map to the same
 point. Formally speaking, the isogeny is surjective. An isogeny is also a
-homomorphism, that is, it preserves the structure of the curve. For any two
+homomorphism. That is, it preserves the structure of the curve. For any two
 points P and Q, `phi(P + Q) = phi(P) + phi(Q)`.
 
 We have a bunch of formulas for generating isogenies from a curve and a
@@ -214,7 +215,7 @@ curves in different forms. For example, for a curve in short Weierstrass form
 j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
 ```
 
-The j-invariant has a few cool properties: for example, while this is the
+The j-invariant has a few cool properties. For example, while this is the
 formula for the short Weierstrass form, the value of j doesn't change if you
 put the same curve in a different form. Also, all curves with the same
 j-invariant are isomorphic. However, for SIDH you don't really care about
