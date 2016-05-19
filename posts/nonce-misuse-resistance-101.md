@@ -106,7 +106,7 @@ VMs or limitations of embedded hardware.
 
 ## Nonce-misuse resistant systems
 
-To recap, mot all protocols have the luxury of an obvious nonce choice, and
+To recap, not all protocols have the luxury of an obvious nonce choice, and
 through circumstances or poor practices, nonces might repeat
 anyway. Regardless of how cryptographers feel about how important nonce misuse
 is, we can anecdotally and empirically verify that such issues are real and
