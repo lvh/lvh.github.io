@@ -175,6 +175,8 @@ scanned before the nonce can be computed. For some protocols, that may not be
 acceptable, although plenty of protocols work around this assumption by simply
 making individual messages sufficiently small.
 
+*Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.*
+
 [c101]: https://www.crypto101.io
 [rog06]: http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf
 [siv]: http://web.cs.ucdavis.edu/~rogaway/papers/siv.pdf
