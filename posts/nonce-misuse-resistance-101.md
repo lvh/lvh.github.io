@@ -122,11 +122,13 @@ able to discern if a particular message repeated, but they will not be able
 to decrypt the message.
 
 Rogaway and Shrimpton also later developed a mode of operation called SIV
-(synthetic IV), which Gueron, Lindell and Langley are refining to GCM-SIV, a
-SIV-like that takes advantage of fast GCM hardware implementations. Two other
-entries in the CAESAR (AEZ, HS1-SIV) also have nonce-misuse resistance as a
-property of the cryptosystem. CAESAR is an ongoing competition, and GCM-SIV is
-not officially finished yet.
+(synthetic IV), which Gueron and Lindell are refined to GCM-SIV, a SIV-like
+that takes advantage of fast GCM hardware implementations. Those two authors
+are currently working with Adam Langley to standardize the AES-GCM-SIV
+construction through CFRG. AEZ and HS1-SIV, two entries in the CAESAR
+competition, also feature nonce-misuse resistance. CAESAR is an ongoing
+competition, and GCM-SIV is not officially finished yet, so this is clearly
+a field that is still evolving.
 
 There are parallels between nonce-misuse resistance and length extension
 attacks. Both address issues that arguably only affected systems that were
