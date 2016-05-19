@@ -26,8 +26,6 @@ instead of having to decrypt everything up to that point first. (That ends up
 being trickier than it seems, because you still want to authenticate that
 small chunk of ciphertext, but that's a topic for another time.)
 
-*REVIEW: seekability seems out of place; should I mention it at all?*
-
 The critical security property of a nonce is that it's never repeated under
 the same key. You can remember this by the mnemonic that a *nonce* is a
 "number used once". If you were to repeat the nonce, the keystream would also
