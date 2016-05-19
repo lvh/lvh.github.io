@@ -132,7 +132,7 @@ There are parallels between nonce-misuse resistance and length extension
 attacks. Both address issues that arguably only affected systems that were
 doing it wrong to begin with. (Note, however, in the embedded case above, it
 might not be a software design flaw but a hardware limitation.) Fortunately,
-the SHA-3 competition showed that you *can* have increased performance and
+the SHA-3 competition showed that you can have increased performance and
 still be immune to a class of problems. I'm hopeful that CAESAR will consider
 nonce-misuse resistance an important property of an authenticated encryption
 standard.
