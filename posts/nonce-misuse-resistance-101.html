@@ -113,7 +113,6 @@ you jump to a particular point in the keystream. This makes these ciphers
 instead of having to decrypt everything up to that point first. (That ends up
 being trickier than it seems, because you still want to authenticate that
 small chunk of ciphertext, but that's a topic for another time.)</p>
-<p><em>REVIEW: seekability seems out of place; should I mention it at all?</em></p>
 <p>The critical security property of a nonce is that it's never repeated under
 the same key. You can remember this by the mnemonic that a <em>nonce</em> is a
 "number used once". If you were to repeat the nonce, the keystream would also
@@ -205,7 +204,7 @@ a field that is still evolving.</p>
 attacks. Both address issues that arguably only affected systems that were
 doing it wrong to begin with. (Note, however, in the embedded case above, it
 might not be a software design flaw but a hardware limitation.) Fortunately,
-the SHA-3 competition showed that you <em>can</em> have increased performance and
+the SHA-3 competition showed that you can have increased performance and
 still be immune to a class of problems. I'm hopeful that CAESAR will consider
 nonce-misuse resistance an important property of an authenticated encryption
 standard.</p>

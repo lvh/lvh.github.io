@@ -26,8 +26,6 @@ instead of having to decrypt everything up to that point first. (That ends up
 being trickier than it seems, because you still want to authenticate that
 small chunk of ciphertext, but that's a topic for another time.)
 
-*REVIEW: seekability seems out of place; should I mention it at all?*
-
 The critical security property of a nonce is that it's never repeated under
 the same key. You can remember this by the mnemonic that a *nonce* is a
 "number used once". If you were to repeat the nonce, the keystream would also
@@ -134,7 +132,7 @@ There are parallels between nonce-misuse resistance and length extension
 attacks. Both address issues that arguably only affected systems that were
 doing it wrong to begin with. (Note, however, in the embedded case above, it
 might not be a software design flaw but a hardware limitation.) Fortunately,
-the SHA-3 competition showed that you *can* have increased performance and
+the SHA-3 competition showed that you can have increased performance and
 still be immune to a class of problems. I'm hopeful that CAESAR will consider
 nonce-misuse resistance an important property of an authenticated encryption
 standard.
