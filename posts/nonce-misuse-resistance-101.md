@@ -29,11 +29,11 @@ small chunk of ciphertext, but that's a topic for another time.)
 *REVIEW: seekability seems out of place; should I mention it at all?*
 
 The critical security property of a nonce is that it's never repeated under
-the same key. The word *nonce* is a contraction of "number used once". If you
-were to repeat the nonce, the keystream would also repeat. That means that an
-attacker can take the two ciphertexts and xor them to compute the xor of the
-plaintexts. If `C_n` are ciphertexts, `P_n` plaintexts, `K_n` keystreams, and
-`^` is bitwise exclusive or:
+the same key. You can remember this by the mnemonic that a *nonce* is a
+"number used once". If you were to repeat the nonce, the keystream would also
+repeat. That means that an attacker can take the two ciphertexts and XOR them
+to compute the XOR of the plaintexts. If `C_n` are ciphertexts, `P_n`
+plaintexts, `K_n` keystreams, and `^` is bitwise exclusive or:
 
 ```
 C_1 = K_1 ^ P_1
@@ -106,7 +106,7 @@ VMs or limitations of embedded hardware.
 
 ## Nonce-misuse resistant systems
 
-To recap, mot all protocols have the luxury of an obvious nonce choice, and
+To recap, not all protocols have the luxury of an obvious nonce choice, and
 through circumstances or poor practices, nonces might repeat
 anyway. Regardless of how cryptographers feel about how important nonce misuse
 is, we can anecdotally and empirically verify that such issues are real and
@@ -122,11 +122,13 @@ able to discern if a particular message repeated, but they will not be able
 to decrypt the message.
 
 Rogaway and Shrimpton also later developed a mode of operation called SIV
-(synthetic IV), which Gueron, Lindell and Langley are refining to GCM-SIV, a
-SIV-like that takes advantage of fast GCM hardware implementations. Two other
-entries in the CAESAR (AEZ, HS1-SIV) also have nonce-misuse resistance as a
-property of the cryptosystem. CAESAR is an ongoing competition, and GCM-SIV is
-not officially finished yet.
+(synthetic IV), which Gueron and Lindell are refined to GCM-SIV, a SIV-like
+that takes advantage of fast GCM hardware implementations. Those two authors
+are currently working with Adam Langley to standardize the AES-GCM-SIV
+construction through CFRG. AEZ and HS1-SIV, two entries in the CAESAR
+competition, also feature nonce-misuse resistance. CAESAR is an ongoing
+competition, and GCM-SIV is not officially finished yet, so this is clearly
+a field that is still evolving.
 
 There are parallels between nonce-misuse resistance and length extension
 attacks. Both address issues that arguably only affected systems that were
@@ -172,6 +174,8 @@ This model does imply off-line operation, in that the entire message has to be
 scanned before the nonce can be computed. For some protocols, that may not be
 acceptable, although plenty of protocols work around this assumption by simply
 making individual messages sufficiently small.
+
+*Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.*
 
 [c101]: https://www.crypto101.io
 [rog06]: http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf
