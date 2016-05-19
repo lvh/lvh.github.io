@@ -29,11 +29,11 @@ small chunk of ciphertext, but that's a topic for another time.)
 *REVIEW: seekability seems out of place; should I mention it at all?*
 
 The critical security property of a nonce is that it's never repeated under
-the same key. The word *nonce* is a contraction of "number used once". If you
-were to repeat the nonce, the keystream would also repeat. That means that an
-attacker can take the two ciphertexts and xor them to compute the xor of the
-plaintexts. If `C_n` are ciphertexts, `P_n` plaintexts, `K_n` keystreams, and
-`^` is bitwise exclusive or:
+the same key. You can remember this by the mnemonic that a *nonce* is a
+"number used once". If you were to repeat the nonce, the keystream would also
+repeat. That means that an attacker can take the two ciphertexts and XOR them
+to compute the XOR of the plaintexts. If `C_n` are ciphertexts, `P_n`
+plaintexts, `K_n` keystreams, and `^` is bitwise exclusive or:
 
 ```
 C_1 = K_1 ^ P_1
