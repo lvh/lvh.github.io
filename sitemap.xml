@@ -7,11 +7,11 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://www.lvh.io/2010/index.html</loc>
-  <lastmod>2016-05-19T21:26:00Z</lastmod>
+  <lastmod>2016-05-19T21:35:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2011/index.html</loc>
-  <lastmod>2016-05-19T21:26:00Z</lastmod>
+  <lastmod>2016-05-19T21:35:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2013/index.html</loc>
@@ -40,10 +40,6 @@
  <url>
   <loc>https://www.lvh.io/categories/amp.html</loc>
   <lastmod>2016-04-30T16:10:00Z</lastmod>
- </url>
- <url>
-  <loc>https://www.lvh.io/categories/cat_cryptography.html</loc>
-  <lastmod>2016-05-14T15:43:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/clojure.html</loc>
@@ -252,10 +248,6 @@
  <url>
   <loc>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</loc>
   <lastmod>2016-04-30T16:10:00Z</lastmod>
- </url>
- <url>
-  <loc>https://www.lvh.io/posts/automatic-nonce-schemes-and-nonce-misuse-resistance-for-libsodium.html</loc>
-  <lastmod>2016-05-14T15:43:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/call-for-proposal-proposals.html</loc>

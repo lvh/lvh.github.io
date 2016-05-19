@@ -180,13 +180,10 @@ userspace CSPRNGs, keep popping up. This is often a consequence of poor
 programming practice, but it can also be a consequence of poorly-configured
 VMs or limitations of embedded hardware.</p>
 <h3>Nonce-misuse resistant systems</h3>
-<p>To recap:</p>
-<ul>
-<li>Not all protocols have the luxury of an obvious nonce choice</li>
-<li>Through circumstances or poor practices, nonces might repeat regardless</li>
-</ul>
-<p>Regardless of how cryptographers feel about how important nonce misuse is, we
-can anecdotally and empirically verify that such issues are both real and
+<p>To recap, mot all protocols have the luxury of an obvious nonce choice, and
+through circumstances or poor practices, nonces might repeat
+anyway. Regardless of how cryptographers feel about how important nonce misuse
+is, we can anecdotally and empirically verify that such issues are real and
 common. This is true even for systems like TLS where there is an "obvious"
 nonce available (<a href="https://eprint.iacr.org/2016/475.pdf">Böck et al, 2016</a>). It's easy to point fingers, but
 it's better to produce cryptosystems that fail gracefully.</p>
