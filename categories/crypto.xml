@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>lvh (crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" rel="self" href="https://www.lvh.io/categories/crypto.xml"></atom:link><language>en</language><lastBuildDate>Sat, 07 May 2016 23:13:14 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link rel="self" type="application/rss+xml" href="https://www.lvh.io/categories/crypto.xml"></atom:link><language>en</language><lastBuildDate>Fri, 13 May 2016 22:39:32 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a &lt;a href="https://eprint.iacr.org/2016/413"&gt;paper&lt;/a&gt; on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
-discussion around it seemed to be how no-one understands isogenies, even
+discussion around it seemed to be how no one understands isogenies, even
 within cryptography-literate communities. This article aims to give you a
 high-level understanding of what this cryptosystem is and why it works.&lt;/p&gt;
 &lt;p&gt;This post assumes that you already know how Diffie-Hellman works in the
@@ -41,8 +41,8 @@ ECDH and ECDSA). To quantify that, consider the following table:&lt;/p&gt;
 ECC. Look at the rightmost column, which represents time taken by the
 classical algorithm, and compare it to the "time" columns, which represent how
 much a quantum computer would take. As &lt;em&gt;n&lt;/em&gt; increases, the amount of time the
-quantum computer would take stays in the same ballpark, whereas for a
-classical computer it increases (almost) exponentially. Therefore, increasing
+quantum computer would take stays in the same ballpark, whereas, for a
+classical computer, it increases (almost) exponentially. Therefore, increasing
 n is an effective strategy for keeping up with ever-faster classical
 computers, but it is ineffective at increasing the run time for a quantum
 computer.&lt;/p&gt;
@@ -83,9 +83,10 @@ start using it right now?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;SIDH is a young cryptosystem in a young field, and hasn't had the same level
 of scrutiny as some of the other post-quantum cryptosystems, let alone the
 "regular" cryptosystems we use daily. Attacks only get better, they never get
-worse. It's possible that SIDH is insecure and we just don't know how to break
-it yet. It does have a good argument for why quantum algorithms wouldn't be
-able to crack it (more on that later), but that's a hypothesis, not a proof.&lt;/p&gt;
+worse. It's possible that SIDH is insecure, and we just don't know how to
+break it yet. It does have a good argument for why quantum algorithms wouldn't
+be able to crack it (more on that later), but that's a hypothesis, not a
+proof.&lt;/p&gt;
 &lt;p&gt;The new performance figures from this paper are impressive, but this system is
 still much slower than the ones we use today. Key generation and key exchange
 take a good 50 million cycles or so each. That's about a thousand times slower
@@ -144,7 +145,7 @@ another that preserves base points. That means it takes points on one curve
 and returns points on the other curve. Every point on the input curve will map
 to a point on the output curve; but multiple points may map to the same
 point. Formally speaking, the isogeny is surjective. An isogeny is also a
-homomorphism, that is, it preserves the structure of the curve. For any two
+homomorphism. That is, it preserves the structure of the curve. For any two
 points P and Q, &lt;code&gt;phi(P + Q) = phi(P) + phi(Q)&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;We have a bunch of formulas for generating isogenies from a curve and a
 point. You might remember that the set of values a function takes is its
@@ -168,12 +169,12 @@ curves in different forms. For example, for a curve in short Weierstrass form
 &lt;/pre&gt;
 
 
-&lt;p&gt;The j-invariant has a few cool properties: for example, while this is the
+&lt;p&gt;The j-invariant has a few cool properties. For example, while this is the
 formula for the short Weierstrass form, the value of j doesn't change if you
 put the same curve in a different form. Also, all curves with the same
 j-invariant are isomorphic. However, for SIDH you don't really care about
 these properties; you just care that the j-invariant is a number you can
-compute and it'll be the same for the two secret curves that are generated by
+compute, and it'll be the same for the two secret curves that are generated by
 the DH exchange.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OK, try explaining SIDH again.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;The protocol fixes a supersingular curve E and four points on that
@@ -187,7 +188,7 @@ of those two integers with P_A and Q_A to produce a random point R_A, so:&lt;/p&
 &lt;p&gt;That random point defines Alice's secret isogeny through the isogeny formulas
 I talked about above. The codomain of that isogeny forms Alice's public
 curve. Alice transforms points P_B and Q_B with the isogeny. She sends Bob her
-public curve, and the two transformed points.&lt;/p&gt;
+public curve and the two transformed points.&lt;/p&gt;
 &lt;p&gt;Bob does the same thing, except with A and B swapped.&lt;/p&gt;
 &lt;p&gt;Once Alice gets Bob's public key, she applies m_A and n_A again to the
 corresponding transformed points she got from Bob. She generates a new isogeny
