@@ -1,5 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link rel="self" type="application/rss+xml" href="https://www.lvh.io/categories/security.xml"></atom:link><language>en</language><lastBuildDate>Fri, 13 May 2016 22:39:32 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Fri, 20 May 2016 16:24:54 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+I think they matter. The first part of this post is about nonce-based
+authenticated encryption schemes: how they work, and how they fail. If you're
+already familiar with them, you can skip to the section on
+&lt;a href="https://www.lvh.io/posts/nonce-misuse-resistance-101.html#proto"&gt;protocol design&lt;/a&gt;. If you're completely new to cryptography, you might
+like my free introductory course to cryptography, &lt;a href="https://www.crypto101.io"&gt;Crypto 101&lt;/a&gt;. In a
+future blog post, I'll talk about some nonce-misuse resistant schemes I've
+implemented using libsodium.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Many stream ciphers and stream cipher-like constructions such as CTR,
+GCM, (X)Salsa20... take a nonce. You can think of it as a pointer that lets
+you jump to a particular point in the keystream. This makes these ciphers
+"seekable", meaning that you can decrypt a small part of a big ciphertext,
+instead of having to decrypt everything up to that point first. (That ends up
+being trickier than it seems, because you still want to authenticate that
+small chunk of ciphertext, but that's a topic for another time.)&lt;/p&gt;
+&lt;p&gt;The critical security property of a nonce is that it's never repeated under
+the same key. You can remember this by the mnemonic that a &lt;em&gt;nonce&lt;/em&gt; is a
+"number used once". If you were to repeat the nonce, the keystream would also
+repeat. That means that an attacker can take the two ciphertexts and XOR them
+to compute the XOR of the plaintexts. If &lt;code&gt;C_n&lt;/code&gt; are ciphertexts, &lt;code&gt;P_n&lt;/code&gt;
+plaintexts, &lt;code&gt;K_n&lt;/code&gt; keystreams, and &lt;code&gt;^&lt;/code&gt; is bitwise exclusive or:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 = K_1 ^ P_1
+C_2 = K_2 ^ P_2
+&lt;/pre&gt;
+
+
+&lt;p&gt;The attacker just XORs &lt;code&gt;C_1&lt;/code&gt; and &lt;code&gt;C_2&lt;/code&gt; together:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
+&lt;/pre&gt;
+
+
+&lt;p&gt;Since XOR is commutative (you can rearrange the order), &lt;code&gt;K_1 = K_2&lt;/code&gt;, and
+XOR'ing two equal values cancels them out:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = P_1 ^ P_2
+&lt;/pre&gt;
+
+
+&lt;p&gt;That tells an attacker a lot about the plaintext, especially if some of one of
+the plaintexts is predictable. If the attacker has access to an encryption
+oracle, meaning that they can get encryptions for plaintexts of their
+choosing, they can even get perfect decryptions. That is not an unrealistic
+scenario. For example, if you're encrypting session cookies that contain the
+user name and e-mail, I can register using a name and e-mail address that has
+a lot of &lt;code&gt;Z&lt;/code&gt; characters, and then I know that just XORing with &lt;code&gt;Z&lt;/code&gt; will reveal
+most of the plaintext.&lt;/p&gt;
+&lt;p&gt;&lt;a id="proto"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Protocol design&lt;/h3&gt;
+&lt;p&gt;For many on-like protocols like TLS, the explicit nonce provides a convenient
+way to securely send many messages under a per-session key. Because the
+critical security property for a nonce is that it is never repeated with the
+same key, it's perfectly safe to use a counter. In protocols where both peers
+send messages to each other, you can just have one peer use odd nonces and
+have the other use even ones.&lt;/p&gt;
+&lt;p&gt;For off-line (or at-rest) protocols, it's a little trickier. You don't have a
+live communication channel to negotiate a new ephemeral key over, so you're
+stuck with longer-term keys or keys derived from them. If multiple systems are
+participating, you need to decide ahead of time which systems own which
+nonces. Even then, systems need to keep track of which nonces they've
+used. That doesn't work well, especially not in a distributed system where
+nodes and connections can fail at any time.&lt;/p&gt;
+&lt;p&gt;One solution is to use randomized nonces. Since nonces can't repeat, random
+nonces should be large: if they're too small, you might randomly select the
+same nonce twice, per the birthday bound. That is the only difference between
+Salsa20 and XSalsa20: Salsa20 has a 64 bit nonce, whereas XSalsa20 has a 192
+bit nonce. That change exists explicitly to make random nonces secure.&lt;/p&gt;
+&lt;p&gt;Picking a random nonce and just prepending it to the secretbox ciphertext is
+secure, but there are a few problems with this approach. It's not clear to
+practitioners that that's a secure construct. Doing this may seem obvious to a
+cryptographer, but not to someone who just wants to encrypt a
+message. Prepending a nonce doesn't feel much different from e.g. appending a
+MAC. A somewhat knowledgeable practitioner knows that there's plenty of ways
+to use MACs that are insecure, and they don't immediately see that the
+prefix-nonce construction is secure. Not wanting to design your own
+cryptosystems is a good reflex which we should be encouraging.&lt;/p&gt;
+&lt;p&gt;Random nonces also mean that any system sending messages needs access to
+high-quality random number generators while they're sending a message. That's
+often, but not always true. Bugs around random number generation, especially
+userspace CSPRNGs, keep popping up. This is often a consequence of poor
+programming practice, but it can also be a consequence of poorly-configured
+VMs or limitations of embedded hardware.&lt;/p&gt;
+&lt;h3&gt;Nonce-misuse resistant systems&lt;/h3&gt;
+&lt;p&gt;To recap, not all protocols have the luxury of an obvious nonce choice, and
+through circumstances or poor practices, nonces might repeat
+anyway. Regardless of how cryptographers feel about how important nonce misuse
+is, we can anecdotally and empirically verify that such issues are real and
+common. This is true even for systems like TLS where there is an "obvious"
+nonce available (&lt;a href="https://eprint.iacr.org/2016/475.pdf"&gt;Böck et al, 2016&lt;/a&gt;). It's easy to point fingers, but
+it's better to produce cryptosystems that fail gracefully.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf"&gt;Rogaway and Shrimpton (2006)&lt;/a&gt; defined a new model called nonce-misuse
+resistance. Informally, nonce-misuse resistance schemes ensure that a repeated
+random nonce doesn't result in plaintext compromise. In the case of a broken
+system where the attacker can cause repeated nonces, an attacker will only be
+able to discern if a particular message repeated, but they will not be able
+to decrypt the message.&lt;/p&gt;
+&lt;p&gt;Rogaway and Shrimpton also later developed a mode of operation called SIV
+(synthetic IV), which Gueron and Lindell are refined to GCM-SIV, a SIV-like
+that takes advantage of fast GCM hardware implementations. Those two authors
+are currently working with Adam Langley to standardize the AES-GCM-SIV
+construction through CFRG. AEZ and HS1-SIV, two entries in the CAESAR
+competition, also feature nonce-misuse resistance. CAESAR is an ongoing
+competition, and GCM-SIV is not officially finished yet, so this is clearly
+a field that is still evolving.&lt;/p&gt;
+&lt;p&gt;There are parallels between nonce-misuse resistance and length extension
+attacks. Both address issues that arguably only affected systems that were
+doing it wrong to begin with. (Note, however, in the embedded case above, it
+might not be a software design flaw but a hardware limitation.) Fortunately,
+the SHA-3 competition showed that you can have increased performance and
+still be immune to a class of problems. I'm hopeful that CAESAR will consider
+nonce-misuse resistance an important property of an authenticated encryption
+standard.&lt;/p&gt;
+&lt;h3&gt;Repeated messages&lt;/h3&gt;
+&lt;p&gt;Repeated messages are suboptimal, and in some protocols they might be
+unacceptable. However, they're a fail-safe failure mode for nonce
+misuse. You're not choosing to have a repeated ciphertext, you're just getting
+a repeated ciphertext instead of a plaintext disclosure (where the attacker
+would also know that you repeated a message). In the case of a secure random
+nonce, a nonce-misuse resistant scheme is just as secure, at the cost of a
+performance hit.&lt;/p&gt;
+&lt;p&gt;In a context where attackers can see individual messages to detect repeated
+ciphertexts, it makes sense to also consider a model where attackers can
+replay messages. If replaying messages (which presumably have side effects) is
+a problem, a common approach is to add a validity timestamp. This is a feature
+of Fernet, for example. A device that doesn't have access to sufficient
+entropy will still typically have access to a reasonably high-resolution
+clock, which is still more than good enough to make sure the synthetic IVs
+don't repeat either.&lt;/p&gt;
+&lt;h3&gt;OK, but how does it work?&lt;/h3&gt;
+&lt;p&gt;Being able to trade plaintext disclosure for attackers being able to detect
+repeated messages sounds like magic, but it makes sense once you realize how
+they work. As demonstrated in the start of this post, nonce re-use normally
+allows an attacker to have two keystreams cancel out. That only makes sense if
+two &lt;em&gt;distinct&lt;/em&gt; messages are encrypted using the same (key, nonce) pair. NMR
+solves this by making the nonce also depend on the message itself. Informally,
+it means that a nonce should never repeat for two distinct
+messages. Therefore, an attacker can't cancel out the keystreams without
+cancelling out the messages themselves as well.&lt;/p&gt;
+&lt;p&gt;This model does imply off-line operation, in that the entire message has to be
+scanned before the nonce can be computed. For some protocols, that may not be
+acceptable, although plenty of protocols work around this assumption by simply
+making individual messages sufficiently small.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a &lt;a href="https://eprint.iacr.org/2016/413"&gt;paper&lt;/a&gt; on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
@@ -699,135 +839,4 @@ URLs.&lt;/p&gt;
 I'm going to invest a ton of time improving the documentation for both
 &lt;code&gt;core.logic&lt;/code&gt; and &lt;code&gt;core.typed&lt;/code&gt;. They're &lt;em&gt;fantastic&lt;/em&gt; projects, but
 they're harder to get started with than they could be, and that's a
-shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/securing-apis-with-shims.html</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item><item><title>On discussing software security improvements</title><link>https://www.lvh.io/posts/on-discussing-software-security-improvements.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common criticism of information security folks is that they tend to
-advise people to not do any crypto. Through projects like &lt;a class="reference external" href="https://www.crypto101.io/"&gt;Crypto
-101&lt;/a&gt;, I've attempted to make a small contribution towards fixing
-that.&lt;/p&gt;
-&lt;p&gt;In the open source world, various people often try to improve the
-security of a project. Because designing secure systems is pretty
-hard, they often produce flawed proposals. The aforemetioned tendency
-for infosec-conscious people to tell them to stop doing crypto is
-experienced as unwelcoming, even dismissive. Typically, the only thing
-that's accomplished is that a lot of feelings get hurt; it seems to
-only rarely result in improved software.&lt;/p&gt;
-&lt;p&gt;I think that's quite unfortunate. I think open source is great, and we
-should be not just welcoming and inclusive, but aiming to produce
-secure software. Furthermore, even if a flawed proposal is
-unsalvageable, a clear description of &lt;em&gt;why&lt;/em&gt; it is flawed will
-presumably result in fewer negative interactions. Best case scenario,
-the issues with a proposal can be discussed and potentially rectified.&lt;/p&gt;
-&lt;p&gt;In an effort to improve this situation, I'm documenting what I believe
-to be a useful way to discuss security changes and their tradeoffs. As
-Zooko has taught me:&lt;/p&gt;
-&lt;blockquote&gt;
-Security isn't about perfect versus imperfect or about better versus
-worse, it's about &lt;em&gt;this&lt;/em&gt; attack surface versus &lt;em&gt;that&lt;/em&gt; attack
-surface.&lt;/blockquote&gt;
-&lt;p&gt;This document aims to be the equivalent of an &lt;a class="reference external" href="http://www.sscce.org/"&gt;SSCCE&lt;/a&gt; for generic bug
-reports: a blueprint for making suggestions likely to lead to
-productive discourse, as long as we can agree that we're trying to
-produce more secure software, as well as provide a welcoming
-development environment.&lt;/p&gt;
-&lt;div class="section" id="important-points"&gt;
-&lt;h2&gt;Important points&lt;/h2&gt;
-&lt;p&gt;A good proposal should contain:&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;A brief description of what you're suggesting.&lt;/li&gt;
-&lt;li&gt;A description of the attack model you're considering, why the
-current system does not address this issue, and why the suggested
-system &lt;em&gt;does&lt;/em&gt; address this issue.&lt;/li&gt;
-&lt;li&gt;A motivation of the attack model. Why is it important that this
-issue is actually addressed?&lt;/li&gt;
-&lt;li&gt;How does this change affect the attack surface (i.e. all of the
-ways an attacker can attempt to attack a system)?&lt;/li&gt;
-&lt;li&gt;What does the user experience for all users of the system look
-like? Many cryptosystems fall over because they're simply unusable
-for most users of the system.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class="section" id="an-example"&gt;
-&lt;h2&gt;An example&lt;/h2&gt;
-&lt;p&gt;Wul (the widely underestimated language, pronounced &lt;em&gt;/wool/&lt;/em&gt;) is a
-general purpose programming language. It has a package repository,
-WuPI (the Wul package index, pronounced &lt;em&gt;/woopie/&lt;/em&gt;), the de facto
-standard for distributing and installing Wul software.&lt;/p&gt;
-&lt;p&gt;WuPI uses TLS as a secure transport. The WuF (Wul foundation,
-pronounced &lt;em&gt;/woof/&lt;/em&gt;), maintains a root certificate, distributed with
-Wul. Thanks to a well-managed system of intermediary CAs run by a
-tireless army of volunteers, this means that both package authors and
-consumers know they're talking to the real WuPI.&lt;/p&gt;
-&lt;p&gt;Alice is the WuPI BDFL. Bob is a Wul programmer, and would like to
-improve the security of WuPI.&lt;/p&gt;
-&lt;p&gt;While consumers and authors know that they're talking to the real
-WuPI, there is no protection against a malicious WuPI endpoint. (This
-problem was recently made worse because WuPI introduced a CDN, greatly
-increasing the number of people who could own a node.). You know that
-you're talking to something with a WuF-signed certificate (presumably
-WuPI, provided the WuF has done a good job managing that certificate),
-but you have no idea if that thing is being honest about the packages
-it serves you.&lt;/p&gt;
-&lt;p&gt;Bob believes WuPI could solve this by using GPG signatures.&lt;/p&gt;
-&lt;p&gt;He starts with a brief description of the suggestion:&lt;/p&gt;
-&lt;blockquote&gt;
-I would like to suggest that WuPI grows support for GPG signatures
-of packages. These signatures would be created when a package author
-uploads a package. They would optionally be verified when the user
-downloads a package.&lt;/blockquote&gt;
-&lt;p&gt;He continues with the attack model being considered:&lt;/p&gt;
-&lt;blockquote&gt;
-I believe this would secure WuPI consumers against a malicious WuPI
-endpoints. A malicious WuPI endpoint (assuming it acquires an
-appropriate certificate) is currently free to deliver whatever
-packages it wants.&lt;/blockquote&gt;
-&lt;p&gt;He explains why the current model doesn't address this:&lt;/p&gt;
-&lt;blockquote&gt;
-The current system assures authenticity and secrecy of the stream
-(through TLS), and it ensures that the server authenticates itself
-with a WuPI/WuF certificate. It does not ensure that the package is
-what the author uploaded.&lt;/blockquote&gt;
-&lt;p&gt;He explains why he believes his model does address this:&lt;/p&gt;
-&lt;blockquote&gt;
-Because the signatures are produced by the author's GPG key, a
-malicious WuPI endpoint would not be able to forge them. Therefore,
-a consumer is sure that a package with a valid signature is indeed
-from the author.&lt;/blockquote&gt;
-&lt;p&gt;He explains why this attack model is important:&lt;/p&gt;
-&lt;blockquote&gt;
-With the new CDN support, the number of people with access to such a
-certificate has greatly increased. While I certainly trust all of
-the volunteers involved, it would be nice if we didn't &lt;em&gt;have&lt;/em&gt; to.
-Furthermore, the software on the servers can always be vulnerable to
-attack; as a high-value target, it certainly isn't inconceivable
-that an attacker would use an unknown vulnerability to take over a
-WuPI endpoint.&lt;/blockquote&gt;
-&lt;p&gt;He (believes to) address the attack surface:&lt;/p&gt;
-&lt;blockquote&gt;
-Because the signatures are optional, the attack surface remains the
-same.&lt;/blockquote&gt;
-&lt;p&gt;Finally, he addresses the user experience:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The weak point of this scheme is most likely the user experience,
-because users historically seem to dislike using GPG.&lt;/p&gt;
-&lt;p&gt;I am hopeful that this increased value of participating in the GPG
-web of trust will mean that more people participate.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Alice reviews this, and notes a flaw in the proposal:&lt;/p&gt;
-&lt;blockquote&gt;
-This proposal aims to address a security flaw when the WuPI endpoint
-is malicious by adding signatures. However, a malicious WuPI
-endpoint can lie by omission, and claim a package was never signed
-by the author.&lt;/blockquote&gt;
-&lt;p&gt;Bob now realizes this issue, and suggests an improvement:&lt;/p&gt;
-&lt;blockquote&gt;
-This could be rectified if the user insists on a signature for
-packages they expect to be signed.&lt;/blockquote&gt;
-&lt;p&gt;As a side note, Alice notes that the attack surface does increase:&lt;/p&gt;
-&lt;blockquote&gt;
-This places trust in author's ability to manage private keys, which
-has historically been shown to be problematic. That introduces a new
-attack vector: an attacker can attempt to go after the author's
-private key.&lt;/blockquote&gt;
-&lt;p&gt;Regardless of the outcome of this conversation, there actually was a
-conversation. I believe this to be an improvement over the overall
-status quo.&lt;/p&gt;
-&lt;/div&gt;&lt;/div&gt;</description><category>crypto</category><category>python</category><category>security</category><guid>https://www.lvh.io/posts/on-discussing-software-security-improvements.html</guid><pubDate>Tue, 29 Jul 2014 06:58:27 GMT</pubDate></item></channel></rss>
+shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/securing-apis-with-shims.html</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item></channel></rss>

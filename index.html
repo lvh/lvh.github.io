@@ -11,7 +11,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://www.lvh.io/index.html">
 <link rel="next" href="index-4.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/supersingular-isogeny-diffie-hellman-101.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/nonce-misuse-resistance-101.html" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -72,7 +72,159 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/supersingular-isogeny-diffie-hellman-101.html" class="u-url">Supersingular isogeny Diffie-Hellman 101</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/nonce-misuse-resistance-101.html" class="u-url">Nonce misuse resistance 101</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/nonce-misuse-resistance-101.html" rel="bookmark"><time class="published dt-published" datetime="2016-05-19T12:25:44-07:00" title="2016-05-19 12:25">2016-05-19 12:25</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p><em>This post is an introduction to nonce-misused resistant cryptosystems and why
+I think they matter. The first part of this post is about nonce-based
+authenticated encryption schemes: how they work, and how they fail. If you're
+already familiar with them, you can skip to the section on
+<a href="posts/nonce-misuse-resistance-101.html#proto">protocol design</a>. If you're completely new to cryptography, you might
+like my free introductory course to cryptography, <a href="https://www.crypto101.io">Crypto 101</a>. In a
+future blog post, I'll talk about some nonce-misuse resistant schemes I've
+implemented using libsodium.</em></p>
+<p>Many stream ciphers and stream cipher-like constructions such as CTR,
+GCM, (X)Salsa20... take a nonce. You can think of it as a pointer that lets
+you jump to a particular point in the keystream. This makes these ciphers
+"seekable", meaning that you can decrypt a small part of a big ciphertext,
+instead of having to decrypt everything up to that point first. (That ends up
+being trickier than it seems, because you still want to authenticate that
+small chunk of ciphertext, but that's a topic for another time.)</p>
+<p>The critical security property of a nonce is that it's never repeated under
+the same key. You can remember this by the mnemonic that a <em>nonce</em> is a
+"number used once". If you were to repeat the nonce, the keystream would also
+repeat. That means that an attacker can take the two ciphertexts and XOR them
+to compute the XOR of the plaintexts. If <code>C_n</code> are ciphertexts, <code>P_n</code>
+plaintexts, <code>K_n</code> keystreams, and <code>^</code> is bitwise exclusive or:</p>
+<pre class="code literal-block"><span></span>C_1 = K_1 ^ P_1
+C_2 = K_2 ^ P_2
+</pre>
+
+
+<p>The attacker just XORs <code>C_1</code> and <code>C_2</code> together:</p>
+<pre class="code literal-block"><span></span>C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
+</pre>
+
+
+<p>Since XOR is commutative (you can rearrange the order), <code>K_1 = K_2</code>, and
+XOR'ing two equal values cancels them out:</p>
+<pre class="code literal-block"><span></span>C_1 ^ C_2 = P_1 ^ P_2
+</pre>
+
+
+<p>That tells an attacker a lot about the plaintext, especially if some of one of
+the plaintexts is predictable. If the attacker has access to an encryption
+oracle, meaning that they can get encryptions for plaintexts of their
+choosing, they can even get perfect decryptions. That is not an unrealistic
+scenario. For example, if you're encrypting session cookies that contain the
+user name and e-mail, I can register using a name and e-mail address that has
+a lot of <code>Z</code> characters, and then I know that just XORing with <code>Z</code> will reveal
+most of the plaintext.</p>
+<p><a id="proto"></a></p>
+<h3>Protocol design</h3>
+<p>For many on-like protocols like TLS, the explicit nonce provides a convenient
+way to securely send many messages under a per-session key. Because the
+critical security property for a nonce is that it is never repeated with the
+same key, it's perfectly safe to use a counter. In protocols where both peers
+send messages to each other, you can just have one peer use odd nonces and
+have the other use even ones.</p>
+<p>For off-line (or at-rest) protocols, it's a little trickier. You don't have a
+live communication channel to negotiate a new ephemeral key over, so you're
+stuck with longer-term keys or keys derived from them. If multiple systems are
+participating, you need to decide ahead of time which systems own which
+nonces. Even then, systems need to keep track of which nonces they've
+used. That doesn't work well, especially not in a distributed system where
+nodes and connections can fail at any time.</p>
+<p>One solution is to use randomized nonces. Since nonces can't repeat, random
+nonces should be large: if they're too small, you might randomly select the
+same nonce twice, per the birthday bound. That is the only difference between
+Salsa20 and XSalsa20: Salsa20 has a 64 bit nonce, whereas XSalsa20 has a 192
+bit nonce. That change exists explicitly to make random nonces secure.</p>
+<p>Picking a random nonce and just prepending it to the secretbox ciphertext is
+secure, but there are a few problems with this approach. It's not clear to
+practitioners that that's a secure construct. Doing this may seem obvious to a
+cryptographer, but not to someone who just wants to encrypt a
+message. Prepending a nonce doesn't feel much different from e.g. appending a
+MAC. A somewhat knowledgeable practitioner knows that there's plenty of ways
+to use MACs that are insecure, and they don't immediately see that the
+prefix-nonce construction is secure. Not wanting to design your own
+cryptosystems is a good reflex which we should be encouraging.</p>
+<p>Random nonces also mean that any system sending messages needs access to
+high-quality random number generators while they're sending a message. That's
+often, but not always true. Bugs around random number generation, especially
+userspace CSPRNGs, keep popping up. This is often a consequence of poor
+programming practice, but it can also be a consequence of poorly-configured
+VMs or limitations of embedded hardware.</p>
+<h3>Nonce-misuse resistant systems</h3>
+<p>To recap, not all protocols have the luxury of an obvious nonce choice, and
+through circumstances or poor practices, nonces might repeat
+anyway. Regardless of how cryptographers feel about how important nonce misuse
+is, we can anecdotally and empirically verify that such issues are real and
+common. This is true even for systems like TLS where there is an "obvious"
+nonce available (<a href="https://eprint.iacr.org/2016/475.pdf">Böck et al, 2016</a>). It's easy to point fingers, but
+it's better to produce cryptosystems that fail gracefully.</p>
+<p><a href="http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf">Rogaway and Shrimpton (2006)</a> defined a new model called nonce-misuse
+resistance. Informally, nonce-misuse resistance schemes ensure that a repeated
+random nonce doesn't result in plaintext compromise. In the case of a broken
+system where the attacker can cause repeated nonces, an attacker will only be
+able to discern if a particular message repeated, but they will not be able
+to decrypt the message.</p>
+<p>Rogaway and Shrimpton also later developed a mode of operation called SIV
+(synthetic IV), which Gueron and Lindell are refined to GCM-SIV, a SIV-like
+that takes advantage of fast GCM hardware implementations. Those two authors
+are currently working with Adam Langley to standardize the AES-GCM-SIV
+construction through CFRG. AEZ and HS1-SIV, two entries in the CAESAR
+competition, also feature nonce-misuse resistance. CAESAR is an ongoing
+competition, and GCM-SIV is not officially finished yet, so this is clearly
+a field that is still evolving.</p>
+<p>There are parallels between nonce-misuse resistance and length extension
+attacks. Both address issues that arguably only affected systems that were
+doing it wrong to begin with. (Note, however, in the embedded case above, it
+might not be a software design flaw but a hardware limitation.) Fortunately,
+the SHA-3 competition showed that you can have increased performance and
+still be immune to a class of problems. I'm hopeful that CAESAR will consider
+nonce-misuse resistance an important property of an authenticated encryption
+standard.</p>
+<h3>Repeated messages</h3>
+<p>Repeated messages are suboptimal, and in some protocols they might be
+unacceptable. However, they're a fail-safe failure mode for nonce
+misuse. You're not choosing to have a repeated ciphertext, you're just getting
+a repeated ciphertext instead of a plaintext disclosure (where the attacker
+would also know that you repeated a message). In the case of a secure random
+nonce, a nonce-misuse resistant scheme is just as secure, at the cost of a
+performance hit.</p>
+<p>In a context where attackers can see individual messages to detect repeated
+ciphertexts, it makes sense to also consider a model where attackers can
+replay messages. If replaying messages (which presumably have side effects) is
+a problem, a common approach is to add a validity timestamp. This is a feature
+of Fernet, for example. A device that doesn't have access to sufficient
+entropy will still typically have access to a reasonably high-resolution
+clock, which is still more than good enough to make sure the synthetic IVs
+don't repeat either.</p>
+<h3>OK, but how does it work?</h3>
+<p>Being able to trade plaintext disclosure for attackers being able to detect
+repeated messages sounds like magic, but it makes sense once you realize how
+they work. As demonstrated in the start of this post, nonce re-use normally
+allows an attacker to have two keystreams cancel out. That only makes sense if
+two <em>distinct</em> messages are encrypted using the same (key, nonce) pair. NMR
+solves this by making the nonce also depend on the message itself. Informally,
+it means that a nonce should never repeat for two distinct
+messages. Therefore, an attacker can't cancel out the keystreams without
+cancelling out the messages themselves as well.</p>
+<p>This model does imply off-line operation, in that the entire message has to be
+scanned before the nonce can be computed. For some protocols, that may not be
+acceptable, although plenty of protocols work around this assumption by simply
+making individual messages sufficiently small.</p>
+<p><em>Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.</em></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/supersingular-isogeny-diffie-hellman-101.html" class="u-url">Supersingular isogeny Diffie-Hellman 101</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
                 lvh
@@ -1232,27 +1384,6 @@ PyCon, but I consider that a superb problem to have.</p>
 <li>Van Lindberg, for continuously inspiring me to serve</li>
 <li>Diana Clarke, for Charing PyCon US in Montreal</li>
 </ul>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/conflicting-threat-models.html" class="u-url">Conflicting threat models</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/conflicting-threat-models.html" rel="bookmark"><time class="published dt-published" datetime="2015-03-07T08:56:05-08:00" title="2015-03-07 08:56">2015-03-07 08:56</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>As I mentioned <a href="http://www.lvh.io/posts/were-just-getting-started.html">in my previous post</a>, we have a long way to go when it comes to information security. I'll be presenting <a href="https://us.pycon.org/2015/schedule/presentation/342/">a talk on building secure systems</a> at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.</p>
-<p>I'm a strong believer in the importance of threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.</p>
-<p>Threat models often simply deal with how much effort you're willing to spend to prevent something from happening. In a world with finite resources, we have to make choices. Some models are unrealistic or prohibitively expensive to defend against. These questions aren't all strictly technical: perhaps some risk is adequately covered by insurance. Perhaps you have a legal or a compliance requirement to do something, even if the result is technically inferior. These questions are also not just about <em>how much</em> you're going to do: different threat models can lead to mutually exclusive resolutions, each a clear security win.</p>
-<p>Consider your smartphone. Our phones have a lot of important, private information; it makes sense to protect them. The iPhone 6 provides two options for the lock screen: a passcode and a fingerprint sensor. Passcodes have been around for about as long as smartphones have, while fingerprint sensors are new and exciting. It's clear that either of them is more secure than not protecting your phone at all. But which one is more secure?</p>
-<p>Most people instinctively feel the fingerprint sensor is the way to go. Biometric devices feel advanced; up until recently, they only existed in Hollywood. Fingerprints have their share of issues. It's impossible to pick a new key or have separate keys for separate capabilities; you're stuck with the keys you have. A fingerprint is like a password that you involuntarily leave on everything you touch. That said, turning a fingerprint into something that will unlock your iPhone is out of reach for most attackers.</p>
-<p>Passcodes aren't perfect either. People generally pick poor codes: important dates and years are common, but typically not kept secret in other contexts. If you know someone's birthday, there's a decent chance you can unlock their phone. At least with a passcode, you have the option of picking a good one. Even if you do, a passcode provides little protection against shoulder surfing. Most people unlock their phone dozens of times per day, and spend most of that day in the presence of other people. A lot of those people could see your passcode inconspicuously.</p>
-<p>Two options. Neither is perfect. How do you pick one? To make an informed choice, you need to formalize your threat models.</p>
-<p>In the United States, under the Fifth Amendment, you don't have to divulge information that might incriminate you. I am not a lawyer, and courts have provided conflicting rulings, <a href="https://en.wikipedia.org/wiki/Fifth_Amendment_to_the_United_States_Constitution#Computer_passwords">but currently it appears that this includes computer passwords.</a> <a href="http://hamptonroads.com/2014/10/police-can-require-cellphone-fingerprint-not-pass-code?wpisrc=nl-swbd&amp;wpmm=1#">However, a court has ruled that a fingerprint doesn't count as secret information.</a> If you can unlock your phone with your fingerprint, they can force you to unlock it.</p>
-<p>If your threat models include people snooping, the fingerprint sensor is superior. If your threat model includes law enforcement, the passcode is superior. So, which do you pick? It depends on your threat model.</p>
-<p>Disclaimer: this is an illustration of how threat models can conflict. It is <em>not</em> operational security advice; in which case I would point out other options. It is not legal advice, which I am not at all qualified to dispense.</p>
 </div>
     </div>
     </article>
