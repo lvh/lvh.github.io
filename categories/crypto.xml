@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/crypto.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Fri, 20 May 2016 16:24:54 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" href="https://www.lvh.io/categories/crypto.xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 21 May 2016 04:12:55 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
@@ -58,7 +58,9 @@ stuck with longer-term keys or keys derived from them. If multiple systems are
 participating, you need to decide ahead of time which systems own which
 nonces. Even then, systems need to keep track of which nonces they've
 used. That doesn't work well, especially not in a distributed system where
-nodes and connections can fail at any time.&lt;/p&gt;
+nodes and connections can fail at any time. This is why some cryptosystems
+like &lt;a href="https://cryptography.io/en/latest/fernet/"&gt;Fernet&lt;/a&gt; provide an API that doesn't require you to specify
+anything besides a key and a message.&lt;/p&gt;
 &lt;p&gt;One solution is to use randomized nonces. Since nonces can't repeat, random
 nonces should be large: if they're too small, you might randomly select the
 same nonce twice, per the birthday bound. That is the only difference between
@@ -121,10 +123,10 @@ performance hit.&lt;/p&gt;
 ciphertexts, it makes sense to also consider a model where attackers can
 replay messages. If replaying messages (which presumably have side effects) is
 a problem, a common approach is to add a validity timestamp. This is a feature
-of Fernet, for example. A device that doesn't have access to sufficient
-entropy will still typically have access to a reasonably high-resolution
-clock, which is still more than good enough to make sure the synthetic IVs
-don't repeat either.&lt;/p&gt;
+of &lt;a href="https://cryptography.io/en/latest/fernet/"&gt;Fernet&lt;/a&gt;, for example. A device that doesn't have access to
+sufficient entropy will still typically have access to a reasonably
+high-resolution clock, which is still more than good enough to make sure the
+synthetic IVs don't repeat either.&lt;/p&gt;
 &lt;h3&gt;OK, but how does it work?&lt;/h3&gt;
 &lt;p&gt;Being able to trade plaintext disclosure for attackers being able to detect
 repeated messages sounds like magic, but it makes sense once you realize how
