@@ -77,7 +77,9 @@ stuck with longer-term keys or keys derived from them. If multiple systems are
 participating, you need to decide ahead of time which systems own which
 nonces. Even then, systems need to keep track of which nonces they've
 used. That doesn't work well, especially not in a distributed system where
-nodes and connections can fail at any time.
+nodes and connections can fail at any time. This is why some cryptosystems
+like [Fernet][fernet] provide an API that doesn't require you to specify
+anything besides a key and a message.
 
 One solution is to use randomized nonces. Since nonces can't repeat, random
 nonces should be large: if they're too small, you might randomly select the
@@ -151,10 +153,10 @@ In a context where attackers can see individual messages to detect repeated
 ciphertexts, it makes sense to also consider a model where attackers can
 replay messages. If replaying messages (which presumably have side effects) is
 a problem, a common approach is to add a validity timestamp. This is a feature
-of Fernet, for example. A device that doesn't have access to sufficient
-entropy will still typically have access to a reasonably high-resolution
-clock, which is still more than good enough to make sure the synthetic IVs
-don't repeat either.
+of [Fernet][fernet], for example. A device that doesn't have access to
+sufficient entropy will still typically have access to a reasonably
+high-resolution clock, which is still more than good enough to make sure the
+synthetic IVs don't repeat either.
 
 ## OK, but how does it work?
 
@@ -179,3 +181,4 @@ making individual messages sufficiently small.
 [rog06]: http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf
 [siv]: http://web.cs.ucdavis.edu/~rogaway/papers/siv.pdf
 [bock16]: https://eprint.iacr.org/2016/475.pdf
+[fernet]: https://cryptography.io/en/latest/fernet/
