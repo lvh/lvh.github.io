@@ -69,9 +69,11 @@ see [Mason06][ttp].
 For many on-like protocols like TLS, the explicit nonce provides a convenient
 way to securely send many messages under a per-session key. Because the
 critical security property for a nonce is that it is never repeated with the
-same key, it's perfectly safe to use a counter. In protocols where both peers
-send messages to each other, you can just have one peer use odd nonces and
-have the other use even ones.
+same key, it's safe to use a counter. In protocols where both peers send
+messages to each other, you can just have one peer use odd nonces and have the
+other use even ones. There are some caveats here: for example, if the nonce
+size is sufficiently small, an attacker might try to make that counter
+overflow, resulting in a repeated nonce.
 
 For off-line (or at-rest) protocols, it's a little trickier. You don't have a
 live communication channel to negotiate a new ephemeral key over, so you're
