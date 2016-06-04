@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" href="https://www.lvh.io/categories/security.xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 21 May 2016 04:12:55 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (security)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" href="https://www.lvh.io/categories/security.xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 04 Jun 2016 06:36:39 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
@@ -43,15 +43,19 @@ choosing, they can even get perfect decryptions. That is not an unrealistic
 scenario. For example, if you're encrypting session cookies that contain the
 user name and e-mail, I can register using a name and e-mail address that has
 a lot of &lt;code&gt;Z&lt;/code&gt; characters, and then I know that just XORing with &lt;code&gt;Z&lt;/code&gt; will reveal
-most of the plaintext.&lt;/p&gt;
+most of the plaintext. For an idea of the state of the art in attacking
+two-time pads (the usual term for two ciphertexts with a reused keystream),
+see &lt;a href="https://www.cs.jhu.edu/~jason/papers/mason+al.ccs06.pdf"&gt;Mason06&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;a id="proto"&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;Protocol design&lt;/h3&gt;
-&lt;p&gt;For many on-like protocols like TLS, the explicit nonce provides a convenient
+&lt;p&gt;For many on-line protocols like TLS, the explicit nonce provides a convenient
 way to securely send many messages under a per-session key. Because the
 critical security property for a nonce is that it is never repeated with the
-same key, it's perfectly safe to use a counter. In protocols where both peers
-send messages to each other, you can just have one peer use odd nonces and
-have the other use even ones.&lt;/p&gt;
+same key, it's safe to use a counter. In protocols where both peers send
+messages to each other, you can just have one peer use odd nonces and have the
+other use even ones. There are some caveats here: for example, if the nonce
+size is sufficiently small, an attacker might try to make that counter
+overflow, resulting in a repeated nonce.&lt;/p&gt;
 &lt;p&gt;For off-line (or at-rest) protocols, it's a little trickier. You don't have a
 live communication channel to negotiate a new ephemeral key over, so you're
 stuck with longer-term keys or keys derived from them. If multiple systems are
@@ -78,9 +82,9 @@ cryptosystems is a good reflex which we should be encouraging.&lt;/p&gt;
 &lt;p&gt;Random nonces also mean that any system sending messages needs access to
 high-quality random number generators while they're sending a message. That's
 often, but not always true. Bugs around random number generation, especially
-userspace CSPRNGs, keep popping up. This is often a consequence of poor
-programming practice, but it can also be a consequence of poorly-configured
-VMs or limitations of embedded hardware.&lt;/p&gt;
+userspace CSPRNGs, &lt;a href="http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/"&gt;keep popping up&lt;/a&gt;. This is often a consequence of
+poor programming practice, but it can also be a consequence of
+poorly-configured VMs or limitations of embedded hardware.&lt;/p&gt;
 &lt;h3&gt;Nonce-misuse resistant systems&lt;/h3&gt;
 &lt;p&gt;To recap, not all protocols have the luxury of an obvious nonce choice, and
 through circumstances or poor practices, nonces might repeat

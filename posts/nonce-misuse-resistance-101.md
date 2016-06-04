@@ -58,18 +58,22 @@ choosing, they can even get perfect decryptions. That is not an unrealistic
 scenario. For example, if you're encrypting session cookies that contain the
 user name and e-mail, I can register using a name and e-mail address that has
 a lot of `Z` characters, and then I know that just XORing with `Z` will reveal
-most of the plaintext.
+most of the plaintext. For an idea of the state of the art in attacking
+two-time pads (the usual term for two ciphertexts with a reused keystream),
+see [Mason06][ttp].
 
 <a id="proto">
 
 ## Protocol design
 
-For many on-like protocols like TLS, the explicit nonce provides a convenient
+For many on-line protocols like TLS, the explicit nonce provides a convenient
 way to securely send many messages under a per-session key. Because the
 critical security property for a nonce is that it is never repeated with the
-same key, it's perfectly safe to use a counter. In protocols where both peers
-send messages to each other, you can just have one peer use odd nonces and
-have the other use even ones.
+same key, it's safe to use a counter. In protocols where both peers send
+messages to each other, you can just have one peer use odd nonces and have the
+other use even ones. There are some caveats here: for example, if the nonce
+size is sufficiently small, an attacker might try to make that counter
+overflow, resulting in a repeated nonce.
 
 For off-line (or at-rest) protocols, it's a little trickier. You don't have a
 live communication channel to negotiate a new ephemeral key over, so you're
@@ -100,9 +104,9 @@ cryptosystems is a good reflex which we should be encouraging.
 Random nonces also mean that any system sending messages needs access to
 high-quality random number generators while they're sending a message. That's
 often, but not always true. Bugs around random number generation, especially
-userspace CSPRNGs, keep popping up. This is often a consequence of poor
-programming practice, but it can also be a consequence of poorly-configured
-VMs or limitations of embedded hardware.
+userspace CSPRNGs, [keep popping up][urandom]. This is often a consequence of
+poor programming practice, but it can also be a consequence of
+poorly-configured VMs or limitations of embedded hardware.
 
 ## Nonce-misuse resistant systems
 
@@ -178,7 +182,9 @@ making individual messages sufficiently small.
 *Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.*
 
 [c101]: https://www.crypto101.io
+[ttp]: https://www.cs.jhu.edu/~jason/papers/mason+al.ccs06.pdf
 [rog06]: http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf
 [siv]: http://web.cs.ucdavis.edu/~rogaway/papers/siv.pdf
 [bock16]: https://eprint.iacr.org/2016/475.pdf
 [fernet]: https://cryptography.io/en/latest/fernet/
+[urandom]: http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/
