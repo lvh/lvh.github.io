@@ -58,7 +58,9 @@ choosing, they can even get perfect decryptions. That is not an unrealistic
 scenario. For example, if you're encrypting session cookies that contain the
 user name and e-mail, I can register using a name and e-mail address that has
 a lot of `Z` characters, and then I know that just XORing with `Z` will reveal
-most of the plaintext.
+most of the plaintext. For an idea of the state of the art in attacking
+two-time pads (the usual term for two ciphertexts with a reused keystream),
+see [Mason06][ttp].
 
 <a id="proto">
 
@@ -178,6 +180,7 @@ making individual messages sufficiently small.
 *Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.*
 
 [c101]: https://www.crypto101.io
+[ttp]: https://www.cs.jhu.edu/~jason/papers/mason+al.ccs06.pdf
 [rog06]: http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf
 [siv]: http://web.cs.ucdavis.edu/~rogaway/papers/siv.pdf
 [bock16]: https://eprint.iacr.org/2016/475.pdf
