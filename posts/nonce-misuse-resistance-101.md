@@ -66,7 +66,7 @@ see [Mason06][ttp].
 
 ## Protocol design
 
-For many on-like protocols like TLS, the explicit nonce provides a convenient
+For many on-line protocols like TLS, the explicit nonce provides a convenient
 way to securely send many messages under a per-session key. Because the
 critical security property for a nonce is that it is never repeated with the
 same key, it's safe to use a counter. In protocols where both peers send
