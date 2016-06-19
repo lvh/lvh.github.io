@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (cryptography, private)</title><link>https://www.lvh.io/</link><description></description><atom:link type="application/rss+xml" rel="self" href="https://www.lvh.io/categories/cat_cryptography-private.xml"></atom:link><language>en</language><lastBuildDate>Sun, 19 Jun 2016 16:02:36 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (cryptography, private)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/cat_cryptography-private.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 19 Jun 2016 17:30:42 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
 of the pitfalls is that getting it wrong looks exactly like getting it
 right. Much like a latent memory corruption bug or a broken distributed
 consensus algorithm, a piece of cryptographic software can appear to be
@@ -35,11 +35,12 @@ getting it to work at all.&lt;/p&gt;
 be unwieldy because of historical reasons, backwards compatibility, language
 limitations, or even simple oversight. Regardless of why the API is the way it
 is, even minute changes to it—a nicer type, an implied parameter—might have
-subtle but catastrophic consequences for the security of the final product. Is
-an arbitrary-length integer in your programming language interchangeable with
-the implementation in your crypto library? How about just a &lt;code&gt;char *&lt;/code&gt;? Are you
-sure? Is that true for every platform your users will run your software on? Is
-that true in perpetuity?&lt;/p&gt;
+subtle but catastrophic consequences for the security of the final
+product. Figuring out if an arbitrary-length integer in your programming
+language is interchangeable with other representations, like the
+implementation in your crypto library or a &lt;code&gt;char *&lt;/code&gt;, has many complex
+facets. It doesn't just have to be true under some conditions; ideally it's
+true for every platform your users will run your software on, in perpetuity.&lt;/p&gt;
 &lt;p&gt;There might be an easy workaround to an annoying API. C APIs often take a
 &lt;code&gt;char *&lt;/code&gt; together with a length parameter, because C doesn't have a standard
 way of passing a byte sequence together with its length. Most higher level

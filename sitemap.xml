@@ -7,11 +7,11 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://www.lvh.io/2010/index.html</loc>
-  <lastmod>2016-06-19T16:02:00Z</lastmod>
+  <lastmod>2016-06-19T17:30:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2011/index.html</loc>
-  <lastmod>2016-06-19T16:02:00Z</lastmod>
+  <lastmod>2016-06-19T17:30:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/2013/index.html</loc>
@@ -27,7 +27,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/2016/index.html</loc>
-  <lastmod>2016-06-19T16:02:00Z</lastmod>
+  <lastmod>2016-06-19T17:30:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/about.html</loc>
@@ -43,11 +43,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/categories/cat_cryptography-private.html</loc>
-  <lastmod>2016-06-19T16:02:00Z</lastmod>
- </url>
- <url>
-  <loc>https://www.lvh.io/categories/cat_cryptography.html</loc>
-  <lastmod>2016-06-18T23:29:00Z</lastmod>
+  <lastmod>2016-06-19T17:30:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/clojure.html</loc>
@@ -56,14 +52,6 @@
  <url>
   <loc>https://www.lvh.io/categories/crypto.html</loc>
   <lastmod>2016-06-04T06:36:00Z</lastmod>
- </url>
- <url>
-  <loc>https://www.lvh.io/categories/cryptography-private.html</loc>
-  <lastmod>2016-06-18T20:45:00Z</lastmod>
- </url>
- <url>
-  <loc>https://www.lvh.io/categories/cryptography.html</loc>
-  <lastmod>2016-06-14T04:52:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/css.html</loc>
@@ -147,7 +135,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/index.html</loc>
-  <lastmod>2016-06-19T16:02:00Z</lastmod>
+  <lastmod>2016-06-19T17:30:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html</loc>
@@ -278,10 +266,6 @@
   <lastmod>2016-04-30T16:10:00Z</lastmod>
  </url>
  <url>
-  <loc>https://www.lvh.io/posts/crypto-api-tradeoffs-and-jvm-byte-types.html</loc>
-  <lastmod>2016-06-18T20:45:00Z</lastmod>
- </url>
- <url>
   <loc>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</loc>
   <lastmod>2016-04-30T16:10:00Z</lastmod>
  </url>
@@ -343,7 +327,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</loc>
-  <lastmod>2016-06-19T16:02:00Z</lastmod>
+  <lastmod>2016-06-19T17:30:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/updated-gpg-key.html</loc>
