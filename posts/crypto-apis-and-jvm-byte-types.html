@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<base href="https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crypto APIs and JVM byte types | lvh</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Crypto APIs and JVM byte types">
+<meta property="og:url" content="https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html">
+<meta property="og:description" content="The JVM has several standard byte types. For in-memory cryptography purposes
+(specifically, one-shot APIs), the two most relevant ones are byte arrays and
+java.nio.ByteBuffer. Unfortunately, picking b">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2016-06-18T13:43:30-07:00">
+<meta property="article:tag" content="cryptography">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://www.lvh.io/">
+                <img src="../pinchy.svg" alt="lvh" id="logo"><span id="blog-title">lvh</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../about.html">About</a>
+                </li>
+<li>
+<a href="../archive.html">Archive</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../talks.html">Talks</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS feed</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="https://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="crypto-apis-and-jvm-byte-types.md" id="sourcelink">Source</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Crypto APIs and JVM byte types</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    lvh
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2016-06-18T13:43:30-07:00" itemprop="datePublished" title="2016-06-18 13:43">2016-06-18 13:43</time></a></p>
+            
+        <p class="sourceline"><a href="crypto-apis-and-jvm-byte-types.md" id="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>The JVM has several standard byte types. For in-memory cryptography purposes
+(specifically, one-shot APIs), the two most relevant ones are byte arrays and
+<code>java.nio.ByteBuffer</code>. Unfortunately, picking between them isn't easy, because
+they have different pros and cons:</p>
+<p><code>ByteBuffer</code> can produce slices of itself and slices of byte arrays with
+zero-copy semantics. This makes it the API you want to use if you want to
+place an encrypted message in a pre-allocated binary format, say, if you're
+designing <a href="https://github.com/lvh/caesium/blob/master/src/caesium/magicnonce/secretbox.clj">nonce-misuse resistant APIs</a>). It is also useful for
+generating more than one key out of a single call to a KDF with an unusually
+long output.</p>
+<p>Byte arrays are easily serializable, but <code>ByteBuffer</code> is not. This results in
+at least some (possibly unnecessary) copying during serialization, unless your
+serialization library .</p>
+<p>Byte arrays are constant length, and that length is stored on the array, so
+it's cheap and easy to find. Figuring out how much to read from a <code>ByteBuffer</code>
+requires a (trivial) amount of math, but that might not be constant time.</p>
+<p><code>ByteBuffer</code> has a public API for allocating direct buffers; unlike byte
+arrays. Direct buffers are interesting because they are not managed by the
+JVM, meaning they won't be copied around by the garbage collector, and memory
+pinning is free. This means they can be securely zeroed out after
+use. Directly-allocated <code>ByteBuffer</code> instances might have underlying arrays,
+so going back to an array <em>might</em> be zero-copy. In my experiments, these byte
+buffers never have underlying arrays, implying copying. The <code>sun.misc.Unsafe</code>
+class does have options for allocating memory directly; but it's pretty clear
+that use of that class is strongly discouraged.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/cryptography.html" rel="tag">cryptography</a></li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36779422-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

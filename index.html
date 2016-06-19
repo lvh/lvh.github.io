@@ -10,8 +10,8 @@
 <meta content="#5670d4" name="theme-color">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://www.lvh.io/index.html">
-<link rel="next" href="index-4.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/nonce-misuse-resistance-101.html" type="text/html">
+<link rel="next" href="index-5.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/tradeoffs-in-cryptographic-api-design.html" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -72,7 +72,96 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/nonce-misuse-resistance-101.html" class="u-url">Nonce misuse resistance 101</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/tradeoffs-in-cryptographic-api-design.html" class="u-url">Tradeoffs in cryptographic API design</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/tradeoffs-in-cryptographic-api-design.html" rel="bookmark"><time class="published dt-published" datetime="2016-06-18T13:45:35-07:00" title="2016-06-18 13:45">2016-06-18 13:45</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Producing cryptographic software is a difficult and specialized endeavor. One
+of the pitfalls is that getting it wrong looks exactly like getting it
+right. Much like a latent memory corruption bug or a broken distributed
+consensus algorithm, a piece of cryptographic software can appear to be
+functioning perfectly, while being subtly broken in a way that only comes to
+light years later. As the adage goes, attacks never get worse; they only get
+better. Implementation concerns like timing attacks can be fiendishly
+complicated to solve, involving problems like division instructions on modern
+Intel CPUs taking a variable number of cycles depending on the size of the
+input. Implementation concerns aren't the only problem; just designing the
+APIs themselves is a complex task as well.</p>
+<p>Like all API design, cryptographic API design is a user experience
+exercise. It doesn't matter how strong or fast your cryptographic software is
+if no one uses it. The people who end up with ECB mode didn't end up with it
+because they understood what that meant. They got stuck with it because it was
+the default and it didn't require thinking about scary parameters like IVs,
+nonces, salts and tweaks. Even if someone ended up with CTR or CBC, these APIs
+are still precarious; they'll still be vulnerable to issues like nonce
+reuse, fixed IV, key-as-IV, unauthenticated encryption...</p>
+<p>User experience design always means deep consideration for who your users
+are. A particular API might be necessary for a cryptographic engineer to build
+new protocols, but that API is probably not a reasonable default encryption
+API. An explicit-nonce encryption scheme is great for a record layer protocol
+between two peers like TLS, but it's awful for someone trying to encrypt a
+session cookie. We can't keep complaining about people getting it wrong when
+we keep giving them no chances at getting it right. This is why I'm building
+educational material like <a href="https://www.crypto101.io/">Crypto 101</a> and care about cryptography
+like <a href="posts/nonce-misuse-resistance-101.html">nonce-misuse resistance</a> that's easier to use correctly.  (The blog
+post on my new nonce-misuse resistant schemes for libsodium is coming soon, I
+promise!)</p>
+<p>Before you can make your API easy to use, first you have to worry about
+getting it to work at all.</p>
+<p>An underlying cryptographic library might expose an unfortunate API. It might
+be unwieldy because of historical reasons, backwards compatibility, language
+limitations, or even simple oversight. Regardless of why the API is the way it
+is, even minute changes to it—a nicer type, an implied parameter—might have
+subtle but catastrophic consequences for the security of the final product. Is
+an arbitrary-length integer in your programming language interchangeable with
+the implementation in your crypto library? How about just a <code>char *</code>? Are you
+sure? Is that true for every platform your users will run your software on? Is
+that true in perpetuity?</p>
+<p>There might be an easy workaround to an annoying API. C APIs often take a
+<code>char *</code> together with a length parameter, because C doesn't have a standard
+way of passing a byte sequence together with its length. Most higher level
+languages, including Java and Python, have byte sequence types that know their
+own length, so you can specify the <code>char *</code> and its associated length in a
+single parameter on the high-level side; that's just the moral equivalent of
+building a small C struct that holds both. (Whether or not you can trust C
+compilers to get anything right at all is a point of contention.)</p>
+<p>These problems compound when you are binding libraries in languages with
+wildly different semantics. One example is relocating garbage collectors;
+pointers stay put in C, but objects move around all the time in environments
+like the JVM (HotSpot) or PyPy. That implies copying to or from a buffer
+whenever you call C code, unless the underlying virtual machine supports
+"memory pinning": forcing the object to stay put for the duration of the call.</p>
+<p>Programmers normally operate in a drastically simplified model of the
+world. We praise programming designs for their ability to separate concerns,
+so that programmers can deal with one problem at a time. The modern CPU your
+code runs on is always an intricate beast, but you don't worry about cache
+lines when you're writing a Python program. Only a fraction of programmers
+ever has to worry about them at all. Those that do typically only do so after
+the program already works, so they can still focus on one part of the problem.</p>
+<p>When designing cryptographic software, these simplified models we normally
+program in don't generally work.  A cryptographic engineer often needs to
+worry about concerns all the way up and down the stack simultaneously: from
+application layer concerns, to runtime semantics like the
+<a href="https://docs.oracle.com/javase/specs/jls/se8/html/index.html">Java Language Specification</a>, to FFI sementics and the C ABI on all
+relevant platforms, to the underlying CPU, to the mathematical underpinnings
+themselves. All of which often while being hamstrung by flawed designs like
+TLS' MAC-then-pad-then-encrypt mess.</p>
+<p>In future blog posts, I'll go into more detail about particular cryptographic
+API design concerns, starting with JVM byte types. If you're interested, you
+should <a href="https://twitter.com/lvh">follow me on Twitter</a> or <a href="rss.xml">subscribe to my blog's feed</a>.</p>
+<p><em>Footnote:</em>
+I'm happy to note that <a href="https://bitbucket.org/cffi/cffi/commits/61e03368485cb78471f701adbfd1bde69a6eaa31">cffi</a> now also has support for memory
+pinning since PyPy will support it in the upcoming 5.2 release; although that
+means I'll no longer be able to make <a href="https://github.com/reaperhulk">Paul of PyCA fame</a> jealous with
+the pinning support in <a href="https://github.com/lvh/caesium">caesium</a>.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/nonce-misuse-resistance-101.html" class="u-url">Nonce misuse resistance 101</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
                 lvh
@@ -1074,334 +1163,14 @@ people feel sad. I feel like those points generalize to all attack
 talks; are they just not that useful?</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program.html" class="u-url">Everything I've learned about running a financial aid program</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program.html" rel="bookmark"><time class="published dt-published" datetime="2015-04-25T21:08:36-07:00" title="2015-04-25 21:08">2015-04-25 21:08</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>For the past two years, I've been running PyCon's financial aid
-program. Starting this year, the event coordinator has asked all staff
-members to document what they do for PyCon. Firstly, this helps to
-objectively recognize the hard work done by our (volunteer) staff, and
-to help make sure there is continuity when the time comes to pass the
-torch. Since organizers of other conferences have expressed interest
-in my opinions for creating their own financial aid programs, I am
-posting my notes publicly instead.</p>
-<p>This is a collection of hard-earned opinions, and is very much work in
-progress. It's written as if it were a conversation with a
-hypothetical financial aid organizer; so, whenever I say "you", I mean
-you, the awesome person running financial aid at a conference
-somewhere.</p>
-<h2>Basics</h2>
-<p>Financial aid programs are one of the most effective ways a software
-foundation can spend their money. Even if you completely ignore the
-effect it has on diversity, the number of speakers, sprinters and
-other contributors that attended PyCon thanks to the financial aid
-program is staggering.</p>
-<h3>Naming your program</h3>
-<p>I inherited the term "Financial Aid". It's a fine term, but some other
-conferences have come up with different terms that you may want to
-consider, like "opportunity grants" and "diversity grants".</p>
-<h3>Taking care of yourself</h3>
-<p>Running a financial aid program is a lot of work. It scales linearly
-with the number of applicants; it's your job to create a process that
-keeps the work per applicant small, so that you can make the number of
-applicants large. (You'll know you've succeeded when the fixed
-overhead dominates, and it wouldn't really matter if you added another
-dozen people.)</p>
-<p>It is also an exercise in deferred gratification. Typically, you will
-need to start preparing about a year before the conference. The
-gratification part only comes at the conference itself. Since you'll
-probably be quite busy as an organizer, it may only come after the
-conference is over. You probably want to make sure that you have an
-excellent social circle and that you're fairly self-motivated.</p>
-<p>As the Financial Aid Chair, I have been on the receiving end of verbal
-abuse once. Don't put up with it.</p>
-<h3>Beat the drum</h3>
-<p>Your financial aid program is useless if people don't know about it.</p>
-<p>Some very talented speakers refrain from sending talk proposals
-because they don't know if they can afford to attend.</p>
-<h3>Numbers</h3>
-<p>PyCon's financial aid program is quite large. There are a number of
-reasons for that:</p>
-<ul>
-<li>PyCon's financial aid program has been around for many years, so
-  it's quite mature.</li>
-<li>The program can count on support from PyCon leadership and the
-  Python Software Foundation.</li>
-<li>Because PyCon US is the largest PyCon in the world, it acts as a
-  nexus for people across the globe; therefore, it's important for the
-  Python community that as many people as possible have a chance to
-  attend.</li>
-</ul>
-<p>This is just to give you a ballpark idea of our numbers.</p>
-<p>Regardless of what your numbers will be, expect that the primary
-bottleneck of your financial aid program will simply be lack of funds.</p>
-<h2>Confusing parts and sad truths</h2>
-<h3>No-shows</h3>
-<p>A lot of people will not show up, and not notify you (or notify you in
-the days around the conference). Sometimes, there's good reasons
-(illness, emergencies...). Sometimes, the reasons are less
-great. Sometimes, you won't know the reason.</p>
-<p>From the perspective of the Financial Aid Chair, no-shows are
-terrible. It's a dead grant: money that's been allocated that can't
-easily be translated into an extra attendee. Hence, many of the
-suggestions I make for running financial aid processes are focused on
-minimizing no-shows.</p>
-<h3>Visas and travel</h3>
-<p>Many recipients have to cancel because they are unable to acquire
-visas to Canada or the United States. In some cases, the visa process
-took several months and simply did not complete in time for the
-conference. In others the visas were declined for various reasons.</p>
-<p>Occam's razor tells me that many countries, particularly the United
-States, to some extent now Canada, but also Schengen zone countries
-are simply actively hostile to foreigners visiting their country.</p>
-<h2>Planning</h2>
-<h3>Stand by your Chair</h3>
-<p>At the end of the day, someone's responsible for making your
-conference all it can be. That position is typically called the
-Conference Chair. They get help from teams like the Program Committee
-and Financial Aid to make that happen. At the end of the day they make
-the hard calls, and you have to execute within their guidelines. That
-typically includes the budget, but it also includes how you want to
-allocate grants. You will almost certainly be resource-constrained, so
-there are trade-offs to be made:</p>
-<ul>
-<li>Do you want to help newbies, or advanced programmers?</li>
-<li>Do you want to help marginalized groups? Which ones? How much?</li>
-<li>Do you want repeat attendees, or first timers?</li>
-<li>Do you want a few people from all over the globe, or many locals?</li>
-<li>Do you want to benefit people who directly contribute to the
-  conference? Which ones (speakers, staff...)? How much?</li>
-<li>Do we care if people are receiving funds from other places? What if
-  their employer is paying? What if their employer is also a sponsor?
-  Does it make sense for them to give us <em>x</em> sponsorship fees when
-  we're giving them a significant portion of that back in financial
-  aid?</li>
-</ul>
-<p>Your budget is, unfortunately, zero sum. Every group you benefit means
-less for everyone else. Helping everyone is the same as helping
-no-one. Everyone wants to help everyone, but it's unlikely you'll get
-to do that. Make everyone understands exactly what you want to
-accomplish; you don't want to have this argument in the middle of
-trying to run a financial aid process.</p>
-<h3>Free or reduced-price tickets</h3>
-<p>For many conferences, the tickets themselves can be quite
-expensive. It makes sense to provide them to financial aid recipients
-at no (or reduced) charge as part of their grant.</p>
-<p>PyCon previously provided free registration, but now provides
-reduced-cost registration. This helps with no-shows, giving
-applicants a financial incentive to let you know if they can't attend.</p>
-<p>Make sure that you document clearly that people will be receiving
-tickets, at what price they'll be receiving them, and that their spots
-are reserved. Common concerns from financial aid applicants:</p>
-<ul>
-<li>"Your conference blog says that you're sold out, and I haven't
-  received financial aid yet. Will I be able to attend?"</li>
-<li>"I've already registered to reserve my spot; what do I do now that I
-  get financial aid?"</li>
-<li>"I'm a student. Will I still be able to register at the student rate
-  if I apply for financial aid?"</li>
-<li>"I applied for a larger amount because I didn't think ticket price
-  would be included." (Unfortunately, most people tell you this far
-  too late.)</li>
-</ul>
-<p>As usual, clarity in communication is key here.</p>
-<p>Previous years, PyCon optionally provided free registration for people
-who asked. This optional part was somewhat confusing. Whatever you do,
-make it part of the default grant application. That also means that
-you should probably offer the reduced-price ticket to anyone who
-applies for financial aid, even if you can't otherwise give them a
-grant. Otherwise, someone who applies for financial aid for whom you
-simply don't have enough funds will get punished twice: no financial
-aid, and no access to early bird ticket price.</p>
-<h3>Housing</h3>
-<p>Housing, in the context of financial aid, means that you pay for a
-bunch of hotel rooms for various dates at your conference, and then
-put financial aid recipients in them. To save costs, you want to pair
-them up, and you want to utilize the rooms maximally.</p>
-<p>Some people think that it's a good idea to organize housing as part of
-your travel grants. Those people are mistaken. Housing is a terrible
-idea all round:</p>
-<ul>
-<li>It doesn't scale, up or down. If you're small, you can't negotiate a
-  worthwhile hotel block contract. If you're big, the system crashes
-  under its /O(N²)/ weight (see below).</li>
-<li>It's not good for the financial aid recipients. While there are many
-  nice things to be said about conference hotels, they are typically
-  not economical. When we still organized housing, many financial aid
-  recipients opted out: they could get significantly more bang for
-  their buck otherwise.</li>
-<li>It's not good for the conference. People leave, people join, people
-  change dates, people have preferences (or hard constraints) about
-  who they'll stay with... Doing this for any nontrivial number of
-  people is a logistic nightmare; doing it for trivial number of
-  people isn't worth it.</li>
-</ul>
-<p>Having humans solve the allocation problem produces inefficiencies at
-larger scales (i.e. humans typically come up with fairly suboptimal
-solutions). It's a pretty tricky problem to solve even with computers
-(believe me, I've <a href="https://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html">tried</a> <a href="http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html">extensively</a>), but computers
-will never solve the logistic issues caused by human factors.</p>
-<p>PyCon used to manage housing for financial aid recipients. Getting rid
-of this was the single best decision I've ever made for the financial
-aid process.</p>
-<p>It worked out quite well for the attendees too. Providing simple tools
-(i.e. the equivalent of a classifieds section) is more than ample to
-help people find great groups to room-share with. This <em>increased</em>
-opportunities for roomsharing, because it made it much less of a
-hassle to mix-and-match between financial aid recipients and other
-attendees.</p>
-<p>Plenty of FA people stayed in large AirBnBs or the like in groups of 6
-or more, and ended up getting fantastic deals that allowed them to
-stay an extra few days to attend other events like sprints and
-tutorials.</p>
-<h2>Before the conference: from applications to allocation</h2>
-<h3>Applications</h3>
-<p>Keep it simple. Use a form generator (Google Forms or Wufoo or
-something) for data collection. All of the processing was done with
-simple Python scripts, most of it in an IPython/Jupyter notebook. This
-enables you to create well-documented processes, which helps
-everyone. CSV files are your best friend.</p>
-<p>Make as many fields on the application form as possible directly
-translatable to something in your allocation process. Multiple choice
-and boolean values are your friend; the review process will make sure
-the applications are accurate. Have free-form fields for documenting
-things, but only use them in the review process. For example, you can
-have a multiple choice field for Python expertise ranging from
-beginner to expert, and then have a free-form field for applicants'
-portfolios.</p>
-<p>Names are weird. There are lots of falsehoods programmers believe
-about names <a href="http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/">(link)</a>. You probably want to ask for a legal
-name; it's quite likely that you need to keep the legal name around
-for your records. Ask a lawyer and/or an accountant for
-details. However, you probably want to ask for an (optional) preferred
-name as well, which you should always use when communicating with
-them. There's a bunch of reasons those might be different, and people
-may have excellent reasons for not using their legal names. For
-example, a legal name might give someone away as being
-transgender. Sometimes, you want to do that just for your /own/
-convenience. People will put all sorts of stuff down as their "name",
-but full legal names are quite consistent. This can be useful to match
-up records from different sources, such as your registration database.</p>
-<p>Speaking of gender, asking for people's gender is also tricky. Make
-sure you have at least a cursory understanding of how gender works
-before you ask. Always have a "decline to answer" button, which is
-distinct from "other/nonbinary". If all you really want to know is
-whether someone qualifies for earmarked funds, just ask the specific
-question you want to know; e.g. "Apply for a PyLadies grant (people
-who self-identify as women only, please)".</p>
-<p>As usual in programming, state is the bane of your existence. Keep it
-in one place whenever possible. A (Google Drive) spreadsheet works
-just fine. Your scripts should operate on data extracted from them
-(again, CSV works fine), but not store any state. This is trickier
-than it sounds, but the alternative is that you'll probably end up
-destroying some data.</p>
-<h3>Review</h3>
-<p>Reviews are easy to do in parallel, so get help from volunteers if
-needed. Establish clear guidelines for what your discrete values
-(e.g. Python experience) mean; not everyone agrees on what "expert"
-means.</p>
-<h3>Allocation</h3>
-<p>I've <a href="https://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html">written about allocation before</a>.</p>
-<p>PyCon allocates approximately 15% over budget; i.e. the budget that we
-allocate is 1.15x the actual grant budget. This does not include aid
-in the form of e.g. reduced ticket prices; remember to account for
-those separately!</p>
-<p>PyCon's no-show rate is somewhere between 10% and 20%, but it's very
-hard to predict if the factors that contribute to that will affect
-your conference equally.</p>
-<p>As mentioned in that previous blog post, you don't always want to
-allocate the full grant asked for. People will still be able to attend
-with partial grants but typically wouldn't with an empty
-grant. Therefore it typically makes sense to reduce everyone's grant
-slightly if that allows you to provide more grants.</p>
-<p>We ended up going with a fairly simple "flood fill" algorithm. An
-applicant's score maps to a fraction of the budget:</p>
-<p>$$f_i = \frac{s_i}{\sum_j s_j}$$</p>
-<p>Where \(f_i\) is the fraction of the budget you're willing to assign
-to applicant \(i\), \(s_i\) is an applicant's score.</p>
-<p>If \(f_i \ge q \cdot r_i\) (where \(q\) is the fraction of the
-grant you're willing to allocate and \(r_i\) is what the applicant
-requested, you grant them \(q \cdot r_i\); otherwise, grant them 0.</p>
-<p>Some applicants will be below this fraction, some will be above. They
-could be below this fraction because they have a very high score
-(e.g. they are a speaker), or because they're "low hanging fruit" and
-not asking for very much money.</p>
-<p>That means that if you run the algorithm again, the fractions will be
-bigger; the people that received allocations in the previous round
-were allocated less than what would've been their "fair share". Rinse,
-repeat until you're out of money.</p>
-<h2>Communications</h2>
-<p>Have a central website where people can see their current status and
-updates, both specific to the applicant and generic to the entire
-process. Training people to expect information there will drastically
-reduce the number of repetitive questions you get to answer by e-mail,
-which will contribute enormously to your happiness. Therefore, if
-people ask questions that are answered there; answer, be kind, but
-point out where they could have gotten that information from.</p>
-<p>Most of the things you will have to say will be generic points about
-the process. Nonetheless, I have spent huge amounts of time answering
-individual questions about that generic process, which got get quite
-tedious. Hence, even a static page that doesn't show any information
-specific to the applicant, but just explaining the process in detail
-is extremely valuable.</p>
-<p>Being up-front about how your process works is also great for
-prospective applicants who wouldn't feel comfortable asking. This also
-attracts speakers to submit talk proposals; many speakers would not
-propose a talk because they know they can't afford to come without
-financial aid. Therefore, it's important to communicate clearly if you
-intend to support speakers, both through your financial aid
-communication and your call for papers.</p>
-<p>Once that fails, send e-mail. Once you're over a dozen or so
-recipients, use <a href="http://www.mailgun.com/">Mailgun</a>. Emails
-particularly automated from your personal email account is a good way
-to get stuck in spam filters.</p>
-<h2>Disbursement (giving out money)</h2>
-<p>First off, talk to your treasurer. Possibly talk to a lawyer,
-too. It's quite possible, particularly if you're in the United States,
-that giving out a bunch of money as a non-profit comes with some
-fairly complex strings attached. For example, you probably have
-certain standards in terms of what records you have to keep.</p>
-<p>As a European, I found it somewhat comical to still see checks in
-active use, but hey; it works. For many parts of the world (apparently
-not the United States, though) wire transfers are how you send money
-to people. PayPal seems to work better for larger, established
-organizations that use it often. There is less of a problem with the
-accounts or funds being frozen. It does actively restrict (or, perhaps
-more accurately, enforces restrictions on) sending funds to certain
-countries, including Brazil and India.</p>
-<p>Cash works, but is hard to scale. With PyCon's budget of well over
-$100,000.00, managing cash is clearly less than ideal.</p>
-<p>At the end of the day, be pragmatic. Do whatever your recipients can
-accept. Be sure to ask ahead of time, as your financial aid programs
-may prove to be successful in bringing people in from very different
-countries, with very different cultures and very different means
-available to them for accepting your grant. This is the case for
-PyCon, but I consider that a superb problem to have.</p>
-<h2>Conclusion</h2>
-<p>I'd like to thank the following people in no particular order:</p>
-<ul>
-<li>Ewa Jodlowska, for managing PyCon and being the love of my life</li>
-<li>Van Lindberg, for continuously inspiring me to serve</li>
-<li>Diana Clarke, for Charing PyCon US in Montreal</li>
-</ul>
-</div>
-    </div>
     </article>
 </div>
 
         <nav class="postindexpager"><ul class="pager">
 <li class="next">
-                <a href="index-4.html" rel="next">Older posts</a>
+                <a href="index-5.html" rel="next">Older posts</a>
             </li>
-        </ul></nav><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script><script type="text/x-mathjax-config">
-            MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
-            </script>
+        </ul></nav>
 </div>
         <!--End of body content-->
 
