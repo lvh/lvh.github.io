@@ -30,17 +30,17 @@ nonces, salts and tweaks. Even if someone ended up with CTR or CBC, these APIs
 are still precarious; they'll still be vulnerable to issues like nonce
 reuse, fixed IV, key-as-IV, unauthenticated encryption...
 
-User experience design always means deep consideration for who your users
+User experience design always means deep consideration of who your users
 are. A particular API might be necessary for a cryptographic engineer to build
 new protocols, but that API is probably not a reasonable default encryption
 API. An explicit-nonce encryption scheme is great for a record layer protocol
 between two peers like TLS, but it's awful for someone trying to encrypt a
 session cookie. We can't keep complaining about people getting it wrong when
 we keep giving them no chances at getting it right. This is why I'm building
-educational material like [Crypto 101][crypto101] and care about cryptography
-like [nonce-misuse resistance][nmr] that's easier to use correctly.  (The blog
-post on my new nonce-misuse resistant schemes for libsodium is coming soon, I
-promise!)
+educational material like [Crypto 101][crypto101] and why I care about
+cryptography like [nonce-misuse resistance][nmr] that's easier to use
+correctly.  (The blog post on my new nonce-misuse resistant schemes for
+libsodium is coming soon, I promise!)
 
 Before you can make your API easy to use, first you have to worry about
 getting it to work at all.
@@ -53,24 +53,25 @@ subtle but catastrophic consequences for the security of the final
 product. Figuring out if an arbitrary-length integer in your programming
 language is interchangeable with other representations, like the
 implementation in your crypto library or a `char *`, has many complex
-facets. It doesn't just have to be true under some conditions; ideally it's
+facets. It doesn't just have to be true under some conditions; ideally, it's
 true for every platform your users will run your software on, in perpetuity.
 
 There might be an easy workaround to an annoying API. C APIs often take a
 `char *` together with a length parameter, because C doesn't have a standard
 way of passing a byte sequence together with its length. Most higher level
 languages, including Java and Python, have byte sequence types that know their
-own length, so you can specify the `char *` and its associated length in a
-single parameter on the high-level side; that's just the moral equivalent of
-building a small C struct that holds both. (Whether or not you can trust C
+own length. Therefore, you can specify the `char *` and its associated length
+in a single parameter on the high-level side. That's just the moral equivalent
+of building a small C struct that holds both. (Whether or not you can trust C
 compilers to get anything right at all is a point of contention.)
 
-These problems compound when you are binding libraries in languages with
-wildly different semantics. One example is relocating garbage collectors;
-pointers stay put in C, but objects move around all the time in environments
-like the JVM (HotSpot) or PyPy. That implies copying to or from a buffer
-whenever you call C code, unless the underlying virtual machine supports
-"memory pinning": forcing the object to stay put for the duration of the call.
+These problems compound when you are binding libraries in languages and
+environments with wildly different semantics. For example, your runtime might
+have a relocating garbage collector.  Pointers in C and objects in CPython
+stay put, but objects move around all the time in environments like the JVM
+(HotSpot) or PyPy. That implies copying to or from a buffer whenever you call
+C code, unless the underlying virtual machine supports "memory pinning":
+forcing the object to stay put for the duration of the call.
 
 Programmers normally operate in a drastically simplified model of the
 world. We praise programming designs for their ability to separate concerns,
@@ -86,18 +87,18 @@ worry about concerns all the way up and down the stack simultaneously: from
 application layer concerns, to runtime semantics like the
 [Java Language Specification][jls], to FFI sementics and the C ABI on all
 relevant platforms, to the underlying CPU, to the mathematical underpinnings
-themselves. All of which often while being hamstrung by flawed designs like
-TLS' MAC-then-pad-then-encrypt mess.
+themselves. The engineer has to manage all of those, often while being
+hamstrung by flawed designs like TLS' MAC-then-pad-then-encrypt mess.
 
 In future blog posts, I'll go into more detail about particular cryptographic
 API design concerns, starting with JVM byte types. If you're interested, you
 should [follow me on Twitter][twitter] or [subscribe to my blog's feed][rss].
 
-*Footnote:*
-I'm happy to note that [cffi][cffi-pinning] now also has support for memory
-pinning since PyPy will support it in the upcoming 5.2 release; although that
-means I'll no longer be able to make [Paul of PyCA fame][paul] jealous with
-the pinning support in [caesium][caesium].
+*Footnote:* I'm happy to note that [cffi][cffi-pinning] now also has
+support for memory pinning since PyPy will support it in the upcoming
+5.2 release, although that means I'll no longer be able to make
+[Paul Kehrer of PyCA fame][paul] jealous with the pinning support in
+[caesium][caesium].
 
 [nmr]: /posts/nonce-misuse-resistance-101.html
 [crypto101]: https://www.crypto101.io/
