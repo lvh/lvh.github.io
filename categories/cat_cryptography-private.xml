@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (cryptography, private)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/cat_cryptography-private.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 20 Jun 2016 15:06:05 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>lvh (cryptography, private)</title><link>https://www.lvh.io/</link><description></description><atom:link rel="self" type="application/rss+xml" href="https://www.lvh.io/categories/cat_cryptography-private.xml"></atom:link><language>en</language><lastBuildDate>Mon, 20 Jun 2016 15:07:35 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
 of the pitfalls is that getting it wrong looks exactly like getting it
 right. Much like a latent memory corruption bug or a broken distributed
 consensus algorithm, a piece of cryptographic software can appear to be
@@ -62,7 +62,7 @@ so that programmers can deal with one problem at a time. The modern CPU your
 code runs on is always an intricate beast, but you don't worry about cache
 lines when you're writing a Python program. Only a fraction of programmers
 ever has to worry about them at all. Those that do typically only do so after
-the program already works, so they can still focus on one part of the problem.&lt;/p&gt;
+the program already works so they can still focus on one part of the problem.&lt;/p&gt;
 &lt;p&gt;When designing cryptographic software, these simplified models we normally
 program in don't generally work.  A cryptographic engineer often needs to
 worry about concerns all the way up and down the stack simultaneously: from
