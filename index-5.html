@@ -73,7 +73,85 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program.html" class="u-url">Everything I've learned about running a financial aid program</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/call-for-proposal-proposals.html" class="u-url">Call for proposal proposals</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/call-for-proposal-proposals.html" rel="bookmark"><time class="published dt-published" datetime="2015-06-13T10:07:13-07:00" title="2015-06-13 10:07">2015-06-13 10:07</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>I'm excited to announce that I was invited to speak at PyCon
+PL. Hence, I'm preparing to freshen up my arsenal of talks for the
+coming year. The organizers have very generously given me a lot of
+freedom regarding what to talk about.</p>
+<p>I'd like to do more security talks as well as shift focus towards a
+more technical audience, going more in-depth and touching on more
+advanced topics.</p>
+<h2>Candidates</h2>
+<h3>Object-capability systems</h3>
+<p>Capabilities are a better way of thinking about authorization. A
+capability ("cap") gives you the authority to perform some action,
+without giving you any other authority. Unlike role-based access
+control systems, capability based systems nearly always fail-closed;
+if you don't have the capability, you simply don't have enough
+information to perform an action. Contrast this with RBAC systems,
+where authorization constraints are enforced with pinky swears, and
+therefore often subverted.</p>
+<p>I think I can make an interesting case for capability systems to any
+technical audience with some professional experience. Just talk about
+secret management, and how it's nearly always terrifying! This gives
+me an opportunity to talk about <a href="https://github.com/lvh/icecap"><code>icecap</code></a>
+(<a href="https://github.com/lvh/icecap/wiki/Introduction">docs</a>) and <a href="https://github.com/lvh/shimmer"><code>shimmer</code></a> (<a href="https://www.lvh.io/posts/securing-apis-with-shims.html">blog</a>,
+my favorite pastimes.</p>
+<h3>Putting a backdoor in <code>RDRAND</code>
+</h3>
+<p>I've <a href="https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html">blogged about this before</a> before, but I think I
+could turn it into a talk. The short version is that Linux's PRNG
+mixes in entropy from the <code>RDRAND</code> in a way that would allow a
+malicious implementation to control the output of the PRNG in ways
+that would be indistinguishable to a (motivated) observer.</p>
+<p>As a proof of concept, I'd love to demo the attack, either in software
+(for example, with QEMU) or even in hardware with an open core. I
+could also go into the research that's been done regarding hiding
+stuff on-die. Unfortunately, the naysayers so far have relied on
+moving the goalposts continuously, so I'm not sure that would convince
+them this is a real issue.</p>
+<h3>Retroreflection</h3>
+<p>An opportunity to get in touch with my languishing inner electrical
+engineer! It turns out that when you zap radio waves at most hardware,
+the reflection gets modulated based on what it's doing right now. The
+concept became known as <a href="https://en.wikipedia.org/wiki/Tempest_%28codename%29">TEMPEST</a>, an NSA program. So far,
+there's little public research on how feasible it is for your average
+motivated hacker. This is essentially <a href="https://en.wikipedia.org/wiki/Van_Eck_phreaking">van Eck phreaking</a>,
+with 2015 tools. There's probably some interesting data to pick off of
+USB HIDs, and undoubtedly a myriad of interesting devices controlled
+by low-speed RS-232. Perhaps wireless JTAG debugging?</p>
+<h2>The unfinished draft bin</h2>
+<h3>Underhanded curve selection</h3>
+<p>Another talk in the underhanded cryptography section I've considered
+would be about underhanded elliptic curve selection. Unfortunately,
+bringing the audience up to speed with the math to get something out
+of it would be impossible in one talk slot. People already familiar
+with the math are also almost certainly familiar with the argument for
+rigid curves.</p>
+<h3>Web app authentication</h3>
+<p>Some folks asked for a tutorial on how to authenticate to web
+apps. I'm not sure I can turn that into a great talk. There's a lot of
+general stuff that's reasonably obvious, and then there's highly
+framework-specific stuff. I don't really see how I can provide a lot
+of value for people's time.</p>
+<h2>Feedback</h2>
+<p><a href="https://twitter.com/dreid">David Reid</a> and <a href="https://twitter.com/DLitz">Dwayne Litzenberger</a> made similar,
+excellent points. They both recommend talking about object-capability
+systems. Unlike the other two, it will (hopefully) actually help
+people build secure software. Also, the other two will just make
+people feel sad. I feel like those points generalize to all attack
+talks; are they just not that useful?</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program.html" class="u-url">Everything I've learned about running a financial aid program</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
                 lvh
