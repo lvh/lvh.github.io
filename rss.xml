@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 11 Jul 2016 21:18:56 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link rel="self" type="application/rss+xml" href="https://www.lvh.io/rss.xml"></atom:link><language>en</language><lastBuildDate>Wed, 13 Jul 2016 03:21:38 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
 post, I'll go into a specific API design case in &lt;a href="https://github.com/lvh/caesium"&gt;&lt;code&gt;caesium&lt;/code&gt;&lt;/a&gt;, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.&lt;/p&gt;
@@ -9,12 +9,11 @@ two most relevant ones are byte arrays (also known as &lt;code&gt;byte[]&lt;/cod
 &lt;code&gt;java.nio.ByteBuffer&lt;/code&gt;.  Unfortunately, they have different pros and cons, so
 there is no unambiguously superior choice.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;ByteBuffer&lt;/code&gt; can produce slices of byte arrays and other byte buffers with
-zero-copy semantics. This makes it the API you want to use if you want to
-place an encrypted message in a pre-allocated binary format. One example of
-this is my &lt;a href="https://github.com/lvh/caesium/blob/master/src/caesium/magicnonce/secretbox.clj"&gt;experimental nonce-misuse resistant suite&lt;/a&gt;. Another
-use case is generating more than one key out of a single call to a key
-derivation function. The call produces one (long) output, and &lt;code&gt;ByteBuffer&lt;/code&gt;
-lets you slice it into different keys.&lt;/p&gt;
+zero-copy semantics. This makes a useful tool when want to place an encrypted
+message in a pre-allocated binary format. One example of this is my
+&lt;a href="https://github.com/lvh/caesium/blob/master/src/caesium/magicnonce/secretbox.clj"&gt;experimental NMR suite&lt;/a&gt;. Another use case is generating more than
+one key out of a single call to a key derivation function. The call produces
+one (long) output, and &lt;code&gt;ByteBuffer&lt;/code&gt; lets you slice it into different keys.&lt;/p&gt;
 &lt;p&gt;Byte arrays are easily serializable, but &lt;code&gt;ByteBuffer&lt;/code&gt; is not. Even if you
 teach your serialization library about &lt;code&gt;ByteBuffer&lt;/code&gt;, this usually results in
 extra copying during serialization.&lt;/p&gt;
@@ -24,40 +23,40 @@ requires a (trivial) amount of math by calling &lt;code&gt;remaining&lt;/code&gt
 the &lt;code&gt;ByteBuffer&lt;/code&gt; is a view, and it can be looking at a different part of the
 underlying memory at different times. For a byte array, this is all fixed: a
 byte array's starting and stopping points remain constant. Computing the
-remaining length of a &lt;code&gt;ByteBuffer&lt;/code&gt; may not always be constant time, although
-it probably is. Even if it isn't, it's probably not in a way that is relevant
-to the security of the scheme (in &lt;code&gt;caesium&lt;/code&gt;, only cryptographic hashes,
-detached signatures and detached MACs don't publicly specify the message
-length).&lt;/p&gt;
+remaining length of a &lt;code&gt;ByteBuffer&lt;/code&gt; may not always be constant time (although
+it probably is). Even if that computation isn't constant time, that probably
+does not have significant security consequences: in &lt;code&gt;caesium&lt;/code&gt;, only
+cryptographic hashes, detached signatures and detached MACs don't publicly
+specify the message length.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;ByteBuffer&lt;/code&gt; has a public API for allocating &lt;em&gt;direct&lt;/em&gt; buffers. This means they
-are not managed by the JVM, meaning they won't be copied around by the garbage
-collector and memory pinning is free. "Memory pinning" means that you notify
-the JVM that some external C code is using this object, and so it should not
-be moved around or garbage collected until that code is done using that
-buffer. You can't pass "regular" (non-direct) buffers to C code; when you do
+are not managed by the JVM. Therefore they won't be copied around by the
+garbage collector, and memory pinning is free. "Memory pinning" means that you
+notify the JVM that some external C code is using this object, so it should
+not be moved around or garbage collected until that code is done using that
+buffer. You can't pass "regular" (non-direct) buffers to C code. When you do
 that, the buffer is first copied under the hood. Directly allocated buffers
-let you securely manage the entire lifecycle of the buffer, for example, they
+let you securely manage the entire lifecycle of the buffer. For example, they
 can be securely zeroed out after use. Directly allocated &lt;code&gt;ByteBuffer&lt;/code&gt;
 instances might have underlying arrays; this is explicitly unspecified.
 Therefore, going back to an array &lt;em&gt;might&lt;/em&gt; be zero-copy. In my experiments,
 these byte buffers never have underlying arrays, so copying is always
-required. I have not yet done further research if this generally the case. In
-addition to &lt;code&gt;ByteBuffer&lt;/code&gt;, the&lt;code&gt;sun.misc.Unsafe&lt;/code&gt; class does have options for
-allocating memory directly; but it's pretty clear that use of that class is
-strongly discouraged. Outside of the JDK, the &lt;code&gt;Pointer&lt;/code&gt; API in &lt;code&gt;jnr-ffi&lt;/code&gt; works
-identically to &lt;code&gt;ByteBuffer&lt;/code&gt;.&lt;/p&gt;
+required. I have not yet done further research to determine if this generally
+the case. In addition to &lt;code&gt;ByteBuffer&lt;/code&gt;, the&lt;code&gt;sun.misc.Unsafe&lt;/code&gt; class does have
+options for allocating memory directly, but it's pretty clear that use of that
+class is strongly discouraged. Outside of the JDK, the &lt;code&gt;Pointer&lt;/code&gt; API in
+&lt;code&gt;jnr-ffi&lt;/code&gt; works identically to &lt;code&gt;ByteBuffer&lt;/code&gt;.&lt;/p&gt;
 &lt;h3&gt;Design decisions&lt;/h3&gt;
 &lt;p&gt;As a brief recap from my previous post, it's important that we design an API
 that makes common things easy and hard things possible while remaining secure
 and performant. For the cryptographic APIs in &lt;code&gt;caesium&lt;/code&gt;, there are a number of
-variables to fix:&lt;/p&gt;
+variables to consider:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Are the return types and arguments &lt;code&gt;ByteBuffer&lt;/code&gt; instances, byte arrays
    (&lt;code&gt;[B&lt;/code&gt;), &lt;code&gt;Pointer&lt;/code&gt; instances, or something else?&lt;/li&gt;
 &lt;li&gt;Is the return type fixed per exposed function, or is the return
    type based on the input types, like Clojure's &lt;a href="https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/empty"&gt;&lt;code&gt;empty&lt;/code&gt;&lt;/a&gt;?&lt;/li&gt;
-&lt;li&gt;Are the APIs "C style" where the output buffer is passed in as an
-   argument, or "functional style" that allocates the output buffer for you?&lt;/li&gt;
+&lt;li&gt;Are the APIs "C style" (which passes in the output buffer as an argument)
+   or "functional style" (which allocates the output buffer for you)?&lt;/li&gt;
 &lt;li&gt;Does the implementation convert to the appropriate type (which might
    involve copying), does it use reflection to find the appropriate type, does
    it explicitly dispatch on argument types, or does it assume you give
@@ -74,7 +73,7 @@ function manage the output buffer for you is the most convenient option, but
 it also precludes using direct byte buffers effectively. Type conversion is
 most convenient, but type dispatch is faster, and statically resolvable
 dispatching to the right implementation is faster still. The correct return
-value depends on context; trying to divine what the user really wanted is
+value depends on context. Trying to divine what the user really wanted is
 tricky, and, as we discussed before, the differences between those types are
 significant.&lt;/p&gt;
 &lt;p&gt;The functions exposed in caesium live on the inside of a bigger system, in the
@@ -90,10 +89,10 @@ involve annoying code generation in a regular Java/jnr-ffi project, but
 caesium is written in Clojure. The information on how to bind libsodium is a
 Clojure data structure that gets compiled into an interface, which is what
 jnr-ffi consumes. This makes it easy to expose every permutation, since it's
-just some code that takes and returns a value. You can see this at work in the
+just some code that operates on a value. You can see this at work in the
 &lt;a href="https://github.com/lvh/caesium/blob/master/src/caesium/binding.clj#L13"&gt;&lt;code&gt;caesium.binding&lt;/code&gt; namespace&lt;/a&gt;. As a consequence, an expert
-implementer that knows exactly which underlying function they want to call
-with no "smart" APIs or performance overhead, can always just drop down to the
+implementer (who knows exactly which underlying function they want to call
+with no "smart" APIs or performance overhead) can always just drop down to the
 binding layer.&lt;/p&gt;
 &lt;p&gt;Another easy call is that all APIs should raise exceptions, instead of
 returning success codes. Success codes make sense for a C API, because there's
@@ -101,7 +100,7 @@ no reasonable exception mechanism available. However, problems like failed
 decryption should definitely just raise exceptions.&lt;/p&gt;
 &lt;p&gt;It gets tricky when we compare APIs that take an output buffer versus APIs
 that build the output buffer for you. The latter are clearly the easiest to
-use, but the former is necessary for explicit buffer life cycle
+use, but the former are necessary for explicit buffer life cycle
 management. You can also easily build the managed version from the unmanaged
 version, but you can't do the converse. As a consequence, we should expose
 both.&lt;/p&gt;
@@ -117,22 +116,22 @@ might have a byte buffer:&lt;/p&gt;
 &lt;p&gt;In the former case, the byte buffers primarily act as inputs. In the latter,
 they exclusively act as outputs. Because both byte buffers and byte arrays can
 act as inputs, any API should be flexible in what it accepts. However, this
-asymmetry in how the types are used and how they can be converted has
+asymmetry in how the types are used, and how they can be converted, has
 consequences for APIs where the caller manages the output buffer versus APIs
 that manage it for you.&lt;/p&gt;
 &lt;p&gt;When the API that manages the output buffer for you, the most reasonable
 return type is a byte array. There is no difference between byte arrays
-created by the API and created by the caller, and there's no reasonable way to
-reuse them. If you do really need a byte buffer for some reason, wrapping that
-output array is simple and cheap. Conversely, APIs where the caller manages
-the output buffer should use output byte buffers. Callers who are managing
-their own byte buffer need to call an API that supports that, and there's
-nothing to be gained from managing your own byte arrays (only direct byte
-buffers). This is fine for internal use within &lt;code&gt;caesium&lt;/code&gt;: the byte array
+created by the API and those created by the caller, and there's no reasonable
+way to reuse them. If you do really need a byte buffer for some reason,
+wrapping that output array is simple and cheap. Conversely, APIs where the
+caller manages the output buffer should use output byte buffers. Callers who
+are managing their own byte buffer need to call an API that supports that, and
+there's nothing to be gained from managing your own byte arrays (only direct
+byte buffers). This is fine for internal use within &lt;code&gt;caesium&lt;/code&gt; — the byte array
 producing API can just wrap it in a byte buffer view.&lt;/p&gt;
 &lt;p&gt;This means we've reduced the surface significantly: APIs with caller-managed
-buffers output to &lt;code&gt;ByteBuffer&lt;/code&gt;, APIs that manage it themselves return byte
-arrays. This takes care of the output types, but not input types.&lt;/p&gt;
+buffers output to &lt;code&gt;ByteBuffer&lt;/code&gt;, and APIs that manage it themselves return byte
+arrays. This takes care of the output types, but not the input types.&lt;/p&gt;
 &lt;p&gt;Keys, salts, nonces, messages et cetera will usually be byte arrays, since
 they're typically just read directly from a file or made on the spot. However
 rare, there can be good reasons for having any of these as byte buffers. For
@@ -143,11 +142,11 @@ generated but just into a pre-existing buffer.&lt;/p&gt;
 &lt;p&gt;The easiest way for this to work by default is reflection. That mostly works,
 until it doesn't. Firstly, reflecting can be brittle. For example, if all of
 your byte sequence types are known but a buffer length isn't, Clojure's
-reflection will fail to find the appropriate method even if it is
+reflection will fail to find the appropriate method, even if it is
 unambiguous. Secondly, unannotated Clojure fns always take boxed objects, not
 primitives, which is what we want for calling into C. Annotating is imperfect,
 too, because it moves the onus of producing a primitive to the caller. These
-aren't really criticisms of Clojure; at this point we're well into weird edge
+aren't really criticisms of Clojure. At this point we're well into weird edge
 case territory which this system wasn't designed for.&lt;/p&gt;
 &lt;p&gt;We can't do static dispatch for the public API, because we've established that
 we should be flexible in our input types. We can work around the unknown type
