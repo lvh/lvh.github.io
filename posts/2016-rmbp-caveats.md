@@ -107,11 +107,13 @@ to sync my blog repository from GitHub:
 Get https://api.github.com/repos/lvh/lvh.github.io: dial tcp 192.30.253.116:443: connect: network is unreachable
 ```
 
-It didn't click at first, but I started trying everything, and realized it broke
-when I plugged in my WD backup drive, from which I was copying over an SSH key.
+It didn't click at first what was going on. I restarted my router, connected to
+different networks, tried a different machine -- all telling me it was this
+laptop that was misbehaving. I started trying everything, and realized I had
+recently plugged in my WD backup drive from which I was copying over an SSH key.
 It's a USB 3.0 drive that I'm connecting via an AUKEY USB 3 to USB-C converter.
-Lo and behold: I removed the drive, and my WiFi starts working again. Plugging
-it back in does not instantly, but eventually, break WiFi again.
+I removed the drive, and my WiFi starts working again. Plugging it back in does
+not instantly, but eventually, break WiFi again.
 
 After searching, I was able [to find someone with the same problem][wifi-video].
 It is unclear to me if this issue is related to the first-gen TI chip issue
