@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 22 Nov 2016 17:20:43 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 22 Nov 2016 17:37:46 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
 had it for a week now, and there have been some issues you might want to be
 aware of if you'd like to get one.&lt;/p&gt;
 &lt;p&gt;(There are a bunch of links to Amazon in this article. They're not affiliate
@@ -70,11 +70,13 @@ to sync my blog repository from GitHub:&lt;/p&gt;
 &lt;/pre&gt;
 
 
-&lt;p&gt;It didn't click at first, but I started trying everything, and realized it broke
-when I plugged in my WD backup drive, from which I was copying over an SSH key.
+&lt;p&gt;It didn't click at first what was going on. I restarted my router, connected to
+different networks, tried a different machine -- all telling me it was this
+laptop that was misbehaving. I started trying everything, and realized I had
+recently plugged in my WD backup drive from which I was copying over an SSH key.
 It's a USB 3.0 drive that I'm connecting via an AUKEY USB 3 to USB-C converter.
-Lo and behold: I removed the drive, and my WiFi starts working again. Plugging
-it back in does not instantly, but eventually, break WiFi again.&lt;/p&gt;
+I removed the drive, and my WiFi starts working again. Plugging it back in does
+not instantly, but eventually, break WiFi again.&lt;/p&gt;
 &lt;p&gt;After searching, I was able &lt;a href="https://www.youtube.com/watch?v=NYVjIjBMx6o"&gt;to find someone with the same problem&lt;/a&gt;.
 It is unclear to me if this issue is related to the first-gen TI chip issue
 mentioned above. In that video, the authors are also using a USB 3.0 to USB-C
