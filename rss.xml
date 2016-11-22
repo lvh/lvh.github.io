@@ -1,5 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link rel="self" type="application/rss+xml" href="https://www.lvh.io/rss.xml"></atom:link><language>en</language><lastBuildDate>Wed, 13 Jul 2016 03:21:38 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 22 Nov 2016 17:16:21 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
+had it for a week now, and there have been some issues you might want to be
+aware of if you'd like to get one.&lt;/p&gt;
+&lt;p&gt;(There are a bunch of links to Amazon in this article. They're not affiliate
+links.)&lt;/p&gt;
+&lt;h2&gt;System Integrity Protection is often disabled&lt;/h2&gt;
+&lt;p&gt;I noticed &lt;a href="https://twitter.com/schwa/status/799160866209828864"&gt;via Twitter&lt;/a&gt; that some people were reporting that &lt;a href="https://en.wikipedia.org/wiki/System_Integrity_Protection"&gt;System Integrity
+Protection (SIP)&lt;/a&gt; was disabled by default on their Macs. SIP is a mechanism via
+which macOS protects critical system files from being overwritten.&lt;/p&gt;
+&lt;p&gt;You can check if SIP is enabled on your system by running &lt;code&gt;csrutil status&lt;/code&gt; in a
+terminal. Sure enough, SIP was disabled for both me and my wife's new rMBPs. To
+enable SIP, boot into the recovery mode (hold ⌘-R when booting), open a
+terminal, type &lt;code&gt;csrutil enable&lt;/code&gt; and reboot.&lt;/p&gt;
+&lt;p&gt;Perhaps unrelatedly, different out-of-the-box rMBPs appear to have different
+builds of OS X Sierra 10.12.1.&lt;/p&gt;
+&lt;h2&gt;Thunderbolt 2 dongle doesn't work with external screens&lt;/h2&gt;
+&lt;p&gt;I have a Dell 27" 4k montior (P2715Q). I used it with my previous-generation
+rMBP with a DisplayPort-to-mDP2 cable to connect it to its Thunderbolt 2 port.
+When buying my laptop, it suggested I get a Thunderbolt 3 to Thunderbolt 2
+dongle. I was expecting to get a Thunderbolt 2 port like the one on my previous
+Mac. When I plugged it in to my monitor, it told me that there was a cable
+plugged in, but no signal coming from the computer.&lt;/p&gt;
+&lt;p&gt;My understanding was that the Thunderbolt spec implies PCIe lanes and other
+protocols over the same port. Specifically, Thunderbolt 2 means 4 PCI Express
+2.0 lanes with DisplayPort 1.2; at a cursory glance, &lt;a href="https://en.wikipedia.org/wiki/Thunderbolt_(interface)"&gt;Wikipedia agrees&lt;/a&gt;.
+(Thunderbolt 3 adds HDMI 2.0 and USB 3.1 gen 2.)&lt;/p&gt;
+&lt;p&gt;I spent about an hour and a half on the phone with AppleCare folks. The Apple
+support people were very friendly. (I'm guessing their instructions tell them to
+never, under any circumstances, interrupt a customer. It was a little weird.) I
+was redirected a few times. They at a variety of suggestions, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Changing my monitor to MST mode, which shouldn't be necessary for DisplayPort
+  1.2-supporting devices, and did nothing but make my monitor not work with my old
+  rMBP either. Fortunately I was able to recover via HDMI to my old laptop.&lt;/li&gt;
+&lt;li&gt;Buying the Apple Digital AV Adapter instead. That adapter used HDMI instead of
+  mDP2. That's an important downgrade; my use of DisplayPort was intentional,
+  because DisplayPort 1.2 is the only way I can power the 4K display at 60Hz.
+  (The new adapter does not support HDMI 2.0, which is necessary for 4K@60Hz.)&lt;/li&gt;
+&lt;li&gt;Buying a third-party DisplayPort adapter or dock. This is precarious at best.
+  Most existing devices &lt;a href="https://9to5mac.com/2016/11/03/2016-macbook-pro-thunderbolt-compatibility-issues/"&gt;don't work with the new rMBP&lt;/a&gt;, because they
+  use a previous-generation TI chip. There are plenty of docks that wont work,
+  by &lt;a href="https://www.amazon.com/StarTech-com-Thunderbolt-Dual-4K-Docking-Station"&gt;StarTech&lt;/a&gt;, &lt;a href="https://www.amazon.com/Dell-Dock-WD15-Adapter-Type-C"&gt;Dell&lt;/a&gt;, &lt;a href="https://www.amazon.com/Kensington-Delivery-DisplayPort-Microphone-K38231WW"&gt;Kensington&lt;/a&gt;
+  and &lt;a href="https://www.amazon.com/Plugable-Display-Docking-Charging-Delivery"&gt;Plugable&lt;/a&gt;. I found one Dock by &lt;a href="https://www.amazon.com/CalDigit-USB-C-Docking-Station-DisplayPort"&gt;CalDigit&lt;/a&gt; that will
+  ostensibly work with the new rMBP, but doesn't supply enough power to charge
+  it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Eventually, we found [a KB article] that spells out that the Thunderbolt dongle
+doesn't work for DisplayPort displays:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The Thunderbolt 3 (USB-C) to Thunderbolt 2 Adapter doesn't support connections to these devices:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Apple DisplayPort display&lt;/li&gt;
+&lt;li&gt;DisplayPort devices or accessories, such as Mini DisplayPort to HDMI or Mini DisplayPort to VGA adapters&lt;/li&gt;
+&lt;li&gt;4K Mini DisplayPort displays that don’t have Thunderbolt&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I'm a little vindicated by the &lt;a href="http://www.apple.com/shop/reviews/MMEL2AM/A/thunderbolt-3-usb-c-to-thunderbolt-2-adapter"&gt;Mac Store&lt;/a&gt; review page for the dongle;
+apparently I wasn't the only person to expect that. (I was unable to see the
+reviews before my purchase, because I purchased it with my Mac, which doesn't
+show reviews. Also, the product was brand new at the time, and didn't have these
+reviews yet.)&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.belkin.com/us/p/P-F4U095/"&gt;Belkin&lt;/a&gt; and &lt;a href="https://9to5mac.com/2016/11/03/owc-announces-thunderbolt-3-dock-adds-13-ports-of-legacy-io-to-the-new-macbook-pros-over-a-single-cable/"&gt;OWC&lt;/a&gt; will be shipping docks that allegedly work with
+the new rMBP, but Belkin's is currently unavailable with no ship date mentioned,
+and OWC claims February 2017.&lt;/p&gt;
+&lt;h2&gt;WiFi failing with USB-C devices plugged in&lt;/h2&gt;
+&lt;p&gt;Just as I was going to start writing this post, I noticed that I wasn't able
+to sync my blog repository from GitHub:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;Get https://api.github.com/repos/lvh/lvh.github.io: dial tcp 192.30.253.116:443: connect: network is unreachable
+&lt;/pre&gt;
+
+
+&lt;p&gt;It didn't click at first, but I started trying everything, and realized it broke
+when I plugged in my WD backup drive, from which I was copying over an SSH key.
+It's a USB 3.0 drive that I'm connecting via an AUKEY USB 3 to USB-C converter.
+Lo and behold: I removed the drive, and my WiFi starts working again. Plugging
+it back in does not instantly, but eventually, break WiFi again.&lt;/p&gt;
+&lt;p&gt;After searching, I was able &lt;a href="https://www.youtube.com/watch?v=NYVjIjBMx6o"&gt;to find someone with the same problem&lt;/a&gt;.
+It is unclear to me if this issue is related to the first-gen TI chip issue
+mentioned above. In that video, the authors are also using a USB 3.0 to USB-C
+plug, albeit a different one from mine. I don't have a reference USB-C machine
+that isn't a new 2016 rMBP to test with. However, this seems plausible, because
+the USB 3.0 dongle I purchased from Apple ostensibly works fine.&lt;/p&gt;
+&lt;p&gt;This does not seem like a reasonable failure mode.&lt;/p&gt;
+&lt;h2&gt;The escape key, and the new keyboard&lt;/h2&gt;
+&lt;p&gt;I spend most of my day in Emacs. I'm perfectly happy with the new keyboard. I've
+also used the regular MacBook butterfly keyboard, and the new version is
+significantly better. I've never had a problem with not having an escape key;
+every app where I would've cared to press it had an escape key drawn on the new
+Touch Bar. However, not having tactile feedback for the escape key is annoying.
+When I was setting up my box and quickly editing a file in vim, I successfully
+pressed Escape to exit insert mode -- but I ended up pressing it five times
+because I thought I didn't hit it. Apparently the visual feedback vim gives me
+that I've exited insert mode is not, actually, what my brain relies on. I'll let
+you know if I get used to it.&lt;/p&gt;
+&lt;h2&gt;Charging&lt;/h2&gt;
+&lt;p&gt;I'll miss the safety of Magsafe, but being able to plug in your charger on
+either side is an unexpected nice benefit.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;I was ready to accept a transition period of dongles; I bought into it,
+literally and figuratively. However, most of the dongles don't actually work,
+and that sucks. So, maybe wait for the refresh, or at least until the
+high-quality docks are available.&lt;/p&gt;&lt;/div&gt;</description><guid>https://www.lvh.io/posts/2016-rmbp-caveats.html</guid><pubDate>Tue, 22 Nov 2016 15:49:16 GMT</pubDate></item><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
 post, I'll go into a specific API design case in &lt;a href="https://github.com/lvh/caesium"&gt;&lt;code&gt;caesium&lt;/code&gt;&lt;/a&gt;, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.&lt;/p&gt;
@@ -23,11 +124,11 @@ requires a (trivial) amount of math by calling &lt;code&gt;remaining&lt;/code&gt
 the &lt;code&gt;ByteBuffer&lt;/code&gt; is a view, and it can be looking at a different part of the
 underlying memory at different times. For a byte array, this is all fixed: a
 byte array's starting and stopping points remain constant. Computing the
-remaining length of a &lt;code&gt;ByteBuffer&lt;/code&gt; may not always be constant time (although
-it probably is). Even if that computation isn't constant time, that probably
-does not have significant security consequences: in &lt;code&gt;caesium&lt;/code&gt;, only
-cryptographic hashes, detached signatures and detached MACs don't publicly
-specify the message length.&lt;/p&gt;
+remaining length of a &lt;code&gt;ByteBuffer&lt;/code&gt; may not always be constant time, although
+it probably is. Even if it isn't, it's probably not in a way that is relevant
+to the security of the scheme (in &lt;code&gt;caesium&lt;/code&gt;, only cryptographic hashes,
+detached signatures and detached MACs don't publicly specify the message
+length).&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;ByteBuffer&lt;/code&gt; has a public API for allocating &lt;em&gt;direct&lt;/em&gt; buffers. This means they
 are not managed by the JVM. Therefore they won't be copied around by the
 garbage collector, and memory pinning is free. "Memory pinning" means that you
@@ -1016,47 +1117,4 @@ seriously" is entirely subjective. However, keep in mind that many
 targets &lt;em&gt;actually&lt;/em&gt; haven't taken security seriously, and would not
 even have the technical sophistication to detect an attack.&lt;/p&gt;
 &lt;p&gt;(By the way, if you too would like to help materially improve people's
-security, we're hiring. Contact me at &lt;code&gt;_@lvh.io&lt;/code&gt;.)&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/they-do-take-security-seriously.html</guid><pubDate>Sun, 05 Jul 2015 20:17:18 GMT</pubDate></item><item><title>HTTPS requests with client certificates in Clojure</title><link>https://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The vast majority of TLS connections only authenticate the
-server. When the client opens the connection, the server sends its
-certificate. The client checks the certificate against the list of
-certificate authorities that it knows about. The client is typically
-authenticated, but over the inner HTTP connection, not at a TLS level.&lt;/p&gt;
-&lt;p&gt;That isn't the only way TLS can work. TLS also supports authenticating
-clients with certificates, just like it authenticates servers. This is
-called mutually authenticated TLS, because both peers authenticate
-each other. At Rackspace Managed Security, we use this for all
-communication between internal nodes. We also operate our own
-certificate authority to sign all of those certificates.&lt;/p&gt;
-&lt;p&gt;One major library, &lt;a href="https://github.com/http-kit/http-kit"&gt;&lt;code&gt;http-kit&lt;/code&gt;&lt;/a&gt;, makes use of Java's
-&lt;code&gt;javax.net.ssl&lt;/code&gt;, notably &lt;code&gt;SSLContext&lt;/code&gt; and &lt;code&gt;SSLEngine&lt;/code&gt;. These Java APIs
-are exhaustive, and very... Java. While it's easy to make fun of these
-APIs, most other development environments leave you using OpenSSL,
-whose APIs are patently misanthropic. While some of these APIs do
-leave something to be desired, &lt;a href="https://aphyr.com/"&gt;aphyr&lt;/a&gt; has done a lot of the
-hard work of making them more palatable with
-&lt;a href="https://github.com/aphyr/less-awful-ssl"&gt;&lt;code&gt;less-awful-ssl&lt;/code&gt;&lt;/a&gt;. That gives you an
-&lt;code&gt;SSLContext&lt;/code&gt;. Request methods in &lt;code&gt;http-kit&lt;/code&gt; have an &lt;code&gt;opts&lt;/code&gt; map that
-you can pass a &lt;code&gt;:sslengine&lt;/code&gt; object to. Given an &lt;code&gt;SSLContext&lt;/code&gt;, you just
-need to do &lt;code&gt;(.createSSLEngine ctx)&lt;/code&gt; to get the engine object you want.&lt;/p&gt;
-&lt;p&gt;Another major library, &lt;a href="https://github.com/dakrone/clj-http"&gt;&lt;code&gt;clj-http&lt;/code&gt;&lt;/a&gt;, uses lower-level
-APIs. Specifically, it requires [&lt;code&gt;KeyStore&lt;/code&gt;][keystore] instances for
-its &lt;code&gt;:key-store&lt;/code&gt; and &lt;code&gt;:trust-store&lt;/code&gt; options. That requires diving deep
-into Java's cryptographic APIs, which, as mentioned before, might be
-something you want to avoid. While &lt;code&gt;clj-http&lt;/code&gt; is probably the most
-popular library, if you want to do fancy TLS tricks, you probably want
-to use &lt;code&gt;http-kit&lt;/code&gt; instead for now.&lt;/p&gt;
-&lt;p&gt;My favorite HTTP library is &lt;a href="http://aleph.io/"&gt;&lt;code&gt;aleph&lt;/code&gt;&lt;/a&gt; by
-&lt;a href="http://ideolalia.com/"&gt;Zach Tellman&lt;/a&gt;.  It uses Netty instead of the usual Java IO
-components. Fortunately, Netty's API is at least marginally friendlier
-than the one in &lt;code&gt;javax.net.ssl&lt;/code&gt;. Unfortunately, there's no
-&lt;code&gt;less-awful-ssl&lt;/code&gt; for Aleph. Plus, since I'm using &lt;a href="https://github.com/ptaoussanis/sente"&gt;&lt;code&gt;sente&lt;/code&gt;&lt;/a&gt; for
-asynchronous client-server communication, which doesn't have support
-for &lt;code&gt;aleph&lt;/code&gt; yet. So, I'm comfortably stuck with &lt;code&gt;http-kit&lt;/code&gt; for now.&lt;/p&gt;
-&lt;p&gt;In conclusion, API design &lt;em&gt;is&lt;/em&gt; UX design. The library that "won" for
-us was simply the one that was easiest to use.&lt;/p&gt;
-&lt;p&gt;For a deeper dive in how TLS and its building blocks work, you should
-watch my talk, &lt;a href="https://www.youtube.com/watch?v=3rmCGsCYJF8"&gt;Crypto 101&lt;/a&gt;, or the matching &lt;a href="https://www.crypto101.io"&gt;book&lt;/a&gt;. It's
-free! Oh, and if you're looking for information security positions
-(that includes entry-level!) in an inclusive and friendly environment
-that puts a heavy emphasis on teaching and personal development, you
-should get in touch with me at &lt;code&gt;_@lvh.io&lt;/code&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</guid><pubDate>Thu, 02 Jul 2015 15:53:20 GMT</pubDate></item></channel></rss>
+security, we're hiring. Contact me at &lt;code&gt;_@lvh.io&lt;/code&gt;.)&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/they-do-take-security-seriously.html</guid><pubDate>Sun, 05 Jul 2015 20:17:18 GMT</pubDate></item></channel></rss>

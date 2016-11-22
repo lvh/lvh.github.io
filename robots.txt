@@ -1,2 +1,4 @@
 Sitemap: https://www.lvh.io/sitemapindex.xml
 
+User-Agent: *
+Host: www.lvh.io

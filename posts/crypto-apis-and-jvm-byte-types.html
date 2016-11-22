@@ -2,7 +2,6 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
-<base href="https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crypto APIs and JVM byte types | lvh</title>
 <link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -11,6 +10,7 @@
 <link rel="canonical" href="https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html">
 <!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
 <link rel="prev" href="tradeoffs-in-cryptographic-api-design.html" title="Tradeoffs in cryptographic API design" type="text/html">
+<link rel="next" href="2016-rmbp-caveats.html" title="2016 rMBP caveats" type="text/html">
 <meta property="og:site_name" content="lvh">
 <meta property="og:title" content="Crypto APIs and JVM byte types">
 <meta property="og:url" content="https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html">
@@ -122,11 +122,11 @@ requires a (trivial) amount of math by calling <code>remaining</code>. This is b
 the <code>ByteBuffer</code> is a view, and it can be looking at a different part of the
 underlying memory at different times. For a byte array, this is all fixed: a
 byte array's starting and stopping points remain constant. Computing the
-remaining length of a <code>ByteBuffer</code> may not always be constant time (although
-it probably is). Even if that computation isn't constant time, that probably
-does not have significant security consequences: in <code>caesium</code>, only
-cryptographic hashes, detached signatures and detached MACs don't publicly
-specify the message length.</p>
+remaining length of a <code>ByteBuffer</code> may not always be constant time, although
+it probably is. Even if it isn't, it's probably not in a way that is relevant
+to the security of the scheme (in <code>caesium</code>, only cryptographic hashes,
+detached signatures and detached MACs don't publicly specify the message
+length).</p>
 <p><code>ByteBuffer</code> has a public API for allocating <em>direct</em> buffers. This means they
 are not managed by the JVM. Therefore they won't be copied around by the
 garbage collector, and memory pinning is free. "Memory pinning" means that you
@@ -261,6 +261,9 @@ benchmarks. Stay tuned!</p>
 <ul class="pager hidden-print">
 <li class="previous">
                 <a href="tradeoffs-in-cryptographic-api-design.html" rel="prev" title="Tradeoffs in cryptographic API design">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="2016-rmbp-caveats.html" rel="next" title="2016 rMBP caveats">Next post</a>
             </li>
         </ul></nav></aside></article>
 </div>
