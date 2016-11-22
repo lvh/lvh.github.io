@@ -50,7 +50,7 @@ protocols over the same port. Specifically, Thunderbolt 2 means 4 PCI Express
 I spent about an hour and a half on the phone with AppleCare folks. The Apple
 support people were very friendly. (I'm guessing their instructions tell them to
 never, under any circumstances, interrupt a customer. It was a little weird.) I
-was redirected a few times. They at a variety of suggestions, including:
+was redirected a few times. They had a variety of suggestions, including:
 
 * Changing my monitor to MST mode, which shouldn't be necessary for DisplayPort
   1.2-supporting devices, and did nothing but make my monitor not work with my old
