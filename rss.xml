@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 22 Nov 2016 17:20:18 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 22 Nov 2016 17:20:43 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
 had it for a week now, and there have been some issues you might want to be
 aware of if you'd like to get one.&lt;/p&gt;
 &lt;p&gt;(There are a bunch of links to Amazon in this article. They're not affiliate
@@ -45,8 +45,8 @@ was redirected a few times. They had a variety of suggestions, including:&lt;/p&
   ostensibly work with the new rMBP, but doesn't supply enough power to charge
   it.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Eventually, we found [a KB article] that spells out that the Thunderbolt dongle
-doesn't work for DisplayPort displays:&lt;/p&gt;
+&lt;p&gt;Eventually, we found &lt;a href="https://support.apple.com/en-us/HT207266"&gt;a KB article&lt;/a&gt; that spells out that the Thunderbolt
+dongle doesn't work for DisplayPort displays:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The Thunderbolt 3 (USB-C) to Thunderbolt 2 Adapter doesn't support connections to these devices:&lt;/p&gt;
 &lt;ul&gt;

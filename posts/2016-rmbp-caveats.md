@@ -67,8 +67,8 @@ was redirected a few times. They had a variety of suggestions, including:
   ostensibly work with the new rMBP, but doesn't supply enough power to charge
   it.
 
-Eventually, we found [a KB article] that spells out that the Thunderbolt dongle
-doesn't work for DisplayPort displays:
+Eventually, we found [a KB article][kb] that spells out that the Thunderbolt
+dongle doesn't work for DisplayPort displays:
 
 > The Thunderbolt 3 (USB-C) to Thunderbolt 2 Adapter doesn't support connections to these devices:
 >
