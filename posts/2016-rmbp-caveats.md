@@ -91,11 +91,11 @@ and OWC claims February 2017.
 [tb]: https://en.wikipedia.org/wiki/Thunderbolt_(interface)
 [belkin]: http://www.belkin.com/us/p/P-F4U095/
 [owc]: https://9to5mac.com/2016/11/03/owc-announces-thunderbolt-3-dock-adds-13-ports-of-legacy-io-to-the-new-macbook-pros-over-a-single-cable/
-[startech]: https://www.amazon.com/StarTech-com-Thunderbolt-Dual-4K-Docking-Station
-[dell]: https://www.amazon.com/Dell-Dock-WD15-Adapter-Type-C
+[startech]: https://www.amazon.com/StarTech-com-Thunderbolt-Dual-4K-Docking-Station/dp/B01AAAU4WS
+[dell]: https://www.amazon.com/Dell-Dock-WD15-Adapter-Type-C/dp/B01C8PHWQY
 [kensington]: https://www.amazon.com/Kensington-Delivery-DisplayPort-Microphone-K38231WW
-[plugable]: https://www.amazon.com/Plugable-Display-Docking-Charging-Delivery
-[caldigit]: https://www.amazon.com/CalDigit-USB-C-Docking-Station-DisplayPort
+[plugable]: https://www.amazon.com/Plugable-Display-Docking-Charging-Delivery/dp/B01FKTZLBS
+[caldigit]: https://www.amazon.com/CalDigit-USB-C-Docking-Station-DisplayPort/dp/B01AX6J7P4/
 [macstore]: http://www.apple.com/shop/reviews/MMEL2AM/A/thunderbolt-3-usb-c-to-thunderbolt-2-adapter
 
 # WiFi failing with USB-C devices plugged in
