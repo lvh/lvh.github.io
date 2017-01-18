@@ -2,8 +2,8 @@
 .. title: Tradeoffs in cryptographic API design
 .. slug: tradeoffs-in-cryptographic-api-design
 .. date: 2016-06-18 13:45:35 UTC-07:00
-.. tags:
-.. category: cryptography, private
+.. tags: cryptography
+.. category:
 .. link:
 .. description:
 .. type: text
