@@ -18,6 +18,11 @@ PyCon_. These days, I mostly write Clojure. I'm a fan of Haskell and ML. I write
 C in anger, and am really looking forward to the day where Rust means I will
 never have to do so again.
 
+Feel free to send me an e-mail at my `personal address`_ (``_@lvh.io``) or my
+`work address`_ (``lvh@latacora.com``).
+
 .. _`Latacora`: https://latacora.com
 .. _`Python Software Foundation`: https://www.python.org/psf/
 .. _PyCon: https://us.pycon.org/
+.. _`personal address`: mailto:_@lvh.io
+.. _`work address`: mailto:lvh@latacora.com
