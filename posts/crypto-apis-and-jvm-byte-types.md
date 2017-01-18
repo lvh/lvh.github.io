@@ -2,7 +2,7 @@
 .. title: Crypto APIs and JVM byte types
 .. slug: crypto-apis-and-jvm-byte-types
 .. date: 2016-07-11 14:00:00 UTC-07:00
-.. tags: cryptography
+.. tags: crypto
 .. category:
 .. link:
 .. description:

@@ -19,11 +19,11 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/crypto.xml</loc>
-  <lastmod>2016-11-22T16:18:00Z</lastmod>
+  <lastmod>2017-01-18T21:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/cryptography.xml</loc>
-  <lastmod>2016-11-22T16:18:00Z</lastmod>
+  <lastmod>2017-01-18T21:10:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/css.xml</loc>
@@ -39,11 +39,11 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/game.xml</loc>
-  <lastmod>2016-11-22T16:18:00Z</lastmod>
+  <lastmod>2017-01-18T21:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/hex.xml</loc>
-  <lastmod>2016-11-22T16:18:00Z</lastmod>
+  <lastmod>2017-01-18T21:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/hypercathexes.xml</loc>
@@ -55,7 +55,7 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/mathjax.xml</loc>
-  <lastmod>2016-11-22T16:18:00Z</lastmod>
+  <lastmod>2017-01-18T21:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/pycon.xml</loc>
@@ -66,12 +66,16 @@
   <lastmod>2016-11-22T16:18:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://www.lvh.io/categories/security-crypto.xml</loc>
+  <lastmod>2017-01-18T21:19:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://www.lvh.io/categories/security.xml</loc>
   <lastmod>2016-11-22T16:18:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/svg.xml</loc>
-  <lastmod>2016-11-22T16:18:00Z</lastmod>
+  <lastmod>2017-01-18T21:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/twisted.xml</loc>
@@ -83,10 +87,10 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/rss.xml</loc>
-  <lastmod>2016-11-22T17:37:00Z</lastmod>
+  <lastmod>2017-01-18T21:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/sitemap.xml</loc>
-  <lastmod>2016-11-23T18:21:00Z</lastmod>
+  <lastmod>2017-01-18T21:24:00Z</lastmod>
  </sitemap>
 </sitemapindex>

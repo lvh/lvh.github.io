@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 22 Nov 2016 17:37:46 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 18 Jan 2017 21:24:24 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
 had it for a week now, and there have been some issues you might want to be
 aware of if you'd like to get one.&lt;/p&gt;
 &lt;p&gt;(There are a bunch of links to Amazon in this article. They're not affiliate
@@ -256,7 +256,7 @@ we should be flexible in our input types. We can work around the unknown type
 problems with reflection using explicitly annotated call sites. That means
 we're dispatching on types, which comes with its own set of issues. In the
 next blog post, I'll go into more detail on how that works, with a bunch of
-benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
+benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
 of the pitfalls is that getting it wrong looks exactly like getting it
 right. Much like a latent memory corruption bug or a broken distributed
 consensus algorithm, a piece of cryptographic software can appear to be
@@ -335,7 +335,7 @@ should &lt;a href="https://twitter.com/lvh"&gt;follow me on Twitter&lt;/a&gt; or
 support for memory pinning since PyPy will support it in the upcoming
 5.2 release, although that means I'll no longer be able to make
 &lt;a href="https://github.com/reaperhulk"&gt;Paul Kehrer of PyCA fame&lt;/a&gt; jealous with the pinning support in
-&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on

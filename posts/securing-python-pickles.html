@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Securing Python pickles | lvh</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="https://www.lvh.io/posts/securing-python-pickles.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Securing Python pickles">
+<meta property="og:url" content="https://www.lvh.io/posts/securing-python-pickles.html">
+<meta property="og:description" content="Python's built-in pickle serialization library is a convenient, ubiquitous
+(within Python, at least) way of serializing almost arbitrary objects. It has
+plenty of issues, but since I'm a security nerd">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-01-16T13:37:11-08:00">
+<meta property="article:tag" content="security">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://www.lvh.io/">
+                <img src="../pinchy.svg" alt="lvh" id="logo"><span id="blog-title">lvh</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../about.html">About</a>
+                </li>
+<li>
+<a href="../archive.html">Archive</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../talks.html">Talks</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS feed</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="https://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="securing-python-pickles.md" id="sourcelink">Source</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Securing Python pickles</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    lvh
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2017-01-16T13:37:11-08:00" itemprop="datePublished" title="2017-01-16 13:37">2017-01-16 13:37</time></a></p>
+            
+        <p class="sourceline"><a href="securing-python-pickles.md" id="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Python's built-in pickle serialization library is a convenient, ubiquitous
+(within Python, at least) way of serializing almost arbitrary objects. It has
+plenty of issues, but since I'm a security nerd, I'm going to focus on those
+aspects in this post. Most of those security issues are well-documented, and
+some of them are also reasonably well-known.</p>
+<h2>A brief primer</h2>
+<p>TL;DR: deserializing a pickle is arbitrary code execution. Believe
+me? <a href="securing-python-pickles.html#hidden-pickles">Skip to the next section.</a>.</p>
+<p>Internally, pickle uses a limited stack machine for building objects as it
+deserializes. I've found a few sources claiming that machine to be Turing
+complete without a citation. As far as I can tell, this is incorrect: the
+language itself has no loops or branches, and pickle instructions can't
+directly affect the execution of the following instructions. However, that
+distinction is academic: pickle can execute arbitrary Python code with some
+clever tricks, trivially being able to do whatever it wants after that.</p>
+<p>If you're unfamiliar with how a stack machine works, the idea is that you have
+a growing list of objects, and then operations that act on them. If you've
+ever used a reverse Polish notation calculator, it's the same idea. For
+example, to evaluate <code>1 2 + 3 *</code>, read it left to right:</p>
+<ol>
+<li>stack: <code>[]</code>, input: <code>1</code>, result: <code>[1]</code>
+</li>
+<li>stack: <code>[1]</code>, input: <code>2</code>, result: <code>[1 2]</code>
+</li>
+<li>stack: <code>[1 2]</code>, input: <code>+</code>, result: <code>[3]</code>
+</li>
+<li>stack: <code>[3]</code>, input: <code>3</code>, result: <code>[3 3]</code>
+</li>
+<li>stack: <code>[3 3]</code>, input: <code>*</code>, result: <code>[9]</code>
+</li>
+</ol>
+<p>The Pickle virtual machine has more kinds of objects than just integers and
+plenty more operations, but the general idea is the same. There are many ways that the Pickle VM can turn out to execute some code, but most rely on</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Malicious</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">def</span> <span class="nf">__reduce__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="o">...</span>             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">,</span> <span class="p">(</span><span class="s2">"/bin/sh"</span><span class="p">,)</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_pickle</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">Malicious</span><span class="p">())</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">my_pickle</span><span class="p">)</span>
+<span class="n">sh</span><span class="o">-</span><span class="mf">3.2</span><span class="err">$</span> <span class="c1"># Uh oh!</span>
+<span class="n">sh</span><span class="o">-</span><span class="mf">3.2</span><span class="err">$</span> <span class="nb">exit</span>
+<span class="mi">0</span>
+</pre>
+
+
+<p><a name="hidden-pickles"></a></p>
+<h2>Hidden pickles</h2>
+<p>Knowing pickle's caveats is one thing, but identifying where pickle is used is
+another. You can search the codebase for <code>pickle</code>, but there are plenty of
+implicit call sites too. Because it's so convenient, pickle is often the
+default storage format for anything that needs to turn an object into bytes
+and back again. Examples include:</p>
+<ul>
+<li>multiprocessing libraries, e.g. <a href="#"><code>multiprocessing</code></a>
+</li>
+<li>session stores, e.g. <a href="#">Django's</a>,</li>
+<li>databases and caches, <a href="#">redis</a>,</li>
+<li>queues, e.g. <a href="http://celery.readthedocs.io/en/latest/userguide/security.html#serializers">celery</a>,</li>
+<li>scientific computing and machine learning, e.g. <a href="http://scikit-learn.org/stable/modules/model_persistence.html">scikit-learn</a>.</li>
+</ul>
+<p>et cetera. This list isn't a repudiation of those libraries! Some of these
+don't or at least no longer use pickle by default, and the others come with
+appropriate warnings. The only point here is that there's a decent chance your
+program uses pickle and you didn't even know.</p>
+<h2>Remediation</h2>
+<p>A quick survey of existing remediation of pickle-induced vulnerabilities shows
+that the most common answers include trusting the other party and avoiding
+pickles. These are fine suggestions if you can pull them off. Suppose you're
+merely using pickle because it's the default, but you could use JSON just
+fine; disabling pickle input is an easy security win. But there are plenty of cases where this is harder to do. Maybe it's just inconvenient or poor UX; you can't disable pickle-based session cookies without</p>
+<p>Other suggestions involve answers from cryptography: transport level security
+and signatures. Both of these have limitations when tested against realistic
+threat models.</p>
+<h2>Static analysis</h2>
+<p>I'd like to explore another avenue for remediation: static analysis. Can we
+analyze pickles and determine ahead of time if they're definitely bad or
+definitely good?</p>
+<p>Clearly, we can't solve this problem generally for many of pickle's applications. One of its biggest selling points is</p>
+<p>Both the reference implementation and the Pyrolite Java library implement the
+Pickle stack machine directly. They do not expose parsers.</p>
+<h2>Conclusion</h2>
+<p>The author would appreciate any consideration for not making any awful puns
+about being in a pickle, or analogies about hidden pickles in the back of
+fridges.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/security.html" rel="tag">security</a></li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2017         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36779422-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
