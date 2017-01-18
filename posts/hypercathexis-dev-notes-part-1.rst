@@ -1,7 +1,7 @@
 .. title: hypercathexis dev notes part 1
 .. slug: hypercathexis-dev-notes-part-1
 .. date: 2014-10-18 06:55:15 UTC-07:00
-.. tags: mathjax, game, hypercathexis, hex, svg
+.. tags: mathjax, game, hex, svg
 .. link:
 .. description:
 .. type: text
