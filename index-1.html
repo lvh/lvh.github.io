@@ -6,7 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lvh (old posts, page 1) | lvh</title>
 <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://www.lvh.io/index-1.html">
 <link rel="prev" href="index-2.html" type="text/html">
@@ -134,81 +135,6 @@
 <div>I think I've got most of the annoying administrative stuff out of the way now, maybe we can move on to more interesting things that are actually specific to continuous deployment :-) That starts with the next article, which, as I've already hinted above, will be about "cautious deployment", a robust technique for scheduling deployment.</div>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/well-now-this-changes-everything-.html" class="u-url">Well now, this changes everything.</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/2010/09/well-now-this-changes-everything-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<div>The previously planned crazy installment (I was going to install my own Launchpad instance) has been cancelled (or maybe deferred) to bring you this important announcement.</div>
-
-<p></p>
-<div>For those who still haven't heard yet (sorry about the late blog -- this happened around 4AM my time), <a href="http://blog.bitbucket.org/2010/09/29/bitbucket-joins-atlassian/" target="_blank">Atlassian have bought Bitbucket and are doing crazy awesome things with it</a>.</div>
-<p></p>
-<div>They changed some pricing plans, too. If you remember <a href="http://lvh.posterous.com/a-continuous-deployment-interlude-picking-a-d">my graph from last time</a>, it now looks a bit more like this:</div>
-<div>[[posterous-content:MGLlpFXYHW3ksEDqpcWR]]</div>
-<div>If you remember <a href="http://lvh.posterous.com/a-continuous-deployment-interlude-rolling-you">my previous rant</a>, the big problem I had with Launchpad was pricing. Specifically, I think they charged based on the wrong property: number of projects versus size of team.</div>
-<p></p>
-<div>So Bitbucket went out and did just that. Every Bitbucket plan now gets an unlimited amount of space and repositories (both public and private!). What they charge on is size of the team. Get this: <em>everyone</em> now gets infinite private repositories that they get to share with 5 people. That pretty much means that Atlassian just gave 80% of the small commercial dev houses I know free hosting. Even better, if you change your plan before October 3, you get 10 users for a year. That's 90% of the small commercial dev houses I know right there.</div>
-<p></p>
-<div>That's pretty darn cool.</div>
-<p></p>
-<div>Disclaimer about the graph: my idea of "big dev house" probably isn't your idea of big dev house. Obviously the $80/month = $960/yr you'd pay at Bitbucket for unlimited private collaborators is about four times what you'd pay at Launchpad for an equally sized (that means "more than fifty", mind you) team if they only work on one project. Since they charge based on different properties it's very hard to make a sensible price comparison: I think Launchpad has to compete based on features, and not on price, because fifty people working constantly on one project doesn't sound like the kind of dev team I'd like to see more of :)</div>
-<p></p>
-<div>I think it's time to revisit Bitbucket. Even if most of the tools end up being horrible, you just can't argue with 'free'. If feature X in Bitbucket ends up being unusably bad, I can just install my own code review tool. I've been told Bitbucket repositories are accessible over SVN, so it may even be possible to hook it up to Rietveld and end up with something where I do <em>zero</em> hosting.</div>
-<p></p>
-<div>Regardless of what happens to Bitbucket, I'd like to congratulate Jesper on Atlassian buying Bitbucket and wish him the best of luck in whatever he does next, be it Bitbucket or something else.</div>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" class="u-url">We now have an animal mascot!</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<div>(Sorry, I'll try to keep the unrelated chatter to a minimum and stick to tech stuff! But this is still pretty related.)</div>
-
-<p></p>
-<p>After a Django pony, testing goat, packaging pig, there is now also a <a href="http://twitter.com/deploymentduck">deployment duck</a>.</p>
-<p></p>
-<div>That means, of course, that continuous deployment looks somewhat like this:</div>
-<p></p>
-<div><img title="ducklings_ali_465x349.jpg" src="http://www.bbc.co.uk/devon/content/images/2007/03/12/ducklings_ali_465x349.jpg" alt="ducklings_ali_465x349.jpg"></div>
-<p></p>
-<div>Also, <a href="http://xkcd.com/537/">obligatory XKCD</a>.</div>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" class="u-url">Designing a continuous deployment system: on being language agnostic</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<div>Hi, and welcome again to my series of rants about continuous deployment :) In the next few posts, I'll try to scope out what I think a hypothetical greenfielded continuous deployment system should and shouldn't do, and then get that down to what a <i>feasible</i> continuous deployment system should and shouldn't do. Hopefully there won't be too much cutting.</div>
-
-<p></p>
-<p></p>
-<div>Fair word of warning, there's some ground rules to cover first before I get to talk about anything really interesting. This article, specifically, is about being language agnostic. It's not exactly a very controversial thing, and is mostly here so I have something to point to when someone asks me why I did X rather than Y. If you're willing to concede that the added complexity of supporting arbitrary languages and build/deployment systems is worth it, feel free to skip this one.</div> <p></p>
-<div>Python's great and all, but lock-in is pretty much always bad. There's two big reasons why I think this is worth doing, despite potential added complexity:</div> <div><ol>
-<li>You want other people to use your system.</li>
-<li>You want to be able to use different things, now or in the future.</li> </ol></div>
-<div>The first point is pretty straightforward. For something as critical as a continuous deployment system, you'll want a lot of other people using it and contributing to it. In CI systems, this sort of traction is what made Buildbot great and Hudson popular. Selling people something that works with whatever it is they have is a lot easier than selling people something that works with whatever it is <i>you</i> have.</div> <p></p>
-<div>The second point is just because nothing can be the best way to express every possible problem all the time. You might want to use different tools, if only purely for the sake of experiment.</div>
-<p></p>
-<div>If your architecture makes it possible, why not allow a programmer to foray into the slightly unknown? Who knows, you might develop something nice. Programmers are typically creative people: giving them a lot of a freedom to tinker tends to repay itself many times over (Google figured this out with 20% time).</div> <p></p>
-<div>The bottom line is simple: don't make it work for Python only. Or, which is more like what I'm going to do: make it Python only for now, but don't make it hard for other people to do whatever they like with it.</div> <p></p>
-<div>The next article is going to be about <i>what</i> to deploy and the format to deploy it in.</div>
-</div>
-    </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-rolling-your-own-development-stack.html" class="u-url">A continuous deployment interlude: rolling your own development stack</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
@@ -246,6 +172,81 @@
 <div>Last up: Mercurial. When it comes to code review, I've already explained in a previous post why I think Bitbucket's pull requests are a missed opportunity. (Short version: they make a distinction between local branches and branches in different repositories, which is in my opinion unnecessary. I think the way Launchpad allows merge proposals between arbitrary branches is much better. Github has recently copied this behavior somewhat with Pull Requests 2.0.). However, the main reason I wanted that is for a point to introduce code review. Georg Brandl (birkenfeld) pointed out that Mercurial has the pretty impressive <a href="https://bitbucket.org/sjl/hg-review/src" target="_blank">hg-review extension</a>. It has a sleek, usable <a href="http://review.stevelosh.com/" target="_blank">web interface</a> (try it!). It also has the advantage of the point I made earlier: data is included with your repository, you don't need to go fish for it. Even if you don't use that now, it has the great advantage of being able to do cool things with it later (such as identifying recurring problems in the review process and pointing those out to the reviewer/author).</div>
 <p></p>
 <div>Stay tuned for the next installment, where I try something totally crazy.</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" class="u-url">Designing a continuous deployment system: on being language agnostic</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<div>Hi, and welcome again to my series of rants about continuous deployment :) In the next few posts, I'll try to scope out what I think a hypothetical greenfielded continuous deployment system should and shouldn't do, and then get that down to what a <i>feasible</i> continuous deployment system should and shouldn't do. Hopefully there won't be too much cutting.</div>
+
+<p></p>
+<p></p>
+<div>Fair word of warning, there's some ground rules to cover first before I get to talk about anything really interesting. This article, specifically, is about being language agnostic. It's not exactly a very controversial thing, and is mostly here so I have something to point to when someone asks me why I did X rather than Y. If you're willing to concede that the added complexity of supporting arbitrary languages and build/deployment systems is worth it, feel free to skip this one.</div> <p></p>
+<div>Python's great and all, but lock-in is pretty much always bad. There's two big reasons why I think this is worth doing, despite potential added complexity:</div> <div><ol>
+<li>You want other people to use your system.</li>
+<li>You want to be able to use different things, now or in the future.</li> </ol></div>
+<div>The first point is pretty straightforward. For something as critical as a continuous deployment system, you'll want a lot of other people using it and contributing to it. In CI systems, this sort of traction is what made Buildbot great and Hudson popular. Selling people something that works with whatever it is they have is a lot easier than selling people something that works with whatever it is <i>you</i> have.</div> <p></p>
+<div>The second point is just because nothing can be the best way to express every possible problem all the time. You might want to use different tools, if only purely for the sake of experiment.</div>
+<p></p>
+<div>If your architecture makes it possible, why not allow a programmer to foray into the slightly unknown? Who knows, you might develop something nice. Programmers are typically creative people: giving them a lot of a freedom to tinker tends to repay itself many times over (Google figured this out with 20% time).</div> <p></p>
+<div>The bottom line is simple: don't make it work for Python only. Or, which is more like what I'm going to do: make it Python only for now, but don't make it hard for other people to do whatever they like with it.</div> <p></p>
+<div>The next article is going to be about <i>what</i> to deploy and the format to deploy it in.</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" class="u-url">We now have an animal mascot!</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/2010/09/we-now-have-an-animal-mascot-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<div>(Sorry, I'll try to keep the unrelated chatter to a minimum and stick to tech stuff! But this is still pretty related.)</div>
+
+<p></p>
+<p>After a Django pony, testing goat, packaging pig, there is now also a <a href="http://twitter.com/deploymentduck">deployment duck</a>.</p>
+<p></p>
+<div>That means, of course, that continuous deployment looks somewhat like this:</div>
+<p></p>
+<div><img title="ducklings_ali_465x349.jpg" src="http://www.bbc.co.uk/devon/content/images/2007/03/12/ducklings_ali_465x349.jpg" alt="ducklings_ali_465x349.jpg"></div>
+<p></p>
+<div>Also, <a href="http://xkcd.com/537/">obligatory XKCD</a>.</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/well-now-this-changes-everything-.html" class="u-url">Well now, this changes everything.</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/2010/09/well-now-this-changes-everything-.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-29T13:37:00-07:00" title="2010-09-29 13:37">2010-09-29 13:37</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<div>The previously planned crazy installment (I was going to install my own Launchpad instance) has been cancelled (or maybe deferred) to bring you this important announcement.</div>
+
+<p></p>
+<div>For those who still haven't heard yet (sorry about the late blog -- this happened around 4AM my time), <a href="http://blog.bitbucket.org/2010/09/29/bitbucket-joins-atlassian/" target="_blank">Atlassian have bought Bitbucket and are doing crazy awesome things with it</a>.</div>
+<p></p>
+<div>They changed some pricing plans, too. If you remember <a href="http://lvh.posterous.com/a-continuous-deployment-interlude-picking-a-d">my graph from last time</a>, it now looks a bit more like this:</div>
+<div>[[posterous-content:MGLlpFXYHW3ksEDqpcWR]]</div>
+<div>If you remember <a href="http://lvh.posterous.com/a-continuous-deployment-interlude-rolling-you">my previous rant</a>, the big problem I had with Launchpad was pricing. Specifically, I think they charged based on the wrong property: number of projects versus size of team.</div>
+<p></p>
+<div>So Bitbucket went out and did just that. Every Bitbucket plan now gets an unlimited amount of space and repositories (both public and private!). What they charge on is size of the team. Get this: <em>everyone</em> now gets infinite private repositories that they get to share with 5 people. That pretty much means that Atlassian just gave 80% of the small commercial dev houses I know free hosting. Even better, if you change your plan before October 3, you get 10 users for a year. That's 90% of the small commercial dev houses I know right there.</div>
+<p></p>
+<div>That's pretty darn cool.</div>
+<p></p>
+<div>Disclaimer about the graph: my idea of "big dev house" probably isn't your idea of big dev house. Obviously the $80/month = $960/yr you'd pay at Bitbucket for unlimited private collaborators is about four times what you'd pay at Launchpad for an equally sized (that means "more than fifty", mind you) team if they only work on one project. Since they charge based on different properties it's very hard to make a sensible price comparison: I think Launchpad has to compete based on features, and not on price, because fifty people working constantly on one project doesn't sound like the kind of dev team I'd like to see more of :)</div>
+<p></p>
+<div>I think it's time to revisit Bitbucket. Even if most of the tools end up being horrible, you just can't argue with 'free'. If feature X in Bitbucket ends up being unusably bad, I can just install my own code review tool. I've been told Bitbucket repositories are accessible over SVN, so it may even be possible to hook it up to Rietveld and end up with something where I do <em>zero</em> hosting.</div>
+<p></p>
+<div>Regardless of what happens to Bitbucket, I'd like to congratulate Jesper on Atlassian buying Bitbucket and wish him the best of luck in whatever he does next, be it Bitbucket or something else.</div>
 </div>
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html" class="u-url">A continuous deployment interlude: picking a development stack</a></h1>
@@ -330,6 +331,26 @@
 <p>Pressing the big red button once you're done will still be scary. You might even have a hiccup or two. But ideally, nothing will blow up. After a while (and probably in less time than you think it will), releases will become, as Timothy Fitz puts it, a non-event.</p>
 </div>
     </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" class="u-url">Building a continuous deployment system, part one</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-26T13:37:00-07:00" title="2010-09-26 13:37">2010-09-26 13:37</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Lately, I've been thinking a lot about building a continuous deployment system.</p>
+
+<p>I was really glad to find out that Timothy Fitz was doing <a href="http://timothyfitz.wordpress.com/2009/02/10/continuous-deployment-at-imvu-doing-the-impossible-fifty-times-a-day/">continuous deployment over at IMVU</a> (partially because Timothy and I like some of the same software). Eric Ries, former CTO and co-founder of IMVU, has had a lot of <a href="http://www.startuplessonslearned.com/search/label/continuous%20deployment">interesting things</a> to say about it as well. I used to do this at my old day job, and it's been an absolute eye-opener -- yes, it does require quite a bit of discipline, but I'm convinced it pays off handsomely, especially in the long run.</p>
+
+<p>Despite my newfound conviction, the system we used there wasn't all that fancy. That has its upsides, the less complex it is, the less can go wrong. Unfortunately, being a horrendous hodgepodge (I'd call it an unholy alliance, but there's no VB or COBOL) of bash, perl and Python distributing software with rsync, it's not very suitable for showing off.</p>
+
+<p>The goal of this series of blog posts is to end up with a continuous deployment system people can agree on. (If you're laughing, yes, I realize that's probably a little naive -- I'm hoping to come out relatively unscathed and with a continuous deployment system I can agree on.)</p>
+
+<p> </p>
+</div>
+    </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-.html" class="u-url">Building a continuous deployment system, part two: what is it?</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
@@ -352,26 +373,6 @@
 <p>From what I've read and my own experience, teams who have successfully applied continuous deployment see these two things come back inseparably. If you want to make sure your code isn't plain broken, you better have a wide array of tests. If you want to make sure the code you're now responsible for in production isn't terrible, you better be doing code review (pair programming and/or tool-assisted code review is great -- we've had success doing both). There's nothing quite like the first time you commit a file and then watching your shiny new piece of code do something on a production server less than a minute later.</p>
 
 <p>So, I guess the series is partially about continuous deployment proper, and partly about greenfielding a development process that rocks.</p>
-
-<p> </p>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" class="u-url">Building a continuous deployment system, part one</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one.html" rel="bookmark"><time class="published dt-published" datetime="2010-09-26T13:37:00-07:00" title="2010-09-26 13:37">2010-09-26 13:37</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>Lately, I've been thinking a lot about building a continuous deployment system.</p>
-
-<p>I was really glad to find out that Timothy Fitz was doing <a href="http://timothyfitz.wordpress.com/2009/02/10/continuous-deployment-at-imvu-doing-the-impossible-fifty-times-a-day/">continuous deployment over at IMVU</a> (partially because Timothy and I like some of the same software). Eric Ries, former CTO and co-founder of IMVU, has had a lot of <a href="http://www.startuplessonslearned.com/search/label/continuous%20deployment">interesting things</a> to say about it as well. I used to do this at my old day job, and it's been an absolute eye-opener -- yes, it does require quite a bit of discipline, but I'm convinced it pays off handsomely, especially in the long run.</p>
-
-<p>Despite my newfound conviction, the system we used there wasn't all that fancy. That has its upsides, the less complex it is, the less can go wrong. Unfortunately, being a horrendous hodgepodge (I'd call it an unholy alliance, but there's no VB or COBOL) of bash, perl and Python distributing software with rsync, it's not very suitable for showing off.</p>
-
-<p>The goal of this series of blog posts is to end up with a continuous deployment system people can agree on. (If you're laughing, yes, I realize that's probably a little naive -- I'm hoping to come out relatively unscathed and with a continuous deployment system I can agree on.)</p>
 
 <p> </p>
 </div>
