@@ -37,6 +37,8 @@ passphrase, and is often responsible for generating the secrets to begin with.
 This post is also not about cold storage, like the physical vault where you keep
 your AWS master password.
 
+QQQ small, radioactive, required -- NOT all private information!
+
 This post is intended to be an overview of how we can do better. First, I'll
 argue that we can do better at all. If you're already convinced secret stores
 are a great idea, you can jump ahead to the [contenders](#contenders).
@@ -90,15 +92,34 @@ features, and hence the rationale applies.
 # Bootstrapping
 
 This problem of needing some identity or secret to start from is called
-*bootstrapping*. One traditional strategy is to rely on host identity, and then
-work from there. This is particularly convenient on AWS, where EC2 instances get
-IAM roles.
+*bootstrapping*.
 
-This model is challenging to port to new tools like Kubernetes.
+One traditional strategy is to have an administrator deploy secrets to where
+they need to go, via a configuration management tool like Chef or Ansible. This
+often involves <abbr title="Trust On First Use">TOFU</abbr>. Hosts are
+long-living and their identity is either trusted on first use or verified out of
+band.
 
+You can also tie host identities to capabilities directly. This is particularly
+convenient on AWS, where EC2 instances get IAM roles and hence access to e.g.
+KMS and S3.
 
-<abbr title="Trust On First Use">TOFU</abbr>
+This model is challenging to port to newer tools like Kubernetes, Mesos, AWS ECS
+or Lambda where containers are considered ephemeral and immutable. In these
+models, it's more reasonable to think of the immutable artifact being
+authenticated (signed) rather than the host it might incidentally run on. That
+comes with metadata about what sort of capabilities the application should be
+able to access. Just like an application on your phone asks to be able to use
+the webcam, the application should ask the host for what it has access to.
 
+QQQQQQQ
+[Docker Notary][notary] is an implementation
+of [<abbr title="The Update Framework">TUF</abbr>][tuf]. It can be used to audit
+provenance of container images.
+Credit for this model goes to CloudFlare;
+see [Nick Sullivan's B-Sides LV 2016 talk][pal]. It's important to note that
+this is not another secret management tool. It's a container identity
+bootstrapping tool that bridges the bootstrapping gap.
 
 # Criteria
 
@@ -126,21 +147,39 @@ can securely link those transactions to specific individuals.
 Oh boy. There are a few. This is by no means intended to be a complete overview,
 although it's pretty comprehensive.
 
-# Encrypted bags
+# Encrypted bags or pre-encryption
 
-Many implementations follow an encrypted bag model. The secrets are still
-managed in source control, although the repository might be separate from the
-centralized one. Examples include Chef [data bags][cdb] and
+Many implementations follow an encrypted bag model, also known as a
+pre-encryption scheme. The secrets are still managed in source control, although
+the tool encrypts them first, and the repository might be separate from the one
+used to store the source code. Examples include Chef [data bags][cdb] and
 Ansible [Vault][av].
 
 Some implementations provide incremental improvements on this model.
 
+Chef Vault layers asymmetric RSA encryption on top of Chef's encrypted data
+bags. This effectively builds a key distribution system.
+
 [EJSON][ejson] by Shopify uses strong public-key crypto instead of a shared
 symmetric key or password. (At some point in the middle of 2016, they decided to
-rewrite it from Ruby to Go. I'm reviewing the current Go version.)
+rewrite it from Ruby to Go. I'm reviewing the current Go version, which
+confusingly isn't what the [README tells me to install][ejson-install]).
 
-These solutions generally miss the features mentioned earlier. Because the
-ciphertexts are statically available to the operator and the key is a shared
+[SOPS][sops] was at some point implemented in Python, but then got reimplemented
+in Go. This review only deals with the current version, since the Python version
+is officially deprecated. Unfortunately the new version comes with some
+regressions. The old Python version just ran the GPG binary, whereas the new Go
+version uses Go's built-in OpenPGP implementation. This is convenient, because
+it no longer depends on having GPG installed and you can just use a single
+binary. Unfortunately, it also means the former supported hard tokens like a
+Yubikey, and [the current version does not][sops-yk]. SOPS does have one awesome
+feature: just like GPG internally works by encrypting a session key to different
+public keys, SOPS encrypts a session key via GPG and KMS. This means that a
+secret in SOPS can be written by GPG keys tightly linked to human identities,
+and then consumed by KMS keys tightly linked to machine identities.
+
+All of these solutions generally miss the features mentioned earlier. Because
+the ciphertexts are statically available to the operator and the key is a shared
 password, there is no audit trail for accesses. Fortunately, because the secrets
 are managed in source control, these systems automatically keep a historical
 record.
@@ -148,7 +187,17 @@ record.
 These systems are typically tied to a particular deployment model; either
 they're a part of a configuration management tool, or the tool is unspecified
 (like EJSON). This makes them cumbersome to use for large deployments of
-ephemeral, immutable infrastructure.
+ephemeral, immutable infrastructure. They generally leave you with a
+self-referential problem to solve: you get a secret to access the secrets, but
+how do you safely distribute that secret without buying into the deployment
+model? (This last criticism doesn't apply to SOPS, since it also supports KMS;
+although you're in the same boat if you ever use GPG.) Asymmetric solutions try
+to solve this problem, but typically run into problems where they have to
+encrypt for many servers: you either re-use keys, or have a large key management
+problem on your hands.
+
+# Configuration storage systems (Consul, Zookeeper...)
+
 
 ## [Citadel][citadel]
 
@@ -168,7 +217,6 @@ ephemeral, immutable infrastructure.
 [15:13:26]  <mhashemi>	i appreciate that, too :)
 [15:14:24]  <coderanger>	I think the videos from the final place I gave it are up now, I need to watch it and decide if I like it better
 [15:26:36]  <mhashemi>	aw, but the questions from this one are so much better https://youtu.be/xZiekP_70EA?t=1836 ;)
-[15:30:13] coderanger	still hates listening to his own voice
 ```
 
 # Cluster operating systems
@@ -177,29 +225,39 @@ ephemeral, immutable infrastructure.
 
 ## Docker Swarm
 
+Docker Swarm's secrets management is new in 1.13 and hence unreleased at time of
+writing. Disclaimer: I reviewed some of the cryptography, and the implementation
+and guarantees have changed over the course of the project.
+
 ## Mesos
 
-# Configuration storage systems (Consul, Zookeeper...)
+# Trusted third party systems
 
-# Other systems
+It's clear that some of the features
 
 ## [Vault][vault]
 
-## [PAL][pal]
+Vault does software crypto
+
+## (Building on) hosted platforms
+
+sneaker, credstash both fundamentally rely on KMS; the principal difference is
+that sneaker uses S3, and credstash uses DynamoDB. Relying on these tools is
+convenient, because it implies not having to run servers. Furthermore, routing
+access control through AWS IAM while keeping the key safely locked away in KMS
+helps prevent accidental key disclosure.
+
+SOPS deserves an honorable mention here as well, since it's the only tool I
+found that does both KMS and OpenPGP.
+
+# Other systems
 
 ## [secretary][secretary]
 
 ## [biscuit][biscuit]
 
-## [SOPS][sops]
 
-SOPS was at some point implemented in Python, but then got reimplemented in Go.
-This review only deals with the current version, since the Python version is
-officially deprecated.
-
-Unfortunately [GPG][sops-yk].
-
-[sops-yk]: https://github.com/mozilla/sops/issues/191
+# Honorable mentions
 
 ## [Torus][torus]
 
@@ -209,26 +267,40 @@ Torus is only partially open source: the client is, but the server is not.
 
 While it is by its own admission not yet ready for prime-time, it gets an
 honorable mention for being built on an append-only cryptographically verifiable
-log, a la Certificate Transparency. This has interesting security properties.
+log, a la Certificate Transparency. This has interesting security properties
+from an audit chain perspective, not dissimilar from managing secrets in source
+control.
 
 # Conclusion
 
+There are too many secret stores, by far. This is ostensibly nobody's fault.
+Many of these tools were developed in-house when no great alternatives were
+publicly available. Furthermore, they are too niche for any clear victor to
+emerge.
+
+AWS clearly dominates this space. I was unable to find anything that supports
+Cloud Key Management Service, GCP's equivalent to KMS. Because of their
+similarities, adding support to any of the AWS KMS-powered solutions would not
+be particularly complex.
+
 Interestingly, several projects were rewritten from languages like Python and
-Ruby to Go. While I generally think our industry does that kind of thing too
+Ruby to Go. While I think our industry generally does that kind of thing too
 often, it's hard to fault anyone here. Go is genuinely great at shipping
-easy-to-use binaries with strong crypto.
+easy-to-use binaries with strong cryptography.
+
+In no particular order, I'd like to thank Jeremy Rauch, Noah Kantrowitz, Julien
+Vehent, Adrian Utrilla, Nick Sullivan.
 
 
-
-I'd like to thank the following people:
-
-...
-
-
+[notary]: https://github.com/docker/notary
+[tuf]: https://theupdateframework.github.io/
 [cdb]: https://docs.chef.io/data_bags.html#encrypt-a-data-bag-item
 [av]: http://docs.ansible.com/ansible/playbooks_vault.html
 [icecap]: https://github.com/lvh/icecap
 [ejson]: https://github.com/Shopify/ejson
+[ejson-install]: https://github.com/Shopify/ejson/issues/36
+[sneaker]: https://github.com/codahale/sneaker
+[credstash]: https://github.com/fugue/credstash
 [citadel]: https://github.com/poise/citadel
 [secretary]: https://github.com/meltwater/secretary
 [vault]: https://github.com/hashicorp/vault
