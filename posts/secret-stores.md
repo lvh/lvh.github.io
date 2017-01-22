@@ -44,11 +44,11 @@ you just care about the [conclusion](#conclusion).
 
 # Chicken versus egg
 
-At first sight, secret stores might sound like a fool's errand. Clearly, access
-to secrets is a sensitive operation that you want to properly authenticate.
-Machines authenticate themselves to other machines with high entropy secrets.
-So, you still need to give the machine a secret anyway—why not just give it all
-of them?
+Secret stores might sound like an exercise in futility. Access to secrets is a
+sensitive operation that you want to authenticate. Machines authenticate
+themselves to other machines with high entropy secrets. So, you still need to
+give the machine a secret anyway—why not just give it all of the ones it needs
+anyway?
 
 There are plenty of useful features a secret store might get you:
 
@@ -82,8 +82,10 @@ There are plenty of useful features a secret store might get you:
 * Secret stores can know how secrets are linked; making it easier to do
   revocation, and easier to determine the impact of a breach or misuse incident.
 
-* Once secrets are managed in a centralized place, it becomes feasible to have a
-  coherent rotation strategy.
+* Once secrets are centrally managed, you can have a coherent rotation strategy.
+
+* Once secrets are centrally managed, you can use hardware security modules or
+  smart cards, that would other be prohibitively expensive or complex to deploy.
 
 This concept of a secret store just kicking the can down the road is important
 to consider because some schemes do not have these features, so the rationale
