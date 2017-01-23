@@ -22,10 +22,11 @@ don't have the principle of least authority applied to them; applications get
 access secrets by default, not by exception, and there's no mechanism in place
 for limiting that.
 
-These practices are generally understood to be awful and there are a lot of
-homegrown mechanisms for improving on them. For example, the credentials in
-source control might be encrypted; moving the trusted actors from "everyone with
-the source code" to "the one trusted deployment machine".
+These practices are generally understood to be awful. A lot of homegrown
+remedies exist. For example, the credentials in source control might be
+encrypted; moving the trusted actors from "everyone with the source code" to
+"everyone with the key and the source code", which might mean (with appropriate
+public-key cryptography) "the one trusted deployment machine".
 
 This post is not about password managers. Password managers have many similar
 design constraints, but are still fundamentally different beasts with completely
@@ -94,7 +95,7 @@ applies.
 # Bootstrapping
 
 This problem of needing some identity or secret to start from is called
-*bootstrapping*.
+*bootstrapping*. Bootstraping is how the first secret gets to a new machine.
 
 One traditional strategy is to have an administrator deploy secrets to where
 they need to go, via a configuration management tool like Chef or Ansible. Hosts
@@ -129,7 +130,7 @@ Measuring quality based on purely objective criteria is tempting, but many tools
 make trade-offs or have interesting design choices that are difficult to compare
 objectively. I try not to pick favorites between programming languages.
 Deployment concerns are real, and things like having a single binary are nice,
-hence projects implement in languages like Go or Rust have an advantage.
+hence projects implemented in languages like Go or Rust have an advantage.
 
 Generally speaking, open source is better than closed source. I assume that
 major cloud platform providers, like Google's GCP and Amazon's AWS, are already
@@ -241,20 +242,14 @@ advantageous to use over storing them in etcd directly, because at least
 kubernetes semantically knows they're secrets, so it has the option of allowing
 something more clever in the future.
 
-Mesos, surprisingly, has no answer for secrets management. The closest things I
-found is Mesosphere's Enterprise DC/OS. The documentation seemed pretty
-reasonable as a tutorial, but it didn't help me much to audit the system; either
-way, it's proprietary.
+Mesos, surprisingly, has no open source answer for secrets management. The
+closest things I found is Mesosphere's Enterprise DC/OS. The documentation
+seemed pretty reasonable as a tutorial, but it didn't help me much to audit the
+system; either way, it's proprietary.
 
 Docker Swarm's [secrets][swarm-secrets] are brand new in 1.13. Disclaimer: I
 reviewed some of the cryptography, and the implementation and threat model have
 changed over the course of the feature's development.
-
-
-```
-[15:05:12]  <mhashemi>	(for bystanders, coderanger gave a great talk about secret storages not long back: https://www.youtube.com/watch?v=unFMJlKGh98 )
-[15:06:40]  <coderanger>	Or for a more stable URL (with slides) https://coderanger.net/talks/secrets/
-```
 
 # Trusted third party systems
 
@@ -264,16 +259,25 @@ approach, both with symmetric and asymmetric keys. Those keys can live in
 software or in dedicated hardware devices like HSMs, often provided by cloud
 providers, as with Amazon's KMS. Generally (although not intrinsically), this
 means that the third party system you're talking to is fully trusted to see the
-plaintexts credentials; either permanently or at least at decryption time.
+plaintext credentials; either permanently or at least at decryption time.
 
 ## Vault
 
-Hashicorp's [Vault][vault] is a relatively new and very popular contender.
-Unlike some of the other alternatives, key management is done entirely in
-memory; there is currently no option to use keys managed in an HSM or KMS. This
-option appears [to be dismissed][vault-no-kms] on the issue tracker.
+Hashicorp's [Vault][vault] is a popular new contender.
 
-QQQ read vault's TODO docs/tickets
+Unlike some of the other alternatives, key management is done entirely in
+software. There is currently no option to use keys managed in an HSM or KMS.
+This option appears [to be dismissed][vault-no-kms] on the issue tracker, and a
+KMS implementation [was contributed but never merged][vault-no-kms-pr]. There is
+a [documentation page][vault-vs-kms] on why Vault is better; but this doesn't
+address why you wouldn't simply have KMS do the encryption for you. It is
+reasonable to have more faith in specialized hardware to keep keys secret than
+in a nontrivially sized, actively developed codebase.
+
+Because it's a service you host, Vault is able to do things like key rotation
+and audit logs and has first-class support for both.
+
+Intrinsic to Vault's model is the concept of leasing, renewing and revocation.
 
 ## (Building on) hosted platforms
 
@@ -297,13 +301,18 @@ SOPS deserves an honorable mention here as well, since it's the only tool I
 found that does both KMS and OpenPGP. Of course, once you have a PGP encrypted
 version you might have access without an audit trail.
 
+QQQQ [secretary][secretary]
+
+QQQQ [keywhiz][keywhiz]
+
 # Other systems
 
 ## [Red October][red-october]
 
-Red October is the secret store that CloudFlare uses with PAL. It can be used
-separately: PAL is there to bootstrap, Red October is there to do something with
-the bootstrapped secret. Red October is notable for being able to implement
+Red October is the secret store that CloudFlare uses with PAL, their
+identity bootstrapping solution based on Docker Notary code signing. It can be
+used separately: PAL is there to bootstrap, Red October is there to do something
+with the bootstrapped secret. Red October is notable for being able to implement
 two-person rules: i.e. a secret can be accessed but only if several people or
 sets of people co-operate. This prevents compromise when one individual actors
 is compromised; be it under duress, or because they go rogue.
@@ -317,8 +326,6 @@ to be able to decrypt something, you need *n* choose *k* encrypted keys; with
 something like Shamir Secret Sharing, you'd only need *n*. For any 2 out of 3,
 this is 3 choose 2 = 3, the same as with secret sharing. For any 2 out of 100,
 this nearly 5000.
-
-## [secretary][secretary]
 
 # Honorable mentions
 
@@ -343,10 +350,10 @@ but they're not well-understood, so it's difficult for people who "just want to
 protect secrets" to pick a solution judiciously.
 
 When it comes to hosted key management, AWS clearly dominates the space. I was
-unable to find anything that supports Cloud Key Management Service, GCP's
-equivalent to KMS. In fairness, it's quite new, and officially still in beta.
-Because of their similarities, adding support to any of the AWS KMS-powered
-solutions would not be particularly complex.
+unable to find anything that supports Cloud Key Management Service, GCP is
+equivalent to KMS. In fairness, it's officially still in beta. Because of their
+similarities, adding support to any of the AWS KMS-powered solutions should not
+be particularly complex.
 
 Interestingly, several projects were rewritten from languages like Python and
 Ruby to Go. While I think our industry generally does that kind of thing too
@@ -355,29 +362,46 @@ easy-to-use binaries with strong cryptography.
 
 # Recommendations
 
-Think about your threat model.
+Think about your threat model. Have a fitting secrets management policy. That
+probably includes one of these tools.
 
 Bootstrapping is a good place to start thinking. I hope CloudFlare open sources
 PAL. I know it's on their roadmap and I don't want to voluntell them to do
-things, but it's awesome and I wish I could start putting it in production.
+things, but it's awesome and I wish I could start putting it in production. One
+downside of the encrypted-secrets-in-container model is that rotation implies
+restarting. That should be fine, unless you're still transitioning to a
+container model and still have a lot of pets.
 
 If your threat model includes insider threats and you want to enforce two-person
-policies, Red October seems to be the obvious choice.
+policies, Red October seems to be the obvious choice. Question if that's really
+part of your model, or something that just sounds cool. Operational practice
+isn't free.
 
 biscuit seems like one of the more convenient KMS-based solutions, especially if
 you're committed to the image attestation model. Because it uses local files, it
 is presumably easier to pair with PAL's container image attestation model, as
 well as easier to port to GCP.
 
+An architectural downside of the baked-in-secret model is that it binds images
+(code) with encrypted secrets (data). If you're using an orchestration tool that
+has a secrets management option, like Docker Swarm or Kubernetes, that might
+feel gauche; that binding already exists in configuration management. Depending
+on how much that bothers you, your ochestrator's secrets management story, and
+your threat model, you might opt for that instead. Any threat model should
+presumably include audit log capabilities and access control models; a `.env`
+file that you hope to keep out of source control is probably not an appropriate
+measure.
+
 # Fin
 
-In no particular order, I'd like to thank Jeremy Rauch, Noah Kantrowitz, Julien
-Vehent, Adrian Utrilla, Nick Sullivan.
+In no particular order, I'd like to thank Jeremy Rauch, Noah Kantrowitz, Diogo
+Mónica, Julien Vehent, Adrian Utrilla, Nick Sullivan, Zaki Manian, Andy Schmitz,
+Roman Zabicki. Any mistakes remain my own.
 
-Questions? Comments? Corrections? Updates? I'm [lvh][twitter] on Twitter and you
-can e-mail me at [lvh@latacora.com](mailto:lvh@latacora.com).
+Questions? Comments? Corrections? Updates? I'm [lvh](https://twitter.com/lvh) on
+Twitter and you can e-mail me at [lvh@latacora.com](mailto:lvh@latacora.com).
 
-[chef-vault]:
+[chef-vault]: https://github.com/chef/chef-vault
 [red-october]: https://github.com/cloudflare/redoctober
 [notary]: https://github.com/docker/notary
 [tuf]: https://theupdateframework.github.io/
@@ -391,7 +415,9 @@ can e-mail me at [lvh@latacora.com](mailto:lvh@latacora.com).
 [citadel]: https://github.com/poise/citadel
 [secretary]: https://github.com/meltwater/secretary
 [vault]: https://github.com/hashicorp/vault
-[vault-no-kns]:
+[vault-no-kms]: https://github.com/hashicorp/vault/issues/70
+[vault-no-kms-pr]: https://github.com/hashicorp/vault/pull/805/files
+[vault-vs-kms]: https://www.vaultproject.io/intro/vs/kms.html
 [pal]: https://www.youtube.com/watch?v=G_JXv059UY0
 [biscuit]: https://github.com/dcoker/biscuit
 [sops]: https://github.com/mozilla/sops
