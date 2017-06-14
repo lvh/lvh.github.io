@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/crypto.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 18 Jan 2017 21:31:17 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/crypto.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 14 Jun 2017 21:17:04 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
 post, I'll go into a specific API design case in &lt;a href="https://github.com/lvh/caesium"&gt;&lt;code&gt;caesium&lt;/code&gt;&lt;/a&gt;, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.&lt;/p&gt;
@@ -576,7 +576,7 @@ private key. That isogeny's codomain will be an elliptic curve E_BA.&lt;/p&gt;
 &lt;p&gt;When Bob performs his side of the exchange, he'll produce a different isogeny
 and a different elliptic curve E_AB; but it will have the same j-invariant as
 the curve Alice computed.  That j-invariant is the shared key.&lt;/p&gt;
-&lt;p&gt;I've compiled a &lt;a href="https://dl.dropboxusercontent.com/u/38476311/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf"&gt;transcript&lt;/a&gt; of a Diffie-Hellman exchange using
+&lt;p&gt;I've compiled a &lt;a href="https://www.lvh.io/sage/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf"&gt;transcript&lt;/a&gt; of a Diffie-Hellman exchange using
 Sage so you can see a (toy!) demo in action.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;I know a little about elliptic curves. I thought they were always
 non-singular. What's a supersingular elliptic curve but a contradiction in
