@@ -306,5 +306,5 @@ Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.*
 [c101]: https://www.crypto101.io
 [costello]: https://eprint.iacr.org/2016/413
 [bindel]: https://eprint.iacr.org/2016/415
-[transcript]: https://dl.dropboxusercontent.com/u/38476311/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf
+[transcript]: https://www.lvh.io/sage/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf
 [childs]: https://arxiv.org/pdf/1012.4019v2.pdf

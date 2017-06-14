@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Supersingular Isogeny Elliptic Curve Cryptography -- Sage</title>
+    </head>
+    <body id="print-page"
+          class="">
+
+<h1>Supersingular Isogeny Elliptic Curve Cryptography</h1>
+
+
+
+
+
+
+
+<div class="cell_input_active" id="cell_resizer"></div>
+<div class="worksheet_cell_list" id="worksheet_cell_list">
+
+
+<span id="cell_outer_88">
+
+    <div class="text_cell" id="cell_text_88">
+      <p>Before we start, let's be clear: this is an experiment to demo isogeny-based DH, it is not secure or fast (at least it wouldn't be with reasonably-sized fields)!</p>
+    </div>
+
+
+
+</span>
+
+
+<span id="cell_outer_0">
+
+    <div class="text_cell" id="cell_text_0">
+      <p>We pick a supersingular curve over a small prime field:</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_68" class="cell_visible">
+    <div id="cell_68" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">lA, lB = 2, 3
+eA, eB = 6, 7
+p = lA ^ eA * lB ^ eB - 1 # This is conveniently a large-ish curve for a demo (comically small for crypto, though!); this structure doesn&#39;t matter much because we do math over GF(p), not GF(p^2)
+assert p.is_prime()
+assert p % 4 == 3 # Necessary for below curve to be supersingular.&nbsp;</div>
+
+
+
+            <div id="introspect_div_68" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_68"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_68">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_68">
+
+
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_68">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_13" class="cell_visible">
+    <div id="cell_13" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">k = GF(p) # Note; not using GF(p^2) because of a limitation in Sage
+E = EllipticCurve(k, [1, 0])
+E&nbsp;</div>
+
+
+
+            <div id="introspect_div_13" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_13"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_13">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_13">
+
+                                    <pre class="shrunk">Elliptic Curve defined by y^2 = x^3 + x over Finite Field of size
+139967</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_13">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_1">
+
+    <div class="text_cell" id="cell_text_1">
+      <p>Elliptic curves of this form with a prime congruent to 3 mod 4 will incidentally always be supersingular, but Sage will confirm that:</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_14" class="cell_visible">
+    <div id="cell_14" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">E.is_supersingular()&nbsp;</div>
+
+
+
+            <div id="introspect_div_14" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_14"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_14">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_14">
+
+                                    <pre class="shrunk">True</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_14">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_15" class="cell_visible">
+    <div id="cell_15" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">n_points = E.count_points()
+n_points&nbsp;</div>
+
+
+
+            <div id="introspect_div_15" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_15"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_15">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_15">
+
+                                    <pre class="shrunk">139968</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_15">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_16" class="cell_visible">
+    <div id="cell_16" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">E.j_invariant()&nbsp;</div>
+
+
+
+            <div id="introspect_div_16" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_16"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_16">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_16">
+
+                                    <pre class="shrunk">1728</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_16">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_2">
+
+    <div class="text_cell" id="cell_text_2">
+      <p>Let's pick 4 random unique points, fixed as part of the protocol:</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_71" class="cell_visible">
+    <div id="cell_71" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">points = []
+while len(points) != 4:
+    p = E.random_point()
+    if p not in points:
+        points.append(p)
+
+PA, PB, QA, QB = points
+PA, PB, QA, QB&nbsp;</div>
+
+
+
+            <div id="introspect_div_71" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_71"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_71">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_71">
+
+                                    <pre class="shrunk">((52145 : 122183 : 1),
+ (122248 : 66260 : 1),
+ (22354 : 13937 : 1),
+ (111386 : 102821 : 1))</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_71">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_3">
+
+    <div class="text_cell" id="cell_text_3">
+      <p>Alice computes her secret numbers, from which she computes a point RA, which defines the kernel of her isogeny:</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_18" class="cell_visible">
+    <div id="cell_18" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">mA, nA = 123, 525
+RA = mA * PA + nA * QA
+print RA&nbsp;</div>
+
+
+
+            <div id="introspect_div_18" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_18"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_18">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_18">
+
+                                    <pre class="shrunk">(42052 : 45422 : 1)</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_18">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_4">
+
+    <div class="text_cell" id="cell_text_4">
+      <p>Sage has convenient tools for proving that this is an isogeny:</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_38" class="cell_visible">
+    <div id="cell_38" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">E.is_isogenous(EA)&nbsp;</div>
+
+
+
+            <div id="introspect_div_38" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_38"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_38">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_38">
+
+                                    <pre class="shrunk">True</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_38">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_5">
+
+    <div class="text_cell" id="cell_text_5">
+      <p>Alice sends her public key (consisting of the isogenous elliptic curve and the two base points for Bob under that curve) to Bob. I use the symbols phiA_PB and phiA_QB here to clarify that Bob just sees those values; he does not actually see the isogeny itself.</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_63" class="cell_visible">
+    <div id="cell_63" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">EA, phiA_PB, phiA_QB = EA, phiA(PB), phiA(QB)
+EA, phiA_PB, phiA_QB&nbsp;</div>
+
+
+
+            <div id="introspect_div_63" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_63"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_63">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_63">
+
+                                    <pre class="shrunk">(Elliptic Curve defined by y^2 = x^3 + 91219*x + 72262 over Finite
+Field of size 139967,
+ (107172 : 121677 : 1),
+ (42404 : 0 : 1))</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_63">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_6">
+
+    <div class="text_cell" id="cell_text_6">
+      <p>Sage gives us convenient tools for checking our work:</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_86" class="cell_visible">
+    <div id="cell_86" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">phiA = E.isogeny(RA)
+print phiA
+EA = phiA.codomain()
+print EA&nbsp;</div>
+
+
+
+            <div id="introspect_div_86" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_86"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_86">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_86">
+
+                                    <pre class="shrunk">Isogeny of degree 7776 from Elliptic Curve defined by y^2 = x^3 + x
+over Finite Field of size 139967 to Elliptic Curve defined by y^2 =
+x^3 + 91219*x + 72262 over Finite Field of size 139967
+Elliptic Curve defined by y^2 = x^3 + 91219*x + 72262 over Finite
+Field of size 139967</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_86">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_7">
+
+    <div class="text_cell" id="cell_text_7">
+      <p>Bob does the same thing:</p>
+    </div>
+
+
+
+</span>
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_57" class="cell_visible">
+    <div id="cell_57" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print"># Bob does the same thing
+mB, nB = 812, 580
+RB = mB * PB + nB * QB
+print RB
+
+# phiB is a function from points on E to points on EB
+phiB = E.isogeny(RB)
+print phiB
+EB = phiB.codomain()
+print EB&nbsp;</div>
+
+
+
+            <div id="introspect_div_57" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_57"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_57">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_57">
+
+                                    <pre class="shrunk">(112221 : 17506 : 1)
+Isogeny of degree 11664 from Elliptic Curve defined by y^2 = x^3 + x
+over Finite Field of size 139967 to Elliptic Curve defined by y^2 =
+x^3 + 86786*x + 16746 over Finite Field of size 139967
+Elliptic Curve defined by y^2 = x^3 + 86786*x + 16746 over Finite
+Field of size 139967</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_57">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_59" class="cell_visible">
+    <div id="cell_59" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">E.is_isogenous(EB)&nbsp;</div>
+
+
+
+            <div id="introspect_div_59" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_59"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_59">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_59">
+
+                                    <pre class="shrunk">True</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_59">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_62" class="cell_visible">
+    <div id="cell_62" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print"># Bob sends to Alice:
+EB, phiB_PA, phiB_QA = EB, phiB(PA), phiB(QA)
+EB, phiB_PA, phiB_QA&nbsp;</div>
+
+
+
+            <div id="introspect_div_62" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_62"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_62">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_62">
+
+                                    <pre class="shrunk">(Elliptic Curve defined by y^2 = x^3 + 86786*x + 16746 over Finite
+Field of size 139967,
+ (82090 : 7459 : 1),
+ (70660 : 33062 : 1))</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_62">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_60" class="cell_visible">
+    <div id="cell_60" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print"># Alice computes the shared secret:
+SBA = mA * phiB_PA + nA * phiB_QA
+print SBA
+phiBA = EB.isogeny(SBA)
+print phiBA
+KA = phiBA.codomain().j_invariant()&nbsp;</div>
+
+
+
+            <div id="introspect_div_60" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_60"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_60">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_60">
+
+                                    <pre class="shrunk">(12132 : 0 : 1)
+Isogeny of degree 2 from Elliptic Curve defined by y^2 = x^3 +
+86786*x + 16746 over Finite Field of size 139967 to Elliptic Curve
+defined by y^2 = x^3 + 130855*x + 32368 over Finite Field of size
+139967</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_60">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_61" class="cell_visible">
+    <div id="cell_61" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print"># Bob computes the shared secret:
+SAB = mB * phiA_PB + nB * phiA_QB
+print SAB
+phiAB = EA.isogeny(SAB)
+print phiAB
+KB = phiAB.codomain().j_invariant()&nbsp;</div>
+
+
+
+            <div id="introspect_div_61" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_61"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_61">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_61">
+
+                                    <pre class="shrunk">(107172 : 18290 : 1)
+Isogeny of degree 3 from Elliptic Curve defined by y^2 = x^3 +
+91219*x + 72262 over Finite Field of size 139967 to Elliptic Curve
+defined by y^2 = x^3 + 130855*x + 32368 over Finite Field of size
+139967</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_61">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="cell_outer_65" class="cell_visible">
+    <div id="cell_65" class="cell_evaluated">
+
+
+
+
+
+
+
+
+                <div class="cell_input_print">KA == KB&nbsp;</div>
+
+
+
+            <div id="introspect_div_65" class="introspection"></div>
+
+
+
+
+        <div class="cell_output_div">
+            <table class="cell_output_box">
+                <tr>
+                    <td class="cell_number" id="cell_number_65"
+                         >
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td class="output_cell">
+                        <div class="cell_div_output_wrap" id="cell_div_output_65">
+                            <div class="cell_output_print_wrap"
+                                id="cell_output_65">
+
+                                    <pre class="shrunk">True</pre>
+
+                            </div>
+
+                                <div class="cell_output_html_wrap"
+                                     id="cell_output_html_65">
+
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<span id="cell_outer_8">
+
+    <div class="text_cell" id="cell_text_8">
+
+    </div>
+
+
+
+</span>
+
+</div>
+<!--    <script>
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>-->
+
+    </body>
+</html>
