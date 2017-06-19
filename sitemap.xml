@@ -30,12 +30,16 @@
   <lastmod>2017-06-14T21:17:00Z</lastmod>
  </url>
  <url>
+  <loc>https://www.lvh.io/2017/index.html</loc>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://www.lvh.io/about.html</loc>
   <lastmod>2017-06-14T21:17:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/archive.html</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:18:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/amp.html</loc>
@@ -43,7 +47,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/categories/clojure.html</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/crypto.html</loc>
@@ -55,7 +59,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/categories/docker.html</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/dom.html</loc>
@@ -71,7 +75,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/categories/index.html</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:18:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/categories/mathjax.html</loc>
@@ -119,11 +123,11 @@
  </url>
  <url>
   <loc>https://www.lvh.io/index-5.html</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:18:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/index.html</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack.html</loc>
@@ -247,7 +251,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2016-rmbp-caveats.html</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:18:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/call-for-proposal-proposals.html</loc>
@@ -302,12 +306,12 @@
   <lastmod>2017-06-14T21:17:00Z</lastmod>
  </url>
  <url>
-  <loc>https://www.lvh.io/posts/secret-stores.html</loc>
-  <lastmod>2017-01-23T17:57:00Z</lastmod>
- </url>
- <url>
   <loc>https://www.lvh.io/posts/securing-apis-with-shims.html</loc>
   <lastmod>2017-06-14T21:17:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</loc>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</loc>

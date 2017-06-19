@@ -1,5 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about docker)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/docker.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 14 Jun 2017 21:17:04 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about docker)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/docker.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 19 Jun 2017 16:26:44 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
+runtime environment. Many platforms have different requirements when you're
+generating a runnable artifact than when you're running it.&lt;/p&gt;
+&lt;p&gt;In languages like Go, Rust or C, where the most common implementations produce
+native binaries, the resulting artifact may require nothing from the environment
+at all, or perhaps as little as a C standard library. Even in languages like
+Python that don't typically have a build step, you might indirectly use code
+that still requires compilation. Common examples include OpenSSL with
+pyca/cryptography or NETLIB and other numerical libraries with numpy/scipy.&lt;/p&gt;
+&lt;p&gt;In Clojure, you can easily build "uberjars" with both lein and boot. These are
+jars (the standard JVM deployable artifact) that come with all dependencies
+prepackaged, requiring nothing beyond what's in the Java standard library
+(rt.jar). While this still requires a JRE to run, that is still much smaller
+than the full development environment.&lt;/p&gt;
+&lt;p&gt;There are a few advantages to separating environments. It all boils down to them
+not having anything in them they don't need. That has clear performance
+advantages, although Docker has historically mitigated this problem with layered
+pulls. It can have security benefits as well: you can't have bugs in software
+you don't ship. Even software that isn't directly used in the build process can
+be affected: some build environments will contain plenty of software that is
+never used that would normally carry over into your production environments.&lt;/p&gt;
+&lt;p&gt;Historically, most users of Docker haven't bothered. Even if there are
+advantages, they aren't worth the hassle of having separate Docker environments
+and ferrying data between them. While different ways of effectively sharing data
+between containers have been available for years, people who wanted a shared
+build step have mostly had to write their own tooling. For example,
+my &lt;a href="https://github.com/lvh/icecap/blob/master/utils/build-libsodium-package.sh"&gt;icecap&lt;/a&gt; project has a batch file with an embedded Dockerfile that builds
+libsodium debs.&lt;/p&gt;
+&lt;p&gt;The upcoming release of Docker will add support for a new feature called
+multi-stage builds, where this pattern is much simpler. Dockerfiles themselves
+know about your precursor environments now, and future containers have full
+access to previous containers for copying build artifacts around. At time of
+writing, this requires you to opt in to the beta version of Docker, although it
+should be available in the next stable version.&lt;/p&gt;
+&lt;p&gt;Here's an example Dockerfile that builds an uberjar from a standard lein-based
+app, and puts it in a new JRE image:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;FROM clojure AS build-env
+WORKDIR /usr/src/myapp
+COPY project.clj /usr/src/myapp/
+RUN lein deps
+COPY . /usr/src/myapp
+RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
+
+FROM openjdk:8-jre-alpine
+WORKDIR /myapp
+COPY --from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar
+ENTRYPOINT ["java", "-jar", "/myapp/myapp.jar"]
+&lt;/pre&gt;
+
+
+&lt;p&gt;The full clojure base image is a whopping 629MB (according to &lt;code&gt;docker images&lt;/code&gt;),
+whereas &lt;code&gt;openjdk:8-jre-alpine&lt;/code&gt; clocks in at 81.4MB. That's a little bit of an
+unfair comparison: &lt;code&gt;clojure&lt;/code&gt; also has an alpine-based image. However, this still
+illustrates the savings compared to the most commonly used Docker image.&lt;/p&gt;
+&lt;p&gt;There are still good reasons for not using multi-stage builds. In the icecap
+example above, the entire point is to use Docker as a build system to produce a
+deb artifact &lt;em&gt;outside of Docker&lt;/em&gt;. However, that's a pretty exotic use case: for
+most people this will hopefully make smaller Docker images an easy reality.&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><category>docker</category><guid>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</guid><pubDate>Fri, 16 Jun 2017 17:12:46 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
 process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
 called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
 effectively having root access. Any process that can write to the

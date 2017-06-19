@@ -11,7 +11,7 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/clojure.xml</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/crypto.xml</loc>
@@ -23,7 +23,7 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/docker.xml</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/categories/dom.xml</loc>
@@ -67,10 +67,10 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/rss.xml</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/sitemap.xml</loc>
-  <lastmod>2017-06-14T21:17:00Z</lastmod>
+  <lastmod>2017-06-19T16:26:00Z</lastmod>
  </sitemap>
 </sitemapindex>

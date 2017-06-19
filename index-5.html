@@ -76,7 +76,85 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/https-requests-with-client-certificates-in-clojure.html" class="u-url">HTTPS requests with client certificates in Clojure</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/they-do-take-security-seriously.html" class="u-url">They do take security seriously</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline"><a href="posts/they-do-take-security-seriously.html" rel="bookmark"><time class="published dt-published" datetime="2015-07-05T13:17:18-07:00" title="2015-07-05 13:17">2015-07-05 13:17</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Earlier today, I read an <a href="http://www.troyhunt.com/2015/07/we-take-security-seriously-otherwise.html">article</a> about the plethora of
+information security breaches in recent history. Its title reads:</p>
+<blockquote>
+<p>“We take security seriously”, otherwise known as “We didn’t take it
+seriously enough”</p>
+</blockquote>
+<p>The article then lists a number of companies informing the public that
+they've been breached.</p>
+<p>I think this article doesn't just blame the victims of those attacks,
+but subjects them to public ridicule. Neither helps anyone, least of
+all end users.</p>
+<p>I'm surprised to hear such comments from Troy Hunt. He's certainly an
+accomplished professional with extensive security experience. This is
+not the first time people have expressed similar thoughts; the
+<a href="https://news.ycombinator.com/item?id=9834099">HN thread</a> for that article is rife with them.</p>
+<p>The explicit assumption is that these companies wouldn't have gotten
+in trouble if only they had taken security more seriously. In a world
+where the information services store is increasingly valuable and
+software increasingly complex, breaches are going to happen. The idea
+that getting breached is their own darn fault is unrealistic.</p>
+<p>This idea is also counterproductive. Firstly, there's one thing all of
+the victims being ostracized have in common: they disclosed the
+details of the breach. That is exactly what they should have done;
+punishing them creates a perverse incentive for victims to hide
+breaches in the future, a decidedly worse end-user outcome.</p>
+<p>Secondly, if any breach is as bad as any other breach, there is no
+incentive to proactively mitigate damage from future breaches by
+hardening internal systems. Why encrypt records, invest in access
+control or keep sensitive information in a separate database with
+extensive audit logging? It might materially impact end-user security,
+but who cares -- all anyone is going to remember is that you got
+popped.</p>
+<p>Finally, there's a subtle PR issue: how can the security industry
+build deep relationships with clients when we publicly ridicule them
+when the inevitable happens?</p>
+<p>These commentators have presumably not been the victims of a breach
+themselves. I have trouble swallowing that anyone who's been through
+the terrifying experience of being breached, seeing a breach up close
+or even just witnessing a hairy situation being defused could air
+those thoughts.</p>
+<p>If you haven't been the victim of an attack, and feel that your
+security posture is keeping you from becoming one, consider this:</p>
+<ol>
+<li>What's your threat model?</li>
+<li>How confident are you in your estimation of the capabilities of
+   attackers?</li>
+<li>Would you still be okay if your database became three orders of
+   magnitude more valuable? Most personal data's value will scale
+   linearly with the number of people affected, so if you're a small
+   start-up with growth prospects, you'll either fail to execute, or
+   be subject to that scenario.</li>
+<li>Would you still be okay if the attacker has a few 0-days?</li>
+<li>What if the adversary is a nation-state?</li>
+<li>How do you <em>know</em> you haven't been breached?</li>
+</ol>
+<p>That brings me to my final thesis: I contest the claim that all of the
+companies in the article didn't take security seriously. It is far
+more probable that all of the companies cited in the article have
+expended massive efforts to protect themselves, and, in doing so,
+foiled many attacks. It's also possible that they haven't; but the
+onus there is certainly on the accuser.</p>
+<p>Clearly, that's a weak form of disagreement, since "taking something
+seriously" is entirely subjective. However, keep in mind that many
+targets <em>actually</em> haven't taken security seriously, and would not
+even have the technical sophistication to detect an attack.</p>
+<p>(By the way, if you too would like to help materially improve people's
+security, we're hiring. Contact me at <code>_@lvh.io</code>.)</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/https-requests-with-client-certificates-in-clojure.html" class="u-url">HTTPS requests with client certificates in Clojure</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
