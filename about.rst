@@ -7,16 +7,14 @@
 .. description:
 .. type: text
 
-Hi! I'm Laurens, but most folks call me ``lvh``. I'm a Principal at `Latacora`_.
-If you're interested in building a security team for your startup, you should
-come talk to us. I do work in information security (particularly cryptography)
-and distributed systems. My beard solves discrete logs in fields of small
-characteristic.
+Hi, I'm ``lvh``. I'm a Principal at `Latacora`_.  If you're interested in
+building a security team for your startup, you should come talk to us. I do
+work in information security (particularly cryptography) and distributed
+systems.  Currently I spend most of my time working on SecOps tooling.
 
-I'm a Fellow of the `Python Software Foundation`_, and wear a number of hats at
-PyCon_. These days, I mostly write Clojure. I'm a fan of Haskell and ML. I write
-C in anger, and am really looking forward to the day where Rust means I will
-never have to do so again.
+I'm a Fellow of the `Python Software Foundation`_, and wore a number of hats at
+PyCon_. These days, I mostly write Clojure. I write C in anger, and am really
+looking forward to the day where Rust means I will never have to do so again.
 
 Feel free to send me an e-mail at my `personal address`_ (``_@lvh.io``) or my
 `work address`_ (``lvh@latacora.com``).
