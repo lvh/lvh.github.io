@@ -129,9 +129,8 @@ libsodium debs.</p>
 <p>The upcoming release of Docker will add support for a new feature called
 multi-stage builds, where this pattern is much simpler. Dockerfiles themselves
 know about your precursor environments now, and future containers have full
-access to previous containers for copying build artifacts around. At time of
-writing, this requires you to opt in to the beta version of Docker, although it
-should be available in the next stable version.</p>
+access to previous containers for copying build artifacts around. This
+requires Docker 17.05 or newer.</p>
 <p>Here's an example Dockerfile that builds an uberjar from a standard lein-based
 app, and puts it in a new JRE image:</p>
 <pre class="code literal-block"><span></span>FROM clojure AS build-env
@@ -139,7 +138,8 @@ WORKDIR /usr/src/myapp
 COPY project.clj /usr/src/myapp/
 RUN lein deps
 COPY . /usr/src/myapp
-RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
+RUN lein uberjar :uberjar-name myapp-standalone.jar
+
 
 FROM openjdk:8-jre-alpine
 WORKDIR /myapp
@@ -153,9 +153,20 @@ whereas <code>openjdk:8-jre-alpine</code> clocks in at 81.4MB. That's a little b
 unfair comparison: <code>clojure</code> also has an alpine-based image. However, this still
 illustrates the savings compared to the most commonly used Docker image.</p>
 <p>There are still good reasons for not using multi-stage builds. In the icecap
-example above, the entire point is to use Docker as a build system to produce a
-deb artifact <em>outside of Docker</em>. However, that's a pretty exotic use case: for
-most people this will hopefully make smaller Docker images an easy reality.</p>
+example above, the entire point is to use Docker as a build system to produce
+a deb artifact <em>outside of Docker</em>. However, that's a pretty exotic use case:
+for most people this will hopefully make smaller Docker images an easy
+reality.</p>
+<p><em>Edited:</em> The original blog post said that the Docker version to support this
+feature was in beta at time of writing. That was/is correct, but it's since
+been released, so I updated the post.</p>
+<p><em>Edited:</em>* Łukasz Korecki pointed out that <code>lein uberjar</code> has an <code>:uberjar-name</code>
+parameter. The previous line in the Dockerfile was much harder to read:</p>
+<pre class="code literal-block"><span></span>RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
+</pre>
+
+
+<p>Thanks Łukasz!</p>
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
@@ -171,7 +182,7 @@ most people this will hopefully make smaller Docker images an easy reality.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2017         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

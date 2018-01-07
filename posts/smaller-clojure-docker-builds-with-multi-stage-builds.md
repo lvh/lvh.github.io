@@ -45,9 +45,8 @@ libsodium debs.
 The upcoming release of Docker will add support for a new feature called
 multi-stage builds, where this pattern is much simpler. Dockerfiles themselves
 know about your precursor environments now, and future containers have full
-access to previous containers for copying build artifacts around. At time of
-writing, this requires you to opt in to the beta version of Docker, although it
-should be available in the next stable version.
+access to previous containers for copying build artifacts around. This
+requires Docker 17.05 or newer.
 
 Here's an example Dockerfile that builds an uberjar from a standard lein-based
 app, and puts it in a new JRE image:
@@ -58,7 +57,8 @@ WORKDIR /usr/src/myapp
 COPY project.clj /usr/src/myapp/
 RUN lein deps
 COPY . /usr/src/myapp
-RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
+RUN lein uberjar :uberjar-name myapp-standalone.jar
+
 
 FROM openjdk:8-jre-alpine
 WORKDIR /myapp
@@ -72,8 +72,23 @@ unfair comparison: `clojure` also has an alpine-based image. However, this still
 illustrates the savings compared to the most commonly used Docker image.
 
 There are still good reasons for not using multi-stage builds. In the icecap
-example above, the entire point is to use Docker as a build system to produce a
-deb artifact *outside of Docker*. However, that's a pretty exotic use case: for
-most people this will hopefully make smaller Docker images an easy reality.
+example above, the entire point is to use Docker as a build system to produce
+a deb artifact *outside of Docker*. However, that's a pretty exotic use case:
+for most people this will hopefully make smaller Docker images an easy
+reality.
+
+*Edited:* The original blog post said that the Docker version to support this
+feature was in beta at time of writing. That was/is correct, but it's since
+been released, so I updated the post.
+
+*Edited:** Łukasz Korecki pointed out that `lein uberjar ` has an `:uberjar-name`
+parameter. The previous line in the Dockerfile was much harder to read:
+
+```
+RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
+```
+
+Thanks Łukasz!
+
 
 [icecap]: https://github.com/lvh/icecap/blob/master/utils/build-libsodium-package.sh
