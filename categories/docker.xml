@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about docker)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/docker.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 07 Jan 2018 04:10:15 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about docker)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/docker.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 07 Jan 2018 23:13:32 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
 runtime environment. Many platforms have different requirements when you're
 generating a runnable artifact than when you're running it.&lt;/p&gt;
 &lt;p&gt;In languages like Go, Rust or C, where the most common implementations produce
@@ -39,8 +39,7 @@ WORKDIR /usr/src/myapp
 COPY project.clj /usr/src/myapp/
 RUN lein deps
 COPY . /usr/src/myapp
-RUN lein uberjar :uberjar-name myapp-standalone.jar
-
+RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
 
 FROM openjdk:8-jre-alpine
 WORKDIR /myapp
@@ -49,6 +48,12 @@ ENTRYPOINT ["java", "-jar", "/myapp/myapp.jar"]
 &lt;/pre&gt;
 
 
+&lt;p&gt;This captures the uberjar name from the &lt;code&gt;lein uberjar&lt;/code&gt; output. If your uberjar
+name doesn't end in &lt;code&gt;.standalone.jar&lt;/code&gt;, that won't work. You can change the name
+of the uberjar with the &lt;code&gt;:uberjar-name&lt;/code&gt; setting in &lt;code&gt;project.clj&lt;/code&gt;. If you set it
+to &lt;code&gt;myapp-standalone.jar&lt;/code&gt;, you don't need the gnarly &lt;code&gt;sed&lt;/code&gt; expression anymore at
+all, and can just call &lt;code&gt;lein uberjar&lt;/code&gt;. (Thanks to Łukasz Korecki for the
+suggestion!)&lt;/p&gt;
 &lt;p&gt;The full clojure base image is a whopping 629MB (according to &lt;code&gt;docker images&lt;/code&gt;),
 whereas &lt;code&gt;openjdk:8-jre-alpine&lt;/code&gt; clocks in at 81.4MB. That's a little bit of an
 unfair comparison: &lt;code&gt;clojure&lt;/code&gt; also has an alpine-based image. However, this still
@@ -61,13 +66,8 @@ reality.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edited:&lt;/em&gt; The original blog post said that the Docker version to support this
 feature was in beta at time of writing. That was/is correct, but it's since
 been released, so I updated the post.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Edited:&lt;/em&gt;* Łukasz Korecki pointed out that &lt;code&gt;lein uberjar&lt;/code&gt; has an &lt;code&gt;:uberjar-name&lt;/code&gt;
-parameter. The previous line in the Dockerfile was much harder to read:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
-&lt;/pre&gt;
-
-
-&lt;p&gt;Thanks Łukasz!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><category>docker</category><guid>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</guid><pubDate>Fri, 16 Jun 2017 17:12:46 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+&lt;p&gt;&lt;em&gt;Edited:&lt;/em&gt;* Łukasz Korecki pointed out that &lt;code&gt;project.clj&lt;/code&gt; has an &lt;code&gt;:uberjar-name&lt;/code&gt;
+parameter which can be used to avoid the gnarly &lt;code&gt;sed&lt;/code&gt; expression. Thanks Łukasz!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><category>docker</category><guid>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</guid><pubDate>Fri, 16 Jun 2017 17:12:46 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
 process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
 called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
 effectively having root access. Any process that can write to the

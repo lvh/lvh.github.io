@@ -57,14 +57,20 @@ WORKDIR /usr/src/myapp
 COPY project.clj /usr/src/myapp/
 RUN lein deps
 COPY . /usr/src/myapp
-RUN lein uberjar :uberjar-name myapp-standalone.jar
-
+RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
 
 FROM openjdk:8-jre-alpine
 WORKDIR /myapp
 COPY --from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar
 ENTRYPOINT ["java", "-jar", "/myapp/myapp.jar"]
 ```
+
+This captures the uberjar name from the `lein uberjar` output. If your uberjar
+name doesn't end in `.standalone.jar`, that won't work. You can change the name
+of the uberjar with the `:uberjar-name` setting in `project.clj`. If you set it
+to `myapp-standalone.jar`, you don't need the gnarly `sed` expression anymore at
+all, and can just call `lein uberjar`. (Thanks to Łukasz Korecki for the
+suggestion!)
 
 The full clojure base image is a whopping 629MB (according to `docker images`),
 whereas `openjdk:8-jre-alpine` clocks in at 81.4MB. That's a little bit of an
@@ -81,14 +87,7 @@ reality.
 feature was in beta at time of writing. That was/is correct, but it's since
 been released, so I updated the post.
 
-*Edited:** Łukasz Korecki pointed out that `lein uberjar ` has an `:uberjar-name`
-parameter. The previous line in the Dockerfile was much harder to read:
-
-```
-RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
-```
-
-Thanks Łukasz!
-
+*Edited:** Łukasz Korecki pointed out that `project.clj` has an `:uberjar-name`
+parameter which can be used to avoid the gnarly `sed` expression. Thanks Łukasz!
 
 [icecap]: https://github.com/lvh/icecap/blob/master/utils/build-libsodium-package.sh
