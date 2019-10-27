@@ -1,53 +1,51 @@
 <!DOCTYPE html>
-<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="lvh's blog">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lvh</title>
 <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-<meta name="theme-color" content="#5670d4">
+<meta name="theme-color" content="#383234">
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
-<link rel="canonical" href="https://www.lvh.io/index.html">
+<link rel="canonical" href="https://www.lvh.io/">
 <link rel="next" href="index-5.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/solving-regex-crosswords.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/smaller-clojure-docker-builds-with-multi-stage-builds/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
 <!-- This keeps the margins nice -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="https://www.lvh.io/">
-                <img src="pinchy.svg" alt="lvh" id="logo"><span id="blog-title">lvh</span>
-            </a>
-        </div>
-<!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
-            <ul class="nav navbar-nav">
-<li>
-<a href="about.html">About</a>
+        <a class="navbar-brand" href="https://www.lvh.io/">
+            <img src="pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="about.html" class="nav-link">About</a>
                 </li>
-<li>
-<a href="archive.html">Archive</a>
+<li class="nav-item">
+<a href="archive.html" class="nav-link">Archive</a>
                 </li>
-<li>
-<a href="categories/index.html">Tags</a>
+<li class="nav-item">
+<a href="categories/index.html" class="nav-link">Tags</a>
                 </li>
-<li>
-<a href="talks.html">Talks</a>
+<li class="nav-item">
+<a href="talks.html" class="nav-link">Talks</a>
                 </li>
-<li>
-<a href="rss.xml">RSS feed</a>
+<li class="nav-item">
+<a href="rss.xml" class="nav-link">RSS feed</a>
 
                 
             </li>
@@ -58,7 +56,7 @@
 <!-- End of custom search -->
 
 
-            <ul class="nav navbar-nav navbar-right"></ul>
+            <ul class="navbar-nav navbar-right"></ul>
 </div>
 <!-- /.navbar-collapse -->
     </div>
@@ -66,396 +64,23 @@
 </nav><!-- End of Menubar --><div class="container" id="content" role="main">
     <div class="body-content">
         <!--Body content-->
-        <div class="row">
-            
-            
+        
+        
 
     
 
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/solving-regex-crosswords.html" class="u-url">Solving regex crosswords</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/smaller-clojure-docker-builds-with-multi-stage-builds/" class="u-url">Smaller Clojure Docker builds with multi-stage builds</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/solving-regex-crosswords.html" rel="bookmark"><time class="published dt-published" datetime="2019-10-25T19:36:29-07:00" title="2019-10-25 19:36">2019-10-25 19:36</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p><strong>DRAFT!</strong></p>
-<p><a href="https://regexcrossword.com/">Regex Crossword</a> is a puzzle game to help you
-practice regular expressions. I wrote a program to solve them. You can find it
-on GitHub as <a href="https://github.com/lvh/regex-crossword"><code>lvh/regex-crossword</code></a>.
-This blog post walks you through how I wrote it using logic programming. </p>
-<p>To me this game feels more like Sudoku than a crossword. When you solve a
-crossword, you start by filling out the words you're certain of and use those
-answers as hints for the rest. Backtracking is relatively rare. In a sudoku, you
-might start by filling out a handful of certain boxes, but in most puzzles you
-quickly need to backtrack. That distinction shapes how I think of solving it:
-searching and backtracking is a natural fit for logic programming.</p>
-<p>Logic programming is a niche technology, but in its sweet spot it's miraculous.
-I'll introduce the concept to help you recognize what sorts of problems it's
-good at. Worst case, you'll enjoy a cool hack. Best case you'll get the
-satisfaction of writing a beautiful solution to a problem some time in the
-future.</p>
-<p>My programming language of choice is Clojure, and Clojure has
-<a href="https://github.com/clojure/core.logic"><code>clojure/core.logic</code></a>, a logic programming library. Because logic
-programming is such a specialized tool, it's more useful to have libraries that
-let you "drop in to" logic programming than to do everything in a full-blown
-logic programming language.</p>
-<h2>Approach</h2>
-<p>It would not be a bad idea to read <a href="https://regexcrossword.com/howtoplay">the instructions for Regex
-Crossword</a>. I'll also assume you have seen some basic regular
-expressions. Hopefully the Clojure will be piecemeal enough you can
-just follow along, but reading a tutorial wouldn't hurt.</p>
-<p>Let's take a look at the first beginner puzzle:</p>
-<p><img src="img/regex-crossword/beginner1.png"></p>
-<p>Each regex part applies to some number of unknowns (empty boxes). The first row
-regex <code>HE|LL|O+</code> applies to the unknowns of the first row. The first column
-regex <code>[^SPEAK]+</code> applies to the unknowns of the first column. Both constrain
-the top left unknown: we're counting on our logic programming engine at being
-convenient for expressing that "cascading" of constraints.</p>
-<p>An unknown is just a logic variable in constraint logic programming. For brevity
-we'll call them "lvars" (<em>[ell vars]</em>).</p>
-<p>Rows, columns (and in later puzzles hexagon lines) are all just layout.
-Fundamentally it's all just a regex applying to some lvars.</p>
-<h2>Breaking down regular expressions</h2>
-<p>Most regular expressions have structure, like <code>(AB|CD)XY</code>. We'll solve this
-problem recursively: if <code>(AB|CD)XY</code> matches lvars <code>p q r s</code>, then presumably
-<code>pq</code> must match <code>AB|CD</code> and <code>rs</code> must match <code>XY</code>.</p>
-<p>(There are some counterexamples to the idea that we can solve the entire problem
-recursively! For example, backrefs within a regex would require a second pass,
-and backrefs across regular expressions would require another top-level pass.
-We'll deal with those later. There are ties to language theory here, but that's
-a story for another day.)</p>
-<p>We'll parse the regular expression into a data structure that's easier to
-handle. Fortunately, there's a piece of code out there that knows how to
-generate strings matching a given regex, which has a parser we can reuse. That
-parser is designed for Java's regular expression syntax. It's not quite
-identical to that of JavaScript, but we're hoping that the puzzles avoid those
-tricky edge cases for now.</p>
-<p>To parse, we use <code>[com.gfredericks.test.chuck.regexes :as cre]</code>.</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"HE|LL|O+"</span><span class="p">)</span>
-<span class="c1">;; =&gt; (read: produces)</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\H</span><span class="p">}</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\E</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\L</span><span class="p">}</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\L</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
-     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\O</span><span class="p">}]</span>,
-     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span> <span class="nv">nil</span><span class="p">]})})}</span>
-</pre>
-
-
-<p>Progress! It is indeed an alternation (a or b) of a concatenation of H and E, or
-L and L, or the letter O one or more times. </p>
-<h2>Logic machinery</h2>
-<p>The logic programming engine is going to search a tree of possibilities for
-solutions that fit your constraints. Logic programming is inherently
-declarative: instead of telling the computer how to find the answer, we describe
-what the answer looks like.</p>
-<p>An lvar that doesn't have a value assigned to it yet (it could still be
-anything) is called "fresh". An lvar with a definite value is called "bound".
-There is nothing preventing your program from returning fresh variables: that
-just means the answer that doesn't rely on what that lvar taking any particular
-value (like the <em>x</em> in <em>0x = 0</em>).</p>
-<p>In core.logic, a program consists of a series of expressions called <em>goals</em>.
-<code>(l/== a b)</code> is a goal to make the values of <code>a</code> and <code>b</code> equal. It does not, by
-itself, compare <code>a</code> to <code>b</code> or assign anything to anything. It just expresses the
-idea of comparing the two. Logic programming calls this "unification".</p>
-<p>As the engine searches the space of possible answers, sometimes <code>a</code> will be
-equal to <code>b</code> already, or <code>a</code> will be bound and <code>b</code> will be fresh in which case
-<code>b</code> will become bound to whatever <code>a</code> was bound to. Either way, the two
-variables can be <em>unified</em> and the goal is said to <em>succeed</em>. But in many parts
-of the tree this doesn't work out: <code>a</code> and <code>b</code> will already be bound to
-incompatible values. In that case, the goal is said to fail. Unification is just
-one of many goals, but it's the most important one in most programs including
-ours.</p>
-<p>(You'll probably be happy to learn <code>l/==</code>, full name <code>clojure.core.logic/==</code>, is
-just a function. It requires learning a ton of deep logic machinery to grok, but
-at least it's not magic.)</p>
-<p>Finally, we need a way to actually run the logic programming engine. that's
-<code>clojure.core.logic/run</code>'s job. Something like:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">l/run</span> <span class="mi">1</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>            <span class="c1">;; run to find up to one answer with logic vars [q]</span>
-  <span class="p">(</span><span class="nf">l/==</span> <span class="nv">q</span> <span class="ss">'fred</span><span class="p">)</span>        <span class="c1">;; where q is unified with 'fred</span>
-</pre>
-
-
-<p>... will return <code>('fred)</code> (the 1-list with the symbol <code>'fred</code> in it) because
-there's only one answer for <code>q</code> that makes all the goals (here just one goal)
-succeed. <code>run</code> has a sibling <code>run*</code> that gets you all the answers. It returns
-the same result, because there's only one value for <code>q</code> that makes all goals
-succeed.</p>
-<p>It takes the <em>maximum number of answers</em> as a parameter. Since you're describing
-what the answer looks like, there might be zero, one, or any other number of
-answers. Sometimes the engine will be able to prove there are no other options
-(because the search was exhaustive) and it'll return fewer. Some pathological
-programs run forever, some so long it might as well be forever.</p>
-<h2>Direct match</h2>
-<p>The simplest possible regular expression is just a character, which matches
-itself: <code>A</code>. In our parse tree, this is an entry of <code>:type</code> <code>:character</code>. We'll
-write a multimethod dispatching on <code>:type</code> to make this work so we can implement
-other types later.</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmulti </span><span class="nv">re-&gt;goal</span> <span class="ss">:type</span><span class="p">)</span>
-</pre>
-
-
-<p>A character looks like this: <code>{:type :character, :character \L}</code>. We'll use
-destructuring to extract the <code>:character</code> key. In general, this multimethod will
-take multiple lvars, though incidentally in the case of <code>:character</code> it'll
-be just one, so we can destructure it as well.</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:character</span>
-  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">character</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span><span class="p">]]</span>
-  <span class="p">(</span><span class="nf">l/==</span> <span class="nv">character</span> <span class="nv">lvar</span><span class="p">))</span>
-</pre>
-
-
-<p>We'll write a test to verify this works.</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-character-test</span>
-  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span><span class="p">)</span>
-           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
-             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span> <span class="p">[</span><span class="nv">q</span><span class="p">])))))</span>
-</pre>
-
-
-<h2>Concatenation</h2>
-<p>We want to be able to solve squares, not just individual letters. The simplest
-example of that is concatenation. The simplest case is a concatenation of two
-letters:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">a</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})</span>
-<span class="p">(</span><span class="k">def </span><span class="nv">aa</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span> <span class="ss">:elements</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">a</span><span class="p">]})</span>
-</pre>
-
-
-<p>A simple test:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-concatenation-test</span>
-  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">((</span><span class="sc">\A</span> <span class="sc">\A</span><span class="p">))</span>
-           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span> <span class="nv">q</span><span class="p">]</span>
-             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="nv">aa</span> <span class="p">[</span><span class="nv">p</span> <span class="nv">q</span><span class="p">])))))</span>
-</pre>
-
-
-<p>A simple implementation passes this test:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:concatenation</span>
-  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
-  <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">e</span> <span class="nv">elements</span>
-                <span class="nv">v</span> <span class="nv">lvars</span><span class="p">]</span>
-            <span class="p">(</span><span class="nf">re-&gt;goal</span> <span class="nv">e</span> <span class="p">[</span><span class="nv">v</span><span class="p">]))))</span>
-</pre>
-
-
-<p>(<code>l/and*</code>is a function that returns a goal that succeeds when all its goals
-succeed. We'd use the macro version <code>l/all</code> if we were explicitly writing out
-our goals. Because we're generating them, it's easier to use a function.)</p>
-<p>This passes the test, but we're clearly abusing the fact that we happen to know
-that the parts are characters and therefore length 1. Those constituent parts
-could be anything, and so they could be longer than 1. We can't write a test for
-that yet, because we don't have any regex parses that express different options
-yet. Concatenations of characters only match exactly one thing, so they have
-fixed length. We already saw the remaining two things to implement in our first
-parse tree: <code>:alternation</code> (<em>or</em>, <code>A|B</code>) and <code>:repetition</code> (<code>A{x,y}</code> plus
-shorthand spellings <code>A*</code> and <code>A+</code>). Alternation came first, so let's try that
-next.</p>
-<p>(We could technically produce a concatenation of concatenations, or character
-literals that contain multiple characters, but our parser produces neither and
-I'd rather work from real examples. Plus, we have to implement alternation
-anyway.)</p>
-<h2>Alternation</h2>
-<p>Let's look at a few parse trees for some simple alternations:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
-</pre>
-
-
-<p>Per our note above, we should also think of an example where the options are
-different length.</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"AAA|B"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
-    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
-    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
-</pre>
-
-
-<p>It's also probably a good idea to consider something with more than two alternatives:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B|C"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\C</span><span class="p">})})}</span>
-</pre>
-
-
-<p>We need a way to express disjunction</p>
-<p>This primer is a little unorthodox because we're walking through a problem that
-requires rule generation. Most introductory texts make you write simple, static
-rules and build up from there. Just like <code>l/and*</code> had a macro variant <code>l/all</code>,
-disjunction is much more commonly expressed with the macro <code>l/conde</code>.</p>
-<h2>Fixing :concatenation</h2>
-<p>As we discovered earlier: concatenation is broken. It assumes each part is a
-character, and specifically that each part is length 1.</p>
-<h2>Fixing :character</h2>
-<p>What the concatenation problem tells us is that character is broken, too. It
-returned a successful goal when given more than one lvar.</p>
-<p>We communicate a problem with a failing goal. If some goal fails, the engine
-will stop exploring that branch. The always-failing goal <code>l/fail</code> is designed
-for this sort of thing. (You can probably guess what its counterpart <code>l/succeed</code>
-does.)</p>
-<p>We wrote our <code>:character</code> rule to assume that there would only be one lvar. That
-made sense because we knew that was always the case. But now <code>:concatenation</code>
-may attempt to call it with more, so we use <code>l/fail</code> to communicate the problem.</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:character</span>
-  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">character</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span> <span class="ss">:as</span> <span class="nv">lvars</span><span class="p">]]</span>
-  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lvars</span> <span class="nb">count </span><span class="p">(</span><span class="nb">= </span><span class="mi">1</span><span class="p">))</span>
-    <span class="p">(</span><span class="nf">l/==</span> <span class="nv">character</span> <span class="nv">lvar</span><span class="p">)</span>
-    <span class="nv">l/fail</span><span class="p">))</span>
-</pre>
-
-
-<p>You could also do this in logic programming so that it's checked at runtime, but
-since we're generating our goals ahead of time here and only giving them to the
-engine at the end, we can short-circuit here.</p>
-<h2>Repetition</h2>
-<h3>Sample repetition parses</h3>
-<p>Let's see what the parser does for a few simple repetitions:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A{1}"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
-     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
-     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span><span class="nv">N</span> <span class="mi">1</span><span class="nv">N</span><span class="p">]})})}</span>
-
-<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A{1,}"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
-     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
-     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span><span class="nv">N</span> <span class="nv">nil</span><span class="p">]})})}</span>
-
-<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A{1,2}"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
-     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
-     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span><span class="nv">N</span> <span class="mi">2</span><span class="nv">N</span><span class="p">]})})}</span>
-
-<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A*"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
-     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
-     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">0</span> <span class="nv">nil</span><span class="p">]})})}</span>
-
-<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A+"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
-     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
-     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span> <span class="nv">nil</span><span class="p">]})})}</span>
-</pre>
-
-
-<p>This matches our expectation, since:</p>
-<ul>
-<li>
-<code>A{n}</code> means exactly <em>n</em> A's</li>
-<li>
-<code>A{m,n}</code> means between <em>m</em> and <em>n</em> A's, inclusive</li>
-<li>
-<code>A{n,}</code> means <code>n</code> or more A's</li>
-<li>
-<code>A*</code> means 0 or more A's</li>
-<li>
-<code>A+</code> means 1 or more A's</li>
-</ul>
-<p>"No bound" is represented by <code>nil</code>. Some numbers are represented as just <code>1</code>,
-others as <code>1N</code>. The latter are <code>clojure.lang.BigInts</code>, not longs. The parser
-does this so it can support regexes with pathologically large sizes (longer than
-a <code>long</code>, a signed 64-bit integer). We can ignore that distinction: both behave
-identically for our purposes.</p>
-<h2>Conclusion</h2>
-<p>This introduction was a little unorthodox. Most texts focus on introducing
-different primitives, have you write small static rules and build up from there.
-You'll see <code>conde</code> long before anyone talks to you about <code>or*</code>. That's just a
-consequence of how I wrote this post, not a principled stance. Reading <a href="https://www.amazon.com/Little-Schemer-Daniel-P-Friedman/dp/0262560992">The
-Little Schemer</a> is still a good idea if you want to learn to write your own
-programs.</p>
-<h2>Next steps</h2>
-<p>These are things I thought were neat but didn't make sense in the original text.</p>
-<h3>Running programs backwards</h3>
-<p>A truly mind-bending feature of relational programs is that they can be ran
-"backwards". Usually, you write a program "forwards": it has some inputs and you
-expect some outputs. If you write your logic program a particular way, it
-doesn't actually know what's an input and what's an output, and so you can give
-it an "output" and it will come up with "inputs" that would have led to that
-output. This post did not demonstrate that, but it's one of the better hooks
-I've found to get people excited about logic programming. I could not give this
-talk better than <a href="https://www.youtube.com/watch?v=RVDCRlW1f1Y">Will Byrd presenting miniKanren</a>. I won't spoil the
-ending, but go watch that talk.</p>
-<p>Our program does not work that way. All our "inputs" are rules, all our lvars
-are the same kind (unknown boxes), so running it "backwards" doesn't really mean
-anything. It could, if our parser and rule generation were also fully
-relational. In that case, we could fill out some boxes and our program would
-tell us progressively more creative regular expressions that would match them.
-Instead of a puzzle solver, we would have written a puzzle creator.</p>
-<h3>Palindromes</h3>
-<p>Some puzzles have hints that help you solve them. Usually they're thematic cues,
-(e.g. "Hamlet") which are hard to tell a logic engine about. Structural cues are
-easy. For example, if you think some lines should be palindromes, you can just
-add the following constraint:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">l/all*</span> <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">vars</span><span class="p">]</span> <span class="p">(</span><span class="nf">l/==</span> <span class="nv">vars</span> <span class="p">(</span><span class="nb">reverse </span><span class="nv">vars</span><span class="p">)))</span> <span class="nv">lines</span><span class="p">))</span>
-</pre>
-
-
-<p>If evaluated at the right time, this should constrain the search tree. It's
-tricky to make sure that happens without measurement and fiddling.</p>
-<h3>Thematic cues</h3>
-<p>If you really wanted to add thematic cues, e.g. "Hamlet", you could grab the
-Wikipedia page, use something like TF/IDF to find important words, filter by the
-appropriate size, and introduce them as constraints. I don't expect this will
-speed anything up much even if you discount the initial step.</p>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/smaller-clojure-docker-builds-with-multi-stage-builds.html" class="u-url">Smaller Clojure Docker builds with multi-stage builds</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/smaller-clojure-docker-builds-with-multi-stage-builds.html" rel="bookmark"><time class="published dt-published" datetime="2017-06-16T10:12:46-07:00" title="2017-06-16 10:12">2017-06-16 10:12</time></a></p>
+            <p class="dateline">
+            <a href="posts/smaller-clojure-docker-builds-with-multi-stage-builds/" rel="bookmark">
+            <time class="published dt-published" datetime="2017-06-16T10:12:46-07:00" itemprop="datePublished" title="2017-06-16 10:12">2017-06-16 10:12</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -494,17 +119,17 @@ access to previous containers for copying build artifacts around. This
 requires Docker 17.05 or newer.</p>
 <p>Here's an example Dockerfile that builds an uberjar from a standard lein-based
 app, and puts it in a new JRE image:</p>
-<pre class="code literal-block"><span></span>FROM clojure AS build-env
-WORKDIR /usr/src/myapp
-COPY project.clj /usr/src/myapp/
-RUN lein deps
-COPY . /usr/src/myapp
-RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
+<pre class="code literal-block"><span></span><span class="k">FROM</span> <span class="n">clojure</span> <span class="k">AS</span> <span class="n">build</span><span class="o">-</span><span class="n">env</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">myapp</span>
+<span class="k">COPY</span> <span class="n">project</span><span class="p">.</span><span class="n">clj</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">myapp</span><span class="o">/</span>
+<span class="n">RUN</span> <span class="n">lein</span> <span class="n">deps</span>
+<span class="k">COPY</span> <span class="p">.</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">myapp</span>
+<span class="n">RUN</span> <span class="n">mv</span> <span class="ss">"$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')"</span> <span class="n">myapp</span><span class="o">-</span><span class="n">standalone</span><span class="p">.</span><span class="n">jar</span>
 
-FROM openjdk:8-jre-alpine
-WORKDIR /myapp
-COPY --from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar
-ENTRYPOINT ["java", "-jar", "/myapp/myapp.jar"]
+<span class="k">FROM</span> <span class="n">openjdk</span><span class="p">:</span><span class="mi">8</span><span class="o">-</span><span class="n">jre</span><span class="o">-</span><span class="n">alpine</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">myapp</span>
+<span class="k">COPY</span> <span class="c1">--from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar</span>
+<span class="n">ENTRYPOINT</span> <span class="p">[</span><span class="ss">"java"</span><span class="p">,</span> <span class="ss">"-jar"</span><span class="p">,</span> <span class="ss">"/myapp/myapp.jar"</span><span class="p">]</span>
 </pre>
 
 
@@ -530,12 +155,15 @@ been released, so I updated the post.</p>
 parameter which can be used to avoid the gnarly <code>sed</code> expression. Thanks Łukasz!</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/2016-rmbp-caveats.html" class="u-url">2016 rMBP caveats</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2016-rmbp-caveats/" class="u-url">2016 rMBP caveats</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/2016-rmbp-caveats.html" rel="bookmark"><time class="published dt-published" datetime="2016-11-22T07:49:16-08:00" title="2016-11-22 07:49">2016-11-22 07:49</time></a></p>
+            <p class="dateline">
+            <a href="posts/2016-rmbp-caveats/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-11-22T07:49:16-08:00" itemprop="datePublished" title="2016-11-22 07:49">2016-11-22 07:49</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -606,7 +234,7 @@ and OWC claims February 2017.</p>
 <h2>WiFi failing with USB-C devices plugged in</h2>
 <p>Just as I was going to start writing this post, I noticed that I wasn't able
 to sync my blog repository from GitHub:</p>
-<pre class="code literal-block"><span></span>Get https://api.github.com/repos/lvh/lvh.github.io: dial tcp 192.30.253.116:443: connect: network is unreachable
+<pre class="code literal-block"><span></span><span class="nv">Get</span> <span class="nv">https</span>:<span class="o">//</span><span class="nv">api</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">repos</span><span class="o">/</span><span class="nv">lvh</span><span class="o">/</span><span class="nv">lvh</span>.<span class="nv">github</span>.<span class="nv">io</span>: <span class="nv">dial</span> <span class="nv">tcp</span> <span class="mi">192</span>.<span class="mi">30</span>.<span class="mi">253</span>.<span class="mi">116</span>:<span class="mi">443</span>: <span class="k">connect</span>: <span class="nv">network</span> <span class="nv">is</span> <span class="nv">unreachable</span>
 </pre>
 
 
@@ -645,12 +273,15 @@ and that sucks. So, maybe wait for the refresh, or at least until the
 high-quality docks are available.</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/crypto-apis-and-jvm-byte-types.html" class="u-url">Crypto APIs and JVM byte types</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/crypto-apis-and-jvm-byte-types/" class="u-url">Crypto APIs and JVM byte types</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/crypto-apis-and-jvm-byte-types.html" rel="bookmark"><time class="published dt-published" datetime="2016-07-11T14:00:00-07:00" title="2016-07-11 14:00">2016-07-11 14:00</time></a></p>
+            <p class="dateline">
+            <a href="posts/crypto-apis-and-jvm-byte-types/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-07-11T14:00:00-07:00" itemprop="datePublished" title="2016-07-11 14:00">2016-07-11 14:00</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -811,12 +442,15 @@ next blog post, I'll go into more detail on how that works, with a bunch of
 benchmarks. Stay tuned!</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/tradeoffs-in-cryptographic-api-design.html" class="u-url">Tradeoffs in cryptographic API design</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/tradeoffs-in-cryptographic-api-design/" class="u-url">Tradeoffs in cryptographic API design</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/tradeoffs-in-cryptographic-api-design.html" rel="bookmark"><time class="published dt-published" datetime="2016-06-18T13:45:35-07:00" title="2016-06-18 13:45">2016-06-18 13:45</time></a></p>
+            <p class="dateline">
+            <a href="posts/tradeoffs-in-cryptographic-api-design/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-06-18T13:45:35-07:00" itemprop="datePublished" title="2016-06-18 13:45">2016-06-18 13:45</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -902,12 +536,15 @@ support for memory pinning since PyPy will support it in the upcoming
 <a href="https://github.com/lvh/caesium">caesium</a>.</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/nonce-misuse-resistance-101.html" class="u-url">Nonce misuse resistance 101</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/nonce-misuse-resistance-101/" class="u-url">Nonce misuse resistance 101</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/nonce-misuse-resistance-101.html" rel="bookmark"><time class="published dt-published" datetime="2016-05-19T12:25:44-07:00" title="2016-05-19 12:25">2016-05-19 12:25</time></a></p>
+            <p class="dateline">
+            <a href="posts/nonce-misuse-resistance-101/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-05-19T12:25:44-07:00" itemprop="datePublished" title="2016-05-19 12:25">2016-05-19 12:25</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -915,7 +552,7 @@ support for memory pinning since PyPy will support it in the upcoming
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
-<a href="posts/nonce-misuse-resistance-101.html#proto">protocol design</a>. If you're completely new to cryptography, you might
+<a href="posts/nonce-misuse-resistance-101/#proto">protocol design</a>. If you're completely new to cryptography, you might
 like my free introductory course to cryptography, <a href="https://www.crypto101.io">Crypto 101</a>. In a
 future blog post, I'll talk about some nonce-misuse resistant schemes I've
 implemented using libsodium.</em></p>
@@ -932,19 +569,19 @@ the same key. You can remember this by the mnemonic that a <em>nonce</em> is a
 repeat. That means that an attacker can take the two ciphertexts and XOR them
 to compute the XOR of the plaintexts. If <code>C_n</code> are ciphertexts, <code>P_n</code>
 plaintexts, <code>K_n</code> keystreams, and <code>^</code> is bitwise exclusive or:</p>
-<pre class="code literal-block"><span></span>C_1 = K_1 ^ P_1
-C_2 = K_2 ^ P_2
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span>
+<span class="n">C_2</span> <span class="o">=</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
 </pre>
 
 
 <p>The attacker just XORs <code>C_1</code> and <code>C_2</code> together:</p>
-<pre class="code literal-block"><span></span>C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
 </pre>
 
 
 <p>Since XOR is commutative (you can rearrange the order), <code>K_1 = K_2</code>, and
 XOR'ing two equal values cancels them out:</p>
-<pre class="code literal-block"><span></span>C_1 ^ C_2 = P_1 ^ P_2
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">P_2</span>
 </pre>
 
 
@@ -1060,12 +697,15 @@ making individual messages sufficiently small.</p>
 <p><em>Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.</em></p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/supersingular-isogeny-diffie-hellman-101.html" class="u-url">Supersingular isogeny Diffie-Hellman 101</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/supersingular-isogeny-diffie-hellman-101/" class="u-url">Supersingular isogeny Diffie-Hellman 101</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/supersingular-isogeny-diffie-hellman-101.html" rel="bookmark"><time class="published dt-published" datetime="2016-04-30T09:00:28-07:00" title="2016-04-30 09:00">2016-04-30 09:00</time></a></p>
+            <p class="dateline">
+            <a href="posts/supersingular-isogeny-diffie-hellman-101/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-04-30T09:00:28-07:00" itemprop="datePublished" title="2016-04-30 09:00">2016-04-30 09:00</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -1235,7 +875,7 @@ remember from high school math; it's a single number that tells you something
 interesting about the underlying curve. There are different formulas for
 curves in different forms. For example, for a curve in short Weierstrass form
 <code>y^2 = x^3 + ax + b</code>, the j-invariant is:</p>
-<pre class="code literal-block"><span></span>j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
+<pre class="code literal-block"><span></span><span class="n">j</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1728</span> <span class="o">*</span> <span class="mi">4</span><span class="n">a</span><span class="o">^</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="n">a</span><span class="o">^</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">27</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
 </pre>
 
 
@@ -1251,7 +891,7 @@ the DH exchange.</p>
 curve: P_A, Q_A, P_B, Q_B.</p>
 <p>Alice picks two random integers, m_A and n_A. She takes a linear combination
 of those two integers with P_A and Q_A to produce a random point R_A, so:</p>
-<pre class="code literal-block"><span></span>R_A = n_A * P_A + m_A * Q_A
+<pre class="code literal-block"><span></span><span class="n">R_A</span> <span class="o">=</span> <span class="n">n_A</span> <span class="o">*</span> <span class="n">P_A</span> <span class="o">+</span> <span class="n">m_A</span> <span class="o">*</span> <span class="n">Q_A</span>
 </pre>
 
 
@@ -1312,12 +952,15 @@ this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
 Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.</em></p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport.html" class="u-url">Introducing Teleport</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport/" class="u-url">Introducing Teleport</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/introducing-teleport.html" rel="bookmark"><time class="published dt-published" datetime="2016-03-12T09:35:56-08:00" title="2016-03-12 09:35">2016-03-12 09:35</time></a></p>
+            <p class="dateline">
+            <a href="posts/introducing-teleport/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-03-12T09:35:56-08:00" itemprop="datePublished" title="2016-03-12 09:35">2016-03-12 09:35</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -1384,12 +1027,15 @@ has a bright future ahead of it. It's written in a beautiful, hackable Go
 codebase, and <a href="https://github.com/gravitational/teleport">available on Github</a> starting today.</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container.html" class="u-url">Don't expose the Docker socket (not even to a container)</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container/" class="u-url">Don't expose the Docker socket (not even to a container)</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container.html" rel="bookmark"><time class="published dt-published" datetime="2015-09-23T14:54:24-07:00" title="2015-09-23 14:54">2015-09-23 14:54</time></a></p>
+            <p class="dateline">
+            <a href="posts/dont-expose-the-docker-socket-not-even-to-a-container/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-09-23T14:54:24-07:00" itemprop="datePublished" title="2015-09-23 14:54">2015-09-23 14:54</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -1446,12 +1092,15 @@ API listening on a local TCP port was replaced with the
 <code>/var/run/docker.sock</code> UNIX domain socket.</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" class="u-url">querySelectorAll from an element probably doesn't do what you think it does</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/" class="u-url">querySelectorAll from an element probably doesn't do what you think it does</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html" rel="bookmark"><time class="published dt-published" datetime="2015-08-21T12:11:23-07:00" title="2015-08-21 12:11">2015-08-21 12:11</time></a></p>
+            <p class="dateline">
+            <a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-08-21T12:11:23-07:00" itemprop="datePublished" title="2015-08-21 12:11">2015-08-21 12:11</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -1580,18 +1229,129 @@ to give you the modern API you want. Alternatively, libraries like jQuery can
 also help you get a consistent, friendly interface for querying the DOM.</p>
 </div>
     </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops/" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/todays-openssl-bug-for-techies-without-infosec-chops/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-07-09T08:26:58-07:00" itemprop="datePublished" title="2015-07-09 08:26">2015-07-09 08:26</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<h2>What happened?</h2>
+<p>OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
+alternative certificate chain when the first one fails. The logic in
+that feature had a bug in it, such that it didn't properly verify if
+the certificates in the alternative chain had the appropriate
+permissions; specifically, it didn't check if those certificates are
+certificate authorities.</p>
+<p>Specifically, this means that an attacker who has a valid certificate
+for any domain, can use that certificate to produce new
+certificates. Those normally wouldn't work, but the algorithm for
+finding the alternative trust chain doesn't check if the valid
+certificate can act as a certificate authority.</p>
+<h2>What's a certificate (chain)?</h2>
+<p>A certificate is a bit like an ID card: it has some information about
+you (like your name), and is authenticated by a certificate authority
+(in the case of an ID, usually your government).</p>
+<h2>What's a certificate authority?</h2>
+<p>A certificate authority is an entity that's allowed to authenticate
+certificates. Your computer typically ships with the identity of those
+certificate authorities, so it knows how to recognize certificates
+authorized by them.</p>
+<p>In the ID analogy, your computer knows how to recognize photo IDs
+issued by e.g. California.</p>
+<p>The issue here is that in some cases, OpenSSL was willing to accept
+signatures authenticated by certificates that don't have certificate
+authority powers. In the analogy, it would mean that it accepted
+CostCo cards as valid ID, too.</p>
+<h2>Why did they say it wouldn't affect most users?</h2>
+<p>This basically means "we're assuming most users are using OpenSSL for
+vanilla servers", which is probably true. Most servers do use OpenSSL,
+and most clients (browsers) don't.</p>
+<p>The bug affects anyone trying to authenticate their peer. That
+includes regular clients, and servers doing client
+authentication. Regular servers aren't affected, because they don't
+authenticate their peer.</p>
+<p>Servers doing client authentication are fairly rare. The biggest
+concern is with clients. While browsers typically don't use OpenSSL, a
+lot of API clients do. For those few people affected by the bug and
+with clients that use OpenSSL, the bug is catastrophic.</p>
+<h2>What's client authentication?</h2>
+<p>The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate chain against the list
+of certificate authorities that it knows about. The client is
+typically authenticated, but over the protocol spoken inside of TLS
+(usually HTTP), not at a TLS level.</p>
+<p>That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.</p>
+<h2>What's TLS?</h2>
+<p>TLS is what SSL has been called for way over a decade. The old name
+stuck (particularly in the name "OpenSSL"), but you should probably
+stop using it when you're talking about the secure protocol, since all
+of the versions of the protocol that were called "SSL" have crippling
+security bugs.</p>
+<h2>Why wasn't this found by automated testing?</h2>
+<p>I'm not sure. I wish automated testing this stuff was easier. Since
+I'm both a user and a big fan of client authentication, which is a
+pretty rare feature, I hope to spend more time in the future creating
+easy-to-use automated testing tools for this kind of scenario.</p>
+<h2>How big is the window?</h2>
+<p>1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
+and 1.0.2d, were released today, on 9 Jul 2015.</p>
+<p>The "good news" is that the bad releases are recent. Most people who
+have an affected version will be updating regularly, so the number of
+people affected is small.</p>
+<p>The bug affected following platforms (non-exhaustive):</p>
+<ul>
+<li>It did not affect stock OS X, because they still ship
+  0.9.8. However, the bug does affect a stable version shipped through
+  Homebrew (1.0.2c).</li>
+<li>
+<a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html">Ubuntu is mostly not affected</a>. The only affected version
+  is the unreleased 15.10 (Wily). Ubuntu has already released an
+  update for it.</li>
+<li>The bug affects stable releases of Fedora. I previously mistakenly
+  reported that the contrary, but that information was based on their
+  package version numbers, which did not match upstream. Fedora
+  backported the faulty logic to their version of 1.0.1k, which was
+  available in Fedora 21 and 22. They have since released patches; see
+  <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544">this ticket</a> for details. Thanks to Major Hayden for the
+  correction!</li>
+<li>The bug does not affect Debian stable, but it does affect
+  <a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl">testing and unstable</a>.</li>
+<li>The bug affects <a href="https://www.archlinux.org/packages/?sort=-last_update">ArchLinux testing</a>.</li>
+</ul>
+<h2>In conclusion</h2>
+<p>The bug is disastrous, but affects few people. If you're running
+stable versions of your operating system, you're almost certainly
+safe.</p>
+<p>The biggest concern is with software developers using OS X. That
+audience uses HTTPS APIs frequently, and the clients to connect to
+those APIs typically use OpenSSL. OS X comes with 0.9.8zf by default
+now, which is a recent revision of an ancient branch. Therefore,
+people have a strong motivation to get their OpenSSL from a
+third-party source. The most popular source is Homebrew, which up
+until earlier this morning shipped 1.0.2c. The bug affects that
+version. If you installed OpenSSL through Homebrew, you should go
+update right now.</p>
+</div>
+    </div>
     </article>
 </div>
 
-        <nav class="postindexpager"><ul class="pager">
-<li class="next">
-                <a href="index-5.html" rel="next">Older posts</a>
-            </li>
-        </ul></nav>
-</div>
-        <!--End of body content-->
-
-        <footer id="footer">
+        <ul class="pager postindexpager clearfix">
+<li class="next"><a href="index-5.html" rel="next">Older posts</a></li>
+        </ul>
+<!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
@@ -1599,10 +1359,13 @@ also help you get a consistent, friendly interface for querying the DOM.</p>
 </div>
 
 
-            <script src="assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
-    moment.locale("en");
-    fancydates(0, "YYYY-MM-DD HH:mm");
-    </script><!-- end fancy dates --><script>
+        <script src="assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/crypto.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 06 Jan 2018 23:31:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/crypto.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 27 Oct 2019 15:06:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
 post, I'll go into a specific API design case in &lt;a href="https://github.com/lvh/caesium"&gt;&lt;code&gt;caesium&lt;/code&gt;&lt;/a&gt;, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.&lt;/p&gt;
@@ -153,7 +153,7 @@ we should be flexible in our input types. We can work around the unknown type
 problems with reflection using explicitly annotated call sites. That means
 we're dispatching on types, which comes with its own set of issues. In the
 next blog post, I'll go into more detail on how that works, with a bunch of
-benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
+benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
 of the pitfalls is that getting it wrong looks exactly like getting it
 right. Much like a latent memory corruption bug or a broken distributed
 consensus algorithm, a piece of cryptographic software can appear to be
@@ -232,11 +232,11 @@ should &lt;a href="https://twitter.com/lvh"&gt;follow me on Twitter&lt;/a&gt; or
 support for memory pinning since PyPy will support it in the upcoming
 5.2 release, although that means I'll no longer be able to make
 &lt;a href="https://github.com/reaperhulk"&gt;Paul Kehrer of PyCA fame&lt;/a&gt; jealous with the pinning support in
-&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
-&lt;a href="https://www.lvh.io/posts/nonce-misuse-resistance-101.html#proto"&gt;protocol design&lt;/a&gt;. If you're completely new to cryptography, you might
+&lt;a href="https://www.lvh.io/posts/nonce-misuse-resistance-101/#proto"&gt;protocol design&lt;/a&gt;. If you're completely new to cryptography, you might
 like my free introductory course to cryptography, &lt;a href="https://www.crypto101.io"&gt;Crypto 101&lt;/a&gt;. In a
 future blog post, I'll talk about some nonce-misuse resistant schemes I've
 implemented using libsodium.&lt;/em&gt;&lt;/p&gt;
@@ -253,19 +253,19 @@ the same key. You can remember this by the mnemonic that a &lt;em&gt;nonce&lt;/e
 repeat. That means that an attacker can take the two ciphertexts and XOR them
 to compute the XOR of the plaintexts. If &lt;code&gt;C_n&lt;/code&gt; are ciphertexts, &lt;code&gt;P_n&lt;/code&gt;
 plaintexts, &lt;code&gt;K_n&lt;/code&gt; keystreams, and &lt;code&gt;^&lt;/code&gt; is bitwise exclusive or:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 = K_1 ^ P_1
-C_2 = K_2 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt;
+&lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_2&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;The attacker just XORs &lt;code&gt;C_1&lt;/code&gt; and &lt;code&gt;C_2&lt;/code&gt; together:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;K_2&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;Since XOR is commutative (you can rearrange the order), &lt;code&gt;K_1 = K_2&lt;/code&gt;, and
 XOR'ing two equal values cancels them out:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = P_1 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -378,7 +378,7 @@ cancelling out the messages themselves as well.&lt;/p&gt;
 scanned before the nonce can be computed. For some protocols, that may not be
 acceptable, although plenty of protocols work around this assumption by simply
 making individual messages sufficiently small.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101/</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a &lt;a href="https://eprint.iacr.org/2016/413"&gt;paper&lt;/a&gt; on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
@@ -544,7 +544,7 @@ remember from high school math; it's a single number that tells you something
 interesting about the underlying curve. There are different formulas for
 curves in different forms. For example, for a curve in short Weierstrass form
 &lt;code&gt;y^2 = x^3 + ax + b&lt;/code&gt;, the j-invariant is:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1728&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -560,7 +560,7 @@ the DH exchange.&lt;/p&gt;
 curve: P_A, Q_A, P_B, Q_B.&lt;/p&gt;
 &lt;p&gt;Alice picks two random integers, m_A and n_A. She takes a linear combination
 of those two integers with P_A and Q_A to produce a random point R_A, so:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;R_A = n_A * P_A + m_A * Q_A
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;R_A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;n_A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;P_A&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;m_A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;Q_A&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -618,7 +618,7 @@ an excellent educational tool; and Watson Ladd for pointing out a correction
 w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
 singular.). Finally, I'd like to thank all the people who reviewed drafts of
 this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
-Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>We're just getting started</title><link>https://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
+Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>We're just getting started</title><link>https://www.lvh.io/posts/were-just-getting-started/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
 make. After the presentation, it's "over"; only spoken about in
 perfect tenses. You've communicated your thoughts, perhaps had a
 conversation or two, but, mostly, moved on.&lt;/p&gt;
@@ -655,7 +655,7 @@ overview of how we can build secure systems. More friends of mine will
 talk in about TLS there too. Within Rackspace, I'm focusing on
 information security. There are awesome things brewing here, and I
 hope that we can continue the great work we've been doing so far.&lt;/p&gt;
-&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/were-just-getting-started.html</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Securing APIs with shims</title><link>https://www.lvh.io/posts/securing-apis-with-shims.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
+&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/were-just-getting-started/</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Securing APIs with shims</title><link>https://www.lvh.io/posts/securing-apis-with-shims/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
 the ability to perform a specific &lt;em&gt;action&lt;/em&gt;, it gave you the ability to
 perform a (limited) set of operations on a third party API,
 e.g. OpenStack. The capability URL wouldn't just be something you
@@ -750,7 +750,7 @@ URLs.&lt;/p&gt;
 I'm going to invest a ton of time improving the documentation for both
 &lt;code&gt;core.logic&lt;/code&gt; and &lt;code&gt;core.typed&lt;/code&gt;. They're &lt;em&gt;fantastic&lt;/em&gt; projects, but
 they're harder to get started with than they could be, and that's a
-shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/securing-apis-with-shims.html</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item><item><title>On discussing software security improvements</title><link>https://www.lvh.io/posts/on-discussing-software-security-improvements.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common criticism of information security folks is that they tend to
+shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/securing-apis-with-shims/</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item><item><title>On discussing software security improvements</title><link>https://www.lvh.io/posts/on-discussing-software-security-improvements/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common criticism of information security folks is that they tend to
 advise people to not do any crypto. Through projects like &lt;a class="reference external" href="https://www.crypto101.io/"&gt;Crypto
 101&lt;/a&gt;, I've attempted to make a small contribution towards fixing
 that.&lt;/p&gt;
@@ -881,7 +881,7 @@ private key.&lt;/blockquote&gt;
 &lt;p&gt;Regardless of the outcome of this conversation, there actually was a
 conversation. I believe this to be an improvement over the overall
 status quo.&lt;/p&gt;
-&lt;/div&gt;&lt;/div&gt;</description><category>crypto</category><category>python</category><category>security</category><guid>https://www.lvh.io/posts/on-discussing-software-security-improvements.html</guid><pubDate>Tue, 29 Jul 2014 06:58:27 GMT</pubDate></item><item><title>On TrueCrypt and full-disk encryption</title><link>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Since the early hours of May 29th (CEST), &lt;a href="https://www.truecrypt.org"&gt;the TrueCrypt website
+&lt;/div&gt;&lt;/div&gt;</description><category>crypto</category><category>python</category><category>security</category><guid>https://www.lvh.io/posts/on-discussing-software-security-improvements/</guid><pubDate>Tue, 29 Jul 2014 06:58:27 GMT</pubDate></item><item><title>On TrueCrypt and full-disk encryption</title><link>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Since the early hours of May 29th (CEST), &lt;a href="https://www.truecrypt.org"&gt;the TrueCrypt website
 (&lt;code&gt;https://www.truecrypt.org&lt;/code&gt;)&lt;/a&gt; has pointed
 to &lt;code&gt;http://truecrypt.sourceforge.net/&lt;/code&gt;, with an ominous-looking error
 message:&lt;/p&gt;
@@ -1019,7 +1019,7 @@ you're on Windows, your options are looking a bit thin right now:&lt;/p&gt;
 &lt;p&gt;Personally, I think the first option is the most reasonable right now,
 and then wait until someone actually writes the native LUKS support.&lt;/p&gt;
 &lt;p&gt;Oh, and you should probably install GPG to encrypt some of those files
-stored on that encrypted volume.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption.html</guid><pubDate>Thu, 29 May 2014 17:53:00 GMT</pubDate></item><item><title>Thoughts on RDRAND in Linux</title><link>https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This has been brewing since I read &lt;a href="https://www.change.org/en-GB/petitions/linus-torvalds-remove-rdrand-from-dev-random-4/responses/9066"&gt;Linus' response to the petition to
+stored on that encrypted volume.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption/</guid><pubDate>Thu, 29 May 2014 17:53:00 GMT</pubDate></item><item><title>Thoughts on RDRAND in Linux</title><link>https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This has been brewing since I read &lt;a href="https://www.change.org/en-GB/petitions/linus-torvalds-remove-rdrand-from-dev-random-4/responses/9066"&gt;Linus' response to the petition to
 remove &lt;code&gt;RDRAND&lt;/code&gt; from /dev/random&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;For those of you who don't know, &lt;code&gt;RDRAND&lt;/code&gt; is a CPU instruction
 introduced by Intel on recent CPUs. It (supposedly) uses a hardware
@@ -1122,4 +1122,4 @@ feasible for a CSPRNG to be backdoored than it is to think of a CPU as
 some kind of intelligent being that's actively malicious or being
 remotely controlled.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;For what it's worth, it seems &lt;a href="https://twitter.com/zooko/status/392334674690723840"&gt;Zooko agrees with me&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux.html</guid><pubDate>Sun, 20 Oct 2013 04:47:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;For what it's worth, it seems &lt;a href="https://twitter.com/zooko/status/392334674690723840"&gt;Zooko agrees with me&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux/</guid><pubDate>Sun, 20 Oct 2013 04:47:00 GMT</pubDate></item></channel></rss>

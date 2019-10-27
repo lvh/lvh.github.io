@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reverse ungineering | lvh</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#383234">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://www.lvh.io/posts/reverse-ungineering/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<link rel="prev" href="../on-multiplayer-turn-based-game-mechanics/" title="On multiplayer turn-based game mechanics" type="text/html">
+<link rel="next" href="../securing-apis-with-shims/" title="Securing APIs with shims" type="text/html">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Reverse ungineering">
+<meta property="og:url" content="https://www.lvh.io/posts/reverse-ungineering/">
+<meta property="og:description" content='(Title with apologies to Glyph.)
+Recently, some friends of mine suggested that "software engineer" is
+not a good job title. While they are of course free to call their
+profession whatever they like, I'>
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-11-14T02:44:39-07:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://www.lvh.io/">
+            <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../about.html" class="nav-link">About</a>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/index.html" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../talks.html" class="nav-link">Talks</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="https://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.rst" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Reverse ungineering</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    lvh
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2014-11-14T02:44:39-07:00" itemprop="datePublished" title="2014-11-14 02:44">2014-11-14 02:44</time></a>
+            </p>
+            
+        <p class="sourceline"><a href="index.rst" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>(Title with apologies to Glyph.)</p>
+<p>Recently, some friends of mine suggested that "software engineer" is
+not a good job title. While they are of course free to call their
+profession whatever they like, I respectfully disagree: I think
+"engineer" is a perfectly cromulent description of what we do.</p>
+<p>This is an opinion piece. Despite arriving at opposite conclusions,
+the disagreement is feathery at best.</p>
+<div class="section" id="what-if-buildings-failed-as-often-as-software-projects">
+<h2>What if buildings failed as often as software projects?</h2>
+<p>To illustrate the differences between software development and other
+engineering disciplines, Glyph compares software to civil engineering.</p>
+<p>For example, when it comes to getting things done, we're just not very
+good:</p>
+<blockquote>
+Most software projects fail; as of 2009, 44% are late, over budget,
+or out of specification, and an additional 24% are canceled
+entirely. Only a third of projects succeed according to those
+criteria of being under budget, within specification, and complete.</blockquote>
+<p>Such shenanigans would never be accepted in a Serious Engineering
+Discipline, like civil engineering:</p>
+<blockquote>
+Would you want to live in a city where almost a quarter of all the
+buildings were simply abandoned half-constructed, or fell down
+during construction? Where almost half of the buildings were missing
+floors, had rents in the millions of dollars, or both?</blockquote>
+<p>I certainly wouldn't.</p>
+<p>Computers are terrible, but not quite <em>that</em> bad, as Glyph points
+out. "Failure" simply means something different for software projects
+than it does for construction projects. Many of those "failed"
+software projects were quite successful by other measures; the problem
+isn't with software projects, it's with applying civil engineering
+standards to a project that isn't.</p>
+<p>Software projects aren't civil engineering projects.  Attempts to
+treat them as such have done much more harm than good. That said, that
+doesn't mean that software development isn't engineering.</p>
+<p>Firstly, civil engineering is the outlier here. Other engineering
+disciplines don't do well according to the civil engineering success
+yardstick either. The few engineering endeavors that do are usually
+civil engineering in disguise, such as the construction of nuclear and
+chemical plants.  Rank-and-file projects in most fields of engineering
+operate a lot more like a software project than the construction of a
+skyscraper. Projects are late and over budget, often highly
+experimental in nature, and in many cases also subject to changing
+requirements. It's true that we just can't plan ahead in software, but
+we're not the only ones.</p>
+<p>Secondly, we may be confounding cause and effect, even if we overlook
+that not all engineering is civil engineering. Are software projects
+unable to stick to these standards because it's not engineering, or is
+civil engineering the only thing that sticks to them because <em>they
+have no other choice</em>? Conversely, do we fail early and often because
+we're not engineering, or because, unlike civil engineering projects,
+we <em>can</em>? <a class="footnote-reference" href="#anthropic" id="id1">[1]</a></p>
+<p>Finally, software has existed for decades, but buildings have for
+millennia. Bridges used to collapse all the time. Tacoma Narrows
+wasn't so long ago. If the tour guide on my trip to Paris is to be
+believed, one of those bridges has collapsed four times already.</p>
+</div>
+<div class="section" id="but-this-isn-t-science">
+<h2>But this isn't science!</h2>
+<p>Supposedly, software engineering isn't "real" engineering because,
+unlike "real" engineering, it is not backed by "real" science or math.
+This statement is usually paired with a dictionary definition of the
+word "engineering".</p>
+<p>I feel this characterization is incongruent with the daily reality of
+engineering.</p>
+<p>Consider the civil engineer, presumably the engineeringest engineer
+there is. <a class="footnote-reference" href="#civil" id="id2">[2]</a> If you ask me to dimension an I-beam for
+you, I would:</p>
+<ul class="simple">
+<li>spitball the load,</li>
+<li>draw a free-body diagram,</li>
+<li>probably draw a shear and moment diagram,</li>
+<li>and pick the smallest standard beam that'll do what you want.</li>
+</ul>
+<p>If you want to know how far that beam is going to go, I'll draw you
+some conjugate beams. I would also definitely <em>not</em> use the
+moment-area theorem, even though it wouldn't be too difficult for the
+reasonable uses of an I-beam.</p>
+<p>Once upon a time, someone inflicted a variety of theories on me.
+Euler-Bernouilli beam theory, for example. Very heavy textbooks with
+very heavy math. Neither my physical therapist nor my regular one
+expect me to ever <em>truly</em> recover. Nonetheless, area moments and
+section moduli are the only way to understand where the <tt class="docutils literal">I</tt> in
+I-beam comes from.</p>
+<p>Nasty math didn't prevent me from dimensioning that I-beam. And I do
+really mean <em>math</em>, not physics: Euler-Bernouilli is a math hack. You
+get it by taking Hooke's law and throwing some calculus at it. Hooke's
+law itself is more math than physics, too: it's a first-order
+approximation based only on the observation that stuff stretches when
+you pull it. It's wrong all the time, even for fairly germane objects
+like rubber bands. Both theories were put together long before we had
+materials science. We use them because they (mostly) work, not because
+they are a consequence of a physical model.</p>
+<p>That was just one example from a single discipline, but it holds more
+generally, too. I analyze circuits by recognizing subsections. If you
+show me a piece that looks like a low-pass filter, I am not distracted
+by Maxwell's equations to figure out what that little capacitor is
+doing.  I could certainly derive its behavior that way; in fact,
+someone made me do that once, and it was quite instructive. But I'm
+not bothered with the electrodynamics of a capacitor right now; I'm
+just trying to understand this circuit!</p>
+<p>This isn't just how engineers happen to do their jobs in practice,
+either. Engineering breakthroughs live on both sides of science's
+cutting edge. When Shockley et al. first managed to get a transistor
+to work, we didn't really understand what was going on. <a class="footnote-reference" href="#tor" id="id3">[3]</a> Carnot
+was building engines long before anyone realized he had stumbled upon
+one of the most fundamental properties of the universe. Nobody was
+doing metaphysics. Sadi wanted a better steam engine.</p>
+<p>To me, saying that I-beam was dimensioned with the help of beam theory
+is about as far from the truth as saying that a software project was
+built with the help of category theory. I'm sure that there's some way
+that that thing I just wrote is a covariant functor and you can
+co-Yoneda your way to proving natural isomorphism, but I don't <em>have</em>
+to care in order to successfully produce some software. It's easy to
+reduce an applied field to <em>just</em> the application of that field, but
+that doesn't make it so; especially if we haven't even really figured
+out the field yet.</p>
+<p>So, even if the math and science behind computer engineering is
+somehow less real than that other math and science, I think that
+difference is immaterial, and certainly not enough to make us an
+entirely different profession.</p>
+</div>
+<div class="section" id="but-that-isn-t-art">
+<h2>But <em>that</em> isn't art!</h2>
+<p>Many people smarter than I have made the argument that programming is
+art, not dissimilar from painting, music or even cooking. I'm
+inclined to agree: many talented programmers are also very talented
+artists in other fields. However, I do disagree that those things are
+art-like <em>unlike</em> engineering, which is supposedly just cold, hard
+science.</p>
+<p>There's a not-so-old adage that science is everything we understand
+well enough to explain to a computer, and art is everything else. If
+that's true, there's definitely plenty of art to be found in
+engineering. (That was a little tongue-in-cheek. Nobody wants to get
+dragged into a semantic argument about what art <em>is</em>.)</p>
+<p>Even with a much narrower view of art, engineers do plenty of it, as
+I've tried to argue before. Not all engineering calls are direct
+consequences of relativity, thermodynamics or quantum
+mechanics. Sometimes, it is really just down to what the engineer
+finds most palatable. Even civil engineers, the gray predictable
+stalwarts of our story, care about making beautiful things. The Burj
+Khalifa wasn't a consequence of a human following an algorithm.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>I think the similarities run deep. I hope we don't throw that away
+essentially just because our field is a little younger. We're all
+hackers here; and we're all engineers, too.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="anthropic" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="#id1">[1]</a></td>
+<td>I suppose this is really analogous to the anthropic
+principle, except applied to engineering disciplines
+instead of humans.</td>
+</tr></tbody>
+</table>
+<table class="docutils footnote" frame="void" id="civil" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="#id2">[2]</a></td>
+<td>I'm using civil engineer here in the strict American sense
+of person who builds targets, as opposed to the military
+engineer, who builds weapons. Jokes aside, perhaps this is
+related to the disagreement. Where I come from, "civil
+engineer" means "advanced engineering degree", and
+encompasses many disciplines, including architectural (for
+lack of better word; I mean the American "civil engineer"
+here), chemical, electrical, and yes, computer.</td>
+</tr></tbody>
+</table>
+<table class="docutils footnote" frame="void" id="tor" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="#id3">[3]</a></td>
+<td>While it is very easy to make up a sensible-sounding
+narrative time line after the fact for the breakthroughs in
+physics and engineering that eventually made the transistor
+possible, this ignores the strong disagreements between
+theoretical predictions and practical measurements of the
+time. Regardless of their cause, it would be foolish to
+assume that Shockley just sat down and applied some theory.
+The theory just wasn't there yet.</td>
+</tr></tbody>
+</table>
+<!-- LocalWords:  engineeringest -->
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="../on-multiplayer-turn-based-game-mechanics/" rel="prev" title="On multiplayer turn-based game mechanics">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../securing-apis-with-shims/" rel="next" title="Securing APIs with shims">Next post</a>
+            </li>
+        </ul></nav></aside></article><!--End of body content--><footer id="footer">
+            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36779422-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

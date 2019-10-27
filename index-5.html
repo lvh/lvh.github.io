@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="lvh's blog">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lvh (old posts, page 5) | lvh</title>
 <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-<meta name="theme-color" content="#5670d4">
+<meta name="theme-color" content="#383234">
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://www.lvh.io/index-5.html">
-<link rel="prev" href="index.html" type="text/html">
+<link rel="prev" href="." type="text/html">
 <link rel="next" href="index-4.html" type="text/html">
 <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
 </head>
@@ -19,36 +20,33 @@
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
 <!-- This keeps the margins nice -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="https://www.lvh.io/">
-                <img src="pinchy.svg" alt="lvh" id="logo"><span id="blog-title">lvh</span>
-            </a>
-        </div>
-<!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
-            <ul class="nav navbar-nav">
-<li>
-<a href="about.html">About</a>
+        <a class="navbar-brand" href="https://www.lvh.io/">
+            <img src="pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="about.html" class="nav-link">About</a>
                 </li>
-<li>
-<a href="archive.html">Archive</a>
+<li class="nav-item">
+<a href="archive.html" class="nav-link">Archive</a>
                 </li>
-<li>
-<a href="categories/index.html">Tags</a>
+<li class="nav-item">
+<a href="categories/index.html" class="nav-link">Tags</a>
                 </li>
-<li>
-<a href="talks.html">Talks</a>
+<li class="nav-item">
+<a href="talks.html" class="nav-link">Talks</a>
                 </li>
-<li>
-<a href="rss.xml">RSS feed</a>
+<li class="nav-item">
+<a href="rss.xml" class="nav-link">RSS feed</a>
 
                 
             </li>
@@ -59,7 +57,7 @@
 <!-- End of custom search -->
 
 
-            <ul class="nav navbar-nav navbar-right"></ul>
+            <ul class="navbar-nav navbar-right"></ul>
 </div>
 <!-- /.navbar-collapse -->
     </div>
@@ -67,134 +65,23 @@
 </nav><!-- End of Menubar --><div class="container" id="content" role="main">
     <div class="body-content">
         <!--Body content-->
-        <div class="row">
-            
-            
+        
+        
 
     
 
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/they-do-take-security-seriously/" class="u-url">They do take security seriously</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops.html" rel="bookmark"><time class="published dt-published" datetime="2015-07-09T08:26:58-07:00" title="2015-07-09 08:26">2015-07-09 08:26</time></a></p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<h2>What happened?</h2>
-<p>OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
-alternative certificate chain when the first one fails. The logic in
-that feature had a bug in it, such that it didn't properly verify if
-the certificates in the alternative chain had the appropriate
-permissions; specifically, it didn't check if those certificates are
-certificate authorities.</p>
-<p>Specifically, this means that an attacker who has a valid certificate
-for any domain, can use that certificate to produce new
-certificates. Those normally wouldn't work, but the algorithm for
-finding the alternative trust chain doesn't check if the valid
-certificate can act as a certificate authority.</p>
-<h2>What's a certificate (chain)?</h2>
-<p>A certificate is a bit like an ID card: it has some information about
-you (like your name), and is authenticated by a certificate authority
-(in the case of an ID, usually your government).</p>
-<h2>What's a certificate authority?</h2>
-<p>A certificate authority is an entity that's allowed to authenticate
-certificates. Your computer typically ships with the identity of those
-certificate authorities, so it knows how to recognize certificates
-authorized by them.</p>
-<p>In the ID analogy, your computer knows how to recognize photo IDs
-issued by e.g. California.</p>
-<p>The issue here is that in some cases, OpenSSL was willing to accept
-signatures authenticated by certificates that don't have certificate
-authority powers. In the analogy, it would mean that it accepted
-CostCo cards as valid ID, too.</p>
-<h2>Why did they say it wouldn't affect most users?</h2>
-<p>This basically means "we're assuming most users are using OpenSSL for
-vanilla servers", which is probably true. Most servers do use OpenSSL,
-and most clients (browsers) don't.</p>
-<p>The bug affects anyone trying to authenticate their peer. That
-includes regular clients, and servers doing client
-authentication. Regular servers aren't affected, because they don't
-authenticate their peer.</p>
-<p>Servers doing client authentication are fairly rare. The biggest
-concern is with clients. While browsers typically don't use OpenSSL, a
-lot of API clients do. For those few people affected by the bug and
-with clients that use OpenSSL, the bug is catastrophic.</p>
-<h2>What's client authentication?</h2>
-<p>The vast majority of TLS connections only authenticate the
-server. When the client opens the connection, the server sends its
-certificate. The client checks the certificate chain against the list
-of certificate authorities that it knows about. The client is
-typically authenticated, but over the protocol spoken inside of TLS
-(usually HTTP), not at a TLS level.</p>
-<p>That isn't the only way TLS can work. TLS also supports authenticating
-clients with certificates, just like it authenticates servers. This is
-called mutually authenticated TLS, because both peers authenticate
-each other. At Rackspace Managed Security, we use this for all
-communication between internal nodes. We also operate our own
-certificate authority to sign all of those certificates.</p>
-<h2>What's TLS?</h2>
-<p>TLS is what SSL has been called for way over a decade. The old name
-stuck (particularly in the name "OpenSSL"), but you should probably
-stop using it when you're talking about the secure protocol, since all
-of the versions of the protocol that were called "SSL" have crippling
-security bugs.</p>
-<h2>Why wasn't this found by automated testing?</h2>
-<p>I'm not sure. I wish automated testing this stuff was easier. Since
-I'm both a user and a big fan of client authentication, which is a
-pretty rare feature, I hope to spend more time in the future creating
-easy-to-use automated testing tools for this kind of scenario.</p>
-<h2>How big is the window?</h2>
-<p>1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
-and 1.0.2d, were released today, on 9 Jul 2015.</p>
-<p>The "good news" is that the bad releases are recent. Most people who
-have an affected version will be updating regularly, so the number of
-people affected is small.</p>
-<p>The bug affected following platforms (non-exhaustive):</p>
-<ul>
-<li>It did not affect stock OS X, because they still ship
-  0.9.8. However, the bug does affect a stable version shipped through
-  Homebrew (1.0.2c).</li>
-<li>
-<a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html">Ubuntu is mostly not affected</a>. The only affected version
-  is the unreleased 15.10 (Wily). Ubuntu has already released an
-  update for it.</li>
-<li>The bug affects stable releases of Fedora. I previously mistakenly
-  reported that the contrary, but that information was based on their
-  package version numbers, which did not match upstream. Fedora
-  backported the faulty logic to their version of 1.0.1k, which was
-  available in Fedora 21 and 22. They have since released patches; see
-  <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544">this ticket</a> for details. Thanks to Major Hayden for the
-  correction!</li>
-<li>The bug does not affect Debian stable, but it does affect
-  <a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl">testing and unstable</a>.</li>
-<li>The bug affects <a href="https://www.archlinux.org/packages/?sort=-last_update">ArchLinux testing</a>.</li>
-</ul>
-<h2>In conclusion</h2>
-<p>The bug is disastrous, but affects few people. If you're running
-stable versions of your operating system, you're almost certainly
-safe.</p>
-<p>The biggest concern is with software developers using OS X. That
-audience uses HTTPS APIs frequently, and the clients to connect to
-those APIs typically use OpenSSL. OS X comes with 0.9.8zf by default
-now, which is a recent revision of an ancient branch. Therefore,
-people have a strong motivation to get their OpenSSL from a
-third-party source. The most popular source is Homebrew, which up
-until earlier this morning shipped 1.0.2c. The bug affects that
-version. If you installed OpenSSL through Homebrew, you should go
-update right now.</p>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/they-do-take-security-seriously.html" class="u-url">They do take security seriously</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                lvh
-            </span></p>
-            <p class="dateline"><a href="posts/they-do-take-security-seriously.html" rel="bookmark"><time class="published dt-published" datetime="2015-07-05T13:17:18-07:00" title="2015-07-05 13:17">2015-07-05 13:17</time></a></p>
+            <p class="dateline">
+            <a href="posts/they-do-take-security-seriously/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-07-05T13:17:18-07:00" itemprop="datePublished" title="2015-07-05 13:17">2015-07-05 13:17</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -267,12 +154,15 @@ even have the technical sophistication to detect an attack.</p>
 security, we're hiring. Contact me at <code>_@lvh.io</code>.)</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/https-requests-with-client-certificates-in-clojure.html" class="u-url">HTTPS requests with client certificates in Clojure</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/https-requests-with-client-certificates-in-clojure/" class="u-url">HTTPS requests with client certificates in Clojure</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/https-requests-with-client-certificates-in-clojure.html" rel="bookmark"><time class="published dt-published" datetime="2015-07-02T08:53:20-07:00" title="2015-07-02 08:53">2015-07-02 08:53</time></a></p>
+            <p class="dateline">
+            <a href="posts/https-requests-with-client-certificates-in-clojure/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-07-02T08:53:20-07:00" itemprop="datePublished" title="2015-07-02 08:53">2015-07-02 08:53</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -322,12 +212,15 @@ that puts a heavy emphasis on teaching and personal development, you
 should get in touch with me at <code>_@lvh.io</code>.</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/call-for-proposal-proposals.html" class="u-url">Call for proposal proposals</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/call-for-proposal-proposals/" class="u-url">Call for proposal proposals</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/call-for-proposal-proposals.html" rel="bookmark"><time class="published dt-published" datetime="2015-06-13T10:07:13-07:00" title="2015-06-13 10:07">2015-06-13 10:07</time></a></p>
+            <p class="dateline">
+            <a href="posts/call-for-proposal-proposals/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-06-13T10:07:13-07:00" itemprop="datePublished" title="2015-06-13 10:07">2015-06-13 10:07</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -400,12 +293,15 @@ people feel sad. I feel like those points generalize to all attack
 talks; are they just not that useful?</p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program.html" class="u-url">Everything I've learned about running a financial aid program</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program/" class="u-url">Everything I've learned about running a financial aid program</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
             </span></p>
-            <p class="dateline"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program.html" rel="bookmark"><time class="published dt-published" datetime="2015-04-25T21:08:36-07:00" title="2015-04-25 21:08">2015-04-25 21:08</time></a></p>
+            <p class="dateline">
+            <a href="posts/everything-ive-learned-about-running-a-financial-aid-program/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-04-25T21:08:36-07:00" itemprop="datePublished" title="2015-04-25 21:08">2015-04-25 21:08</time></a>
+            </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
@@ -721,20 +617,13 @@ PyCon, but I consider that a superb problem to have.</p>
     </article>
 </div>
 
-        <nav class="postindexpager"><ul class="pager">
-<li class="previous">
-                <a href="index.html" rel="prev">Newer posts</a>
-            </li>
-            <li class="next">
-                <a href="index-4.html" rel="next">Older posts</a>
-            </li>
-        </ul></nav><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        <ul class="pager postindexpager clearfix">
+<li class="previous"><a href="." rel="prev">Newer posts</a></li>
+            <li class="next"><a href="index-4.html" rel="next">Older posts</a></li>
+        </ul>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
-        </script>
-</div>
-        <!--End of body content-->
-
-        <footer id="footer">
+        </script><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
@@ -742,10 +631,13 @@ PyCon, but I consider that a superb problem to have.</p>
 </div>
 
 
-            <script src="assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
-    moment.locale("en");
-    fancydates(0, "YYYY-MM-DD HH:mm");
-    </script><!-- end fancy dates --><script>
+        <script src="assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

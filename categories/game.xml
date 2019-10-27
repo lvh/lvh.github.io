@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about game)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/game.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 06 Jan 2018 23:31:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about game)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/game.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 27 Oct 2019 15:10:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
 V, are sequential in nature. A player makes a move, then the next
 player makes a move, and so on. The details can vary, for example:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -58,7 +58,7 @@ because they're literally the same game world.&lt;/p&gt;
 &lt;p&gt;There's a number of creative ways to get out from under that problem,
 usually by involving wall-clock time. For example, if a player doesn't
 respond within a fixed amount of time, they may forfeit their turn.
-Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#f1" id="id1"&gt;[1]&lt;/a&gt;
+Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#f1" id="id1"&gt;[1]&lt;/a&gt;
 There's a lot of degrees of freedom here. Do you use a global clock,
 or one local to a particular area?&lt;/p&gt;
 &lt;p&gt;A global clock is probably simpler, but poses some game play
@@ -84,13 +84,15 @@ the issues I described, I'm contemplating two ideas:&lt;/p&gt;
 &lt;table class="docutils footnote" frame="void" id="f1" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't particularly like this, because it "breaks the fourth
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't particularly like this, because it "breaks the fourth
 wall" in a sense. If my engines are still consuming fuel real
 time, why can't the enemy fire missiles? Either time is
 stopped, or it isn't. Sure, games can be abstract, but that
 feels like an undue inconsistency.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics.html</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;blockquote class="epigraph"&gt;
+&lt;/table&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</link><dc:creator>lvh</dc:creator><description>&lt;div class="section" id="hypercathexis"&gt;
+&lt;h2&gt;hypercathexis&lt;/h2&gt;
+&lt;blockquote class="epigraph"&gt;
 hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
 excessive concentration of desire upon a particular object&lt;/blockquote&gt;
 &lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
@@ -140,4 +142,5 @@ aren't, particularly when it comes to transforms. For example, Chrome
 would occasionally literally do the inverse of the scaling it was
 supposed to:&lt;/p&gt;
 &lt;img alt="Differences in scaling behavior across browsers" src="https://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
-&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;&lt;/div&gt;</description><category>game</category><category>hex</category><category>mathjax</category><category>svg</category><guid>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1.html</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>
+&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;
+&lt;/div&gt;</description><category>game</category><category>hex</category><category>svg</category><guid>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>

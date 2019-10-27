@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving regex crosswords | lvh</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#383234">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://www.lvh.io/posts/solving-regex-crosswords/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Solving regex crosswords">
+<meta property="og:url" content="https://www.lvh.io/posts/solving-regex-crosswords/">
+<meta property="og:description" content="DRAFT!
+Regex Crossword is a puzzle game to help you
+practice regular expressions. I wrote a program to solve them. You can find it
+on GitHub as lvh/regex-crossword.
+This blog post walks you through ho">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-10-25T19:36:29-07:00">
+<meta property="article:tag" content="clojure">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://www.lvh.io/">
+            <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../about.html" class="nav-link">About</a>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/index.html" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../talks.html" class="nav-link">Talks</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="https://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Solving regex crosswords</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    lvh
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2019-10-25T19:36:29-07:00" itemprop="datePublished" title="2019-10-25 19:36">2019-10-25 19:36</time></a>
+            </p>
+            
+        <p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p><strong>DRAFT!</strong></p>
+<p><a href="https://regexcrossword.com/">Regex Crossword</a> is a puzzle game to help you
+practice regular expressions. I wrote a program to solve them. You can find it
+on GitHub as <a href="https://github.com/lvh/regex-crossword"><code>lvh/regex-crossword</code></a>.
+This blog post walks you through how I wrote it using logic programming. </p>
+<p>To me this game feels more like Sudoku than a crossword. When you solve a
+crossword, you start by filling out the words you're certain of and use those
+answers as hints for the rest. Backtracking is relatively rare. In a sudoku, you
+might start by filling out a handful of certain boxes, but in most puzzles you
+quickly need to backtrack. That distinction shapes how I think of solving it:
+searching and backtracking is a natural fit for logic programming.</p>
+<p>Logic programming is a niche technology, but in its sweet spot it's miraculous.
+I'll introduce the concept to help you recognize what sorts of problems it's
+good at. Worst case, you'll enjoy a cool hack. Best case you'll get the
+satisfaction of writing a beautiful solution to a problem some time in the
+future.</p>
+<p>My programming language of choice is Clojure, and Clojure has
+<a href="https://github.com/clojure/core.logic"><code>clojure/core.logic</code></a>, a logic programming library. Because logic
+programming is such a specialized tool, it's more useful to have libraries that
+let you "drop in to" logic programming than to do everything in a full-blown
+logic programming language.</p>
+<h2>Approach</h2>
+<p>It would not be a bad idea to read <a href="https://regexcrossword.com/howtoplay">the instructions for Regex
+Crossword</a>. I'll also assume you have seen some basic regular
+expressions. Hopefully the Clojure will be piecemeal enough you can
+just follow along, but reading a tutorial wouldn't hurt.</p>
+<p>Let's take a look at the first beginner puzzle:</p>
+<p><img src="../../img/regex-crossword/beginner1.png"></p>
+<p>Each regex part applies to some number of unknowns (empty boxes). The first row
+regex <code>HE|LL|O+</code> applies to the unknowns of the first row. The first column
+regex <code>[^SPEAK]+</code> applies to the unknowns of the first column. Both constrain
+the top left unknown: we're counting on our logic programming engine at being
+convenient for expressing that "cascading" of constraints.</p>
+<p>An unknown is just a logic variable in constraint logic programming. For brevity
+we'll call them "lvars" (<em>[ell vars]</em>).</p>
+<p>Rows, columns (and in later puzzles hexagon lines) are all just layout.
+Fundamentally it's all just a regex applying to some lvars.</p>
+<h2>Breaking down regular expressions</h2>
+<p>Most regular expressions have structure, like <code>(AB|CD)XY</code>. We'll solve this
+problem recursively: if <code>(AB|CD)XY</code> matches lvars <code>p, q, r, s</code>, then presumably
+<code>pq</code> must match <code>AB|CD</code> and <code>rs</code> must match <code>XY</code>.</p>
+<p>(There are some counterexamples to the idea that we can solve the entire problem
+recursively! For example, backrefs within a regex would require a second pass,
+and backrefs across regular expressions would require another top-level pass.
+We'll deal with those later. There are ties to language theory here, but that's
+a story for another day.)</p>
+<p>We'll parse the regular expression into a data structure that's easier to
+handle. Fortunately, there's a piece of code out there that knows how to
+generate strings matching a given regex, which has a parser we can reuse. That
+parser is designed for Java's regular expression syntax. It's not quite
+identical to that of JavaScript, but we're hoping that the puzzles avoid those
+tricky edge cases for now.</p>
+<p>To parse, we use <code>[com.gfredericks.test.chuck.regexes :as cre]</code>.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"HE|LL|O+"</span><span class="p">)</span>
+<span class="c1">;; =&gt; (read: produces)</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\H</span><span class="p">}</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\E</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\L</span><span class="p">}</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\L</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
+     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\O</span><span class="p">}]</span>,
+     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span> <span class="nv">nil</span><span class="p">]})})}</span>
+</pre>
+
+
+<p>Progress! It is indeed an alternation (a or b) of a concatenation of H and E, or
+L and L, or the letter O one or more times. </p>
+<h2>Logic machinery</h2>
+<p>The logic programming engine is going to search a tree of possibilities for
+solutions that fit your constraints. Logic programming is inherently
+declarative: instead of telling the computer how to find the answer, we describe
+what the answer looks like.</p>
+<p>An lvar that doesn't have a value assigned to it yet (it could still be
+anything) is called "fresh". An lvar with a definite value is called "bound".
+There is nothing preventing your program from returning fresh variables: that
+just means the answer that doesn't rely on what that lvar taking any particular
+value (like the <em>x</em> in <em>0x = 0</em>).</p>
+<p>In core.logic, a program consists of a series of expressions called <em>goals</em>.
+<code>(l/== a b)</code> is a goal to make the values of <code>a</code> and <code>b</code> equal. It does not, by
+itself, compare <code>a</code> to <code>b</code> or assign anything to anything. It just expresses the
+idea of comparing the two. Logic programming calls this "unification".</p>
+<p>As the engine searches the space of possible answers, sometimes <code>a</code> will be
+equal to <code>b</code> already, or <code>a</code> will be bound and <code>b</code> will be fresh in which case
+<code>b</code> will become bound to whatever <code>a</code> was bound to. Either way, the two
+variables can be <em>unified</em> and the goal is said to <em>succeed</em>. But in many parts
+of the tree this doesn't work out: <code>a</code> and <code>b</code> will already be bound to
+incompatible values. In that case, the goal is said to fail. Unification is just
+one of many goals, but it's the most important one in most programs including
+ours.</p>
+<p>(You'll probably be happy to learn <code>l/==</code>, full name <code>clojure.core.logic/==</code>, is
+just a function. It requires learning a ton of deep logic machinery to grok, but
+at least it's not magic.)</p>
+<p>Finally, we need a way to actually run the logic programming engine. that's
+<code>clojure.core.logic/run</code>'s job. Something like:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">l/run</span> <span class="mi">1</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>            <span class="c1">;; run to find up to one answer with logic vars [q]</span>
+  <span class="p">(</span><span class="nf">l/==</span> <span class="nv">q</span> <span class="ss">'fred</span><span class="p">)</span>        <span class="c1">;; where q is unified with 'fred</span>
+</pre>
+
+
+<p>... will return <code>('fred)</code> (the 1-list with the symbol <code>'fred</code> in it) because
+there's only one answer for <code>q</code> that makes all the goals (here just one goal)
+succeed. <code>run</code> has a sibling <code>run*</code> that gets you all the answers. It returns
+the same result, because there's only one value for <code>q</code> that makes all goals
+succeed.</p>
+<p>It takes the <em>maximum number of answers</em> as a parameter. Since you're describing
+what the answer looks like, there might be zero, one, or any other number of
+answers. Sometimes the engine will be able to prove there are no other options
+(because the search was exhaustive) and it'll return fewer. Some pathological
+programs run forever, some so long it might as well be forever.</p>
+<h2>Direct match</h2>
+<p>The simplest possible regular expression is just a character, which matches
+itself: <code>A</code>. In our parse tree, this is an entry of <code>:type</code> <code>:character</code>. We'll
+write a multimethod dispatching on <code>:type</code> to make this work so we can implement
+other types later.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmulti </span><span class="nv">re-&gt;goal</span> <span class="ss">:type</span><span class="p">)</span>
+</pre>
+
+
+<p>A character looks like this: <code>{:type :character, :character \L}</code>. We'll use
+destructuring to extract the <code>:character</code> key. In general, this multimethod will
+take multiple lvars, though incidentally in the case of <code>:character</code> it'll
+be just one, so we can destructure it as well.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:character</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">character</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span><span class="p">]]</span>
+  <span class="p">(</span><span class="nf">l/==</span> <span class="nv">character</span> <span class="nv">lvar</span><span class="p">))</span>
+</pre>
+
+
+<p>We'll write a test to verify this works.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-character-test</span>
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span> <span class="p">[</span><span class="nv">q</span><span class="p">])))))</span>
+</pre>
+
+
+<h2>Concatenation</h2>
+<p>We want to be able to solve squares, not just individual letters. The simplest
+example of that is concatenation. The simplest case is a concatenation of two
+letters:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">a</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">aa</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span> <span class="ss">:elements</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">a</span><span class="p">]})</span>
+</pre>
+
+
+<p>A simple test:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-concatenation-test</span>
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">((</span><span class="sc">\A</span> <span class="sc">\A</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span> <span class="nv">q</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="nv">aa</span> <span class="p">[</span><span class="nv">p</span> <span class="nv">q</span><span class="p">])))))</span>
+</pre>
+
+
+<p>A simple implementation passes this test:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:concatenation</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">e</span> <span class="nv">elements</span>
+                <span class="nv">v</span> <span class="nv">lvars</span><span class="p">]</span>
+            <span class="p">(</span><span class="nf">re-&gt;goal</span> <span class="nv">e</span> <span class="p">[</span><span class="nv">v</span><span class="p">]))))</span>
+</pre>
+
+
+<p>(<code>l/and*</code>is a function that returns a goal that succeeds when all its goals
+succeed. We'd use the macro version <code>l/all</code> if we were explicitly writing out
+our goals. Because we're generating them, it's easier to use a function.)</p>
+<p>This passes the test, but we're clearly abusing the fact that we happen to know
+that the parts are characters and therefore length 1. Those constituent parts
+could be anything, and so they could be longer than 1. We can't write a test for
+that yet, because we don't have any regex parses that express different options
+yet. Concatenations of characters only match exactly one thing, so they have
+fixed length. We already saw the remaining two things to implement in our first
+parse tree: <code>:alternation</code> (<em>or</em>, <code>A|B</code>) and <code>:repetition</code> (<code>A{x,y}</code> plus
+shorthand spellings <code>A*</code> and <code>A+</code>). Alternation came first, so let's try that
+next.</p>
+<p>(We could technically produce a concatenation of concatenations, or character
+literals that contain multiple characters, but our parser produces neither and
+I'd rather work from real examples. Plus, we have to implement alternation
+anyway.)</p>
+<h2>Alternation</h2>
+<p>Let's look at a few parse trees for some simple alternations:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
+</pre>
+
+
+<p>Per our note above, we should also think of an example where the options are
+different length.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"AAA|B"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
+    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
+    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
+</pre>
+
+
+<p>It's also probably a good idea to consider something with more than two alternatives:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B|C"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\C</span><span class="p">})})}</span>
+</pre>
+
+
+<p>We need a way to express disjunction</p>
+<p>This primer is a little unorthodox because we're walking through a problem that
+requires rule generation. Most introductory texts make you write simple, static
+rules and build up from there. Just like <code>l/and*</code> had a macro variant <code>l/all</code>,
+disjunction is much more commonly expressed with the macro <code>l/conde</code>.</p>
+<h2>Fixing :concatenation</h2>
+<p>As we discovered earlier: concatenation is broken. It assumes each part is a
+character, and specifically that each part is length 1.</p>
+<h2>Fixing :character</h2>
+<p>What the concatenation problem tells us is that character is broken, too. It
+returned a successful goal when given more than one lvar.</p>
+<p>We communicate a problem with a failing goal. If some goal fails, the engine
+will stop exploring that branch. The always-failing goal <code>l/fail</code> is designed
+for this sort of thing. (You can probably guess what its counterpart <code>l/succeed</code>
+does.)</p>
+<p>We wrote our <code>:character</code> rule to assume that there would only be one lvar. That
+made sense because we knew that was always the case. But now <code>:concatenation</code>
+may attempt to call it with more, so we use <code>l/fail</code> to communicate the problem.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:character</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">character</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span> <span class="ss">:as</span> <span class="nv">lvars</span><span class="p">]]</span>
+  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lvars</span> <span class="nb">count </span><span class="p">(</span><span class="nb">= </span><span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">l/==</span> <span class="nv">character</span> <span class="nv">lvar</span><span class="p">)</span>
+    <span class="nv">l/fail</span><span class="p">))</span>
+</pre>
+
+
+<p>You could also do this in logic programming so that it's checked at runtime, but
+since we're generating our goals ahead of time here and only giving them to the
+engine at the end, we can short-circuit here.</p>
+<h2>Repetition</h2>
+<h3>Sample repetition parses</h3>
+<p>Let's see what the parser does for a few simple repetitions:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A{1}"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
+     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
+     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span><span class="nv">N</span> <span class="mi">1</span><span class="nv">N</span><span class="p">]})})}</span>
+
+<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A{1,}"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
+     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
+     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span><span class="nv">N</span> <span class="nv">nil</span><span class="p">]})})}</span>
+
+<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A{1,2}"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
+     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
+     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span><span class="nv">N</span> <span class="mi">2</span><span class="nv">N</span><span class="p">]})})}</span>
+
+<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A*"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
+     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
+     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">0</span> <span class="nv">nil</span><span class="p">]})})}</span>
+
+<span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A+"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:repetition</span>,
+     <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}]</span>,
+     <span class="ss">:bounds</span> <span class="p">[</span><span class="mi">1</span> <span class="nv">nil</span><span class="p">]})})}</span>
+</pre>
+
+
+<p>This matches our expectation, since:</p>
+<ul>
+<li>
+<code>A{n}</code> means exactly <em>n</em> A's</li>
+<li>
+<code>A{m,n}</code> means between <em>m</em> and <em>n</em> A's, inclusive</li>
+<li>
+<code>A{n,}</code> means <code>n</code> or more A's</li>
+<li>
+<code>A*</code> means 0 or more A's</li>
+<li>
+<code>A+</code> means 1 or more A's</li>
+</ul>
+<p>"No bound" is represented by <code>nil</code>. Some numbers are represented as just <code>1</code>,
+others as <code>1N</code>. The latter are <code>clojure.lang.BigInts</code>, not longs. The parser
+does this so it can support regexes with pathologically large sizes (longer than
+a <code>long</code>, a signed 64-bit integer). We can ignore that distinction: both behave
+identically for our purposes.</p>
+<h2>Conclusion</h2>
+<p>This introduction was a little unorthodox. Most texts focus on introducing
+different primitives, have you write small static rules and build up from there.
+You'll see <code>conde</code> long before anyone talks to you about <code>or*</code>. That's just a
+consequence of how I wrote this post, not a principled stance. Reading <a href="https://www.amazon.com/Little-Schemer-Daniel-P-Friedman/dp/0262560992">The
+Little Schemer</a> is still a good idea if you want to learn to write your own
+programs.</p>
+<h2>Next steps</h2>
+<p>These are things I thought were neat but didn't make sense in the original text.</p>
+<h3>Running programs backwards</h3>
+<p>A truly mind-bending feature of relational programs is that they can be ran
+"backwards". Usually, you write a program "forwards": it has some inputs and you
+expect some outputs. If you write your logic program a particular way, it
+doesn't actually know what's an input and what's an output, and so you can give
+it an "output" and it will come up with "inputs" that would have led to that
+output. This post did not demonstrate that, but it's one of the better hooks
+I've found to get people excited about logic programming. I could not give this
+talk better than <a href="https://www.youtube.com/watch?v=RVDCRlW1f1Y">Will Byrd presenting miniKanren</a>. I won't spoil the
+ending, but go watch that talk.</p>
+<p>Our program does not work that way. All our "inputs" are rules, all our lvars
+are the same kind (unknown boxes), so running it "backwards" doesn't really mean
+anything. It could, if our parser and rule generation were also fully
+relational. In that case, we could fill out some boxes and our program would
+tell us progressively more creative regular expressions that would match them.
+Instead of a puzzle solver, we would have written a puzzle creator.</p>
+<h3>Palindromes</h3>
+<p>Some puzzles have hints that help you solve them. Usually they're thematic cues,
+(e.g. "Hamlet") which are hard to tell a logic engine about. Structural cues are
+easy. For example, if you think some lines should be palindromes, you can just
+add the following constraint:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">l/all*</span> <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">vars</span><span class="p">]</span> <span class="p">(</span><span class="nf">l/==</span> <span class="nv">vars</span> <span class="p">(</span><span class="nb">reverse </span><span class="nv">vars</span><span class="p">)))</span> <span class="nv">lines</span><span class="p">))</span>
+</pre>
+
+
+<p>If evaluated at the right time, this should constrain the search tree. It's
+tricky to make sure that happens without measurement and fiddling.</p>
+<h3>Thematic cues</h3>
+<p>If you really wanted to add thematic cues, e.g. "Hamlet", you could grab the
+Wikipedia page, use something like TF/IDF to find important words, filter by the
+appropriate size, and introduce them as constraints. I don't expect this will
+speed anything up much even if you discount the initial step.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/clojure/" rel="tag">clojure</a></li>
+        </ul></nav></aside></article><!--End of body content--><footer id="footer">
+            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36779422-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

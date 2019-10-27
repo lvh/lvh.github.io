@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 06 Jan 2018 23:31:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/categories/security.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 27 Oct 2019 15:06:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
-&lt;a href="https://www.lvh.io/posts/nonce-misuse-resistance-101.html#proto"&gt;protocol design&lt;/a&gt;. If you're completely new to cryptography, you might
+&lt;a href="https://www.lvh.io/posts/nonce-misuse-resistance-101/#proto"&gt;protocol design&lt;/a&gt;. If you're completely new to cryptography, you might
 like my free introductory course to cryptography, &lt;a href="https://www.crypto101.io"&gt;Crypto 101&lt;/a&gt;. In a
 future blog post, I'll talk about some nonce-misuse resistant schemes I've
 implemented using libsodium.&lt;/em&gt;&lt;/p&gt;
@@ -20,19 +20,19 @@ the same key. You can remember this by the mnemonic that a &lt;em&gt;nonce&lt;/e
 repeat. That means that an attacker can take the two ciphertexts and XOR them
 to compute the XOR of the plaintexts. If &lt;code&gt;C_n&lt;/code&gt; are ciphertexts, &lt;code&gt;P_n&lt;/code&gt;
 plaintexts, &lt;code&gt;K_n&lt;/code&gt; keystreams, and &lt;code&gt;^&lt;/code&gt; is bitwise exclusive or:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 = K_1 ^ P_1
-C_2 = K_2 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt;
+&lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_2&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;The attacker just XORs &lt;code&gt;C_1&lt;/code&gt; and &lt;code&gt;C_2&lt;/code&gt; together:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;K_2&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;Since XOR is commutative (you can rearrange the order), &lt;code&gt;K_1 = K_2&lt;/code&gt;, and
 XOR'ing two equal values cancels them out:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = P_1 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -145,7 +145,7 @@ cancelling out the messages themselves as well.&lt;/p&gt;
 scanned before the nonce can be computed. For some protocols, that may not be
 acceptable, although plenty of protocols work around this assumption by simply
 making individual messages sufficiently small.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101/</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a &lt;a href="https://eprint.iacr.org/2016/413"&gt;paper&lt;/a&gt; on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
@@ -311,7 +311,7 @@ remember from high school math; it's a single number that tells you something
 interesting about the underlying curve. There are different formulas for
 curves in different forms. For example, for a curve in short Weierstrass form
 &lt;code&gt;y^2 = x^3 + ax + b&lt;/code&gt;, the j-invariant is:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1728&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -327,7 +327,7 @@ the DH exchange.&lt;/p&gt;
 curve: P_A, Q_A, P_B, Q_B.&lt;/p&gt;
 &lt;p&gt;Alice picks two random integers, m_A and n_A. She takes a linear combination
 of those two integers with P_A and Q_A to produce a random point R_A, so:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;R_A = n_A * P_A + m_A * Q_A
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;R_A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;n_A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;P_A&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;m_A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;Q_A&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -385,7 +385,7 @@ an excellent educational tool; and Watson Ladd for pointing out a correction
 w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
 singular.). Finally, I'd like to thank all the people who reviewed drafts of
 this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
-Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
+Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
 managing SSH infrastructure. Teleport is built by &lt;a href="http://www.gravitational.com/"&gt;Gravitational&lt;/a&gt;, a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
 Gravitational, I have been advising them on the Teleport project.&lt;/p&gt;
@@ -445,7 +445,7 @@ only exist until you can eradicate them, but they do exist, they're typically
 here to stay, and they need a real security story, too.&lt;/p&gt;
 &lt;p&gt;Teleport is still in its early stages. It's usable today, and I'm convinced it
 has a bright future ahead of it. It's written in a beautiful, hackable Go
-codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport.html</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport/</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
 process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
 called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
 effectively having root access. Any process that can write to the
@@ -495,7 +495,7 @@ container with write access to the Docker socket).&lt;/p&gt;
 &lt;p&gt;This isn't new; it's been a known property of the way Docker works
 ever since the (unfortunately trivially cross-site scriptable) REST
 API listening on a local TCP port was replaced with the
-&lt;code&gt;/var/run/docker.sock&lt;/code&gt; UNIX domain socket.&lt;/p&gt;&lt;/div&gt;</description><category>docker</category><category>security</category><guid>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</guid><pubDate>Wed, 23 Sep 2015 21:54:24 GMT</pubDate></item><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
+&lt;code&gt;/var/run/docker.sock&lt;/code&gt; UNIX domain socket.&lt;/p&gt;&lt;/div&gt;</description><category>docker</category><category>security</category><guid>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</guid><pubDate>Wed, 23 Sep 2015 21:54:24 GMT</pubDate></item><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
 &lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
 alternative certificate chain when the first one fails. The logic in
 that feature had a bug in it, such that it didn't properly verify if
@@ -595,7 +595,7 @@ people have a strong motivation to get their OpenSSL from a
 third-party source. The most popular source is Homebrew, which up
 until earlier this morning shipped 1.0.2c. The bug affects that
 version. If you installed OpenSSL through Homebrew, you should go
-update right now.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops.html</guid><pubDate>Thu, 09 Jul 2015 15:26:58 GMT</pubDate></item><item><title>They do take security seriously</title><link>https://www.lvh.io/posts/they-do-take-security-seriously.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Earlier today, I read an &lt;a href="http://www.troyhunt.com/2015/07/we-take-security-seriously-otherwise.html"&gt;article&lt;/a&gt; about the plethora of
+update right now.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops/</guid><pubDate>Thu, 09 Jul 2015 15:26:58 GMT</pubDate></item><item><title>They do take security seriously</title><link>https://www.lvh.io/posts/they-do-take-security-seriously/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Earlier today, I read an &lt;a href="http://www.troyhunt.com/2015/07/we-take-security-seriously-otherwise.html"&gt;article&lt;/a&gt; about the plethora of
 information security breaches in recent history. Its title reads:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;“We take security seriously”, otherwise known as “We didn’t take it
@@ -661,7 +661,7 @@ seriously" is entirely subjective. However, keep in mind that many
 targets &lt;em&gt;actually&lt;/em&gt; haven't taken security seriously, and would not
 even have the technical sophistication to detect an attack.&lt;/p&gt;
 &lt;p&gt;(By the way, if you too would like to help materially improve people's
-security, we're hiring. Contact me at &lt;code&gt;_@lvh.io&lt;/code&gt;.)&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/they-do-take-security-seriously.html</guid><pubDate>Sun, 05 Jul 2015 20:17:18 GMT</pubDate></item><item><title>HTTPS requests with client certificates in Clojure</title><link>https://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The vast majority of TLS connections only authenticate the
+security, we're hiring. Contact me at &lt;code&gt;_@lvh.io&lt;/code&gt;.)&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/they-do-take-security-seriously/</guid><pubDate>Sun, 05 Jul 2015 20:17:18 GMT</pubDate></item><item><title>HTTPS requests with client certificates in Clojure</title><link>https://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The vast majority of TLS connections only authenticate the
 server. When the client opens the connection, the server sends its
 certificate. The client checks the certificate against the list of
 certificate authorities that it knows about. The client is typically
@@ -704,7 +704,7 @@ watch my talk, &lt;a href="https://www.youtube.com/watch?v=3rmCGsCYJF8"&gt;Crypt
 free! Oh, and if you're looking for information security positions
 (that includes entry-level!) in an inclusive and friendly environment
 that puts a heavy emphasis on teaching and personal development, you
-should get in touch with me at &lt;code&gt;_@lvh.io&lt;/code&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure.html</guid><pubDate>Thu, 02 Jul 2015 15:53:20 GMT</pubDate></item><item><title>Conflicting threat models</title><link>https://www.lvh.io/posts/conflicting-threat-models.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;As I mentioned &lt;a href="http://www.lvh.io/posts/were-just-getting-started.html"&gt;in my previous post&lt;/a&gt;, we have a long way to go when it comes to information security. I'll be presenting &lt;a href="https://us.pycon.org/2015/schedule/presentation/342/"&gt;a talk on building secure systems&lt;/a&gt; at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.&lt;/p&gt;
+should get in touch with me at &lt;code&gt;_@lvh.io&lt;/code&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/https-requests-with-client-certificates-in-clojure/</guid><pubDate>Thu, 02 Jul 2015 15:53:20 GMT</pubDate></item><item><title>Conflicting threat models</title><link>https://www.lvh.io/posts/conflicting-threat-models/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;As I mentioned &lt;a href="http://www.lvh.io/posts/were-just-getting-started.html"&gt;in my previous post&lt;/a&gt;, we have a long way to go when it comes to information security. I'll be presenting &lt;a href="https://us.pycon.org/2015/schedule/presentation/342/"&gt;a talk on building secure systems&lt;/a&gt; at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.&lt;/p&gt;
 &lt;p&gt;I'm a strong believer in the importance of threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.&lt;/p&gt;
 &lt;p&gt;Threat models often simply deal with how much effort you're willing to spend to prevent something from happening. In a world with finite resources, we have to make choices. Some models are unrealistic or prohibitively expensive to defend against. These questions aren't all strictly technical: perhaps some risk is adequately covered by insurance. Perhaps you have a legal or a compliance requirement to do something, even if the result is technically inferior. These questions are also not just about &lt;em&gt;how much&lt;/em&gt; you're going to do: different threat models can lead to mutually exclusive resolutions, each a clear security win.&lt;/p&gt;
 &lt;p&gt;Consider your smartphone. Our phones have a lot of important, private information; it makes sense to protect them. The iPhone 6 provides two options for the lock screen: a passcode and a fingerprint sensor. Passcodes have been around for about as long as smartphones have, while fingerprint sensors are new and exciting. It's clear that either of them is more secure than not protecting your phone at all. But which one is more secure?&lt;/p&gt;
@@ -713,7 +713,7 @@ should get in touch with me at &lt;code&gt;_@lvh.io&lt;/code&gt;.&lt;/p&gt;&lt;/
 &lt;p&gt;Two options. Neither is perfect. How do you pick one? To make an informed choice, you need to formalize your threat models.&lt;/p&gt;
 &lt;p&gt;In the United States, under the Fifth Amendment, you don't have to divulge information that might incriminate you. I am not a lawyer, and courts have provided conflicting rulings, &lt;a href="https://en.wikipedia.org/wiki/Fifth_Amendment_to_the_United_States_Constitution#Computer_passwords"&gt;but currently it appears that this includes computer passwords.&lt;/a&gt; &lt;a href="http://hamptonroads.com/2014/10/police-can-require-cellphone-fingerprint-not-pass-code?wpisrc=nl-swbd&amp;amp;wpmm=1#"&gt;However, a court has ruled that a fingerprint doesn't count as secret information.&lt;/a&gt; If you can unlock your phone with your fingerprint, they can force you to unlock it.&lt;/p&gt;
 &lt;p&gt;If your threat models include people snooping, the fingerprint sensor is superior. If your threat model includes law enforcement, the passcode is superior. So, which do you pick? It depends on your threat model.&lt;/p&gt;
-&lt;p&gt;Disclaimer: this is an illustration of how threat models can conflict. It is &lt;em&gt;not&lt;/em&gt; operational security advice; in which case I would point out other options. It is not legal advice, which I am not at all qualified to dispense.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/conflicting-threat-models.html</guid><pubDate>Sat, 07 Mar 2015 16:56:05 GMT</pubDate></item><item><title>We're just getting started</title><link>https://www.lvh.io/posts/were-just-getting-started.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
+&lt;p&gt;Disclaimer: this is an illustration of how threat models can conflict. It is &lt;em&gt;not&lt;/em&gt; operational security advice; in which case I would point out other options. It is not legal advice, which I am not at all qualified to dispense.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/conflicting-threat-models/</guid><pubDate>Sat, 07 Mar 2015 16:56:05 GMT</pubDate></item><item><title>We're just getting started</title><link>https://www.lvh.io/posts/were-just-getting-started/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
 make. After the presentation, it's "over"; only spoken about in
 perfect tenses. You've communicated your thoughts, perhaps had a
 conversation or two, but, mostly, moved on.&lt;/p&gt;
@@ -750,7 +750,7 @@ overview of how we can build secure systems. More friends of mine will
 talk in about TLS there too. Within Rackspace, I'm focusing on
 information security. There are awesome things brewing here, and I
 hope that we can continue the great work we've been doing so far.&lt;/p&gt;
-&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/were-just-getting-started.html</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Securing APIs with shims</title><link>https://www.lvh.io/posts/securing-apis-with-shims.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
+&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/were-just-getting-started/</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Securing APIs with shims</title><link>https://www.lvh.io/posts/securing-apis-with-shims/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
 the ability to perform a specific &lt;em&gt;action&lt;/em&gt;, it gave you the ability to
 perform a (limited) set of operations on a third party API,
 e.g. OpenStack. The capability URL wouldn't just be something you
@@ -845,4 +845,4 @@ URLs.&lt;/p&gt;
 I'm going to invest a ton of time improving the documentation for both
 &lt;code&gt;core.logic&lt;/code&gt; and &lt;code&gt;core.typed&lt;/code&gt;. They're &lt;em&gt;fantastic&lt;/em&gt; projects, but
 they're harder to get started with than they could be, and that's a
-shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/securing-apis-with-shims.html</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item></channel></rss>
+shame.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/securing-apis-with-shims/</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item></channel></rss>

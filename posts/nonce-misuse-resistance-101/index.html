@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="An introduction to nonce-misuse resistant cryptosystems">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nonce misuse resistance 101 | lvh</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#383234">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://www.lvh.io/posts/nonce-misuse-resistance-101/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<link rel="prev" href="../supersingular-isogeny-diffie-hellman-101/" title="Supersingular isogeny Diffie-Hellman 101" type="text/html">
+<link rel="next" href="../tradeoffs-in-cryptographic-api-design/" title="Tradeoffs in cryptographic API design" type="text/html">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Nonce misuse resistance 101">
+<meta property="og:url" content="https://www.lvh.io/posts/nonce-misuse-resistance-101/">
+<meta property="og:description" content="An introduction to nonce-misuse resistant cryptosystems">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2016-05-19T12:25:44-07:00">
+<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="security">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://www.lvh.io/">
+            <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../about.html" class="nav-link">About</a>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/index.html" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../talks.html" class="nav-link">Talks</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="https://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Nonce misuse resistance 101</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    lvh
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2016-05-19T12:25:44-07:00" itemprop="datePublished" title="2016-05-19 12:25">2016-05-19 12:25</time></a>
+            </p>
+            
+        <p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p><em>This post is an introduction to nonce-misused resistant cryptosystems and why
+I think they matter. The first part of this post is about nonce-based
+authenticated encryption schemes: how they work, and how they fail. If you're
+already familiar with them, you can skip to the section on
+<a href="#proto">protocol design</a>. If you're completely new to cryptography, you might
+like my free introductory course to cryptography, <a href="https://www.crypto101.io">Crypto 101</a>. In a
+future blog post, I'll talk about some nonce-misuse resistant schemes I've
+implemented using libsodium.</em></p>
+<p>Many stream ciphers and stream cipher-like constructions such as CTR,
+GCM, (X)Salsa20... take a nonce. You can think of it as a pointer that lets
+you jump to a particular point in the keystream. This makes these ciphers
+"seekable", meaning that you can decrypt a small part of a big ciphertext,
+instead of having to decrypt everything up to that point first. (That ends up
+being trickier than it seems, because you still want to authenticate that
+small chunk of ciphertext, but that's a topic for another time.)</p>
+<p>The critical security property of a nonce is that it's never repeated under
+the same key. You can remember this by the mnemonic that a <em>nonce</em> is a
+"number used once". If you were to repeat the nonce, the keystream would also
+repeat. That means that an attacker can take the two ciphertexts and XOR them
+to compute the XOR of the plaintexts. If <code>C_n</code> are ciphertexts, <code>P_n</code>
+plaintexts, <code>K_n</code> keystreams, and <code>^</code> is bitwise exclusive or:</p>
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span>
+<span class="n">C_2</span> <span class="o">=</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+</pre>
+
+
+<p>The attacker just XORs <code>C_1</code> and <code>C_2</code> together:</p>
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+</pre>
+
+
+<p>Since XOR is commutative (you can rearrange the order), <code>K_1 = K_2</code>, and
+XOR'ing two equal values cancels them out:</p>
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">P_2</span>
+</pre>
+
+
+<p>That tells an attacker a lot about the plaintext, especially if some of one of
+the plaintexts is predictable. If the attacker has access to an encryption
+oracle, meaning that they can get encryptions for plaintexts of their
+choosing, they can even get perfect decryptions. That is not an unrealistic
+scenario. For example, if you're encrypting session cookies that contain the
+user name and e-mail, I can register using a name and e-mail address that has
+a lot of <code>Z</code> characters, and then I know that just XORing with <code>Z</code> will reveal
+most of the plaintext. For an idea of the state of the art in attacking
+two-time pads (the usual term for two ciphertexts with a reused keystream),
+see <a href="https://www.cs.jhu.edu/~jason/papers/mason+al.ccs06.pdf">Mason06</a>.</p>
+<p><a id="proto"></a></p>
+<h3>Protocol design</h3>
+<p>For many on-line protocols like TLS, the explicit nonce provides a convenient
+way to securely send many messages under a per-session key. Because the
+critical security property for a nonce is that it is never repeated with the
+same key, it's safe to use a counter. In protocols where both peers send
+messages to each other, you can just have one peer use odd nonces and have the
+other use even ones. There are some caveats here: for example, if the nonce
+size is sufficiently small, an attacker might try to make that counter
+overflow, resulting in a repeated nonce.</p>
+<p>For off-line (or at-rest) protocols, it's a little trickier. You don't have a
+live communication channel to negotiate a new ephemeral key over, so you're
+stuck with longer-term keys or keys derived from them. If multiple systems are
+participating, you need to decide ahead of time which systems own which
+nonces. Even then, systems need to keep track of which nonces they've
+used. That doesn't work well, especially not in a distributed system where
+nodes and connections can fail at any time. This is why some cryptosystems
+like <a href="https://cryptography.io/en/latest/fernet/">Fernet</a> provide an API that doesn't require you to specify
+anything besides a key and a message.</p>
+<p>One solution is to use randomized nonces. Since nonces can't repeat, random
+nonces should be large: if they're too small, you might randomly select the
+same nonce twice, per the birthday bound. That is the only difference between
+Salsa20 and XSalsa20: Salsa20 has a 64 bit nonce, whereas XSalsa20 has a 192
+bit nonce. That change exists explicitly to make random nonces secure.</p>
+<p>Picking a random nonce and just prepending it to the secretbox ciphertext is
+secure, but there are a few problems with this approach. It's not clear to
+practitioners that that's a secure construct. Doing this may seem obvious to a
+cryptographer, but not to someone who just wants to encrypt a
+message. Prepending a nonce doesn't feel much different from e.g. appending a
+MAC. A somewhat knowledgeable practitioner knows that there's plenty of ways
+to use MACs that are insecure, and they don't immediately see that the
+prefix-nonce construction is secure. Not wanting to design your own
+cryptosystems is a good reflex which we should be encouraging.</p>
+<p>Random nonces also mean that any system sending messages needs access to
+high-quality random number generators while they're sending a message. That's
+often, but not always true. Bugs around random number generation, especially
+userspace CSPRNGs, <a href="http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/">keep popping up</a>. This is often a consequence of
+poor programming practice, but it can also be a consequence of
+poorly-configured VMs or limitations of embedded hardware.</p>
+<h3>Nonce-misuse resistant systems</h3>
+<p>To recap, not all protocols have the luxury of an obvious nonce choice, and
+through circumstances or poor practices, nonces might repeat
+anyway. Regardless of how cryptographers feel about how important nonce misuse
+is, we can anecdotally and empirically verify that such issues are real and
+common. This is true even for systems like TLS where there is an "obvious"
+nonce available (<a href="https://eprint.iacr.org/2016/475.pdf">Böck et al, 2016</a>). It's easy to point fingers, but
+it's better to produce cryptosystems that fail gracefully.</p>
+<p><a href="http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf">Rogaway and Shrimpton (2006)</a> defined a new model called nonce-misuse
+resistance. Informally, nonce-misuse resistance schemes ensure that a repeated
+random nonce doesn't result in plaintext compromise. In the case of a broken
+system where the attacker can cause repeated nonces, an attacker will only be
+able to discern if a particular message repeated, but they will not be able
+to decrypt the message.</p>
+<p>Rogaway and Shrimpton also later developed a mode of operation called SIV
+(synthetic IV), which Gueron and Lindell are refined to GCM-SIV, a SIV-like
+that takes advantage of fast GCM hardware implementations. Those two authors
+are currently working with Adam Langley to standardize the AES-GCM-SIV
+construction through CFRG. AEZ and HS1-SIV, two entries in the CAESAR
+competition, also feature nonce-misuse resistance. CAESAR is an ongoing
+competition, and GCM-SIV is not officially finished yet, so this is clearly
+a field that is still evolving.</p>
+<p>There are parallels between nonce-misuse resistance and length extension
+attacks. Both address issues that arguably only affected systems that were
+doing it wrong to begin with. (Note, however, in the embedded case above, it
+might not be a software design flaw but a hardware limitation.) Fortunately,
+the SHA-3 competition showed that you can have increased performance and
+still be immune to a class of problems. I'm hopeful that CAESAR will consider
+nonce-misuse resistance an important property of an authenticated encryption
+standard.</p>
+<h3>Repeated messages</h3>
+<p>Repeated messages are suboptimal, and in some protocols they might be
+unacceptable. However, they're a fail-safe failure mode for nonce
+misuse. You're not choosing to have a repeated ciphertext, you're just getting
+a repeated ciphertext instead of a plaintext disclosure (where the attacker
+would also know that you repeated a message). In the case of a secure random
+nonce, a nonce-misuse resistant scheme is just as secure, at the cost of a
+performance hit.</p>
+<p>In a context where attackers can see individual messages to detect repeated
+ciphertexts, it makes sense to also consider a model where attackers can
+replay messages. If replaying messages (which presumably have side effects) is
+a problem, a common approach is to add a validity timestamp. This is a feature
+of <a href="https://cryptography.io/en/latest/fernet/">Fernet</a>, for example. A device that doesn't have access to
+sufficient entropy will still typically have access to a reasonably
+high-resolution clock, which is still more than good enough to make sure the
+synthetic IVs don't repeat either.</p>
+<h3>OK, but how does it work?</h3>
+<p>Being able to trade plaintext disclosure for attackers being able to detect
+repeated messages sounds like magic, but it makes sense once you realize how
+they work. As demonstrated in the start of this post, nonce re-use normally
+allows an attacker to have two keystreams cancel out. That only makes sense if
+two <em>distinct</em> messages are encrypted using the same (key, nonce) pair. NMR
+solves this by making the nonce also depend on the message itself. Informally,
+it means that a nonce should never repeat for two distinct
+messages. Therefore, an attacker can't cancel out the keystreams without
+cancelling out the messages themselves as well.</p>
+<p>This model does imply off-line operation, in that the entire message has to be
+scanned before the nonce can be computed. For some protocols, that may not be
+acceptable, although plenty of protocols work around this assumption by simply
+making individual messages sufficiently small.</p>
+<p><em>Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.</em></p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/crypto/" rel="tag">crypto</a></li>
+            <li><a class="tag p-category" href="../../categories/security/" rel="tag">security</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../supersingular-isogeny-diffie-hellman-101/" rel="prev" title="Supersingular isogeny Diffie-Hellman 101">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../tradeoffs-in-cryptographic-api-design/" rel="next" title="Tradeoffs in cryptographic API design">Next post</a>
+            </li>
+        </ul></nav></aside></article><!--End of body content--><footer id="footer">
+            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36779422-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

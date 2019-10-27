@@ -1,5 +1,37 @@
 .body-content {
     text-align: justify;
+
+    /* Too lazy to fix bootstrap, so !important yay */
+    font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica" !important;
+    font-size: 16pt;
+}
+
+p {
+    margin-bottom: 1.5em;
+    line-height: 180%;
+}
+
+h1, h2, h3, h4, h5 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+code {
+    color: #383234 !important;
+}
+
+pre {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 2em !important;
+}
+
+a {
+    color: #383234;
+}
+
+a:hover {
+    color: #534a4d;
 }
 
 img#logo {
@@ -9,7 +41,7 @@ img#logo {
     top: 80px;
 }
 .entry-content a[href] {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 @media (max-width: 1024px) {
     img#logo {

@@ -1,363 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 27 Oct 2019 15:05:35 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Solving regex crosswords</title><link>https://www.lvh.io/posts/solving-regex-crosswords.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;strong&gt;DRAFT!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://regexcrossword.com/"&gt;Regex Crossword&lt;/a&gt; is a puzzle game to help you
-practice regular expressions. I wrote a program to solve them. You can find it
-on GitHub as &lt;a href="https://github.com/lvh/regex-crossword"&gt;&lt;code&gt;lvh/regex-crossword&lt;/code&gt;&lt;/a&gt;.
-This blog post walks you through how I wrote it using logic programming. &lt;/p&gt;
-&lt;p&gt;To me this game feels more like Sudoku than a crossword. When you solve a
-crossword, you start by filling out the words you're certain of and use those
-answers as hints for the rest. Backtracking is relatively rare. In a sudoku, you
-might start by filling out a handful of certain boxes, but in most puzzles you
-quickly need to backtrack. That distinction shapes how I think of solving it:
-searching and backtracking is a natural fit for logic programming.&lt;/p&gt;
-&lt;p&gt;Logic programming is a niche technology, but in its sweet spot it's miraculous.
-I'll introduce the concept to help you recognize what sorts of problems it's
-good at. Worst case, you'll enjoy a cool hack. Best case you'll get the
-satisfaction of writing a beautiful solution to a problem some time in the
-future.&lt;/p&gt;
-&lt;p&gt;My programming language of choice is Clojure, and Clojure has
-&lt;a href="https://github.com/clojure/core.logic"&gt;&lt;code&gt;clojure/core.logic&lt;/code&gt;&lt;/a&gt;, a logic programming library. Because logic
-programming is such a specialized tool, it's more useful to have libraries that
-let you "drop in to" logic programming than to do everything in a full-blown
-logic programming language.&lt;/p&gt;
-&lt;h2&gt;Approach&lt;/h2&gt;
-&lt;p&gt;It would not be a bad idea to read &lt;a href="https://regexcrossword.com/howtoplay"&gt;the instructions for Regex
-Crossword&lt;/a&gt;. I'll also assume you have seen some basic regular
-expressions. Hopefully the Clojure will be piecemeal enough you can
-just follow along, but reading a tutorial wouldn't hurt.&lt;/p&gt;
-&lt;p&gt;Let's take a look at the first beginner puzzle:&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://www.lvh.io/img/regex-crossword/beginner1.png"&gt;&lt;/p&gt;
-&lt;p&gt;Each regex part applies to some number of unknowns (empty boxes). The first row
-regex &lt;code&gt;HE|LL|O+&lt;/code&gt; applies to the unknowns of the first row. The first column
-regex &lt;code&gt;[^SPEAK]+&lt;/code&gt; applies to the unknowns of the first column. Both constrain
-the top left unknown: we're counting on our logic programming engine at being
-convenient for expressing that "cascading" of constraints.&lt;/p&gt;
-&lt;p&gt;An unknown is just a logic variable in constraint logic programming. For brevity
-we'll call them "lvars" (&lt;em&gt;[ell vars]&lt;/em&gt;).&lt;/p&gt;
-&lt;p&gt;Rows, columns (and in later puzzles hexagon lines) are all just layout.
-Fundamentally it's all just a regex applying to some lvars.&lt;/p&gt;
-&lt;h2&gt;Breaking down regular expressions&lt;/h2&gt;
-&lt;p&gt;Most regular expressions have structure, like &lt;code&gt;(AB|CD)XY&lt;/code&gt;. We'll solve this
-problem recursively: if &lt;code&gt;(AB|CD)XY&lt;/code&gt; matches lvars &lt;code&gt;p q r s&lt;/code&gt;, then presumably
-&lt;code&gt;pq&lt;/code&gt; must match &lt;code&gt;AB|CD&lt;/code&gt; and &lt;code&gt;rs&lt;/code&gt; must match &lt;code&gt;XY&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;(There are some counterexamples to the idea that we can solve the entire problem
-recursively! For example, backrefs within a regex would require a second pass,
-and backrefs across regular expressions would require another top-level pass.
-We'll deal with those later. There are ties to language theory here, but that's
-a story for another day.)&lt;/p&gt;
-&lt;p&gt;We'll parse the regular expression into a data structure that's easier to
-handle. Fortunately, there's a piece of code out there that knows how to
-generate strings matching a given regex, which has a parser we can reuse. That
-parser is designed for Java's regular expression syntax. It's not quite
-identical to that of JavaScript, but we're hoping that the puzzles avoid those
-tricky edge cases for now.&lt;/p&gt;
-&lt;p&gt;To parse, we use &lt;code&gt;[com.gfredericks.test.chuck.regexes :as cre]&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"HE|LL|O+"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt; (read: produces)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\H&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\E&lt;/span&gt;&lt;span class="p"&gt;})}&lt;/span&gt;
-  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\L&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\L&lt;/span&gt;&lt;span class="p"&gt;})}&lt;/span&gt;
-  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:repetition&lt;/span&gt;,
-     &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\O&lt;/span&gt;&lt;span class="p"&gt;}]&lt;/span&gt;,
-     &lt;span class="ss"&gt;:bounds&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="nv"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;]})})}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Progress! It is indeed an alternation (a or b) of a concatenation of H and E, or
-L and L, or the letter O one or more times. &lt;/p&gt;
-&lt;h2&gt;Logic machinery&lt;/h2&gt;
-&lt;p&gt;The logic programming engine is going to search a tree of possibilities for
-solutions that fit your constraints. Logic programming is inherently
-declarative: instead of telling the computer how to find the answer, we describe
-what the answer looks like.&lt;/p&gt;
-&lt;p&gt;An lvar that doesn't have a value assigned to it yet (it could still be
-anything) is called "fresh". An lvar with a definite value is called "bound".
-There is nothing preventing your program from returning fresh variables: that
-just means the answer that doesn't rely on what that lvar taking any particular
-value (like the &lt;em&gt;x&lt;/em&gt; in &lt;em&gt;0x = 0&lt;/em&gt;).&lt;/p&gt;
-&lt;p&gt;In core.logic, a program consists of a series of expressions called &lt;em&gt;goals&lt;/em&gt;.
-&lt;code&gt;(l/== a b)&lt;/code&gt; is a goal to make the values of &lt;code&gt;a&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt; equal. It does not, by
-itself, compare &lt;code&gt;a&lt;/code&gt; to &lt;code&gt;b&lt;/code&gt; or assign anything to anything. It just expresses the
-idea of comparing the two. Logic programming calls this "unification".&lt;/p&gt;
-&lt;p&gt;As the engine searches the space of possible answers, sometimes &lt;code&gt;a&lt;/code&gt; will be
-equal to &lt;code&gt;b&lt;/code&gt; already, or &lt;code&gt;a&lt;/code&gt; will be bound and &lt;code&gt;b&lt;/code&gt; will be fresh in which case
-&lt;code&gt;b&lt;/code&gt; will become bound to whatever &lt;code&gt;a&lt;/code&gt; was bound to. Either way, the two
-variables can be &lt;em&gt;unified&lt;/em&gt; and the goal is said to &lt;em&gt;succeed&lt;/em&gt;. But in many parts
-of the tree this doesn't work out: &lt;code&gt;a&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt; will already be bound to
-incompatible values. In that case, the goal is said to fail. Unification is just
-one of many goals, but it's the most important one in most programs including
-ours.&lt;/p&gt;
-&lt;p&gt;(You'll probably be happy to learn &lt;code&gt;l/==&lt;/code&gt;, full name &lt;code&gt;clojure.core.logic/==&lt;/code&gt;, is
-just a function. It requires learning a ton of deep logic machinery to grok, but
-at least it's not magic.)&lt;/p&gt;
-&lt;p&gt;Finally, we need a way to actually run the logic programming engine. that's
-&lt;code&gt;clojure.core.logic/run&lt;/code&gt;'s job. Something like:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/run&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;            &lt;span class="c1"&gt;;; run to find up to one answer with logic vars [q]&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/==&lt;/span&gt; &lt;span class="nv"&gt;q&lt;/span&gt; &lt;span class="ss"&gt;'fred&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="c1"&gt;;; where q is unified with 'fred&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;... will return &lt;code&gt;('fred)&lt;/code&gt; (the 1-list with the symbol &lt;code&gt;'fred&lt;/code&gt; in it) because
-there's only one answer for &lt;code&gt;q&lt;/code&gt; that makes all the goals (here just one goal)
-succeed. &lt;code&gt;run&lt;/code&gt; has a sibling &lt;code&gt;run*&lt;/code&gt; that gets you all the answers. It returns
-the same result, because there's only one value for &lt;code&gt;q&lt;/code&gt; that makes all goals
-succeed.&lt;/p&gt;
-&lt;p&gt;It takes the &lt;em&gt;maximum number of answers&lt;/em&gt; as a parameter. Since you're describing
-what the answer looks like, there might be zero, one, or any other number of
-answers. Sometimes the engine will be able to prove there are no other options
-(because the search was exhaustive) and it'll return fewer. Some pathological
-programs run forever, some so long it might as well be forever.&lt;/p&gt;
-&lt;h2&gt;Direct match&lt;/h2&gt;
-&lt;p&gt;The simplest possible regular expression is just a character, which matches
-itself: &lt;code&gt;A&lt;/code&gt;. In our parse tree, this is an entry of &lt;code&gt;:type&lt;/code&gt; &lt;code&gt;:character&lt;/code&gt;. We'll
-write a multimethod dispatching on &lt;code&gt;:type&lt;/code&gt; to make this work so we can implement
-other types later.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defmulti &lt;/span&gt;&lt;span class="nv"&gt;re-&amp;gt;goal&lt;/span&gt; &lt;span class="ss"&gt;:type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;A character looks like this: &lt;code&gt;{:type :character, :character \L}&lt;/code&gt;. We'll use
-destructuring to extract the &lt;code&gt;:character&lt;/code&gt; key. In general, this multimethod will
-take multiple lvars, though incidentally in the case of &lt;code&gt;:character&lt;/code&gt; it'll
-be just one, so we can destructure it as well.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defmethod &lt;/span&gt;&lt;span class="nv"&gt;re-&amp;gt;goal&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;
-  &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:keys&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;character&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;lvar&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/==&lt;/span&gt; &lt;span class="nv"&gt;character&lt;/span&gt; &lt;span class="nv"&gt;lvar&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;We'll write a test to verify this works.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;t/deftest&lt;/span&gt; &lt;span class="nv"&gt;re-&amp;gt;goal-character-test&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;t/is&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;= &lt;/span&gt;&lt;span class="o"&gt;'&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-           &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/run*&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-             &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;rcl/re-&amp;gt;goal&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;])))))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;h2&gt;Concatenation&lt;/h2&gt;
-&lt;p&gt;We want to be able to solve squares, not just individual letters. The simplest
-example of that is concatenation. The simplest case is a concatenation of two
-letters:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;a&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nv"&gt;aa&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt; &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;a&lt;/span&gt; &lt;span class="nv"&gt;a&lt;/span&gt;&lt;span class="p"&gt;]})&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;A simple test:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;t/deftest&lt;/span&gt; &lt;span class="nv"&gt;re-&amp;gt;goal-concatenation-test&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;t/is&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;= &lt;/span&gt;&lt;span class="o"&gt;'&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="sc"&gt;\A&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-           &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/run*&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;p&lt;/span&gt; &lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-             &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;rcl/re-&amp;gt;goal&lt;/span&gt; &lt;span class="nv"&gt;aa&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;p&lt;/span&gt; &lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;])))))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;A simple implementation passes this test:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defmethod &lt;/span&gt;&lt;span class="nv"&gt;re-&amp;gt;goal&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;
-  &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:keys&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;elements&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt; &lt;span class="nv"&gt;lvars&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/and*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;for &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;e&lt;/span&gt; &lt;span class="nv"&gt;elements&lt;/span&gt;
-                &lt;span class="nv"&gt;v&lt;/span&gt; &lt;span class="nv"&gt;lvars&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-            &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;re-&amp;gt;goal&lt;/span&gt; &lt;span class="nv"&gt;e&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;v&lt;/span&gt;&lt;span class="p"&gt;]))))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;(&lt;code&gt;l/and*&lt;/code&gt;is a function that returns a goal that succeeds when all its goals
-succeed. We'd use the macro version &lt;code&gt;l/all&lt;/code&gt; if we were explicitly writing out
-our goals. Because we're generating them, it's easier to use a function.)&lt;/p&gt;
-&lt;p&gt;This passes the test, but we're clearly abusing the fact that we happen to know
-that the parts are characters and therefore length 1. Those constituent parts
-could be anything, and so they could be longer than 1. We can't write a test for
-that yet, because we don't have any regex parses that express different options
-yet. Concatenations of characters only match exactly one thing, so they have
-fixed length. We already saw the remaining two things to implement in our first
-parse tree: &lt;code&gt;:alternation&lt;/code&gt; (&lt;em&gt;or&lt;/em&gt;, &lt;code&gt;A|B&lt;/code&gt;) and &lt;code&gt;:repetition&lt;/code&gt; (&lt;code&gt;A{x,y}&lt;/code&gt; plus
-shorthand spellings &lt;code&gt;A*&lt;/code&gt; and &lt;code&gt;A+&lt;/code&gt;). Alternation came first, so let's try that
-next.&lt;/p&gt;
-&lt;p&gt;(We could technically produce a concatenation of concatenations, or character
-literals that contain multiple characters, but our parser produces neither and
-I'd rather work from real examples. Plus, we have to implement alternation
-anyway.)&lt;/p&gt;
-&lt;h2&gt;Alternation&lt;/h2&gt;
-&lt;p&gt;Let's look at a few parse trees for some simple alternations:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"A|B"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;, &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;})}&lt;/span&gt;
-  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;, &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\B&lt;/span&gt;&lt;span class="p"&gt;})})}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Per our note above, we should also think of an example where the options are
-different length.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"AAA|B"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;})}&lt;/span&gt;
-  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;, &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\B&lt;/span&gt;&lt;span class="p"&gt;})})}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;It's also probably a good idea to consider something with more than two alternatives:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"A|B|C"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;, &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;})}&lt;/span&gt;
-  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;, &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\B&lt;/span&gt;&lt;span class="p"&gt;})}&lt;/span&gt;
-  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;, &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\C&lt;/span&gt;&lt;span class="p"&gt;})})}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;We need a way to express disjunction&lt;/p&gt;
-&lt;p&gt;This primer is a little unorthodox because we're walking through a problem that
-requires rule generation. Most introductory texts make you write simple, static
-rules and build up from there. Just like &lt;code&gt;l/and*&lt;/code&gt; had a macro variant &lt;code&gt;l/all&lt;/code&gt;,
-disjunction is much more commonly expressed with the macro &lt;code&gt;l/conde&lt;/code&gt;.&lt;/p&gt;
-&lt;h2&gt;Fixing :concatenation&lt;/h2&gt;
-&lt;p&gt;As we discovered earlier: concatenation is broken. It assumes each part is a
-character, and specifically that each part is length 1.&lt;/p&gt;
-&lt;h2&gt;Fixing :character&lt;/h2&gt;
-&lt;p&gt;What the concatenation problem tells us is that character is broken, too. It
-returned a successful goal when given more than one lvar.&lt;/p&gt;
-&lt;p&gt;We communicate a problem with a failing goal. If some goal fails, the engine
-will stop exploring that branch. The always-failing goal &lt;code&gt;l/fail&lt;/code&gt; is designed
-for this sort of thing. (You can probably guess what its counterpart &lt;code&gt;l/succeed&lt;/code&gt;
-does.)&lt;/p&gt;
-&lt;p&gt;We wrote our &lt;code&gt;:character&lt;/code&gt; rule to assume that there would only be one lvar. That
-made sense because we knew that was always the case. But now &lt;code&gt;:concatenation&lt;/code&gt;
-may attempt to call it with more, so we use &lt;code&gt;l/fail&lt;/code&gt; to communicate the problem.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defmethod &lt;/span&gt;&lt;span class="nv"&gt;re-&amp;gt;goal&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;
-  &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:keys&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;character&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;lvar&lt;/span&gt; &lt;span class="ss"&gt;:as&lt;/span&gt; &lt;span class="nv"&gt;lvars&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;-&amp;gt; &lt;/span&gt;&lt;span class="nv"&gt;lvars&lt;/span&gt; &lt;span class="nb"&gt;count &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;= &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/==&lt;/span&gt; &lt;span class="nv"&gt;character&lt;/span&gt; &lt;span class="nv"&gt;lvar&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="nv"&gt;l/fail&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;You could also do this in logic programming so that it's checked at runtime, but
-since we're generating our goals ahead of time here and only giving them to the
-engine at the end, we can short-circuit here.&lt;/p&gt;
-&lt;h2&gt;Repetition&lt;/h2&gt;
-&lt;h3&gt;Sample repetition parses&lt;/h3&gt;
-&lt;p&gt;Let's see what the parser does for a few simple repetitions:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"A{1}"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:repetition&lt;/span&gt;,
-     &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}]&lt;/span&gt;,
-     &lt;span class="ss"&gt;:bounds&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="nv"&gt;N&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="nv"&gt;N&lt;/span&gt;&lt;span class="p"&gt;]})})}&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"A{1,}"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:repetition&lt;/span&gt;,
-     &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}]&lt;/span&gt;,
-     &lt;span class="ss"&gt;:bounds&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="nv"&gt;N&lt;/span&gt; &lt;span class="nv"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;]})})}&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"A{1,2}"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:repetition&lt;/span&gt;,
-     &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}]&lt;/span&gt;,
-     &lt;span class="ss"&gt;:bounds&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="nv"&gt;N&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="nv"&gt;N&lt;/span&gt;&lt;span class="p"&gt;]})})}&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"A*"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:repetition&lt;/span&gt;,
-     &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}]&lt;/span&gt;,
-     &lt;span class="ss"&gt;:bounds&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="nv"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;]})})}&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;cre/parse&lt;/span&gt; &lt;span class="s"&gt;"A+"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c1"&gt;;; =&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:alternation&lt;/span&gt;,
- &lt;span class="ss"&gt;:elements&lt;/span&gt;
- &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:concatenation&lt;/span&gt;,
-   &lt;span class="ss"&gt;:elements&lt;/span&gt;
-   &lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:repetition&lt;/span&gt;,
-     &lt;span class="ss"&gt;:elements&lt;/span&gt; &lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="ss"&gt;:type&lt;/span&gt; &lt;span class="ss"&gt;:character&lt;/span&gt;, &lt;span class="ss"&gt;:character&lt;/span&gt; &lt;span class="sc"&gt;\A&lt;/span&gt;&lt;span class="p"&gt;}]&lt;/span&gt;,
-     &lt;span class="ss"&gt;:bounds&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="nv"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;]})})}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;This matches our expectation, since:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;A{n}&lt;/code&gt; means exactly &lt;em&gt;n&lt;/em&gt; A's&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;A{m,n}&lt;/code&gt; means between &lt;em&gt;m&lt;/em&gt; and &lt;em&gt;n&lt;/em&gt; A's, inclusive&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;A{n,}&lt;/code&gt; means &lt;code&gt;n&lt;/code&gt; or more A's&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;A*&lt;/code&gt; means 0 or more A's&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;A+&lt;/code&gt; means 1 or more A's&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;"No bound" is represented by &lt;code&gt;nil&lt;/code&gt;. Some numbers are represented as just &lt;code&gt;1&lt;/code&gt;,
-others as &lt;code&gt;1N&lt;/code&gt;. The latter are &lt;code&gt;clojure.lang.BigInts&lt;/code&gt;, not longs. The parser
-does this so it can support regexes with pathologically large sizes (longer than
-a &lt;code&gt;long&lt;/code&gt;, a signed 64-bit integer). We can ignore that distinction: both behave
-identically for our purposes.&lt;/p&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;This introduction was a little unorthodox. Most texts focus on introducing
-different primitives, have you write small static rules and build up from there.
-You'll see &lt;code&gt;conde&lt;/code&gt; long before anyone talks to you about &lt;code&gt;or*&lt;/code&gt;. That's just a
-consequence of how I wrote this post, not a principled stance. Reading &lt;a href="https://www.amazon.com/Little-Schemer-Daniel-P-Friedman/dp/0262560992"&gt;The
-Little Schemer&lt;/a&gt; is still a good idea if you want to learn to write your own
-programs.&lt;/p&gt;
-&lt;h2&gt;Next steps&lt;/h2&gt;
-&lt;p&gt;These are things I thought were neat but didn't make sense in the original text.&lt;/p&gt;
-&lt;h3&gt;Running programs backwards&lt;/h3&gt;
-&lt;p&gt;A truly mind-bending feature of relational programs is that they can be ran
-"backwards". Usually, you write a program "forwards": it has some inputs and you
-expect some outputs. If you write your logic program a particular way, it
-doesn't actually know what's an input and what's an output, and so you can give
-it an "output" and it will come up with "inputs" that would have led to that
-output. This post did not demonstrate that, but it's one of the better hooks
-I've found to get people excited about logic programming. I could not give this
-talk better than &lt;a href="https://www.youtube.com/watch?v=RVDCRlW1f1Y"&gt;Will Byrd presenting miniKanren&lt;/a&gt;. I won't spoil the
-ending, but go watch that talk.&lt;/p&gt;
-&lt;p&gt;Our program does not work that way. All our "inputs" are rules, all our lvars
-are the same kind (unknown boxes), so running it "backwards" doesn't really mean
-anything. It could, if our parser and rule generation were also fully
-relational. In that case, we could fill out some boxes and our program would
-tell us progressively more creative regular expressions that would match them.
-Instead of a puzzle solver, we would have written a puzzle creator.&lt;/p&gt;
-&lt;h3&gt;Palindromes&lt;/h3&gt;
-&lt;p&gt;Some puzzles have hints that help you solve them. Usually they're thematic cues,
-(e.g. "Hamlet") which are hard to tell a logic engine about. Structural cues are
-easy. For example, if you think some lines should be palindromes, you can just
-add the following constraint:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/all*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;map &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;fn &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;vars&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/==&lt;/span&gt; &lt;span class="nv"&gt;vars&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;reverse &lt;/span&gt;&lt;span class="nv"&gt;vars&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt; &lt;span class="nv"&gt;lines&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;If evaluated at the right time, this should constrain the search tree. It's
-tricky to make sure that happens without measurement and fiddling.&lt;/p&gt;
-&lt;h3&gt;Thematic cues&lt;/h3&gt;
-&lt;p&gt;If you really wanted to add thematic cues, e.g. "Hamlet", you could grab the
-Wikipedia page, use something like TF/IDF to find important words, filter by the
-appropriate size, and introduce them as constraints. I don't expect this will
-speed anything up much even if you discount the initial step.&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><guid>https://www.lvh.io/posts/solving-regex-crosswords.html</guid><pubDate>Sat, 26 Oct 2019 02:36:29 GMT</pubDate></item><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 27 Oct 2019 15:10:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
 runtime environment. Many platforms have different requirements when you're
 generating a runnable artifact than when you're running it.&lt;/p&gt;
 &lt;p&gt;In languages like Go, Rust or C, where the most common implementations produce
@@ -392,17 +34,17 @@ access to previous containers for copying build artifacts around. This
 requires Docker 17.05 or newer.&lt;/p&gt;
 &lt;p&gt;Here's an example Dockerfile that builds an uberjar from a standard lein-based
 app, and puts it in a new JRE image:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;FROM clojure AS build-env
-WORKDIR /usr/src/myapp
-COPY project.clj /usr/src/myapp/
-RUN lein deps
-COPY . /usr/src/myapp
-RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;clojure&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;
+&lt;span class="n"&gt;WORKDIR&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
+&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="n"&gt;project&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;clj&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;lein&lt;/span&gt; &lt;span class="n"&gt;deps&lt;/span&gt;
+&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
+&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;mv&lt;/span&gt; &lt;span class="ss"&gt;"$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')"&lt;/span&gt; &lt;span class="n"&gt;myapp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;standalone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jar&lt;/span&gt;
 
-FROM openjdk:8-jre-alpine
-WORKDIR /myapp
-COPY --from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar
-ENTRYPOINT ["java", "-jar", "/myapp/myapp.jar"]
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;openjdk&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;jre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;alpine&lt;/span&gt;
+&lt;span class="n"&gt;WORKDIR&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
+&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="c1"&gt;--from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar&lt;/span&gt;
+&lt;span class="n"&gt;ENTRYPOINT&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;"java"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;"-jar"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;"/myapp/myapp.jar"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -425,7 +67,7 @@ reality.&lt;/p&gt;
 feature was in beta at time of writing. That was/is correct, but it's since
 been released, so I updated the post.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edited:&lt;/em&gt;* Łukasz Korecki pointed out that &lt;code&gt;project.clj&lt;/code&gt; has an &lt;code&gt;:uberjar-name&lt;/code&gt;
-parameter which can be used to avoid the gnarly &lt;code&gt;sed&lt;/code&gt; expression. Thanks Łukasz!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><category>docker</category><guid>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds.html</guid><pubDate>Fri, 16 Jun 2017 17:12:46 GMT</pubDate></item><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
+parameter which can be used to avoid the gnarly &lt;code&gt;sed&lt;/code&gt; expression. Thanks Łukasz!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><category>docker</category><guid>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</guid><pubDate>Fri, 16 Jun 2017 17:12:46 GMT</pubDate></item><item><title>2016 rMBP caveats</title><link>https://www.lvh.io/posts/2016-rmbp-caveats/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
 had it for a week now, and there have been some issues you might want to be
 aware of if you'd like to get one.&lt;/p&gt;
 &lt;p&gt;(There are a bunch of links to Amazon in this article. They're not affiliate
@@ -492,7 +134,7 @@ and OWC claims February 2017.&lt;/p&gt;
 &lt;h2&gt;WiFi failing with USB-C devices plugged in&lt;/h2&gt;
 &lt;p&gt;Just as I was going to start writing this post, I noticed that I wasn't able
 to sync my blog repository from GitHub:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;Get https://api.github.com/repos/lvh/lvh.github.io: dial tcp 192.30.253.116:443: connect: network is unreachable
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;Get&lt;/span&gt; &lt;span class="nv"&gt;https&lt;/span&gt;:&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nv"&gt;api&lt;/span&gt;.&lt;span class="nv"&gt;github&lt;/span&gt;.&lt;span class="nv"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;repos&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;lvh&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;lvh&lt;/span&gt;.&lt;span class="nv"&gt;github&lt;/span&gt;.&lt;span class="nv"&gt;io&lt;/span&gt;: &lt;span class="nv"&gt;dial&lt;/span&gt; &lt;span class="nv"&gt;tcp&lt;/span&gt; &lt;span class="mi"&gt;192&lt;/span&gt;.&lt;span class="mi"&gt;30&lt;/span&gt;.&lt;span class="mi"&gt;253&lt;/span&gt;.&lt;span class="mi"&gt;116&lt;/span&gt;:&lt;span class="mi"&gt;443&lt;/span&gt;: &lt;span class="k"&gt;connect&lt;/span&gt;: &lt;span class="nv"&gt;network&lt;/span&gt; &lt;span class="nv"&gt;is&lt;/span&gt; &lt;span class="nv"&gt;unreachable&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -528,7 +170,7 @@ either side is an unexpected nice benefit.&lt;/p&gt;
 &lt;p&gt;I was ready to accept a transition period of dongles; I bought into it,
 literally and figuratively. However, most of the dongles don't actually work,
 and that sucks. So, maybe wait for the refresh, or at least until the
-high-quality docks are available.&lt;/p&gt;&lt;/div&gt;</description><guid>https://www.lvh.io/posts/2016-rmbp-caveats.html</guid><pubDate>Tue, 22 Nov 2016 15:49:16 GMT</pubDate></item><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
+high-quality docks are available.&lt;/p&gt;&lt;/div&gt;</description><guid>https://www.lvh.io/posts/2016-rmbp-caveats/</guid><pubDate>Tue, 22 Nov 2016 15:49:16 GMT</pubDate></item><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
 post, I'll go into a specific API design case in &lt;a href="https://github.com/lvh/caesium"&gt;&lt;code&gt;caesium&lt;/code&gt;&lt;/a&gt;, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.&lt;/p&gt;
@@ -682,7 +324,7 @@ we should be flexible in our input types. We can work around the unknown type
 problems with reflection using explicitly annotated call sites. That means
 we're dispatching on types, which comes with its own set of issues. In the
 next blog post, I'll go into more detail on how that works, with a bunch of
-benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types.html</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
+benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
 of the pitfalls is that getting it wrong looks exactly like getting it
 right. Much like a latent memory corruption bug or a broken distributed
 consensus algorithm, a piece of cryptographic software can appear to be
@@ -761,11 +403,11 @@ should &lt;a href="https://twitter.com/lvh"&gt;follow me on Twitter&lt;/a&gt; or
 support for memory pinning since PyPy will support it in the upcoming
 5.2 release, although that means I'll no longer be able to make
 &lt;a href="https://github.com/reaperhulk"&gt;Paul Kehrer of PyCA fame&lt;/a&gt; jealous with the pinning support in
-&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
-&lt;a href="https://www.lvh.io/posts/nonce-misuse-resistance-101.html#proto"&gt;protocol design&lt;/a&gt;. If you're completely new to cryptography, you might
+&lt;a href="https://www.lvh.io/posts/nonce-misuse-resistance-101/#proto"&gt;protocol design&lt;/a&gt;. If you're completely new to cryptography, you might
 like my free introductory course to cryptography, &lt;a href="https://www.crypto101.io"&gt;Crypto 101&lt;/a&gt;. In a
 future blog post, I'll talk about some nonce-misuse resistant schemes I've
 implemented using libsodium.&lt;/em&gt;&lt;/p&gt;
@@ -782,19 +424,19 @@ the same key. You can remember this by the mnemonic that a &lt;em&gt;nonce&lt;/e
 repeat. That means that an attacker can take the two ciphertexts and XOR them
 to compute the XOR of the plaintexts. If &lt;code&gt;C_n&lt;/code&gt; are ciphertexts, &lt;code&gt;P_n&lt;/code&gt;
 plaintexts, &lt;code&gt;K_n&lt;/code&gt; keystreams, and &lt;code&gt;^&lt;/code&gt; is bitwise exclusive or:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 = K_1 ^ P_1
-C_2 = K_2 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt;
+&lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_2&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;The attacker just XORs &lt;code&gt;C_1&lt;/code&gt; and &lt;code&gt;C_2&lt;/code&gt; together:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;K_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;K_2&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
 &lt;p&gt;Since XOR is commutative (you can rearrange the order), &lt;code&gt;K_1 = K_2&lt;/code&gt;, and
 XOR'ing two equal values cancels them out:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;C_1 ^ C_2 = P_1 ^ P_2
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;C_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;C_2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;P_1&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;P_2&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -907,7 +549,7 @@ cancelling out the messages themselves as well.&lt;/p&gt;
 scanned before the nonce can be computed. For some protocols, that may not be
 acceptable, although plenty of protocols work around this assumption by simply
 making individual messages sufficiently small.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101.html</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101/</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a &lt;a href="https://eprint.iacr.org/2016/413"&gt;paper&lt;/a&gt; on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
@@ -1073,7 +715,7 @@ remember from high school math; it's a single number that tells you something
 interesting about the underlying curve. There are different formulas for
 curves in different forms. For example, for a curve in short Weierstrass form
 &lt;code&gt;y^2 = x^3 + ax + b&lt;/code&gt;, the j-invariant is:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1728&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -1089,7 +731,7 @@ the DH exchange.&lt;/p&gt;
 curve: P_A, Q_A, P_B, Q_B.&lt;/p&gt;
 &lt;p&gt;Alice picks two random integers, m_A and n_A. She takes a linear combination
 of those two integers with P_A and Q_A to produce a random point R_A, so:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;R_A = n_A * P_A + m_A * Q_A
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;R_A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;n_A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;P_A&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;m_A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;Q_A&lt;/span&gt;
 &lt;/pre&gt;
 
 
@@ -1147,7 +789,7 @@ an excellent educational tool; and Watson Ladd for pointing out a correction
 w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
 singular.). Finally, I'd like to thank all the people who reviewed drafts of
 this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
-Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101.html</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
+Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
 managing SSH infrastructure. Teleport is built by &lt;a href="http://www.gravitational.com/"&gt;Gravitational&lt;/a&gt;, a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
 Gravitational, I have been advising them on the Teleport project.&lt;/p&gt;
@@ -1207,7 +849,7 @@ only exist until you can eradicate them, but they do exist, they're typically
 here to stay, and they need a real security story, too.&lt;/p&gt;
 &lt;p&gt;Teleport is still in its early stages. It's usable today, and I'm convinced it
 has a bright future ahead of it. It's written in a beautiful, hackable Go
-codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport.html</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport/</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
 process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
 called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
 effectively having root access. Any process that can write to the
@@ -1257,7 +899,7 @@ container with write access to the Docker socket).&lt;/p&gt;
 &lt;p&gt;This isn't new; it's been a known property of the way Docker works
 ever since the (unfortunately trivially cross-site scriptable) REST
 API listening on a local TCP port was replaced with the
-&lt;code&gt;/var/run/docker.sock&lt;/code&gt; UNIX domain socket.&lt;/p&gt;&lt;/div&gt;</description><category>docker</category><category>security</category><guid>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container.html</guid><pubDate>Wed, 23 Sep 2015 21:54:24 GMT</pubDate></item><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
+&lt;code&gt;/var/run/docker.sock&lt;/code&gt; UNIX domain socket.&lt;/p&gt;&lt;/div&gt;</description><category>docker</category><category>security</category><guid>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</guid><pubDate>Wed, 23 Sep 2015 21:54:24 GMT</pubDate></item><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, the Mozilla Developer Network has an excellent
@@ -1379,4 +1021,104 @@ thing. It's important to know pitfalls like these, because they're difficult
 to discover from just the behavior. Fortunately, you can often rewrite your
 selector so that it isn't a problem. If you can't, there's always a polyfill
 to give you the modern API you want. Alternatively, libraries like jQuery can
-also help you get a consistent, friendly interface for querying the DOM.&lt;/p&gt;&lt;/div&gt;</description><category>css</category><category>dom</category><category>webdev</category><guid>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does.html</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item></channel></rss>
+also help you get a consistent, friendly interface for querying the DOM.&lt;/p&gt;&lt;/div&gt;</description><category>css</category><category>dom</category><category>webdev</category><guid>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
+&lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
+alternative certificate chain when the first one fails. The logic in
+that feature had a bug in it, such that it didn't properly verify if
+the certificates in the alternative chain had the appropriate
+permissions; specifically, it didn't check if those certificates are
+certificate authorities.&lt;/p&gt;
+&lt;p&gt;Specifically, this means that an attacker who has a valid certificate
+for any domain, can use that certificate to produce new
+certificates. Those normally wouldn't work, but the algorithm for
+finding the alternative trust chain doesn't check if the valid
+certificate can act as a certificate authority.&lt;/p&gt;
+&lt;h2&gt;What's a certificate (chain)?&lt;/h2&gt;
+&lt;p&gt;A certificate is a bit like an ID card: it has some information about
+you (like your name), and is authenticated by a certificate authority
+(in the case of an ID, usually your government).&lt;/p&gt;
+&lt;h2&gt;What's a certificate authority?&lt;/h2&gt;
+&lt;p&gt;A certificate authority is an entity that's allowed to authenticate
+certificates. Your computer typically ships with the identity of those
+certificate authorities, so it knows how to recognize certificates
+authorized by them.&lt;/p&gt;
+&lt;p&gt;In the ID analogy, your computer knows how to recognize photo IDs
+issued by e.g. California.&lt;/p&gt;
+&lt;p&gt;The issue here is that in some cases, OpenSSL was willing to accept
+signatures authenticated by certificates that don't have certificate
+authority powers. In the analogy, it would mean that it accepted
+CostCo cards as valid ID, too.&lt;/p&gt;
+&lt;h2&gt;Why did they say it wouldn't affect most users?&lt;/h2&gt;
+&lt;p&gt;This basically means "we're assuming most users are using OpenSSL for
+vanilla servers", which is probably true. Most servers do use OpenSSL,
+and most clients (browsers) don't.&lt;/p&gt;
+&lt;p&gt;The bug affects anyone trying to authenticate their peer. That
+includes regular clients, and servers doing client
+authentication. Regular servers aren't affected, because they don't
+authenticate their peer.&lt;/p&gt;
+&lt;p&gt;Servers doing client authentication are fairly rare. The biggest
+concern is with clients. While browsers typically don't use OpenSSL, a
+lot of API clients do. For those few people affected by the bug and
+with clients that use OpenSSL, the bug is catastrophic.&lt;/p&gt;
+&lt;h2&gt;What's client authentication?&lt;/h2&gt;
+&lt;p&gt;The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate chain against the list
+of certificate authorities that it knows about. The client is
+typically authenticated, but over the protocol spoken inside of TLS
+(usually HTTP), not at a TLS level.&lt;/p&gt;
+&lt;p&gt;That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.&lt;/p&gt;
+&lt;h2&gt;What's TLS?&lt;/h2&gt;
+&lt;p&gt;TLS is what SSL has been called for way over a decade. The old name
+stuck (particularly in the name "OpenSSL"), but you should probably
+stop using it when you're talking about the secure protocol, since all
+of the versions of the protocol that were called "SSL" have crippling
+security bugs.&lt;/p&gt;
+&lt;h2&gt;Why wasn't this found by automated testing?&lt;/h2&gt;
+&lt;p&gt;I'm not sure. I wish automated testing this stuff was easier. Since
+I'm both a user and a big fan of client authentication, which is a
+pretty rare feature, I hope to spend more time in the future creating
+easy-to-use automated testing tools for this kind of scenario.&lt;/p&gt;
+&lt;h2&gt;How big is the window?&lt;/h2&gt;
+&lt;p&gt;1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
+and 1.0.2d, were released today, on 9 Jul 2015.&lt;/p&gt;
+&lt;p&gt;The "good news" is that the bad releases are recent. Most people who
+have an affected version will be updating regularly, so the number of
+people affected is small.&lt;/p&gt;
+&lt;p&gt;The bug affected following platforms (non-exhaustive):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It did not affect stock OS X, because they still ship
+  0.9.8. However, the bug does affect a stable version shipped through
+  Homebrew (1.0.2c).&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html"&gt;Ubuntu is mostly not affected&lt;/a&gt;. The only affected version
+  is the unreleased 15.10 (Wily). Ubuntu has already released an
+  update for it.&lt;/li&gt;
+&lt;li&gt;The bug affects stable releases of Fedora. I previously mistakenly
+  reported that the contrary, but that information was based on their
+  package version numbers, which did not match upstream. Fedora
+  backported the faulty logic to their version of 1.0.1k, which was
+  available in Fedora 21 and 22. They have since released patches; see
+  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544"&gt;this ticket&lt;/a&gt; for details. Thanks to Major Hayden for the
+  correction!&lt;/li&gt;
+&lt;li&gt;The bug does not affect Debian stable, but it does affect
+  &lt;a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl"&gt;testing and unstable&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;The bug affects &lt;a href="https://www.archlinux.org/packages/?sort=-last_update"&gt;ArchLinux testing&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;In conclusion&lt;/h2&gt;
+&lt;p&gt;The bug is disastrous, but affects few people. If you're running
+stable versions of your operating system, you're almost certainly
+safe.&lt;/p&gt;
+&lt;p&gt;The biggest concern is with software developers using OS X. That
+audience uses HTTPS APIs frequently, and the clients to connect to
+those APIs typically use OpenSSL. OS X comes with 0.9.8zf by default
+now, which is a recent revision of an ancient branch. Therefore,
+people have a strong motivation to get their OpenSSL from a
+third-party source. The most popular source is Homebrew, which up
+until earlier this morning shipped 1.0.2c. The bug affects that
+version. If you installed OpenSSL through Homebrew, you should go
+update right now.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops/</guid><pubDate>Thu, 09 Jul 2015 15:26:58 GMT</pubDate></item></channel></rss>
