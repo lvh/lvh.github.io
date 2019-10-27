@@ -1,12 +1,11 @@
 .body-content {
-    text-align: justify;
-
     /* Too lazy to fix bootstrap, so !important yay */
     font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica" !important;
     font-size: 16pt;
 }
 
-p {
+.body-content p {
+    text-align: justify;
     margin-bottom: 1.5em;
     line-height: 180%;
 }
@@ -34,23 +33,31 @@ a:hover {
     color: #534a4d;
 }
 
-img#logo {
-    position: absolute;
-    width: 25%;
-    right: 0;
-    top: 80px;
-}
 .entry-content a[href] {
     text-decoration: underline;
 }
+
 @media (max-width: 1024px) {
     img#logo {
-        display: none;
+        display: none !important;
     }
 }
 
 @media (min-width: 1024px) {
+    /* make space for my giant head */
+
+    img#logo {
+        position: absolute;
+        width: 15%;
+        right: 0;
+        top: 80px;
+    }
+
     .body-content {
-        width: 40em;
+        margin-top: 80px;
+    }
+
+    .entry-title:first-child {
+        width: 85%;
     }
 }

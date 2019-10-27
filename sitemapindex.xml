@@ -38,10 +38,6 @@
   <lastmod>2019-10-27T15:10:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>https://www.lvh.io/categories/mathjax.xml</loc>
-  <lastmod>2019-10-27T15:06:00Z</lastmod>
- </sitemap>
- <sitemap>
   <loc>https://www.lvh.io/categories/pycon.xml</loc>
   <lastmod>2019-10-27T15:10:00Z</lastmod>
  </sitemap>
@@ -71,6 +67,6 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/sitemap.xml</loc>
-  <lastmod>2019-10-27T15:52:00Z</lastmod>
+  <lastmod>2019-10-27T17:32:00Z</lastmod>
  </sitemap>
 </sitemapindex>
