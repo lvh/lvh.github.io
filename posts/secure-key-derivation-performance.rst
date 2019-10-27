@@ -1,10 +1,10 @@
 .. title: Secure key derivation performance
 .. slug: secure-key-derivation-performance
 .. date: 2014-08-04 04:29:15 UTC-07:00
-.. tags: mathjax, private, crypto, security
-.. link:
-.. description:
+.. tags: crypto, security
 .. type: text
+.. has_math: yes
+.. status: private
 
 I'm primarily interested in Clojure and Python.
 

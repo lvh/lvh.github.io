@@ -1,10 +1,9 @@
 <!--
 .. title: More on financial aid grant optimization
-.. date: 2014/04/06 20:34
 .. slug: more-on-financial-aid-grant-optimization
-.. link:
-.. description:
-.. tags: pycon, mathjax
+.. date: 2014/04/06 20:34
+.. tags: pycon
+.. has_math: yes
 -->
 
 

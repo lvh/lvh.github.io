@@ -1,10 +1,9 @@
 <!--
 .. title: Optimal hotel room pairing
-.. date: 2014/03/18 13:05
 .. slug: optimal-hotel-room-pairing
-.. link:
-.. description:
-.. tags: pycon, mathjax
+.. date: 2014/03/18 13:05
+.. tags: pycon
+.. has_math: yes
 -->
 
 The greedy hotel pairing algorithm from my [previous post][previous]

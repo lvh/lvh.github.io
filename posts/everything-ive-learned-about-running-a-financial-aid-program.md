@@ -2,10 +2,9 @@
 .. title: Everything I've learned about running a financial aid program
 .. slug: everything-ive-learned-about-running-a-financial-aid-program
 .. date: 2015-04-25 21:08:36 UTC-07:00
-.. tags: pycon, mathjax
-.. link:
-.. description:
+.. tags: pycon
 .. type: text
+.. has_math: yes
 -->
 
 For the past two years, I've been running PyCon's financial aid

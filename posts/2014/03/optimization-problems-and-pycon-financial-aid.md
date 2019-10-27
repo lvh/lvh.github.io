@@ -1,10 +1,9 @@
 <!--
 .. title: Optimization problems and PyCon financial aid
-.. date: 2014/03/10 16:47
 .. slug: optimization-problems-and-pycon-financial-aid
-.. link:
-.. description:
-.. tags: pycon, mathjax
+.. date: 2014/03/10 16:47
+.. tags: pycon
+.. has_math: yes
 -->
 
 
