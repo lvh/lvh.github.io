@@ -7,46 +7,50 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>https://www.lvh.io/rss.xml</loc>
-  <lastmod>2019-10-30T13:54:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/sitemap.xml</loc>
-  <lastmod>2019-10-30T13:54:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://www.lvh.io/tags/cat_security-cryptography.xml</loc>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/clojure.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>https://www.lvh.io/tags/crypto.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/cryptography.xml</loc>
-  <lastmod>2019-10-30T13:54:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/docker.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/gamedev.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://www.lvh.io/tags/pickle.xml</loc>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/pycon.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/python.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/security.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/web.xml</loc>
-  <lastmod>2019-10-30T03:13:00Z</lastmod>
+  <lastmod>2019-10-30T16:22:00Z</lastmod>
  </sitemap>
 </sitemapindex>

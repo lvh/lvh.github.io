@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about cryptography)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/cryptography.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 14:06:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about cryptography)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/cryptography.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 16:24:09 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
 &lt;h2&gt;You don’t really want a signature&lt;/h2&gt;
 &lt;p&gt;When cryptography engineers say "signature" they tend to mean something asymmetric, like RSA or ECDSA. Developers reach for asymmetric tools too often. There are a lot of ways to screw them up. By comparison, symmetric “signing” (MACs) are easy to use and hard to screw up. HMAC is bulletproof and ubiquitous.&lt;/p&gt;
 &lt;p&gt;Unless you have a good reason why you need an (asymmetric) signature, you want a MAC. If you really do want a signature, check out our Cryptographic Right Answers post to make that as safe as possible. For the rest of this blog post, "signing" means symmetrically, and in practice that means HMAC.&lt;/p&gt;
@@ -73,7 +73,81 @@
 &lt;li&gt;Add a signature on the outside of the request body, make sure the request body is complete, and don’t worry about "signing what is said versus what is meant" -- it’s OK to sign the exact byte sequence.&lt;/li&gt;
 &lt;li&gt;The corollary here is that it’s way harder to do request signing for a REST API (where stuff like headers and paths and methods matter) than it is to do signing for an RPC-like API.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</guid><pubDate>Thu, 25 Jul 2019 01:56:06 GMT</pubDate></item><item><title>Analyzing a simple encryption scheme using GitHub SSH keys</title><link>https://www.lvh.io/posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(This is an introductory level analysis of a scheme involving RSA. If you're already comfortable with Bleichenbacher oracles you should skip it.)&lt;/p&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</guid><pubDate>Thu, 25 Jul 2019 01:56:06 GMT</pubDate></item><item><title>The PGP problem</title><link>https://www.lvh.io/posts/the-pgp-problem/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="https://blog.cryptographyengineering.com/2014/08/13/whats-matter-with-pgp/"&gt;Cryptography engineers have been tearing their hair out over PGP’s deficiencies&lt;/a&gt; for (literally) decades. When other kinds of engineers get wind of this, they’re shocked. PGP is bad? Why do people keep telling me to use PGP? The answer is that they shouldn’t be telling you that, because PGP is bad and needs to go away.&lt;/p&gt;
+&lt;p&gt;There are, as you’re about to see, lots of problems with PGP. Fortunately, if you’re not morbidly curious, there’s a simple meta-problem with it: it was designed in the 1990s, before serious modern cryptography. No competent crypto engineer would design a system that looked like PGP today, nor tolerate most of its defects in any other design. Serious cryptographers have largely given up on PGP and don’t spend much time publishing on it anymore (&lt;a href="https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-poddebniak.pdf"&gt;with a notable exception&lt;/a&gt;). Well-understood problems in PGP have gone unaddressed for over a decade because of this.&lt;/p&gt;
+&lt;p&gt;Two quick notes: first, we wrote this for engineers, not lawyers and activists. Second: “PGP” can mean a bunch of things, from the &lt;a href="https://tools.ietf.org/html/rfc4880"&gt;OpenPGP standard&lt;/a&gt; to its reference implementation in GnuPG. We use the term “PGP” to cover all of these things.&lt;/p&gt;
+&lt;h2&gt;The Problems&lt;/h2&gt;
+&lt;h3&gt;Absurd Complexity&lt;/h3&gt;
+&lt;p&gt;For reasons none of us here in the future understand, PGP has a packet-based structure. A PGP message (in a “.asc” file) is an archive of typed packets. There are &lt;a href="https://tools.ietf.org/html/rfc4880#page-13"&gt;at least 8 different ways&lt;/a&gt; of encoding the length of a packet, depending on whether you’re using “new” or “old” format packets. The “new format” packets have variable-length lengths, like BER (try to write a PGP implementation and you may wish for the sweet release of ASN.1). Packets can have subpackets. There are overlapping variants of some packets. The most recent keyserver attack happened because GnuPG &lt;a href="https://threadreaderapp.com/thread/1147162583969009664.html"&gt;accidentally went quadratic&lt;/a&gt; in parsing keys, which also follow this deranged format.&lt;/p&gt;
+&lt;p&gt;That’s just the encoding. The actual system doesn’t get simpler. There are keys and subkeys. Key IDs and key servers and key signatures. Sign-only and encrypt-only. Multiple “key rings”. Revocation certificates. Three different compression formats. This is all before we get to smartcard support.&lt;/p&gt;
+&lt;h3&gt;Swiss Army Knife Design&lt;/h3&gt;
+&lt;p&gt;If you’re stranded in the woods and, I don’t know, need to repair your jean cuffs, it’s handy if your utility knife has a pair of scissors. But nobody who does serious work uses their multitool scissors regularly.&lt;/p&gt;
+&lt;p&gt;A Swiss Army knife does a bunch of things, all of them poorly. PGP does a mediocre job of signing things, a relatively poor job of encrypting them with passwords, and a pretty bad job of encrypting them with public keys. PGP is not an especially good way to securely transfer a file. It’s a clunky way to sign packages. It’s not great at protecting backups. It’s a downright dangerous way to converse in secure messages.&lt;/p&gt;
+&lt;p&gt;Back in the MC Hammer era from which PGP originates, “encryption” was its own special thing; there was one tool to send a file, or to back up a directory, and another tool to encrypt and sign a file. Modern cryptography doesn’t work like this; it’s purpose built. Secure messaging wants crypto that is different from secure backups or package signing.&lt;/p&gt;
+&lt;h3&gt;Mired In Backwards Compatibility&lt;/h3&gt;
+&lt;p&gt;PGP predates modern cryptography; there are Hanson albums that have aged better. If you’re lucky, your local GnuPG defaults to 2048-bit RSA, the 64-bit-block CAST5 cipher in CFB, and the OpenPGP MDC checksum (about which more later). If you encrypt with a password rather than with a public key, the OpenPGP protocol specifies PGP’s S2K password KDF. These are, to put it gently, not the primitives a cryptography engineer would select for a modern system.&lt;/p&gt;
+&lt;p&gt;We’ve learned a lot since Steve  Urkel graced the airwaves during ABC’s TGIF: that you should authenticate your ciphertexts (and avoid CFB mode) would be an obvious example, but also that 64-bit block ciphers are bad, that we can do much better than RSA, that mixing compression and encryption is dangerous, and that KDFs should be both time- and memory-hard.&lt;/p&gt;
+&lt;p&gt;Whatever the OpenPGP RFCs may say, you’re probably not doing any of these things if you’re using PGP, nor can you predict when you will. Take AEAD ciphers: the Rust-language Sequoia PGP defaulted to the AES-EAX AEAD mode, which is great, and nobody can read those messages because most PGP installs don’t know what EAX mode is, which is not great. Every well-known bad cryptosystem eventually sprouts an RFC extension that supports curves or AEAD, so that its proponents can claim on message boards that they support modern cryptography. RFC’s don’t matter: only the installed base does. We’ve understood authenticated encryption for 2 decades, and PGP is old enough to buy me drinks; enough excuses.&lt;/p&gt;
+&lt;p&gt;You can have backwards compatibility with the 1990s or you can have sound cryptography; &lt;em&gt;you can’t have both&lt;/em&gt;.&lt;/p&gt;
+&lt;h3&gt;Obnoxious UX&lt;/h3&gt;
+&lt;p&gt;We can’t say this any better than Ted Unangst:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There was a PGP usability study conducted a few years ago where a group of technical people were placed in a room with a computer and asked to set up PGP. Two hours later, they were never seen or heard from again.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If you’d like empirical data of your own to back this up, here’s an experiment you can run: find an immigration lawyer and talk them through the process of getting Signal working on their phone. You probably don’t suddenly smell burning toast. Now try doing that with PGP.&lt;/p&gt;
+&lt;h3&gt;Long-Term Secrets&lt;/h3&gt;
+&lt;p&gt;PGP begs users to keep a practically-forever root key tied to their identity. It does this by making keys annoying to generate and exchange, by encouraging “key signing parties”, and by creating a “web of trust” where keys depend on other keys.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://blog.filippo.io/giving-up-on-long-term-pgp/"&gt;Long term keys are almost never what you want&lt;/a&gt;. If you keep using a key, it eventually gets exposed. You want the blast radius of a compromise to be as small as possible, and, just as importantly, you don’t want users to hesitate even for a moment at the thought of rolling a new key if there’s any concern at all about the safety of their current key.&lt;/p&gt;
+&lt;p&gt;The PGP cheering section will immediately reply “that’s why you keep keys on a Yubikey”. To a decent first approximation, nobody in the whole world uses the expensive Yubikeys that do this, and you can’t imagine a future in which that changes (we can barely get U2F rolled out, and those keys are disposable). We can’t accept bad cryptosystems just to make Unix nerds feel better about their toys.&lt;/p&gt;
+&lt;h3&gt;Broken Authentication&lt;/h3&gt;
+&lt;p&gt;More on PGP’s archaic primitives: way back in 2000, the OpenPGP working group realized they needed to authenticate ciphertext, and that PGP’s signatures weren’t accomplishing that. So OpenPGP invented &lt;a href="https://tools.ietf.org/html/rfc4880#section-5.14"&gt;the MDC system&lt;/a&gt;: PGP messages with MDCs attach a SHA-1 of the plaintext to the plaintext, which is then encrypted (as normal) in CFB mode.&lt;/p&gt;
+&lt;p&gt;If you’re wondering how PGP gets away with this when modern systems use relatively complex AEAD modes (why can’t everyone just tack a SHA-1 to their plaintext), you’re not alone. Where to start with this Rube Goldberg contraption? The PGP MDC can be stripped off messages  it was encoded in such a way that you can simply chop off the last 22 bytes of the ciphertext to do that. To retain backwards compatibility with insecure older messages, PGP introduced a new packet type to signal that the MDC needs to be validated; if you use the wrong type, the MDC doesn’t get checked. Even if you do, the new SEIP packet format is close enough to the insecure SE format that you can potentially trick readers into downgrading; &lt;a href="https://mailarchive.ietf.org/arch/msg/openpgp/tB00vO5r-qneX9wz1xz3netpXVU"&gt;Trevor Perrin worked the SEIP out to 16 whole bits of security.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;And, finally, even if everything goes right, the reference PGP implementation will (wait for it) release unauthenticated plaintext to callers, &lt;em&gt;even if the MDC doesn’t match&lt;/em&gt;.&lt;/p&gt;
+&lt;h3&gt;Incoherent Identity&lt;/h3&gt;
+&lt;p&gt;PGP is an application. It’s a set of integrations with other applications. It’s a file format. It’s also a social network, and a subculture.&lt;/p&gt;
+&lt;p&gt;PGP pushes notion of a cryptographic identity. You generate a key, save it in your keyring, print its fingerprint on your business card, and publish it to a keyserver. You sign other people’s keys. They in turn may or may not rely on your signatures to verify other keys. Some people go out of their way to meet other PGP users in person to exchange keys and more securely attach themselves to this “web of trust”. Other people organize “key signing parties”. The image you’re conjuring in your head of that accurately explains how hard it is to PGP’s devotees to switch to newer stuff.&lt;/p&gt;
+&lt;p&gt;None of this identity goop works. Not the key signing web of trust, not the keyservers, not the parties. Ordinary people will trust anything that looks like a PGP key no matter where it came from  how could they not, when even an expert would have a hard time articulating how to evaluate a key? Experts don’t trust keys they haven’t exchanged personally. Everyone else relies on centralized authorities to distribute keys. PGP’s key distribution mechanisms are theater.&lt;/p&gt;
+&lt;h3&gt;Leaks Metadata&lt;/h3&gt;
+&lt;p&gt;Forget the email debacle for a second (we’ll get to that later). PGP by itself leaks metadata. Messages are (in normal usage) linked directly to key identifiers, which are, throughout PGP’s cobweb of trust, linked to user identity. Further, a rather large fraction of PGP users make use of keyservers, which can themselves leak to the network the identities of which PGP users are communicating with each other.&lt;/p&gt;
+&lt;h3&gt;No Forward Secrecy&lt;/h3&gt;
+&lt;p&gt;A good example of that last problem: secure messaging crypto demands forward secrecy. Forward secrecy means that if you lose your key to an attacker today, they still can’t go back and read yesterday’s messages; they had to be there with the key yesterday to read them. In modern cryptography engineering, we assume our adversary is recording everything, into infinite storage. PGP’s claimed adversaries include world governments, many of whom are certainly doing exactly that. Against serious adversaries and without forward secrecy, breaches are a question of “when”, not “if”.&lt;/p&gt;
+&lt;p&gt;To get forward secrecy in practice, you typically keep two secret keys: a short term session key and a longer-term trusted key. The session key is ephemeral (usually the product of a DH exchange) and the trusted key signs it, so that a man-in-the-middle can’t swap their own key in. It’s theoretically possible to achieve a facsimile of forward secrecy using the tools PGP provides. Of course, pretty much nobody does this.&lt;/p&gt;
+&lt;h3&gt;Clumsy Keys&lt;/h3&gt;
+&lt;p&gt;An OpenBSD signify(1) public key is a Base64 string short enough to fit in the middle of a sentence in an email; the private key, which isn’t an interchange format, is just a line or so longer. A PGP public key is a whole giant Base64 document; if you’ve used them often, you’re probably already in the habit of attaching them rather than pasting them into messages so they don’t get corrupted. Signify’s key is a state-of-the-art Ed25519 key; PGP’s is a weaker RSA key.&lt;/p&gt;
+&lt;p&gt;You might think this stuff doesn’t matter, but it matters a lot; orders of magnitude more people use SSH and manage SSH keys than use PGP. SSH keys are trivial to handle; PGP’s are not.&lt;/p&gt;
+&lt;h3&gt;Negotiation&lt;/h3&gt;
+&lt;p&gt;PGP supports ElGamal. PGP supports RSA. PGP supports the NIST P-Curves. PGP supports Brainpool. PGP supports Curve25519. PGP supports SHA-1. PGP supports SHA-2. PGP supports RIPEMD160. PGP supports IDEA. PGP supports 3DES. PGP supports CAST5. PGP supports AES. There is no way this is a complete list of what PGP supports.&lt;/p&gt;
+&lt;p&gt;If we’ve learned 3 important things about cryptography design in the last 20 years, at least 2 of them are that negotiation and compatibility are evil. The flaws in cryptosystems tend to appear in the joinery, not the lumber, and expansive crypto compatibility increases the amount of joinery. Modern protocols like TLS 1.3 are jettisoning backwards compatibility with things like RSA, not adding it. New systems support &lt;em&gt;just a single suite of primitives&lt;/em&gt;, and a simple version number. If one of those primitives fails, you bump the version and chuck the old protocol all at once.&lt;/p&gt;
+&lt;p&gt;If we’re unlucky, and people are still using PGP 20 years from now, PGP will be the only reason any code anywhere includes CAST5. We can’t say this more clearly or often enough: you can have backwards compatibility with the 1990s or you can have sound cryptography; you can’t have both.&lt;/p&gt;
+&lt;h3&gt;Janky Code&lt;/h3&gt;
+&lt;p&gt;The de facto standard implementation of PGP is GnuPG. GnuPG is not carefully built. It’s a sprawling C-language codebase with duplicative functionality (write-ups of the most recent SKS key parsing denial of service noted that it has multiple key parsers, for instance) with a &lt;a href="https://www.cvedetails.com/vulnerability-list/vendor_id-4711/Gnupg.html"&gt;long track record of CVEs&lt;/a&gt; ranging from memory corruption to cryptographic side channels. It has at times been possible to strip authenticators off messages without GnuPG noticing. It’s been possible to feed it keys that don’t fingerprint properly without it noticing. The 2018 Efail vulnerability was a result of it releasing unauthenticated plaintext to callers. GnuPG is not good.&lt;/p&gt;
+&lt;p&gt;GnuPG is also effectively the reference implementation for PGP, and also the basis for most other tools that integrate PGP cryptography. It isn’t going anywhere. To rely on PGP is to rely on GPG.&lt;/p&gt;
+&lt;h2&gt;The Answers&lt;/h2&gt;
+&lt;p&gt;One of the rhetorical challenges of persuading people to stop using PGP is that there’s no one thing you can replace it with, &lt;em&gt;nor should there be&lt;/em&gt;. What you should use instead depends on what you’re doing.&lt;/p&gt;
+&lt;h3&gt;Talking To People&lt;/h3&gt;
+&lt;p&gt;Use Signal. Or Wire, or WhatsApp, or some other Signal-protocol-based secure messenger.&lt;/p&gt;
+&lt;p&gt;Modern secure messengers are purpose-built around messaging. They use privacy-preserving authentication handshakes, repudiable messages, &lt;em&gt;cryptographic ratchets&lt;/em&gt; that rekey on every message exchange, and, of course, modern encryption primitives. Messengers are trivially easy to use and there’s no fussing over keys and subkeys. If you use Signal, you get even more than that: you get a system so paranoid about keeping private metadata off servers that it tunnels Giphy searches to avoid traffic analysis attacks, and until relatively recently didn’t even support user profiles.&lt;/p&gt;
+&lt;h3&gt;Encrypting Email&lt;/h3&gt;
+&lt;p&gt;Don’t.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://news.ycombinator.com/item?id=16088386"&gt;Email is insecure&lt;/a&gt;. Even with PGP, it’s default-plaintext, which means that even if you do everything right, some totally reasonable person you mail, doing totally reasonable things, will invariably CC the quoted plaintext of your encrypted message to someone else (we don’t know a PGP email user who hasn’t seen this happen). PGP email is forward-insecure. Email metadata, including the subject (which is literally message content), are always plaintext.&lt;/p&gt;
+&lt;p&gt;If you needed another reason, &lt;a href="https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-poddebniak.pdf"&gt;read the Efail paper&lt;/a&gt;. The GnuPG community, &lt;a href="https://web.archive.org/web/20181225214730/https://flaked.sockpuppet.org/2018/05/16/a-unified-timeline.html"&gt;which mishandled the Efail disclosure&lt;/a&gt;, talks this research down a lot, but it was accepted at Usenix Security (one of the top academic software security venues) and at Black Hat USA (&lt;em&gt;the&lt;/em&gt; top industry software security venue), was one of the best cryptographic attacks of the last 5 years, and is a pretty devastating indictment of the PGP ecosystem. As you’ll see from the paper, S/MIME isn’t better.&lt;/p&gt;
+&lt;p&gt;This isn’t going to get fixed. To make actually-secure email, you’d have to tunnel another protocol over email (you’d still be conceding traffic analysis attacks). At that point, why bother pretending?&lt;/p&gt;
+&lt;p&gt;Encrypting email is asking for a calamity. Recommending email encryption to at-risk users is malpractice. Anyone who tells you it’s secure to communicate over PGP-encrypted email is putting their weird preferences ahead of your safety.&lt;/p&gt;
+&lt;h3&gt;Sending Files&lt;/h3&gt;
+&lt;p&gt;Use &lt;a href="https://github.com/warner/magic-wormhole"&gt;Magic Wormhole&lt;/a&gt;. Wormhole clients use a one-time password-authenticated key exchange (PAKE) to encrypt files to recipients. It’s easy (for nerds, at least), secure, and fun: we haven’t introduced wormhole to anyone who didn’t start gleefully wormholing things immediately just like we did.&lt;/p&gt;
+&lt;p&gt;Someone stick a Windows installer on a Go or Rust implementation of Magic Wormhole right away; it’s too great for everyone not to have.&lt;/p&gt;
+&lt;p&gt;If you’re working with lawyers and not with technologists, Signal does a perfectly cromulent job of securing file transfers. Put a Signal number on your security page to receive bug bounty reports, not a PGP key.&lt;/p&gt;
+&lt;h3&gt;Encrypting Backups&lt;/h3&gt;
+&lt;p&gt;Use Tarsnap. &lt;a href="https://www.tarsnap.com/design.html"&gt;Colin can tell you all about how Tarsnap is optimized to protect backups.&lt;/a&gt; Or really, use any other encrypted backup tool that lots of other people use; they won’t be as good as Tarsnap but they’ll all do a better job than PGP will.&lt;/p&gt;
+&lt;p&gt;Need offline backups? Use encrypted disk images; they’re built into modern Windows, Linux, and macOS. &lt;a href="https://sockpuppet.org/blog/2014/04/30/you-dont-want-xts/"&gt;Full disk encryption isn’t great&lt;/a&gt;, but it works fine for this use case, and it’s easier and safer than PGP.&lt;/p&gt;
+&lt;h3&gt;Signing Packages&lt;/h3&gt;
+&lt;p&gt;Use Signify/Minisign. &lt;a href="https://www.openbsd.org/papers/bsdcan-signify.html"&gt;Ted Unangst will tell you all about it.&lt;/a&gt; It’s what OpenBSD uses to sign packages. It’s extremely simple and uses modern signing. &lt;a href="https://jedisct1.github.io/minisign/"&gt;Minisign&lt;/a&gt;, from Frank Denis, the libsodium guy, brings the same design to Windows and macOS; it has bindings for Go, Rust, Python, Javascript, and .NET; it’s even compatible with Signify.&lt;/p&gt;
+&lt;h3&gt;Encrypting Application Data&lt;/h3&gt;
+&lt;p&gt;Use  &lt;a href="https://github.com/jedisct1/libsodium"&gt;libsodium&lt;/a&gt; It builds everywhere, has interface that’s designed to be hard to misuse, and you won’t have to shell out to a binary to use it.&lt;/p&gt;
+&lt;h3&gt;Encrypting Files&lt;/h3&gt;
+&lt;p&gt;This really is a problem. If you’re/not/making a backup, and you’re /not/archiving something offline for long-term storage, and you’re /not/encrypting in order to securely send the file to someone else, and you’re /not/encrypting virtual drives that you mount/unmount as needed to get work done, then there’s no one good tool that does this now. Filippo Valsorda is working on “&lt;a href="https://docs.google.com/document/d/11yHom20CrsuX8KQJXBBw04s80Unjv8zCg_A7sPAX_9Y/view"&gt;age&lt;/a&gt;” for these use cases, and I'm super optimistic about it, but it's not there yet.&lt;/p&gt;
+&lt;p&gt;Hopefully it’s clear that this is a pretty narrow use case. We work in software security and handle sensitive data, including bug bounty reports (another super common “we need PGP!” use case), and we almost never have to touch PGP.&lt;/p&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/the-pgp-problem/</guid><pubDate>Wed, 17 Jul 2019 03:14:00 GMT</pubDate></item><item><title>Analyzing a simple encryption scheme using GitHub SSH keys</title><link>https://www.lvh.io/posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;(This is an introductory level analysis of a scheme involving RSA. If you're already comfortable with Bleichenbacher oracles you should skip it.)&lt;/p&gt;
 &lt;p&gt;Someone pointed me at the following suggestion on the Internet for encrypting secrets to people based on their GitHub SSH keys. I like the idea of making it easier for people to leverage key material and tools they already have.  The encryption instructions are:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"my secret"&lt;/span&gt; &amp;gt; message.txt
 curl -q github.com/&lt;span class="nv"&gt;$USER&lt;/span&gt;.keys &lt;span class="p"&gt;|&lt;/span&gt; head -n &lt;span class="m"&gt;1&lt;/span&gt; &amp;gt; recipient.pub
@@ -107,7 +181,7 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl &lt;span class="se"&gt;
 &lt;span class="nv"&gt;Generating&lt;/span&gt; &lt;span class="nv"&gt;public/private&lt;/span&gt; &lt;span class="nv"&gt;rsa&lt;/span&gt; &lt;span class="nb"&gt;key &lt;/span&gt;&lt;span class="nv"&gt;pair.&lt;/span&gt;
 &lt;span class="nv"&gt;Enter&lt;/span&gt; &lt;span class="nv"&gt;file&lt;/span&gt; &lt;span class="nv"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;which&lt;/span&gt; &lt;span class="nv"&gt;to&lt;/span&gt; &lt;span class="nv"&gt;save&lt;/span&gt; &lt;span class="nv"&gt;the&lt;/span&gt; &lt;span class="nb"&gt;key &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;/home/user/.ssh/id_rsa&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="nv"&gt;mykey&lt;/span&gt;
 &lt;span class="nv"&gt;...&lt;/span&gt;
-&lt;span class="nv"&gt;user&lt;/span&gt;&lt;span class="o"&gt;@&lt;/span&gt;&lt;span class="nv"&gt;work&lt;/span&gt; &lt;span class="nv"&gt;/tmp&lt;/span&gt; &lt;span class="nv"&gt;$&lt;/span&gt; &lt;span class="nv"&gt;head&lt;/span&gt; &lt;span class="nv"&gt;-n&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="nv"&gt;mykey&lt;/span&gt;  
+&lt;span class="nv"&gt;user&lt;/span&gt;&lt;span class="o"&gt;@&lt;/span&gt;&lt;span class="nv"&gt;work&lt;/span&gt; &lt;span class="nv"&gt;/tmp&lt;/span&gt; &lt;span class="nv"&gt;$&lt;/span&gt; &lt;span class="nv"&gt;head&lt;/span&gt; &lt;span class="nv"&gt;-n&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="nv"&gt;mykey&lt;/span&gt;
 &lt;span class="nv"&gt;-----BEGIN&lt;/span&gt; &lt;span class="nv"&gt;RSA&lt;/span&gt; &lt;span class="nv"&gt;PRIVATE&lt;/span&gt; &lt;span class="nv"&gt;KEY-----&lt;/span&gt;
 &lt;span class="nv"&gt;Proc-Type&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;,&lt;span class="nv"&gt;ENCRYPTED&lt;/span&gt;
 &lt;span class="nv"&gt;DEK-Info&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="nv"&gt;AES-128-CBC&lt;/span&gt;,&lt;span class="nv"&gt;CB973D5520E952B8D5A6B86716C6223F&lt;/span&gt;
@@ -125,7 +199,265 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl &lt;span class="se"&gt;
 &lt;p&gt;We want to provide a better answer to this. On the one hand, aws-vault has shown the way by moving credentials off disk and into keychains. Another parallel approach is to move development into partitioned environments. Finally, most startups should consider not having long-held SSH keys, instead using temporary credentials issued by an SSH CA, ideally gated on SSO. Unfortunately this doesn't work for GitHub.&lt;/p&gt;
 &lt;p&gt;PS: It’s hard to find an authoritative source, but from my memory: the versioned parameter in the PEM-like OpenSSH private key format only affect the encryption method. That doesn’t matter in the slightest: it’s the KDF that’s broken. That’s an argument against piecemeal negotiating parts of protocols, I’m sure. We’ll get you a blog post on that later.&lt;/p&gt;
 &lt;p&gt;The full key is available here, just in case you feel like running john the ripper on something today: &lt;a href="https://gist.github.com/lvh/c532c8fd46115d2857f40a433a2416fd"&gt;gist.github.com/lvh/c532c...&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/the-default-openssh-key-encryption-is-worse-than-plaintext/</guid><pubDate>Sat, 04 Aug 2018 02:00:18 GMT</pubDate></item><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/the-default-openssh-key-encryption-is-worse-than-plaintext/</guid><pubDate>Sat, 04 Aug 2018 02:00:18 GMT</pubDate></item><item><title>A child's garden of inter-service authentication schemes</title><link>https://www.lvh.io/posts/a-childs-garden-of-inter-service-authentication-schemes/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern applications tend to be composed from relationships between smaller applications. Secure modern applications thus need a way to express and enforce security policies that span multiple services. This is the “server-to-server” (S2S) authentication and authorization problem (for simplicity, I’ll mash both concepts into the term “auth” for most of this post).&lt;/p&gt;
+&lt;p&gt;Designers today have a lot of options for S2S auth, but there isn’t much clarity about what the options are or why you’d select any of them. Bad decisions sometimes result. What follows is a stab at clearing the question up.&lt;/p&gt;
+&lt;h3&gt;Cast Of Characters&lt;/h3&gt;
+&lt;p&gt;Alice and Bob are services on a production VPC. Alice wants to make a request of Bob. How can we design a system that allows this to happen?&lt;/p&gt;
+&lt;p&gt;Here’s, I think, a pretty comprehensive overview of available S2S schemes. I’ve done my best to describe the “what’s” and minimize the “why’s”, beyond just explaining the motivation for each scheme. Importantly, these are all things that reasonable teams use for S2S auth.&lt;/p&gt;
+&lt;h4&gt;Nothing At All&lt;/h4&gt;
+&lt;p&gt;Far and away the most popular S2S scheme is “no auth at all”. Internet users can’t reach internal services. There’s little perceived need to protect a service whose only clients are already trusted.&lt;/p&gt;
+&lt;h4&gt;Bearer Token&lt;/h4&gt;
+&lt;p&gt;Bearer tokens rule everything around us. Give Alice a small blob of data, such that when Bob sees that data presented, he assumes he’s talking to Alice. Cookies are bearer tokens. Most API keys are bearer tokens. OAuth is an elaborate scheme for generating and relaying bearer tokens. SAML assertions are delivered in bearer tokens.&lt;/p&gt;
+&lt;p&gt;The canonical bearer token is a random string, generated from a secure RNG, that is at least 16 bytes long (that is: we generally consider 128 bits a reasonable common security denominator). But part of the point of a bearer token is that the holder doesn’t care what it is, so Alice’s bearer token could also encode data that Bob could recover. This is common in client-server designs and less common in S2S designs.&lt;/p&gt;
+&lt;h5&gt;A few words about passwords&lt;/h5&gt;
+&lt;p&gt;S2S passwords are disappointingly common. You see them in a lot of over-the-Internet APIs (ie, for S2S relationships that span companies). A password is basically a bearer token that you can memorize and quickly type. Computers are, in 2018, actually pretty good at memorizing and typing, and so you should use real secrets, rather than passwords, in S2S applications.&lt;/p&gt;
+&lt;h4&gt;HMAC(timestamp)&lt;/h4&gt;
+&lt;p&gt;The problem with bearer tokens is that anybody who has them can use them. And they’re routinely transmitted. They could get captured off the wire, or logged by a proxy. This keeps smart ops people up at night, and motivates a lot of “innovation”.&lt;/p&gt;
+&lt;p&gt;You can keep the simplicity of bearer tokens while avoiding the capture-in-flight problem by exchanging the tokens with secrets, and using the secrets to authenticate a timestamp. A valid HMAC proves ownership of the shared secret without revealing it. You’d then proceed as with bearer tokens.&lt;/p&gt;
+&lt;h5&gt;A few words about TOTP&lt;/h5&gt;
+&lt;p&gt;TOTP is basically HMAC(timestamp) stripped down to make it easy for humans to briefly memorize and type. As with passwords, you shouldn’t see TOTP in S2S applications.&lt;/p&gt;
+&lt;h5&gt;A few words about PAKEs&lt;/h5&gt;
+&lt;p&gt;PAKEs are a sort of inexplicably popular cryptographic construction for securely proving knowledge of a password and, from that proof, deriving an ephemeral shared secret. SRP is a PAKE. People go out of their way to find applications for PAKEs. The thing to understand about them is that they’re fundamentally a way to extract cryptographic strength from passwords. Since this isn’t a problem computers have, PAKEs don’t make sense for S2S auth.&lt;/p&gt;
+&lt;h4&gt;Encrypted Tokens&lt;/h4&gt;
+&lt;p&gt;HMAC(timestamp) is stateful; it works because there’s pairwise knowledge of secrets and the metadata associated with them.  Usually, this is fine. But sometimes it’s hard to get all the parties to share metadata.&lt;/p&gt;
+&lt;p&gt;Instead of making that metadata implicit to the protocol, you can store it directly in the credential: include it alongside the timestamp and HMAC or encrypt it. This is how Rails cookie storage works; it’s also the dominant use case for JWTs. AWS-style request “signing” is another example (using HMAC and forgoing encryption).&lt;/p&gt;
+&lt;p&gt;By themselves, encrypted tokens make more sense in client-server settings than they do for S2S. Unlike client-server, where a server can just use the same secret for all the clients, S2S tokens still require some kind of pairwise state-keeping.&lt;/p&gt;
+&lt;h4&gt;Macaroons&lt;/h4&gt;
+&lt;p&gt;You can’t easily design a system where Alice takes her encrypted token, reduces its security scope (for instance, from read-write to read-only), and then passes it to Dave to use on her behalf. No matter how “sophisticated” we make the encoding and transmission mechanisms, encrypted tokens still basically express bearer logic.&lt;/p&gt;
+&lt;p&gt;Macaroons are an interesting (and criminally underused) construction that directly provides both &lt;em&gt;delegation&lt;/em&gt; and &lt;em&gt;attenuation&lt;/em&gt;. They’re a kind of token from which you can derive more restricted tokens (that’s the “attenuation”), and, if you want, pass that token to someone else to use without them being able to exceed the authorization you gave them. Macaroons accomplish this by chaining HMAC; the HMAC of a macaroon is the HMAC secret for its derived attenuated macaroons.&lt;/p&gt;
+&lt;p&gt;By adding encryption along with HMAC, Macaroons also express “third-party” conditions. Alice can get Charles to attest that Alice is a member of the super-awesome-best-friends-club, and include that in the Macaroon she delivers to Bob. If Bob also trusts Charles, Bob can safely learn whether Alice is in the club. Macaroons can flexibly express whole trees of these kinds of relationships, capturing identity, revocation, and… actually, revocation and identity are the only two big wins I can think of for this feature.&lt;/p&gt;
+&lt;h4&gt;Asymmetric Tokens&lt;/h4&gt;
+&lt;p&gt;You can swap the symmetric constructions used in tokens for asymmetric tokens and get some additional properties.&lt;/p&gt;
+&lt;p&gt;Using signatures instead of HMACs, you get non-repudiability: Bob can verify Alice’s token, but can’t necessarily mint a new Alice token himself.&lt;/p&gt;
+&lt;p&gt;More importantly, you can eliminate pairwise configuration. Bob and Alice can trust Charles, who doesn’t even need to be online all the time, and from that trust derive mutual authentication.&lt;/p&gt;
+&lt;p&gt;The trade-offs for these capabilities are speed and complexity. Asymmetric cryptography is much slower and much more error-prone than symmetric cryptography.&lt;/p&gt;
+&lt;h4&gt;Mutual TLS&lt;/h4&gt;
+&lt;p&gt;Rather than designing a new asymmetric token format, every service can have a certificate. When Alice connects to Bob, Bob can check a whitelist of valid certificate fingerprints, and whether Alice’s name on her client certificate is allowed. Or, you could set up a simple CA, and Bob could trust any certificate signed by the CA. Things can get more complex; you might take advantage of X.509 and directly encode claims in certs (beyond just names).&lt;/p&gt;
+&lt;h5&gt;A few words about SPIFFE&lt;/h5&gt;
+&lt;p&gt;If you’re a Kubernetes person this scheme is also sometimes called SPIFFE.&lt;/p&gt;
+&lt;h5&gt;A few words about Tokbind&lt;/h5&gt;
+&lt;p&gt;If you’re a participant in the IETF TLS Working Group, you can combine bearer tokens and MTLS using tokbind. Think of tokbind as a sort of “TLS cookie”. It’s derived from the client and server certificate and survives multiple TLS connections. You can use a tokbind secret to sign a bearer token, resulting in a bearer token that is confined to a particular MTLS relationship that can’t be used in any other context.&lt;/p&gt;
+&lt;h4&gt;Magic Headers&lt;/h4&gt;
+&lt;p&gt;Instead of building an explicit application-layer S2S scheme, you can punt the problem to your infrastructure. Ensure all requests are routed through one or more trusted, stateful proxies. Have the proxies set headers on the forwarded requests. Have the services trust the headers.&lt;/p&gt;
+&lt;p&gt;This accomplishes the same things a complicated Mutual TLS scheme does without requiring slow, error-prone public-key encryption. The trade-off is that your policy is directly coupled to your network infrastructure.&lt;/p&gt;
+&lt;h4&gt;Kerberos&lt;/h4&gt;
+&lt;p&gt;You can try to get the benefits of magic headers and encrypted tokens at the same time using something like Kerberos, where there’s a magic server trusted by all parties, but bound by cryptography rather than network configuration. Services need to be introduced to the Kerberos server, but not to each other; mutual trust of the Kerberos server, and authorization logic that lives on that Kerberos server, resolves all auth questions. Notably, no asymmetric cryptography is needed to make this work.&lt;/p&gt;
+&lt;h3&gt;Themes&lt;/h3&gt;
+&lt;p&gt;What are the things we might want to achieve from an S2S scheme? Here’s a list. It’s incomplete. Understand that it’s probably not reasonable to expect &lt;em&gt;all of these things&lt;/em&gt; from a single scheme.&lt;/p&gt;
+&lt;h4&gt;Minimalism&lt;/h4&gt;
+&lt;p&gt;This goal is less obvious than it seems. People adopt complicated auth schemes without clear rationales. It’s easy to lose security by doing this; every feature you add to an application  especially security features  adds attack surface. From an application security perspective, “do the simplest thing you can get away with” has a lot of merit. If you understand and keep careful track of your threat model, “nothing at all” can be a security-maximizing option. Certainly, minimalism motivates a lot of bearer token deployments.&lt;/p&gt;
+&lt;p&gt;The opposite of minimalism is complexity. A reasonable way to think about the tradeoffs in S2S design is to think of complexity as a currency you have to spend. If you introduce new complexity, what are you getting for it?&lt;/p&gt;
+&lt;h4&gt;Claims&lt;/h4&gt;
+&lt;p&gt;Authentication and authorization are two different things: who are you, and what are you allowed to do? Of the two problems, authorization is the harder one. An auth scheme can handle authorization, or assist authorization, or punt on it altogether.&lt;/p&gt;
+&lt;p&gt;Opaque bearer token schemes usually just convey identity. An encrypted token, on the other hand, might bind &lt;em&gt;claims&lt;/em&gt;: statements that limit the scope of what the token enables, or metadata about the identity of the requestor.&lt;/p&gt;
+&lt;p&gt;Schemes that don’t bind claims can make sense if authorization logic between services is straightforward, or if there’s already a trusted system (for instance, a service discovery layer) that expresses authorization. Schemes that do bind claims can be problematic if the claims carried in an credential can be abused, or targeted by application flaws. On the other hand, an S2S scheme that supports claims can do useful things like propagating on-behalf-of requestor identities or supporting distributed tracing.&lt;/p&gt;
+&lt;h4&gt;Confinement&lt;/h4&gt;
+&lt;p&gt;The big problem with HTTP cookies is that once they’ve captured one, an attacker can abuse it however they see fit. You can do better than that by adding mitigations or caveats to credentials. They might be valid only for a short period of time, or valid only for a specific IP address (especially powerful when combined with short expiry),  or, as in the case of Tokbind, valid only on a particular MTLS relationship.&lt;/p&gt;
+&lt;h4&gt;Statelessness&lt;/h4&gt;
+&lt;p&gt;Statelessness means Bob doesn’t have to remember much (or, ideally, anything) about Alice. This is an immensely popular motivator for some S2S schemes. It’s perceived as eliminating a potential performance bottleneck, and as simplifying deployment.&lt;/p&gt;
+&lt;p&gt;The tricky thing about statelessness is that it often doesn’t make sense to minimize state, only to eliminate it. If pairwise statefulness creeps back into the application for some other reason (for instance, Bob has to remember anything at all about Alice), stateless S2S auth can spend a lot of complexity for no real gain.&lt;/p&gt;
+&lt;h4&gt;Pairwise Configuration&lt;/h4&gt;
+&lt;p&gt;Pairwise configuration is the bête noire of S2S operational requirements. An application secret that has to be generated once for each of several peers and that &lt;em&gt;anybody might ever store in code&lt;/em&gt; is part of a scheme in which secrets are never, ever rotated. In a relatively common set of circumstances, pairwise config means that new services can only be introduced during maintenance windows.&lt;/p&gt;
+&lt;p&gt;Still, if you have a relatively small and stable set of services (or if all instances of a particular service might simply share a credential), it can make sense to move complexity out of the application design and into the operational requirements.  Also it makes sense if you have an ops team and you never have to drink with them.&lt;/p&gt;
+&lt;p&gt;I kid, really, because if you can get away with it, not spending complexity to eliminate pairwise configuration can make sense. Also, many of the ways S2S schemes manage to eliminate pairwise configurations involve &lt;em&gt;introducing yet another service&lt;/em&gt;, which has a sort of constant factor cost that can swamp the variable cost.&lt;/p&gt;
+&lt;h4&gt;Delegation and Attenuation&lt;/h4&gt;
+&lt;p&gt;People deploy a lot of pointless delegation. Application providers might use OAuth for their client-server login, for instance, even though no third-party applications exist.  The flip side of this is that if you actually need delegation, you really want to have it expressed carefully in your protocol. The thing you don’t want to do is ever share a bearer token.&lt;/p&gt;
+&lt;p&gt;Delegation can show up in internal S2S designs as a building block. For instance, a Macaroon design might have a central identity issuance server that grants all-powerful tokens to systems that in turn filter them for specific requestors.&lt;/p&gt;
+&lt;p&gt;Some delegation schemes have implied or out-of-band attenuation. For instance, you might not be able to look at an OAuth token and know what it’s restrictions are. These systems are rough in practice; from an operational security perspective, your starting point probably needs to be that any lost token is game-over for its owner.&lt;/p&gt;
+&lt;p&gt;A problem with writing about attenuation is that Macaroons express it so well that it’s hard to write about its value without lapsing into the case for Macaroons.&lt;/p&gt;
+&lt;h4&gt;Flexibility&lt;/h4&gt;
+&lt;p&gt;If use JSON as your credential format, and you later build a feature that allows a credential to express not just Alice’s name but also whether she’s an admin, you can add that feature without changing the credential format. Later, attackers can add the feature where they turn any user into an admin, and you can then add the feature that breaks that attack. JSON is just features all the way down.&lt;/p&gt;
+&lt;p&gt;I’m only mostly serious. If you’re doing something more complicated than a bearer token, you’re going to choose an extensible mechanism. If not, I already made the case for minimalism.&lt;/p&gt;
+&lt;h4&gt;Coupling&lt;/h4&gt;
+&lt;p&gt;All things being equal, coupling is bad. If your S2S scheme is expressed by network controls and unprotected headers, it’s tightly coupled to the network deployment, which can’t change without updating the security scheme. But if your network configuration doesn’t change often, that limitation might save you a lot of complexity.&lt;/p&gt;
+&lt;h4&gt;Revocation&lt;/h4&gt;
+&lt;p&gt;People talk about this problem a lot. Stateless schemes have revocation problems: the whole point of a stateless scheme is for Bob not to have to remember anything about Alice (other than perhaps some configuration that says Alice is allowed to make requests, but not Dave, and this gets complicated really quickly and can quickly call into question the value of statelessness but let’s not go there). At any rate: a stateless bearer token will eventually be compromised, and you can’t just let it get used over and over again to steal data.&lt;/p&gt;
+&lt;p&gt;The two mainstream answers to this problem are short expiry and revocation lists.&lt;/p&gt;
+&lt;p&gt;Short expiry addresses revocation if: (a) you have a dedicated auth server and the channel to that server is somehow more secure than the channel between Alice and Bob.; (b) the auth server relies on a long-lived secret that never appears on the less-secure channel, and (c) issues an access secret that is transmitted on the less-secure channel, but lives only for a few minutes. These schemes are called “refresh tokens”. Refresh tends to find its way into a lot of designs where this fact pattern doesn’t hold. Security design is full of wooden headphones and coconut phones.&lt;/p&gt;
+&lt;p&gt;Revocation lists (and, usually, some attendant revocation service) are a sort of all-purpose solution to this problem; you just blacklist revoked tokens, for at least as long as the lifetime of the token. This obviously introduces state, but it’s a specific kind of state that doesn’t (you hope) grow as quickly as your service does. If it’s the only state you have to keep, it’s nice to have the flexibility of putting it wherever you want.&lt;/p&gt;
+&lt;h4&gt;Rigidity&lt;/h4&gt;
+&lt;p&gt;It is hard to screw up a random bearer token. Alice stores the token and supply it on requests. Bob uses the token to look up an entry in a database. There aren’t a lot of questions.&lt;/p&gt;
+&lt;p&gt;It is extraordinarily easy to screw up JWT. JWT is a JSON format where you have to parse and interpret a JSON document to figure out how to decrypt and authenticate a JSON document. It has revived bugs we thought long dead, like “repurposing asymmetric public keys as symmetric private keys”.&lt;/p&gt;
+&lt;p&gt;Problems with rigidity creep up a lot in distributed security. The first draft of this post said that MTLS was rigid; you’re either speaking TLS with a client cert or you’re not. But that ignores how hard X.509 validation is. If you’re not careful, an attacker can just ask Comodo for a free email certificate and use it to access your services. Worse still, MTLS can “fail open” in a way that TLS sort of doesn’t: if a service forgets to check for client certificates, TLS will still get negotiated, and you might not notice until an attacker does.&lt;/p&gt;
+&lt;p&gt;Long story short: bearer tokens are rigid. JWT is a kind of evil pudding. Don’t use JWT.&lt;/p&gt;
+&lt;h4&gt;Universality&lt;/h4&gt;
+&lt;p&gt;A nice attribute of widely deployed MTLS is that it can mitigate SSRF bugs (the very bad bug where an attacker coerces one of your service to make an arbitrary HTTP request, probably targeting your internal services, on their behalf). If the normal HTTP-request-generating code doesn’t add a client certificate, and every internal service needs to see one to honor a request, you’ve limited the SSRF attackers options a lot.&lt;/p&gt;
+&lt;p&gt;On the other hand, we forget that a lot of our internal services consist of code that we didn’t write. The best example of this is Redis, which for years proudly waved the banner of “if you can talk to it, you already own the whole application”.&lt;/p&gt;
+&lt;p&gt;It’s helpful if we can reasonably expect an auth control to span all the systems we use, from Postgres to our custom revocation server. That might be a realistic goal with Kerberos, or with network controls and magic headers; with tunnels or proxies, it’s even something you can do with MTLS  this is a reason MTLS is such a big deal for Kubernetes, where it’s reasonable for the infrastructure to provide every container with an MTLS-enabled Envoy proxy.  On the other hand it’s unlikely to be something you can achieve with Macaroons or evil puddings.&lt;/p&gt;
+&lt;h4&gt;Performance and Complexity&lt;/h4&gt;
+&lt;p&gt;If you want performance and simplicity, you probably avoid asymmetric crypto, unless your request frequency is (and will remain) quite low. Similarly, you’d probably want to avoid dedicated auth servers, especially if Bob needs to be in constant contact with them for Alice to make requests to him; this is a reason people tend to migrate away from Kerberos.&lt;/p&gt;
+&lt;h3&gt;Our Thoughts&lt;/h3&gt;
+&lt;p&gt;Do the simplest thing that makes sense for your application right now. A true fact we can relate from something like a decade of consulting work on these problems: intricate S2S auth schemes are not the norm; if there’s a norm, it’s “nothing at all except for ELBs”.  If you need something, but you have to ask whether that something oughtn’t just be bearer tokens, then just use bearer tokens.&lt;/p&gt;
+&lt;p&gt;Unfortunately, if there’s a second norm, it’s adopting complicated auth mechanisms independently or, worse, in combination, and then succumbing to vulnerabilities.&lt;/p&gt;
+&lt;p&gt;Macaroons are inexplicably underused. They’re the Velvet Underground of authentication mechanisms, hugely influential but with little radio airplay. Unlike the Velvets, Macaroons aren’t overrated. They work well for client-server auth and for s2s auth. They’re very flexible but have reassuring format rigidity, and they elegantly take advantage of just a couple simple crypto operations. There are libraries for all the mainstream languages. You will have a hard time coming up with a scenario where we’d try to talk you out of using them.&lt;/p&gt;
+&lt;p&gt;JWT is a standard that tries to do too much and ends up doing everything haphazardly.  Our loathing of JWT motivated this post, but this post isn’t about JWT; we’ll write more about it in the future.&lt;/p&gt;
+&lt;p&gt;If your inter-service auth problem really decomposes to inter-container (or, without containers, inter-instance) auth, MTLS starts to make sense. The container-container MTLS story usually involves containers including a proxy, like Envoy, that mediates access. If you’re not connecting containers, or have ad-hoc components, MTLS can really start to take on a CORBA feel: random sidecar processes (here stunnel, there Envoy, and this one app that tries to do everything itself). It can be a pain to configure properly, and this is a place you need to get configurations right.&lt;/p&gt;
+&lt;p&gt;If you can do MTLS in such a way that there is exactly one way all your applications use it (probably: a single proxy that all your applications install), consider MTLS. Otherwise, be cautious about it.&lt;/p&gt;
+&lt;p&gt;Beyond that, we don’t want to be too much more prescriptive. Rather, we’d just urge you to think about what you’re actually getting from an S2S auth scheme before adopting it.&lt;/p&gt;
+&lt;p&gt;(But really, you should just use Macaroons.)&lt;/p&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/a-childs-garden-of-inter-service-authentication-schemes/</guid><pubDate>Tue, 12 Jun 2018 22:27:00 GMT</pubDate></item><item><title>Cryptographic right answers</title><link>https://www.lvh.io/posts/cryptographic-right-answers/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;We’re less interested in empowering developers and a lot more pessimistic about the prospects of getting this stuff right.&lt;/p&gt;
+&lt;p&gt;There are, in the literature and in the most sophisticated modern systems, “better” answers for many of these items. If you’re building for low-footprint embedded systems, you can use STROBE and a sound, modern, authenticated encryption stack entirely out of a single SHA-3-like sponge constructions. You can use NOISE to build a secure transport protocol with its own AKE. Speaking of AKEs, there are, like, 30 different password AKEs you could choose from.&lt;/p&gt;
+&lt;p&gt;But if you’re a developer and not a cryptography engineer, you shouldn’t do any of that. You should keep things simple and conventional and easy to analyze; “boring”, as the Google TLS people would say.&lt;/p&gt;
+&lt;p&gt;(This content has been developed and updated by different people over a decade. We've kept what Colin Percival originally said in 2009, Thomas Ptacek said in 2015, and what we're saying in 2018 for comparison. If you're designing something today, just use the 2018 Latacora recommendation.)&lt;/p&gt;
+&lt;h3&gt;Cryptographic Right Answers&lt;/h3&gt;
+&lt;h4&gt;Encrypting Data&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009:&lt;/em&gt; AES-CTR with HMAC.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015:&lt;/em&gt; (1) NaCl/libsodium’s default, (2) ChaCha20-Poly1305, or (3) AES-GCM.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; KMS or XSalsa20+Poly1305&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're hiding information from users or the network.&lt;/p&gt;
+&lt;p&gt;If you are in a position to use KMS, Amazon’s (or Google’s) Hardware Security Module time share, use KMS. If you could use KMS but encrypting is just a fun weekend project and you might be able to save some money by minimizing your KMS usage, use KMS. If you’re just encrypting secrets like API tokens for your application at startup, use SSM Parameter Store, which is KMS. You don’t have to understand how KMS works.&lt;/p&gt;
+&lt;p&gt;Otherwise, what you want ideally is “AEAD”: authenticated encryption with additional data (the option for plaintext authenticated headers).&lt;/p&gt;
+&lt;p&gt;The mainstream way to get authenticated encryption is to use a stream cipher (usually: AES in CTR mode) composed with a polynomial MAC (a cryptographic CRC).&lt;/p&gt;
+&lt;p&gt;The problem you’ll run into with all those mainstream options is nonces: they want you to come up with a unique (usually random) number for each stream which can never be reused. It’s simplest to generate nonces from a secure random number generator, so you want a scheme that makes that easy.&lt;/p&gt;
+&lt;p&gt;Nonces are particularly important for AES-GCM, which is the most popular mode of encryption. Unfortunately, it’s particularly tricky with AES-GCM, where it’s just-barely-but-maybe-not-quite on the border of safe to use random nonces.&lt;/p&gt;
+&lt;p&gt;So we recommend you use XSalsa20-Poly1305. This is a species of “ChaPoly” constructions, which, put together, are the most common encryption constructions outside of AES-GCM. Get XSalsa20-Poly1305 from libsodium or NaCl.&lt;/p&gt;
+&lt;p&gt;The advantage to XSalsa20 over ChaCha20 and Salsa20 is that XSalsa supports an extended nonce; it’s big enough that you can simply generate a big long random nonce for every stream and not worry about how many streams you’re encrypting.&lt;/p&gt;
+&lt;p&gt;There are “NMR” or “MRAE” schemes in the pipeline that promise some degree of security even if nonces are mishandled; these include GCM-SIV (all the SIVs, really) and CAESAR-contest-finalist Deoxys-II. They’re interesting, but nobody really supports or uses them yet, and with an extended nonce, the security win is kind of marginal. They’re not boring. Stay boring for now.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; AES-CBC, AES-CTR by itself, block ciphers with 64-bit blocks --- most especially Blowfish, which is inexplicably popular, OFB mode. Don't ever use RC4, which is comically broken.&lt;/p&gt;
+&lt;h4&gt;Symmetric key length&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use 256-bit keys.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use 256-bit keys.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Go ahead and use 256 bit keys.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're using cryptography.&lt;/p&gt;
+&lt;p&gt;But remember: your AES key is far less likely to be broken than your public key pair, so the latter key size should be larger if you're going to obsess about this.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; constructions with huge keys, cipher "cascades", key sizes under 128 bits.&lt;/p&gt;
+&lt;h4&gt;Symmetric “Signatures”&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use HMAC.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Yep, use HMAC.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Still HMAC.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're securing an API, encrypting session cookies, or are encrypting user data but, against medical advice, not using an AEAD construction.&lt;/p&gt;
+&lt;p&gt;If you're authenticating but not encrypting, as with API requests, don't do anything complicated. There is a class of crypto implementation bugs that arises from how you feed data to your MAC, so, if you're designing a new system from scratch, Google "crypto canonicalization bugs". Also, use a secure compare function.&lt;/p&gt;
+&lt;p&gt;If you use HMAC, people will feel the need to point out that SHA3 (and the truncated SHA2 hashes) can do “KMAC”, which is to say you can just concatenate the key and data and hash them and be secure. This means that in theory HMAC is doing unnecessary extra work with SHA-3 or truncated SHA-2. But who cares? Think of HMAC as cheap insurance for your design, in case someone switches to non-truncated SHA-2.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; custom "keyed hash" constructions, HMAC-MD5, HMAC-SHA1, complex polynomial MACs, encrypted hashes, CRC.&lt;/p&gt;
+&lt;h4&gt;Hashing algorithm&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use SHA256 (SHA-2).&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use SHA-2.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Still SHA-2.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you always care about this.&lt;/p&gt;
+&lt;p&gt;If you can get away with it: use SHA-512/256, which truncates its output and sidesteps length extension attacks.&lt;/p&gt;
+&lt;p&gt;We still think it's less likely that you'll upgrade from SHA-2 to SHA-3 than it is that you'll upgrade from SHA-2 to something faster than SHA-3, and SHA-2 still looks great, so get comfortable and cuddly with SHA-2.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; SHA-1, MD5, MD6.&lt;/p&gt;
+&lt;h4&gt;Random IDs&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use 256-bit random numbers.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use 256-bit random numbers.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Use 256-bit random numbers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you always care about this.&lt;/p&gt;
+&lt;p&gt;From /dev/urandom.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; userspace random number generators, the OpenSSL RNG, havaged, prngd, egd, /dev/random.&lt;/p&gt;
+&lt;h4&gt;Password handling&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: scrypt or PBKDF2.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;:  In order of preference, use scrypt, bcrypt, and then if nothing else is available PBKDF2.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  In order of preference, use scrypt, argon2, bcrypt, and then if nothing else is available PBKDF2.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you accept passwords from users or, anywhere in your system, have human-intelligible secret keys.&lt;/p&gt;
+&lt;p&gt;But, seriously: you can throw a dart at a wall to pick one of these. Technically, argon2 and scrypt are materially better than bcrypt, which is much better than PBKDF2. In practice, it mostly matters that you use a real secure password hash, and not as much which one you use.&lt;/p&gt;
+&lt;p&gt;Don’t build elaborate password-hash-agility schemes.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; SHA-3, naked SHA-2, SHA-1, MD5.&lt;/p&gt;
+&lt;h4&gt;Asymmetric encryption&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use RSAES-OAEP with SHA256 and MGF1+SHA256 bzzrt pop ffssssssst exponent 65537.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use NaCl/libsodium (box / crypto_box).&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use Nacl/libsodium (box / crypto_box).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if&lt;/em&gt;: you need to encrypt the same kind of message to many different people, some of them strangers, and they need to be able to accept the message asynchronously, like it was store-and-forward email, and then decrypt it offline. It's a pretty narrow use case.&lt;/p&gt;
+&lt;p&gt;Of all the cryptographic "right answers", this is the one you're least likely to get right on your own. Don't freelance public key encryption, and don't use a low-level crypto library like OpenSSL or BouncyCastle.&lt;/p&gt;
+&lt;p&gt;Here are several reasons you should stop using RSA and switch to elliptic curve:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RSA (and DH) drag you towards "backwards compatibility" (ie: downgrade-attack compatibility) with insecure systems.&lt;/li&gt;
+&lt;li&gt;RSA begs implementors to encrypt directly with its public key primitive, which is usually not what you want to do&lt;/li&gt;
+&lt;li&gt;RSA has too many knobs. In modern curve systems, like Curve25519, everything is pre-set for security.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;NaCl uses Curve25519 (the most popular modern curve, carefully designed to eliminate several classes of attacks against the NIST standard curves) in conjunction with a ChaPoly AEAD scheme. Your language will have bindings (or, in the case of Go, its own library implementation) to NaCl/libsodium; use them. Don’t try to assemble this yourself. Libsodium has &lt;a href="https://libsodium.gitbook.io/doc/bindings_for_other_languages"&gt;a list&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Don't use RSA.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; Systems designed after 2015 that use RSA, RSA-PKCS1v15, RSA, ElGamal, I don't know, Merkle-Hellman knapsacks? Just avoid RSA.&lt;/p&gt;
+&lt;h4&gt;Asymmetric signatures&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use RSASSA-PSS with SHA256 then MGF1+SHA256 in tricolor systemic silicate orientation.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use Nacl, Ed25519, or RFC6979.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use Nacl or Ed25519.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if&lt;/em&gt;: you're designing a new cryptocurrency. Or, a system to sign Ruby Gems or Vagrant images, or a DRM scheme, where the authenticity of a series of files arriving at random times needs to be checked offline against the same secret key. Or, you're designing an encrypted message transport.&lt;/p&gt;
+&lt;p&gt;The allegations from the previous answer are incorporated herein as if stated in full.&lt;/p&gt;
+&lt;p&gt;The two dominating use cases within the last 10 years for asymmetric signatures are cryptocurrencies and forward-secret key agreement, as with ECDHE-TLS. The dominating algorithms for these use cases are all elliptic-curve based. Be wary of new systems that use RSA signatures.&lt;/p&gt;
+&lt;p&gt;In the last few years there has been a major shift away from conventional DSA signatures and towards misuse-resistent "deterministic" signature schemes, of which EdDSA and RFC6979 are the best examples. You can think of these schemes as "user-proofed" responses to the Playstation 3 ECDSA flaw, in which reuse of a random number leaked secret keys. Use deterministic signatures in preference to any other signature scheme.&lt;/p&gt;
+&lt;p&gt;Ed25519, the NaCl/libsodium default, is by far the most popular public key signature scheme outside of Bitcoin. It’s misuse-resistant and carefully designed in other ways as well. You shouldn’t freelance this either; get it from NaCl.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; RSA-PKCS1v15, RSA, ECDSA, DSA; really, especially avoid conventional DSA and ECDSA.&lt;/p&gt;
+&lt;h4&gt;Diffie-Hellman&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Operate over the 2048-bit Group #14 with a generator of 2.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Probably still DH-2048, or Nacl.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Probably nothing. Or use Curve25519.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're designing an encrypted transport or messaging system that will be used someday by a stranger, and so static AES keys won't work.&lt;/p&gt;
+&lt;p&gt;The 2015 version of this document confused the hell out of everyone.&lt;/p&gt;
+&lt;p&gt;Part of the problem is that our “Right Answers” are a response to Colin Percival’s “Right Answers”, and his included a “Diffie-Hellman” answer, as if “Diffie-Hellmanning” was a thing developers routinely do. In reality, developers simply shouldn’t freelance their own encrypted transports. To get a sense of the complexity of this issue, read the documentation for the Noise Protocol Framework. If you’re doing a key-exchange with DH, you probably want an authenticated key exchange (AKE) that resists key compromise impersonation (KCI), and so the primitive you use for DH is not the only important security concern.&lt;/p&gt;
+&lt;p&gt;But whatever.&lt;/p&gt;
+&lt;p&gt;It remains the case: if you can just use NaCl, use NaCl. You don't even have to care what NaCl does. That’s the point of NaCl.&lt;/p&gt;
+&lt;p&gt;Otherwise: use Curve25519. There are libraries for virtually every language. In 2015, we were worried about encouraging people to write their own Curve25519 libraries, with visions of Javascript bignum implementations dancing in our heads. But really, part of the point of Curve25519 is that the entire curve was carefully chosen to minimize implementation errors. Don’t write your own! But really, just use Curve25519.&lt;/p&gt;
+&lt;p&gt;Don’t do ECDH with the NIST curves, where you’ll have to carefully verify elliptic curve points before computing with them to avoid leaking secrets. That attack is very simple to implement, easier than a CBC padding oracle, and far more devastating.&lt;/p&gt;
+&lt;p&gt;The 2015 document included a clause about using DH-1024 in preference to sketchy curve libraries. You know what? That’s still a valid point. Valid and stupid. The way to solve the “DH-1024 vs. sketchy curve library” problem is, the same as the “should I use Blowfish or IDEA?” problem. Don’t have that problem. Use Curve25519.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; conventional DH, SRP, J-PAKE, handshakes and negotiation, elaborate key negotiation schemes that only use block ciphers, srand(time()).*&lt;/p&gt;
+&lt;h4&gt;Website security&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use OpenSSL.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Remains: OpenSSL, or BoringSSL if you can. Or just use AWS ELBs&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use AWS ALB/ELB or OpenSSL, with LetsEncrypt&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you have a website.&lt;/p&gt;
+&lt;p&gt;If you can pay AWS not to care about this problem, we recommend you do that.&lt;/p&gt;
+&lt;p&gt;Otherwise, there was a dark period between 2010 and 2016 where OpenSSL might not have been the right answer, but that time has passed. OpenSSL has gotten better, and, more importantly, OpenSSL is on-the-ball with vulnerability disclosure and response.&lt;/p&gt;
+&lt;p&gt;Using anything besides OpenSSL will drastically complicate your system for little, no, or even negative security benefit. So just keep it simple.&lt;/p&gt;
+&lt;p&gt;Speaking of simple: LetsEncrypt is free and automated. Set up a cron job to re-fetch certificates regularly, and test it.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; offbeat TLS libraries like PolarSSL, GnuTLS, and MatrixSSL.&lt;/p&gt;
+&lt;h4&gt;Client-server application security&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Distribute the server's public RSA key with the client code, and do not use SSL.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use OpenSSL, or BoringSSL if you can. Or just use AWS ELBs&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use AWS ALB/ELB or OpenSSL, with LetsEncrypt&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; the previous recommendations about public-key crypto were relevant to you.*&lt;/p&gt;
+&lt;p&gt;It seems a little crazy to recommend TLS given its recent history:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The Logjam DH negotiation attack&lt;/li&gt;
+&lt;li&gt;The FREAK export cipher attack&lt;/li&gt;
+&lt;li&gt;The POODLE CBC oracle attack&lt;/li&gt;
+&lt;li&gt;The RC4 fiasco&lt;/li&gt;
+&lt;li&gt;The CRIME compression attack&lt;/li&gt;
+&lt;li&gt;The Lucky13 CBC padding oracle timing attack&lt;/li&gt;
+&lt;li&gt;The BEAST CBC chained IV attack&lt;/li&gt;
+&lt;li&gt;Heartbleed&lt;/li&gt;
+&lt;li&gt;Renegotiation&lt;/li&gt;
+&lt;li&gt;Triple Handshakes&lt;/li&gt;
+&lt;li&gt;Compromised CAs&lt;/li&gt;
+&lt;li&gt;DROWN (though personally we’re warped and an opportunity to play with attacks like DROWN would be in our “pro” column)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here's why you should still use TLS for your custom transport problem:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In custom protocols, you don’t have to (and shouldn’t) depend on 3rd party CAs. You don’t even have to use CAs at all (though it’s not hard to set up your own); you can just use a whitelist of self-signed certificates  which is approximately what SSH does by default, and what you’d come up with on your own.&lt;/li&gt;
+&lt;li&gt;Since you’re doing a custom protocol, you can use the best possible TLS cipher suites: TLS 1.2+, Curve25519, and ChaPoly. That eliminates most attacks on TLS. The reason everyone doesn’t do this is that they need backwards-compatibility, but in custom protocols you don’t need that.&lt;/li&gt;
+&lt;li&gt;Many of these attacks only work against browsers, because they rely on the victim accepting and executing attacker-controlled Javascript in order to generate repeated known/chosen plaintexts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; designing your own encrypted transport, which is a genuinely hard engineering problem; using TLS but in a default configuration, like, with "curl"; using "curl", IPSEC.&lt;/p&gt;
+&lt;h4&gt;Online backups&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use Tarsnap.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use Tarsnap.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Store PMAC-SIV-encrypted arc files to S3 and save fingerprints of your backups to an ERC20-compatible blockchain.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you bother backing things up.&lt;/p&gt;
+&lt;p&gt;Just kidding. You should still use Tarsnap.&lt;/p&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><guid>https://www.lvh.io/posts/cryptographic-right-answers/</guid><pubDate>Tue, 03 Apr 2018 21:25:00 GMT</pubDate></item><item><title>Crypto APIs and JVM byte types</title><link>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;In a previous post, I talked about &lt;a href="https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design.html"&gt;crypto API tradeoffs&lt;/a&gt;. In this
 post, I'll go into a specific API design case in &lt;a href="https://github.com/lvh/caesium"&gt;&lt;code&gt;caesium&lt;/code&gt;&lt;/a&gt;, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.&lt;/p&gt;
@@ -744,267 +1076,4 @@ an excellent educational tool; and Watson Ladd for pointing out a correction
 w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
 singular.). Finally, I'd like to thank all the people who reviewed drafts of
 this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
-Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>We're just getting started</title><link>https://www.lvh.io/posts/were-just-getting-started/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most conference talks are transactional. The speaker has a point to
-make. After the presentation, it's "over"; only spoken about in
-perfect tenses. You've communicated your thoughts, perhaps had a
-conversation or two, but, mostly, moved on.&lt;/p&gt;
-&lt;p&gt;I've given talks like these. However, about two years ago, I gave a
-talk that had a deep impact on my life. That talk was Crypto 101.&lt;/p&gt;
-&lt;p&gt;Right before the presentation, cryptanalytic research was released
-that popped RC4. I couldn't have asked for a better setup. Turns out
-it wasn't &lt;em&gt;just&lt;/em&gt; luck; eventually our systemic failure as an industry
-in taking security seriously was bound to catch up with us. Since
-then, the proverbial piper has been well-paid. We've seen a plethora
-of serious security bugs. Huge corporations have been the victims of
-attacks in the billions of dollars a pop. As I'm writing this blog
-post, there's an article on a new TLS attack in my reading list.&lt;/p&gt;
-&lt;p&gt;It quickly became clear that this wasn't just a one-off thing. I
-started writing &lt;a href="http://crypto101.github.io"&gt;Crypto 101, the book,&lt;/a&gt; not too long after
-giving the talk. We were, unwittingly, at the crest of a wave that's
-still growing. Projects like PyCA and LibreSSL started fighting
-tirelessly to make the software we use better. Security talks became a
-mandatory part of the programming conference food pyramid. My friends
-Hynek and Ying gave fantastic talks. They, too, got "lucky" with a
-security bombshell: Heartbleed happened mere days before the
-conference.&lt;/p&gt;
-&lt;p&gt;Last week, I presented Crypto 101 again at rax.io, Rackspace's
-internal conference. It was well-received, and I think I provided
-value for people's time. One thing, more than anything, it
-crystallized where we are. We're not done yet. There's still a huge
-audience left to reach. Interest in information security has done
-nothing but grow.  With a total of just over 100,000 downloads for the
-book and about half as many for the recording of the presentation,
-people are definitely listening. We've made real impact, and we have
-people's attention, but we need to keep going.&lt;/p&gt;
-&lt;p&gt;One of the two talks I'll be giving at PyCon is a more high-level
-overview of how we can build secure systems. More friends of mine will
-talk in about TLS there too. Within Rackspace, I'm focusing on
-information security. There are awesome things brewing here, and I
-hope that we can continue the great work we've been doing so far.&lt;/p&gt;
-&lt;p&gt;We've accomplished a lot, but we're just getting started.&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/were-just-getting-started/</guid><pubDate>Tue, 03 Mar 2015 01:06:41 GMT</pubDate></item><item><title>Securing APIs with shims</title><link>https://www.lvh.io/posts/securing-apis-with-shims/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Imagine that you had a capability URL, except instead of giving you
-the ability to perform a specific &lt;em&gt;action&lt;/em&gt;, it gave you the ability to
-perform a (limited) set of operations on a third party API,
-e.g. OpenStack. The capability URL wouldn't just be something you
-exercise or revoke; it'd be an API endpoint, mostly indistinguishable
-from the real API. Incoming requests would be inspected, and based on
-a set of rules, either be rejected or forwarded to the API being
-shimmed.&lt;/p&gt;
-&lt;h2&gt;Proof of concept&lt;/h2&gt;
-&lt;p&gt;At my day job, we had a programming task that I thought logic
-programming would be well-suited for. Unfortunately, logic programming
-is kind of weird and esoteric. Even programmers with otherwise broad
-experiences professed to not being quite sure how it worked, or what
-to do with it.&lt;/p&gt;
-&lt;p&gt;Therefore, I used up my hack day (a day where we get to hack on random
-projects) to cook up some cool stuff using logic programming. I demoed
-the usual suspects (&lt;a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/monkey.clj"&gt;the monkey with the banana&lt;/a&gt;, and a
-&lt;a href="https://github.com/lvh/shimmer/blob/master/src/shimmer/sudoku.clj"&gt;sudoku solver&lt;/a&gt;), illustrating the difference between the
-relational nature of the logic programs and the imperative nature of
-the algorithms you might otherwise write to solve the same problems.
-Finally, I demoed the aforementioned proxying API shim. The proof of
-concept, codenamed shimmer, is &lt;a href="https://github.com/lvh/shimmer/"&gt;up on Github&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Let's take a look at the handler function, which takes incoming
-requests and modifies them slightly so they can be passed on:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;build-handler&lt;/span&gt;
-  &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;target-host&lt;/span&gt; &lt;span class="nv"&gt;target-port&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;fn &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;match&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="nv"&gt;incoming-request&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-      &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;let &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;modified-request&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;-&amp;gt; &lt;/span&gt;&lt;span class="nv"&gt;incoming-request&lt;/span&gt;
-                                 &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;dissoc &lt;/span&gt;&lt;span class="ss"&gt;:scheme&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;;; hack&lt;/span&gt;
-                                 &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;assoc &lt;/span&gt;&lt;span class="ss"&gt;:host&lt;/span&gt; &lt;span class="nv"&gt;target-host&lt;/span&gt;
-                                        &lt;span class="ss"&gt;:port&lt;/span&gt; &lt;span class="nv"&gt;target-port&lt;/span&gt;
-                                        &lt;span class="ss"&gt;:throw-exceptions&lt;/span&gt; &lt;span class="nv"&gt;false&lt;/span&gt;&lt;span class="p"&gt;))]&lt;/span&gt;
-        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;request&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;spy&lt;/span&gt; &lt;span class="nv"&gt;modified-request&lt;/span&gt;&lt;span class="p"&gt;))))&lt;/span&gt;
-      &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:status&lt;/span&gt; &lt;span class="mi"&gt;403&lt;/span&gt; &lt;span class="c1"&gt;;; Forbidden&lt;/span&gt;
-       &lt;span class="ss"&gt;:headers&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;"content-type"&lt;/span&gt; &lt;span class="s"&gt;"text/plain"&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-       &lt;span class="ss"&gt;:body&lt;/span&gt; &lt;span class="s"&gt;"Doesn't match!"&lt;/span&gt;&lt;span class="p"&gt;})))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;(Those &lt;code&gt;spy&lt;/code&gt; calls are from the excellent &lt;a href="https://github.com/ptaoussanis/timbre"&gt;&lt;code&gt;timbre&lt;/code&gt;&lt;/a&gt;
-library. They make it easy to log values without cluttering up your
-code; a godsend while developing with some libraries you're not
-terribly familiar with.)&lt;/p&gt;
-&lt;p&gt;The matching function looks like this:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;match&lt;/span&gt;
-  &lt;span class="s"&gt;"Checks if the request is allowed."&lt;/span&gt;
-  &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;req&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;not= &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/run&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;q&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/conde&lt;/span&gt;
-           &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:request-method&lt;/span&gt; &lt;span class="ss"&gt;:get&lt;/span&gt;&lt;span class="p"&gt;})]&lt;/span&gt;
-           &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:request-method&lt;/span&gt; &lt;span class="ss"&gt;:post&lt;/span&gt;
-                             &lt;span class="ss"&gt;:headers&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;"x-some-header"&lt;/span&gt;
-                                       &lt;span class="s"&gt;"the right header value"&lt;/span&gt;&lt;span class="p"&gt;}})]&lt;/span&gt;
-           &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:request-method&lt;/span&gt; &lt;span class="ss"&gt;:post&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-            &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/featurec&lt;/span&gt; &lt;span class="nv"&gt;req&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:headers&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;"x-some-header"&lt;/span&gt;
-                                       &lt;span class="s"&gt;"another right header value"&lt;/span&gt;&lt;span class="p"&gt;}})]))&lt;/span&gt;
-        &lt;span class="o"&gt;'&lt;/span&gt;&lt;span class="p"&gt;()))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;h2&gt;Future work&lt;/h2&gt;
-&lt;p&gt;Make this thing actually vaguely correct. That means e.g. also
-inspecting the body for URL references, and changing those to go
-through the proxy as well.&lt;/p&gt;
-&lt;p&gt;Start collecting a library of short hand notations for specific API
-functionality, e.g. if you're proxying an OpenStack API, you should be
-able to just say you want to allow server creation requests, without
-having to figure out exactly what those requests look like.&lt;/p&gt;
-&lt;p&gt;The spec is hard-coded, it should be specified at runtime. That was
-trickier than I had originally anticipated: the vast majority of
-&lt;code&gt;core.logic&lt;/code&gt; behavior uses macros. While some functionality is fairly
-easy to port, that's probably a red herring: I don't want to port a
-gazillion macros. As an example, here's &lt;code&gt;conds&lt;/code&gt;, which is just&lt;code&gt;conde&lt;/code&gt;
-as a function (except without support for logical conjunction per
-disjunctive set of goals):&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="ss"&gt;:private&lt;/span&gt; &lt;span class="nv"&gt;conds&lt;/span&gt;
-  &lt;span class="s"&gt;"Like conde, but a function."&lt;/span&gt;
-  &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;empty?&lt;/span&gt; &lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="nv"&gt;l/fail&lt;/span&gt;
-    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;l/conde&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;first &lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-             &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nf"&gt;conds&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;rest &lt;/span&gt;&lt;span class="nv"&gt;goals&lt;/span&gt;&lt;span class="p"&gt;))])))&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;That's not the worst function, but let's just say I see a lot of
-&lt;code&gt;macroexpand&lt;/code&gt; in my future if I'm going to take this seriously.&lt;/p&gt;
-&lt;p&gt;URLs and bodies should be parsed, so that you can write assertions
-against structured data, or against URL patterns, instead of specific
-URLs.&lt;/p&gt;
-&lt;p&gt;If I ever end up letting any of this be a serious part of my day job,
-I'm going to invest a ton of time improving the documentation for both
-&lt;code&gt;core.logic&lt;/code&gt; and &lt;code&gt;core.typed&lt;/code&gt;. They're &lt;em&gt;fantastic&lt;/em&gt; projects, but
-they're harder to get started with than they could be, and that's a
-shame.&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/securing-apis-with-shims/</guid><pubDate>Sat, 21 Feb 2015 06:24:03 GMT</pubDate></item><item><title>On discussing software security improvements</title><link>https://www.lvh.io/posts/on-discussing-software-security-improvements/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common criticism of information security folks is that they tend to
-advise people to not do any crypto. Through projects like &lt;a class="reference external" href="https://www.crypto101.io/"&gt;Crypto
-101&lt;/a&gt;, I've attempted to make a small contribution towards fixing
-that.&lt;/p&gt;
-&lt;p&gt;In the open source world, various people often try to improve the
-security of a project. Because designing secure systems is pretty
-hard, they often produce flawed proposals. The aforemetioned tendency
-for infosec-conscious people to tell them to stop doing crypto is
-experienced as unwelcoming, even dismissive. Typically, the only thing
-that's accomplished is that a lot of feelings get hurt; it seems to
-only rarely result in improved software.&lt;/p&gt;
-&lt;p&gt;I think that's quite unfortunate. I think open source is great, and we
-should be not just welcoming and inclusive, but aiming to produce
-secure software. Furthermore, even if a flawed proposal is
-unsalvageable, a clear description of &lt;em&gt;why&lt;/em&gt; it is flawed will
-presumably result in fewer negative interactions. Best case scenario,
-the issues with a proposal can be discussed and potentially rectified.&lt;/p&gt;
-&lt;p&gt;In an effort to improve this situation, I'm documenting what I believe
-to be a useful way to discuss security changes and their tradeoffs. As
-Zooko has taught me:&lt;/p&gt;
-&lt;blockquote&gt;
-Security isn't about perfect versus imperfect or about better versus
-worse, it's about &lt;em&gt;this&lt;/em&gt; attack surface versus &lt;em&gt;that&lt;/em&gt; attack
-surface.&lt;/blockquote&gt;
-&lt;p&gt;This document aims to be the equivalent of an &lt;a class="reference external" href="http://www.sscce.org/"&gt;SSCCE&lt;/a&gt; for generic bug
-reports: a blueprint for making suggestions likely to lead to
-productive discourse, as long as we can agree that we're trying to
-produce more secure software, as well as provide a welcoming
-development environment.&lt;/p&gt;
-&lt;div class="section" id="important-points"&gt;
-&lt;h2&gt;Important points&lt;/h2&gt;
-&lt;p&gt;A good proposal should contain:&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;A brief description of what you're suggesting.&lt;/li&gt;
-&lt;li&gt;A description of the attack model you're considering, why the
-current system does not address this issue, and why the suggested
-system &lt;em&gt;does&lt;/em&gt; address this issue.&lt;/li&gt;
-&lt;li&gt;A motivation of the attack model. Why is it important that this
-issue is actually addressed?&lt;/li&gt;
-&lt;li&gt;How does this change affect the attack surface (i.e. all of the
-ways an attacker can attempt to attack a system)?&lt;/li&gt;
-&lt;li&gt;What does the user experience for all users of the system look
-like? Many cryptosystems fall over because they're simply unusable
-for most users of the system.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class="section" id="an-example"&gt;
-&lt;h2&gt;An example&lt;/h2&gt;
-&lt;p&gt;Wul (the widely underestimated language, pronounced &lt;em&gt;/wool/&lt;/em&gt;) is a
-general purpose programming language. It has a package repository,
-WuPI (the Wul package index, pronounced &lt;em&gt;/woopie/&lt;/em&gt;), the de facto
-standard for distributing and installing Wul software.&lt;/p&gt;
-&lt;p&gt;WuPI uses TLS as a secure transport. The WuF (Wul foundation,
-pronounced &lt;em&gt;/woof/&lt;/em&gt;), maintains a root certificate, distributed with
-Wul. Thanks to a well-managed system of intermediary CAs run by a
-tireless army of volunteers, this means that both package authors and
-consumers know they're talking to the real WuPI.&lt;/p&gt;
-&lt;p&gt;Alice is the WuPI BDFL. Bob is a Wul programmer, and would like to
-improve the security of WuPI.&lt;/p&gt;
-&lt;p&gt;While consumers and authors know that they're talking to the real
-WuPI, there is no protection against a malicious WuPI endpoint. (This
-problem was recently made worse because WuPI introduced a CDN, greatly
-increasing the number of people who could own a node.). You know that
-you're talking to something with a WuF-signed certificate (presumably
-WuPI, provided the WuF has done a good job managing that certificate),
-but you have no idea if that thing is being honest about the packages
-it serves you.&lt;/p&gt;
-&lt;p&gt;Bob believes WuPI could solve this by using GPG signatures.&lt;/p&gt;
-&lt;p&gt;He starts with a brief description of the suggestion:&lt;/p&gt;
-&lt;blockquote&gt;
-I would like to suggest that WuPI grows support for GPG signatures
-of packages. These signatures would be created when a package author
-uploads a package. They would optionally be verified when the user
-downloads a package.&lt;/blockquote&gt;
-&lt;p&gt;He continues with the attack model being considered:&lt;/p&gt;
-&lt;blockquote&gt;
-I believe this would secure WuPI consumers against a malicious WuPI
-endpoints. A malicious WuPI endpoint (assuming it acquires an
-appropriate certificate) is currently free to deliver whatever
-packages it wants.&lt;/blockquote&gt;
-&lt;p&gt;He explains why the current model doesn't address this:&lt;/p&gt;
-&lt;blockquote&gt;
-The current system assures authenticity and secrecy of the stream
-(through TLS), and it ensures that the server authenticates itself
-with a WuPI/WuF certificate. It does not ensure that the package is
-what the author uploaded.&lt;/blockquote&gt;
-&lt;p&gt;He explains why he believes his model does address this:&lt;/p&gt;
-&lt;blockquote&gt;
-Because the signatures are produced by the author's GPG key, a
-malicious WuPI endpoint would not be able to forge them. Therefore,
-a consumer is sure that a package with a valid signature is indeed
-from the author.&lt;/blockquote&gt;
-&lt;p&gt;He explains why this attack model is important:&lt;/p&gt;
-&lt;blockquote&gt;
-With the new CDN support, the number of people with access to such a
-certificate has greatly increased. While I certainly trust all of
-the volunteers involved, it would be nice if we didn't &lt;em&gt;have&lt;/em&gt; to.
-Furthermore, the software on the servers can always be vulnerable to
-attack; as a high-value target, it certainly isn't inconceivable
-that an attacker would use an unknown vulnerability to take over a
-WuPI endpoint.&lt;/blockquote&gt;
-&lt;p&gt;He (believes to) address the attack surface:&lt;/p&gt;
-&lt;blockquote&gt;
-Because the signatures are optional, the attack surface remains the
-same.&lt;/blockquote&gt;
-&lt;p&gt;Finally, he addresses the user experience:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The weak point of this scheme is most likely the user experience,
-because users historically seem to dislike using GPG.&lt;/p&gt;
-&lt;p&gt;I am hopeful that this increased value of participating in the GPG
-web of trust will mean that more people participate.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Alice reviews this, and notes a flaw in the proposal:&lt;/p&gt;
-&lt;blockquote&gt;
-This proposal aims to address a security flaw when the WuPI endpoint
-is malicious by adding signatures. However, a malicious WuPI
-endpoint can lie by omission, and claim a package was never signed
-by the author.&lt;/blockquote&gt;
-&lt;p&gt;Bob now realizes this issue, and suggests an improvement:&lt;/p&gt;
-&lt;blockquote&gt;
-This could be rectified if the user insists on a signature for
-packages they expect to be signed.&lt;/blockquote&gt;
-&lt;p&gt;As a side note, Alice notes that the attack surface does increase:&lt;/p&gt;
-&lt;blockquote&gt;
-This places trust in author's ability to manage private keys, which
-has historically been shown to be problematic. That introduces a new
-attack vector: an attacker can attempt to go after the author's
-private key.&lt;/blockquote&gt;
-&lt;p&gt;Regardless of the outcome of this conversation, there actually was a
-conversation. I believe this to be an improvement over the overall
-status quo.&lt;/p&gt;
-&lt;/div&gt;&lt;/div&gt;</description><category>cryptography</category><category>python</category><category>security</category><guid>https://www.lvh.io/posts/on-discussing-software-security-improvements/</guid><pubDate>Tue, 29 Jul 2014 06:58:27 GMT</pubDate></item></channel></rss>
+Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item></channel></rss>

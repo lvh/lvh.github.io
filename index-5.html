@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://www.lvh.io/index-5.html">
-<link rel="prev" href="." type="text/html">
+<link rel="prev" href="index-6.html" type="text/html">
 <link rel="next" href="index-4.html" type="text/html">
 <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
 </head>
@@ -73,7 +73,686 @@ navbar-dark bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport/" class="u-url">Introducing Teleport</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/crypto-apis-and-jvm-byte-types/" class="u-url">Crypto APIs and JVM byte types</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/crypto-apis-and-jvm-byte-types/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-07-11T14:00:00-07:00" itemprop="datePublished" title="2016-07-11 14:00">2016-07-11 14:00</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>In a previous post, I talked about <a href="posts/tradeoffs-in-cryptographic-api-design.html">crypto API tradeoffs</a>. In this
+post, I'll go into a specific API design case in <a href="https://github.com/lvh/caesium"><code>caesium</code></a>, my
+cryptographic library for Clojure, a language that runs on the Java Virtual
+Machine.</p>
+<h3>JVM byte types</h3>
+<p>The JVM has several standard byte types. For one-shot cryptographic APIs, the
+two most relevant ones are byte arrays (also known as <code>byte[]</code>) and
+<code>java.nio.ByteBuffer</code>.  Unfortunately, they have different pros and cons, so
+there is no unambiguously superior choice.</p>
+<p><code>ByteBuffer</code> can produce slices of byte arrays and other byte buffers with
+zero-copy semantics. This makes a useful tool when want to place an encrypted
+message in a pre-allocated binary format. One example of this is my
+<a href="https://github.com/lvh/caesium/blob/master/src/caesium/magicnonce/secretbox.clj">experimental NMR suite</a>. Another use case is generating more than
+one key out of a single call to a key derivation function. The call produces
+one (long) output, and <code>ByteBuffer</code> lets you slice it into different keys.</p>
+<p>Byte arrays are easily serializable, but <code>ByteBuffer</code> is not. Even if you
+teach your serialization library about <code>ByteBuffer</code>, this usually results in
+extra copying during serialization.</p>
+<p>Byte arrays are constant length, and that length is stored with the array, so
+it's cheap to access. Figuring out how much to read from a <code>ByteBuffer</code>
+requires a (trivial) amount of math by calling <code>remaining</code>. This is because
+the <code>ByteBuffer</code> is a view, and it can be looking at a different part of the
+underlying memory at different times. For a byte array, this is all fixed: a
+byte array's starting and stopping points remain constant. Computing the
+remaining length of a <code>ByteBuffer</code> may not always be constant time, although
+it probably is. Even if it isn't, it's probably not in a way that is relevant
+to the security of the scheme (in <code>caesium</code>, only cryptographic hashes,
+detached signatures and detached MACs don't publicly specify the message
+length).</p>
+<p><code>ByteBuffer</code> has a public API for allocating <em>direct</em> buffers. This means they
+are not managed by the JVM. Therefore they won't be copied around by the
+garbage collector, and memory pinning is free. "Memory pinning" means that you
+notify the JVM that some external C code is using this object, so it should
+not be moved around or garbage collected until that code is done using that
+buffer. You can't pass "regular" (non-direct) buffers to C code. When you do
+that, the buffer is first copied under the hood. Directly allocated buffers
+let you securely manage the entire lifecycle of the buffer. For example, they
+can be securely zeroed out after use. Directly allocated <code>ByteBuffer</code>
+instances might have underlying arrays; this is explicitly unspecified.
+Therefore, going back to an array <em>might</em> be zero-copy. In my experiments,
+these byte buffers never have underlying arrays, so copying is always
+required. I have not yet done further research to determine if this generally
+the case. In addition to <code>ByteBuffer</code>, the<code>sun.misc.Unsafe</code> class does have
+options for allocating memory directly, but it's pretty clear that use of that
+class is strongly discouraged. Outside of the JDK, the <code>Pointer</code> API in
+<code>jnr-ffi</code> works identically to <code>ByteBuffer</code>.</p>
+<h3>Design decisions</h3>
+<p>As a brief recap from my previous post, it's important that we design an API
+that makes common things easy and hard things possible while remaining secure
+and performant. For the cryptographic APIs in <code>caesium</code>, there are a number of
+variables to consider:</p>
+<ul>
+<li>Are the return types and arguments <code>ByteBuffer</code> instances, byte arrays
+   (<code>[B</code>), <code>Pointer</code> instances, or something else?</li>
+<li>Is the return type fixed per exposed function, or is the return
+   type based on the input types, like Clojure's <a href="https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/empty"><code>empty</code></a>?</li>
+<li>Are the APIs "C style" (which passes in the output buffer as an argument)
+   or "functional style" (which allocates the output buffer for you)?</li>
+<li>Does the implementation convert to the appropriate type (which might
+   involve copying), does it use reflection to find the appropriate type, does
+   it explicitly dispatch on argument types, or does it assume you give
+   it some specific types?</li>
+</ul>
+<p>Many of these choices are orthogonal, meaning we can choose them
+independently. With dozens of exposed functions, half a dozen or so arguments
+per function with 2-4 argument types each, two function styles, four argument
+conversion styles, and two ways of picking the return type, this easily turns
+into a combinatorial explosion of many thousands of exposed functions.</p>
+<p>All of these choices pose trade-offs. We've already discussed the differences
+between the different byte types, so I won't repeat them here. Having the
+function manage the output buffer for you is the most convenient option, but
+it also precludes using direct byte buffers effectively. Type conversion is
+most convenient, but type dispatch is faster, and statically resolvable
+dispatching to the right implementation is faster still. The correct return
+value depends on context. Trying to divine what the user really wanted is
+tricky, and, as we discussed before, the differences between those types are
+significant.</p>
+<p>The functions exposed in caesium live on the inside of a bigger system, in the
+same sense that IO libraries like <a href="https://twistedmatrix.com/">Twisted</a> and <a href="https://github.com/ztellman/manifold">manifold</a>
+live on the edges. Something gives you some bytes, you perform some
+cryptographic operations on them, and then the resulting bytes go somewhere
+else. This is important, because it reduces the number of contexts in which
+people end up with particular types.</p>
+<h3>Implementing the API</h3>
+<p>One easy decision is that the underlying binding should support every
+permutation, regardless of what the API exposes. This would most likely
+involve annoying code generation in a regular Java/jnr-ffi project, but
+caesium is written in Clojure. The information on how to bind libsodium is a
+Clojure data structure that gets compiled into an interface, which is what
+jnr-ffi consumes. This makes it easy to expose every permutation, since it's
+just some code that operates on a value. You can see this at work in the
+<a href="https://github.com/lvh/caesium/blob/master/src/caesium/binding.clj#L13"><code>caesium.binding</code> namespace</a>. As a consequence, an expert
+implementer (who knows exactly which underlying function they want to call
+with no "smart" APIs or performance overhead) can always just drop down to the
+binding layer.</p>
+<p>Another easy call is that all APIs should raise exceptions, instead of
+returning success codes. Success codes make sense for a C API, because there's
+no reasonable exception mechanism available. However, problems like failed
+decryption should definitely just raise exceptions.</p>
+<p>It gets tricky when we compare APIs that take an output buffer versus APIs
+that build the output buffer for you. The latter are clearly the easiest to
+use, but the former are necessary for explicit buffer life cycle
+management. You can also easily build the managed version from the unmanaged
+version, but you can't do the converse. As a consequence, we should expose
+both.</p>
+<p>Having to expose both has the downside that we haven't put a dent in that
+combinatorial explosion of APIs yet. Let's consider the cases in which someone
+might have a byte buffer:</p>
+<ul>
+<li>They're using them as a slice of memory, where the underlying memory could
+   be another byte buffer (direct or indirect) or a byte array -- usually a
+   byte array wrapping a byte buffer.</li>
+<li>They're managing their own (presumably direct) output buffers.</li>
+</ul>
+<p>In the former case, the byte buffers primarily act as inputs. In the latter,
+they exclusively act as outputs. Because both byte buffers and byte arrays can
+act as inputs, any API should be flexible in what it accepts. However, this
+asymmetry in how the types are used, and how they can be converted, has
+consequences for APIs where the caller manages the output buffer versus APIs
+that manage it for you.</p>
+<p>When the API that manages the output buffer for you, the most reasonable
+return type is a byte array. There is no difference between byte arrays
+created by the API and those created by the caller, and there's no reasonable
+way to reuse them. If you do really need a byte buffer for some reason,
+wrapping that output array is simple and cheap. Conversely, APIs where the
+caller manages the output buffer should use output byte buffers. Callers who
+are managing their own byte buffer need to call an API that supports that, and
+there's nothing to be gained from managing your own byte arrays (only direct
+byte buffers). This is fine for internal use within <code>caesium</code> — the byte array
+producing API can just wrap it in a byte buffer view.</p>
+<p>This means we've reduced the surface significantly: APIs with caller-managed
+buffers output to <code>ByteBuffer</code>, and APIs that manage it themselves return byte
+arrays. This takes care of the output types, but not the input types.</p>
+<p>Keys, salts, nonces, messages et cetera will usually be byte arrays, since
+they're typically just read directly from a file or made on the spot. However
+rare, there can be good reasons for having any of these as byte buffers. For
+example, a key might have been generated from a different key using a key
+derivation function; a nonce might be synthetically generated (as with
+deterministic or nonce-misuse resistant schemes); either might be randomly
+generated but just into a pre-existing buffer.</p>
+<p>The easiest way for this to work by default is reflection. That mostly works,
+until it doesn't. Firstly, reflecting can be brittle. For example, if all of
+your byte sequence types are known but a buffer length isn't, Clojure's
+reflection will fail to find the appropriate method, even if it is
+unambiguous. Secondly, unannotated Clojure fns always take boxed objects, not
+primitives, which is what we want for calling into C. Annotating is imperfect,
+too, because it moves the onus of producing a primitive to the caller. These
+aren't really criticisms of Clojure. At this point we're well into weird edge
+case territory which this system wasn't designed for.</p>
+<p>We can't do static dispatch for the public API, because we've established that
+we should be flexible in our input types. We can work around the unknown type
+problems with reflection using explicitly annotated call sites. That means
+we're dispatching on types, which comes with its own set of issues. In the
+next blog post, I'll go into more detail on how that works, with a bunch of
+benchmarks. Stay tuned!</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/tradeoffs-in-cryptographic-api-design/" class="u-url">Tradeoffs in cryptographic API design</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/tradeoffs-in-cryptographic-api-design/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-06-18T13:45:35-07:00" itemprop="datePublished" title="2016-06-18 13:45">2016-06-18 13:45</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Producing cryptographic software is a difficult and specialized endeavor. One
+of the pitfalls is that getting it wrong looks exactly like getting it
+right. Much like a latent memory corruption bug or a broken distributed
+consensus algorithm, a piece of cryptographic software can appear to be
+functioning perfectly, while being subtly broken in a way that only comes to
+light years later. As the adage goes, attacks never get worse; they only get
+better. Implementation concerns like timing attacks can be fiendishly
+complicated to solve, involving problems like division instructions on modern
+Intel CPUs taking a variable number of cycles depending on the size of the
+input. Implementation concerns aren't the only problem; just designing the
+APIs themselves is a complex task as well.</p>
+<p>Like all API design, cryptographic API design is a user experience
+exercise. It doesn't matter how strong or fast your cryptographic software is
+if no one uses it. The people who end up with ECB mode didn't end up with it
+because they understood what that meant. They got stuck with it because it was
+the default and it didn't require thinking about scary parameters like IVs,
+nonces, salts and tweaks. Even if someone ended up with CTR or CBC, these APIs
+are still precarious; they'll still be vulnerable to issues like nonce
+reuse, fixed IV, key-as-IV, unauthenticated encryption...</p>
+<p>User experience design always means deep consideration of who your users
+are. A particular API might be necessary for a cryptographic engineer to build
+new protocols, but that API is probably not a reasonable default encryption
+API. An explicit-nonce encryption scheme is great for a record layer protocol
+between two peers like TLS, but it's awful for someone trying to encrypt a
+session cookie. We can't keep complaining about people getting it wrong when
+we keep giving them no chances at getting it right. This is why I'm building
+educational material like <a href="https://www.crypto101.io/">Crypto 101</a> and why I care about
+cryptography like <a href="posts/nonce-misuse-resistance-101.html">nonce-misuse resistance</a> that's easier to use
+correctly.  (The blog post on my new nonce-misuse resistant schemes for
+libsodium is coming soon, I promise!)</p>
+<p>Before you can make your API easy to use, first you have to worry about
+getting it to work at all.</p>
+<p>An underlying cryptographic library might expose an unfortunate API. It might
+be unwieldy because of historical reasons, backwards compatibility, language
+limitations, or even simple oversight. Regardless of why the API is the way it
+is, even minute changes to it—a nicer type, an implied parameter—might have
+subtle but catastrophic consequences for the security of the final
+product. Figuring out if an arbitrary-length integer in your programming
+language is interchangeable with other representations, like the
+implementation in your crypto library or a <code>char *</code>, has many complex
+facets. It doesn't just have to be true under some conditions; ideally, it's
+true for every platform your users will run your software on, in perpetuity.</p>
+<p>There might be an easy workaround to an annoying API. C APIs often take a
+<code>char *</code> together with a length parameter, because C doesn't have a standard
+way of passing a byte sequence together with its length. Most higher level
+languages, including Java and Python, have byte sequence types that know their
+own length. Therefore, you can specify the <code>char *</code> and its associated length
+in a single parameter on the high-level side. That's just the moral equivalent
+of building a small C struct that holds both. (Whether or not you can trust C
+compilers to get anything right at all is a point of contention.)</p>
+<p>These problems compound when you are binding libraries in languages and
+environments with wildly different semantics. For example, your runtime might
+have a relocating garbage collector.  Pointers in C and objects in CPython
+stay put, but objects move around all the time in environments like the JVM
+(HotSpot) or PyPy. That implies copying to or from a buffer whenever you call
+C code, unless the underlying virtual machine supports "memory pinning":
+forcing the object to stay put for the duration of the call.</p>
+<p>Programmers normally operate in a drastically simplified model of the
+world. We praise programming designs for their ability to separate concerns,
+so that programmers can deal with one problem at a time. The modern CPU your
+code runs on is always an intricate beast, but you don't worry about cache
+lines when you're writing a Python program. Only a fraction of programmers
+ever has to worry about them at all. Those that do typically only do so after
+the program already works so they can still focus on one part of the problem.</p>
+<p>When designing cryptographic software, these simplified models we normally
+program in don't generally work.  A cryptographic engineer often needs to
+worry about concerns all the way up and down the stack simultaneously: from
+application layer concerns, to runtime semantics like the
+<a href="https://docs.oracle.com/javase/specs/jls/se8/html/index.html">Java Language Specification</a>, to FFI semantics and the C ABI on all
+relevant platforms, to the underlying CPU, to the mathematical underpinnings
+themselves. The engineer has to manage all of those, often while being
+hamstrung by flawed designs like TLS' MAC-then-pad-then-encrypt mess.</p>
+<p>In future blog posts, I'll go into more detail about particular cryptographic
+API design concerns, starting with JVM byte types. If you're interested, you
+should <a href="https://twitter.com/lvh">follow me on Twitter</a> or <a href="rss.xml">subscribe to my blog's feed</a>.</p>
+<p><em>Footnote:</em> I'm happy to note that <a href="https://bitbucket.org/cffi/cffi/commits/61e03368485cb78471f701adbfd1bde69a6eaa31">cffi</a> now also has
+support for memory pinning since PyPy will support it in the upcoming
+5.2 release, although that means I'll no longer be able to make
+<a href="https://github.com/reaperhulk">Paul Kehrer of PyCA fame</a> jealous with the pinning support in
+<a href="https://github.com/lvh/caesium">caesium</a>.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/nonce-misuse-resistance-101/" class="u-url">Nonce misuse resistance 101</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/nonce-misuse-resistance-101/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-05-19T12:25:44-07:00" itemprop="datePublished" title="2016-05-19 12:25">2016-05-19 12:25</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p><em>This post is an introduction to nonce-misused resistant cryptosystems and why
+I think they matter. The first part of this post is about nonce-based
+authenticated encryption schemes: how they work, and how they fail. If you're
+already familiar with them, you can skip to the section on
+<a href="posts/nonce-misuse-resistance-101/#proto">protocol design</a>. If you're completely new to cryptography, you might
+like my free introductory course to cryptography, <a href="https://www.crypto101.io">Crypto 101</a>. In a
+future blog post, I'll talk about some nonce-misuse resistant schemes I've
+implemented using libsodium.</em></p>
+<p>Many stream ciphers and stream cipher-like constructions such as CTR,
+GCM, (X)Salsa20... take a nonce. You can think of it as a pointer that lets
+you jump to a particular point in the keystream. This makes these ciphers
+"seekable", meaning that you can decrypt a small part of a big ciphertext,
+instead of having to decrypt everything up to that point first. (That ends up
+being trickier than it seems, because you still want to authenticate that
+small chunk of ciphertext, but that's a topic for another time.)</p>
+<p>The critical security property of a nonce is that it's never repeated under
+the same key. You can remember this by the mnemonic that a <em>nonce</em> is a
+"number used once". If you were to repeat the nonce, the keystream would also
+repeat. That means that an attacker can take the two ciphertexts and XOR them
+to compute the XOR of the plaintexts. If <code>C_n</code> are ciphertexts, <code>P_n</code>
+plaintexts, <code>K_n</code> keystreams, and <code>^</code> is bitwise exclusive or:</p>
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span>
+<span class="n">C_2</span> <span class="o">=</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+</pre>
+
+
+<p>The attacker just XORs <code>C_1</code> and <code>C_2</code> together:</p>
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+</pre>
+
+
+<p>Since XOR is commutative (you can rearrange the order), <code>K_1 = K_2</code>, and
+XOR'ing two equal values cancels them out:</p>
+<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">P_2</span>
+</pre>
+
+
+<p>That tells an attacker a lot about the plaintext, especially if some of one of
+the plaintexts is predictable. If the attacker has access to an encryption
+oracle, meaning that they can get encryptions for plaintexts of their
+choosing, they can even get perfect decryptions. That is not an unrealistic
+scenario. For example, if you're encrypting session cookies that contain the
+user name and e-mail, I can register using a name and e-mail address that has
+a lot of <code>Z</code> characters, and then I know that just XORing with <code>Z</code> will reveal
+most of the plaintext. For an idea of the state of the art in attacking
+two-time pads (the usual term for two ciphertexts with a reused keystream),
+see <a href="https://www.cs.jhu.edu/~jason/papers/mason+al.ccs06.pdf">Mason06</a>.</p>
+<p><a id="proto"></a></p>
+<h3>Protocol design</h3>
+<p>For many on-line protocols like TLS, the explicit nonce provides a convenient
+way to securely send many messages under a per-session key. Because the
+critical security property for a nonce is that it is never repeated with the
+same key, it's safe to use a counter. In protocols where both peers send
+messages to each other, you can just have one peer use odd nonces and have the
+other use even ones. There are some caveats here: for example, if the nonce
+size is sufficiently small, an attacker might try to make that counter
+overflow, resulting in a repeated nonce.</p>
+<p>For off-line (or at-rest) protocols, it's a little trickier. You don't have a
+live communication channel to negotiate a new ephemeral key over, so you're
+stuck with longer-term keys or keys derived from them. If multiple systems are
+participating, you need to decide ahead of time which systems own which
+nonces. Even then, systems need to keep track of which nonces they've
+used. That doesn't work well, especially not in a distributed system where
+nodes and connections can fail at any time. This is why some cryptosystems
+like <a href="https://cryptography.io/en/latest/fernet/">Fernet</a> provide an API that doesn't require you to specify
+anything besides a key and a message.</p>
+<p>One solution is to use randomized nonces. Since nonces can't repeat, random
+nonces should be large: if they're too small, you might randomly select the
+same nonce twice, per the birthday bound. That is the only difference between
+Salsa20 and XSalsa20: Salsa20 has a 64 bit nonce, whereas XSalsa20 has a 192
+bit nonce. That change exists explicitly to make random nonces secure.</p>
+<p>Picking a random nonce and just prepending it to the secretbox ciphertext is
+secure, but there are a few problems with this approach. It's not clear to
+practitioners that that's a secure construct. Doing this may seem obvious to a
+cryptographer, but not to someone who just wants to encrypt a
+message. Prepending a nonce doesn't feel much different from e.g. appending a
+MAC. A somewhat knowledgeable practitioner knows that there's plenty of ways
+to use MACs that are insecure, and they don't immediately see that the
+prefix-nonce construction is secure. Not wanting to design your own
+cryptosystems is a good reflex which we should be encouraging.</p>
+<p>Random nonces also mean that any system sending messages needs access to
+high-quality random number generators while they're sending a message. That's
+often, but not always true. Bugs around random number generation, especially
+userspace CSPRNGs, <a href="http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/">keep popping up</a>. This is often a consequence of
+poor programming practice, but it can also be a consequence of
+poorly-configured VMs or limitations of embedded hardware.</p>
+<h3>Nonce-misuse resistant systems</h3>
+<p>To recap, not all protocols have the luxury of an obvious nonce choice, and
+through circumstances or poor practices, nonces might repeat
+anyway. Regardless of how cryptographers feel about how important nonce misuse
+is, we can anecdotally and empirically verify that such issues are real and
+common. This is true even for systems like TLS where there is an "obvious"
+nonce available (<a href="https://eprint.iacr.org/2016/475.pdf">Böck et al, 2016</a>). It's easy to point fingers, but
+it's better to produce cryptosystems that fail gracefully.</p>
+<p><a href="http://web.cs.ucdavis.edu/~rogaway/papers/keywrap.pdf">Rogaway and Shrimpton (2006)</a> defined a new model called nonce-misuse
+resistance. Informally, nonce-misuse resistance schemes ensure that a repeated
+random nonce doesn't result in plaintext compromise. In the case of a broken
+system where the attacker can cause repeated nonces, an attacker will only be
+able to discern if a particular message repeated, but they will not be able
+to decrypt the message.</p>
+<p>Rogaway and Shrimpton also later developed a mode of operation called SIV
+(synthetic IV), which Gueron and Lindell are refined to GCM-SIV, a SIV-like
+that takes advantage of fast GCM hardware implementations. Those two authors
+are currently working with Adam Langley to standardize the AES-GCM-SIV
+construction through CFRG. AEZ and HS1-SIV, two entries in the CAESAR
+competition, also feature nonce-misuse resistance. CAESAR is an ongoing
+competition, and GCM-SIV is not officially finished yet, so this is clearly
+a field that is still evolving.</p>
+<p>There are parallels between nonce-misuse resistance and length extension
+attacks. Both address issues that arguably only affected systems that were
+doing it wrong to begin with. (Note, however, in the embedded case above, it
+might not be a software design flaw but a hardware limitation.) Fortunately,
+the SHA-3 competition showed that you can have increased performance and
+still be immune to a class of problems. I'm hopeful that CAESAR will consider
+nonce-misuse resistance an important property of an authenticated encryption
+standard.</p>
+<h3>Repeated messages</h3>
+<p>Repeated messages are suboptimal, and in some protocols they might be
+unacceptable. However, they're a fail-safe failure mode for nonce
+misuse. You're not choosing to have a repeated ciphertext, you're just getting
+a repeated ciphertext instead of a plaintext disclosure (where the attacker
+would also know that you repeated a message). In the case of a secure random
+nonce, a nonce-misuse resistant scheme is just as secure, at the cost of a
+performance hit.</p>
+<p>In a context where attackers can see individual messages to detect repeated
+ciphertexts, it makes sense to also consider a model where attackers can
+replay messages. If replaying messages (which presumably have side effects) is
+a problem, a common approach is to add a validity timestamp. This is a feature
+of <a href="https://cryptography.io/en/latest/fernet/">Fernet</a>, for example. A device that doesn't have access to
+sufficient entropy will still typically have access to a reasonably
+high-resolution clock, which is still more than good enough to make sure the
+synthetic IVs don't repeat either.</p>
+<h3>OK, but how does it work?</h3>
+<p>Being able to trade plaintext disclosure for attackers being able to detect
+repeated messages sounds like magic, but it makes sense once you realize how
+they work. As demonstrated in the start of this post, nonce re-use normally
+allows an attacker to have two keystreams cancel out. That only makes sense if
+two <em>distinct</em> messages are encrypted using the same (key, nonce) pair. NMR
+solves this by making the nonce also depend on the message itself. Informally,
+it means that a nonce should never repeat for two distinct
+messages. Therefore, an attacker can't cancel out the keystreams without
+cancelling out the messages themselves as well.</p>
+<p>This model does imply off-line operation, in that the entire message has to be
+scanned before the nonce can be computed. For some protocols, that may not be
+acceptable, although plenty of protocols work around this assumption by simply
+making individual messages sufficiently small.</p>
+<p><em>Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.</em></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/supersingular-isogeny-diffie-hellman-101/" class="u-url">Supersingular isogeny Diffie-Hellman 101</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/supersingular-isogeny-diffie-hellman-101/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-04-30T09:00:28-07:00" itemprop="datePublished" title="2016-04-30 09:00">2016-04-30 09:00</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+Microsoft Research, recently published a <a href="https://eprint.iacr.org/2016/413">paper</a> on supersingular
+isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
+community and even made it to the front page of Hacker News. Most of the
+discussion around it seemed to be how no one understands isogenies, even
+within cryptography-literate communities. This article aims to give you a
+high-level understanding of what this cryptosystem is and why it works.</p>
+<p>This post assumes that you already know how Diffie-Hellman works in the
+abstract, and that you know elliptic curves are a mathematical construct that
+you can use to perform Diffie-Hellman operations, just like you can with the
+integers <em>mod p</em> (that would be "regular" Diffie-Hellman). If that was
+gibberish to you and you'd like to know more, check out <a href="https://www.crypto101.io">Crypto 101</a>, my
+free introductory book on cryptography. You don't need a math background to
+understand those concepts at a high level. The main difference is that Crypto
+101 sticks to production cryptography, while this is still experimental.</p>
+<p>It's not surprising that isogeny-based cryptography is so confusing. Up until
+recently, it was unambiguously in the realm of research, not even close to
+being practically applicable. Its mathematical underpinnings are much more
+complex than regular elliptic curves, let alone integers <em>mod p</em>. It also
+looks superficially similar to elliptic curve Diffie-Hellman, which only adds
+to the confusion.</p>
+<p>With that, let's begin!</p>
+<p><strong>What is this paper about?</strong></p>
+<p>Supersingular isogeny Diffie-Hellman (SIDH) is one of a handful of
+"post-quantum" cryptosystems. Those are cryptosystems that will remain secure
+even if the attacker has access to a large quantum computer. This has nothing
+to do with quantum cryptography (for example, quantum key distribution)
+beyond their shared quantum mechanical underpinning.</p>
+<p><strong>Why should I care about quantum computers?</strong></p>
+<p>General quantum computers are not useful as general-purpose computing devices,
+but they can solve some problems much faster than classical
+computers. Classical computers can emulate quantum computers, but only with
+exponential slowdown. A sufficiently large quantum computer could break most
+production cryptography, including cryptosystems based on the difficulty of
+factoring large numbers (like RSA), taking discrete logs over the integers
+<em>mod p</em> (like regular DH), or taking discrete logs over elliptic curves (like
+ECDH and ECDSA). To quantify that, consider the following table:</p>
+<p><img alt="quantum computer attack cost versus classical" src="img/post-quantum/quantum-computer-relative-cost.png"></p>
+<p>In this table, n refers to the modulus size for RSA, and the field size for
+ECC. Look at the rightmost column, which represents time taken by the
+classical algorithm, and compare it to the "time" columns, which represent how
+much a quantum computer would take. As <em>n</em> increases, the amount of time the
+quantum computer would take stays in the same ballpark, whereas, for a
+classical computer, it increases (almost) exponentially. Therefore, increasing
+n is an effective strategy for keeping up with ever-faster classical
+computers, but it is ineffective at increasing the run time for a quantum
+computer.</p>
+<p><strong>Aah! Why isn't everyone panicking about this?!</strong></p>
+<p>The good news is that these large quantum computers don't exist yet.</p>
+<p>If you look at the qubits column, you'll see that these attacks require large
+universal quantum computers. The state of the art in those only has a handful
+of qubits. In 2011, IBM successfully factored 143 using a 4-qubit quantum
+computer. Scaling the number of qubits up is troublesome. In that light,
+larger key sizes may prove effective after all; we simply don't know yet how
+hard it is to build quantum computers that big.</p>
+<p>D-wave, a quantum computing company, has produced computers with 128 and 512
+qubits and even &gt;1000 qubits. While there is some discussion if D-waves
+provide quantum speedup or are even real quantum computers at all; there is no
+discussion that they are not <em>universal</em> quantum computers. Specifically, they
+only claim to solve one particular problem called quantum annealing. The 1000
+qubit D-Wave 2X cannot factor RSA moduli of ~512 bits or solve discrete logs
+on curves of ~120 bits.</p>
+<p>The systems at risk implement asymmetric encryption, signatures, and
+Diffie-Hellman key exchanges. That's no accident: all post-quantum
+alternatives are asymmetric algorithms. Post-quantum secure symmetric
+cryptography is easier: we can just use bigger key sizes, which are still
+small enough to be practical and result in fast primitives. Quantum computers
+simply halve the security level, so all we need to do to maintain a 128 bit
+security level is to use ciphers with 256 bit keys, like Salsa20.</p>
+<p>Quantum computers also have an advantage against SIDH, but both are still
+exponential in the field size. The SIDH scheme in the new paper has 192 bits
+of security against a classical attacker, but still has 128 bits of security
+against a quantum attacker. That's in the same ballpark as most symmetric
+cryptography, and better than the 2048-bit RSA certificates that underpin the
+security of the Internet.</p>
+<p><strong>What makes this paper special?</strong></p>
+<p>Post-quantum cryptography has been firmly in the realm of academic research
+and experiments. This paper makes significant advancements in how practically
+applicable SIDH is.</p>
+<p><strong>Being future-proof sounds good. If this makes it practical, why don't we
+start using it right now?</strong></p>
+<p>SIDH is a young cryptosystem in a young field, and hasn't had the same level
+of scrutiny as some of the other post-quantum cryptosystems, let alone the
+"regular" cryptosystems we use daily. Attacks only get better, they never get
+worse. It's possible that SIDH is insecure, and we just don't know how to
+break it yet. It does have a good argument for why quantum algorithms wouldn't
+be able to crack it (more on that later), but that's a hypothesis, not a
+proof.</p>
+<p>The new performance figures from this paper are impressive, but this system is
+still much slower than the ones we use today. Key generation and key exchange
+take a good 50 million cycles or so each. That's about a thousand times slower
+than Curve25519, a curve designed about 10 years ago. Key sizes are also much
+larger: SIDH public keys are 751 bytes, whereas Curve25519 keys are only 32
+bytes. For on-line protocols like HTTPS operating over TCP, that's a
+significant cost.</p>
+<p>Finally, there are issues with implementing SIDH safely. Systems like
+Diffie-Hellman over integers <em>mod p</em> are much less complex than elliptic curve
+Diffie-Hellman (ECDH), let alone SIDH. With ECDH and ECC in general, we've
+seen new implementation difficulties, especially with early curves. Point
+addition formulas would work, unless you were adding a point to itself. You
+have to check that input points are on the curve, or leak the secret key
+modulo some small order. These are real implementation problems, even though
+we know how to solve them.</p>
+<p>This is nothing compared to the difficulties implementing SIDH. Currently,
+SIDH security arguments rely on honest peers. A peer that gives you a
+pathological input can utterly break the security of the scheme. To make
+matters worse, while we understand how to verify inputs for elliptic curve
+Diffie-Hellman, we don't have a way to verify inputs for isogeny-based
+cryptography at all. We don't have much research to fall back on here
+either. This isn't a SIDH-specific problem; post-quantum cryptography isn't
+mature enough yet to have implementation issues like these nailed down
+yet. (For an example from lattice-based cryptography, see the recent paper by
+<a href="https://eprint.iacr.org/2016/415">Bindel et al</a>.)</p>
+<p>I don't want to diminish the importance of this paper in any way!  Just
+because it's not something that your browser is going to be doing tomorrow
+doesn't mean it's not an impressive accomplishment. It's just a step on the
+path that might lead to production crypto one day.</p>
+<p><strong>OK, fine. Why is this so different from elliptic curve Diffie-Hellman?</strong></p>
+<p>While SIDH and ECDH both use elliptic curves, they're different beasts. SIDH
+generates new curves to perform a DH exchange, whereas ECDH uses points on one
+fixed curve. These supersingular curves also have different properties from
+regular curves. Using a supersingular curve for regular elliptic curve
+operations would be horribly insecure. If you have some background in elliptic
+curves: supersingular curves have a tiny embedding degree, meaning that
+solving the ECDLP over <code>F(p)</code> can easily be transformed into solving the DLP
+over <code>F(p^n)</code> where <code>n</code> is that small embedding degree. Most curves have large
+embedding degrees, meaning that solving the ECDLP directly is easier than
+translating it into a DLP and then solving that.  You generally have to go out
+of your way to find a curve with a small embedding degree. That is only done
+in specialized systems, like for pairing-based cryptography, or, as in this
+case, supersingular isogeny-based Diffie-Hellman.</p>
+<p>Let's recap ECDH. Public keys are points on a curve, and secret keys are
+numbers. Alice and Bob agree on the parameters of the exchange ahead of time,
+such as the curve <em>E</em> and a generator point <em>P</em> on that curve. Alice picks a
+secret integer <em>a</em> and computes her public key <em>aP</em>. Bob picks a secret
+integer <em>b</em> and computes his public key <em>bP</em>. Alice and Bob send each other
+their public keys, and multiply their secret key by the other peer's public
+key. Since <em>abP = baP</em>, they compute the same secret. Since an attacker has
+neither secret key, they can't compute the shared secret.</p>
+<p>SIDH is different. Secret keys are isogenies...</p>
+<p><strong>Whoa whoa whoa. What the heck are isogenies?</strong></p>
+<p>An isogeny between elliptic curves is a function from one elliptic curve to
+another that preserves base points. That means it takes points on one curve
+and returns points on the other curve. Every point on the input curve will map
+to a point on the output curve; but multiple points may map to the same
+point. Formally speaking, the isogeny is surjective. An isogeny is also a
+homomorphism. That is, it preserves the structure of the curve. For any two
+points P and Q, <code>phi(P + Q) = phi(P) + phi(Q)</code>.</p>
+<p>We have a bunch of formulas for generating isogenies from a curve and a
+point. You might remember that the set of values a function takes is its
+"domain", and the set of values it returns is called its "codomain". The
+domain of such an isogeny is the curve you give it; its codomain might be the
+same curve, or it might be a different one. In general, for SIDH, we care
+about the case where it produces a new curve.</p>
+<p><strong>OK, so explain how SIDH works again.</strong></p>
+<p>Roughly speaking, a secret key is an isogeny, and a public key is an elliptic
+curve. By "mixing" their isogeny with the peer's public curve, each peer
+generates a secret curve. The two peers will generally generate different
+curves, but those curves will have the same j-invariant.</p>
+<p><strong>Wait, what's a j-invariant?</strong></p>
+<p>The j-invariant is a number you can compute for a particular curve. Perhaps
+the best analogy would be the discriminant for quadratic equation you might
+remember from high school math; it's a single number that tells you something
+interesting about the underlying curve. There are different formulas for
+curves in different forms. For example, for a curve in short Weierstrass form
+<code>y^2 = x^3 + ax + b</code>, the j-invariant is:</p>
+<pre class="code literal-block"><span></span><span class="n">j</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1728</span> <span class="o">*</span> <span class="mi">4</span><span class="n">a</span><span class="o">^</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="n">a</span><span class="o">^</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">27</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+
+
+<p>The j-invariant has a few cool properties. For example, while this is the
+formula for the short Weierstrass form, the value of j doesn't change if you
+put the same curve in a different form. Also, all curves with the same
+j-invariant are isomorphic. However, for SIDH you don't really care about
+these properties; you just care that the j-invariant is a number you can
+compute, and it'll be the same for the two secret curves that are generated by
+the DH exchange.</p>
+<p><strong>OK, try explaining SIDH again.</strong></p>
+<p>The protocol fixes a supersingular curve E and four points on that
+curve: P_A, Q_A, P_B, Q_B.</p>
+<p>Alice picks two random integers, m_A and n_A. She takes a linear combination
+of those two integers with P_A and Q_A to produce a random point R_A, so:</p>
+<pre class="code literal-block"><span></span><span class="n">R_A</span> <span class="o">=</span> <span class="n">n_A</span> <span class="o">*</span> <span class="n">P_A</span> <span class="o">+</span> <span class="n">m_A</span> <span class="o">*</span> <span class="n">Q_A</span>
+</pre>
+
+
+<p>That random point defines Alice's secret isogeny through the isogeny formulas
+I talked about above. The codomain of that isogeny forms Alice's public
+curve. Alice transforms points P_B and Q_B with the isogeny. She sends Bob her
+public curve and the two transformed points.</p>
+<p>Bob does the same thing, except with A and B swapped.</p>
+<p>Once Alice gets Bob's public key, she applies m_A and n_A again to the
+corresponding transformed points she got from Bob. She generates a new isogeny
+phiBA from the resulting point just like she did before to generate her
+private key. That isogeny's codomain will be an elliptic curve E_BA.</p>
+<p>When Bob performs his side of the exchange, he'll produce a different isogeny
+and a different elliptic curve E_AB; but it will have the same j-invariant as
+the curve Alice computed.  That j-invariant is the shared key.</p>
+<p>I've compiled a <a href="https://www.lvh.io/sage/Supersingular%20Isogeny%20Elliptic%20Curve%20Cryptography%20--%20Sage.pdf">transcript</a> of a Diffie-Hellman exchange using
+Sage so you can see a (toy!) demo in action.</p>
+<p><strong>I know a little about elliptic curves. I thought they were always
+non-singular. What's a supersingular elliptic curve but a contradiction in
+terms?</strong></p>
+<p>You're right! Supersingular elliptic curves are somewhat confusingly
+named. Supersingular elliptic curves are still elliptic curves, and they are
+non-singular just like all other elliptic curves. The "supersingular" refers
+to the singular values of the j-invariant. Equivalently, the Hasse invariant
+will be 0.</p>
+<p><strong>So, why does it matter that the curve is supersingular?</strong></p>
+<p>Firstly, computing the isogeny is much easier on supersingular curves than on
+ordinary (not supersingular) elliptic curves. Secondly, if the curve is
+ordinary, the scheme can be broken in subexponential time by a quantum
+attacker.</p>
+<p>Isogeny-based cryptography using ordinary curves was considered as a
+post-quantum secure cryptosystem before SIDH. However, Childs et al. showed a
+subexponential quantum algorithm in 2010. This paper appeared to have ended
+isogeny-based cryptography: it was already slower than other post-quantum
+systems, and now it was shown that it wasn't even post-quantum secure.</p>
+<p>Because supersingular curves are rare, they had not previously been considered
+for isogeny-based cryptography. However, the paper itself suggested that
+supersingular curves might be worth examining, so it ended up pushing research
+in a new direction rather than ending it.</p>
+<p>Explaining why the supersingular curve makes the problem quantum-hard is
+tricky without being thoroughly familiar with isogenies and quantum
+computing. If you're really interested, <a href="https://arxiv.org/pdf/1012.4019v2.pdf">the Childs paper</a> explains
+how the quantum attack in the ordinary case works. Informally, in the ordinary
+case, there is a group action (the <em>isogeny star operator</em>) of the ideal class
+group onto the set of isomorphism classes of isogenous curves with the same
+endomorphism ring. That can be shown to be a special case of the abelian group
+hidden shift problem, which can be solved quickly on a quantum computer. In
+the supersingular case, there is no such group action to exploit. (If you're
+trying to solve for this at home; this is why SIDH needs to define the 4
+points P_A, P_B, Q_A, Q_B.)</p>
+<p><em>I would like to thank Thomas Ptacek for reviewing this blog post and bearing
+with me as I struggle through trying to come up with human-readable
+explanations for all of this stuff; Sean Devlin for reminding me that Sage is
+an excellent educational tool; and Watson Ladd for pointing out a correction
+w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
+singular.). Finally, I'd like to thank all the people who reviewed drafts of
+this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
+Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.</em></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport/" class="u-url">Introducing Teleport</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
@@ -466,87 +1145,6 @@ version. If you installed OpenSSL through Homebrew, you should go
 update right now.</p>
 </div>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/they-do-take-security-seriously/" class="u-url">They do take security seriously</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                lvh
-            </span></p>
-            <p class="dateline">
-            <a href="posts/they-do-take-security-seriously/" rel="bookmark">
-            <time class="published dt-published" datetime="2015-07-05T13:17:18-07:00" itemprop="datePublished" title="2015-07-05 13:17">2015-07-05 13:17</time></a>
-            </p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>Earlier today, I read an <a href="http://www.troyhunt.com/2015/07/we-take-security-seriously-otherwise.html">article</a> about the plethora of
-information security breaches in recent history. Its title reads:</p>
-<blockquote>
-<p>“We take security seriously”, otherwise known as “We didn’t take it
-seriously enough”</p>
-</blockquote>
-<p>The article then lists a number of companies informing the public that
-they've been breached.</p>
-<p>I think this article doesn't just blame the victims of those attacks,
-but subjects them to public ridicule. Neither helps anyone, least of
-all end users.</p>
-<p>I'm surprised to hear such comments from Troy Hunt. He's certainly an
-accomplished professional with extensive security experience. This is
-not the first time people have expressed similar thoughts; the
-<a href="https://news.ycombinator.com/item?id=9834099">HN thread</a> for that article is rife with them.</p>
-<p>The explicit assumption is that these companies wouldn't have gotten
-in trouble if only they had taken security more seriously. In a world
-where the information services store is increasingly valuable and
-software increasingly complex, breaches are going to happen. The idea
-that getting breached is their own darn fault is unrealistic.</p>
-<p>This idea is also counterproductive. Firstly, there's one thing all of
-the victims being ostracized have in common: they disclosed the
-details of the breach. That is exactly what they should have done;
-punishing them creates a perverse incentive for victims to hide
-breaches in the future, a decidedly worse end-user outcome.</p>
-<p>Secondly, if any breach is as bad as any other breach, there is no
-incentive to proactively mitigate damage from future breaches by
-hardening internal systems. Why encrypt records, invest in access
-control or keep sensitive information in a separate database with
-extensive audit logging? It might materially impact end-user security,
-but who cares -- all anyone is going to remember is that you got
-popped.</p>
-<p>Finally, there's a subtle PR issue: how can the security industry
-build deep relationships with clients when we publicly ridicule them
-when the inevitable happens?</p>
-<p>These commentators have presumably not been the victims of a breach
-themselves. I have trouble swallowing that anyone who's been through
-the terrifying experience of being breached, seeing a breach up close
-or even just witnessing a hairy situation being defused could air
-those thoughts.</p>
-<p>If you haven't been the victim of an attack, and feel that your
-security posture is keeping you from becoming one, consider this:</p>
-<ol>
-<li>What's your threat model?</li>
-<li>How confident are you in your estimation of the capabilities of
-   attackers?</li>
-<li>Would you still be okay if your database became three orders of
-   magnitude more valuable? Most personal data's value will scale
-   linearly with the number of people affected, so if you're a small
-   start-up with growth prospects, you'll either fail to execute, or
-   be subject to that scenario.</li>
-<li>Would you still be okay if the attacker has a few 0-days?</li>
-<li>What if the adversary is a nation-state?</li>
-<li>How do you <em>know</em> you haven't been breached?</li>
-</ol>
-<p>That brings me to my final thesis: I contest the claim that all of the
-companies in the article didn't take security seriously. It is far
-more probable that all of the companies cited in the article have
-expended massive efforts to protect themselves, and, in doing so,
-foiled many attacks. It's also possible that they haven't; but the
-onus there is certainly on the accuser.</p>
-<p>Clearly, that's a weak form of disagreement, since "taking something
-seriously" is entirely subjective. However, keep in mind that many
-targets <em>actually</em> haven't taken security seriously, and would not
-even have the technical sophistication to detect an attack.</p>
-<p>(By the way, if you too would like to help materially improve people's
-security, we're hiring. Contact me at <code>_@lvh.io</code>.)</p>
-</div>
-    </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/https-requests-with-client-certificates-in-clojure/" class="u-url">HTTPS requests with client certificates in Clojure</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
@@ -686,337 +1284,14 @@ people feel sad. I feel like those points generalize to all attack
 talks; are they just not that useful?</p>
 </div>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/everything-ive-learned-about-running-a-financial-aid-program/" class="u-url">Everything I've learned about running a financial aid program</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                lvh
-            </span></p>
-            <p class="dateline">
-            <a href="posts/everything-ive-learned-about-running-a-financial-aid-program/" rel="bookmark">
-            <time class="published dt-published" datetime="2015-04-25T21:08:36-07:00" itemprop="datePublished" title="2015-04-25 21:08">2015-04-25 21:08</time></a>
-            </p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>For the past two years, I've been running PyCon's financial aid
-program. Starting this year, the event coordinator has asked all staff
-members to document what they do for PyCon. Firstly, this helps to
-objectively recognize the hard work done by our (volunteer) staff, and
-to help make sure there is continuity when the time comes to pass the
-torch. Since organizers of other conferences have expressed interest
-in my opinions for creating their own financial aid programs, I am
-posting my notes publicly instead.</p>
-<p>This is a collection of hard-earned opinions, and is very much work in
-progress. It's written as if it were a conversation with a
-hypothetical financial aid organizer; so, whenever I say "you", I mean
-you, the awesome person running financial aid at a conference
-somewhere.</p>
-<h2>Basics</h2>
-<p>Financial aid programs are one of the most effective ways a software
-foundation can spend their money. Even if you completely ignore the
-effect it has on diversity, the number of speakers, sprinters and
-other contributors that attended PyCon thanks to the financial aid
-program is staggering.</p>
-<h3>Naming your program</h3>
-<p>I inherited the term "Financial Aid". It's a fine term, but some other
-conferences have come up with different terms that you may want to
-consider, like "opportunity grants" and "diversity grants".</p>
-<h3>Taking care of yourself</h3>
-<p>Running a financial aid program is a lot of work. It scales linearly
-with the number of applicants; it's your job to create a process that
-keeps the work per applicant small, so that you can make the number of
-applicants large. (You'll know you've succeeded when the fixed
-overhead dominates, and it wouldn't really matter if you added another
-dozen people.)</p>
-<p>It is also an exercise in deferred gratification. Typically, you will
-need to start preparing about a year before the conference. The
-gratification part only comes at the conference itself. Since you'll
-probably be quite busy as an organizer, it may only come after the
-conference is over. You probably want to make sure that you have an
-excellent social circle and that you're fairly self-motivated.</p>
-<p>As the Financial Aid Chair, I have been on the receiving end of verbal
-abuse once. Don't put up with it.</p>
-<h3>Beat the drum</h3>
-<p>Your financial aid program is useless if people don't know about it.</p>
-<p>Some very talented speakers refrain from sending talk proposals
-because they don't know if they can afford to attend.</p>
-<h3>Numbers</h3>
-<p>PyCon's financial aid program is quite large. There are a number of
-reasons for that:</p>
-<ul>
-<li>PyCon's financial aid program has been around for many years, so
-  it's quite mature.</li>
-<li>The program can count on support from PyCon leadership and the
-  Python Software Foundation.</li>
-<li>Because PyCon US is the largest PyCon in the world, it acts as a
-  nexus for people across the globe; therefore, it's important for the
-  Python community that as many people as possible have a chance to
-  attend.</li>
-</ul>
-<p>This is just to give you a ballpark idea of our numbers.</p>
-<p>Regardless of what your numbers will be, expect that the primary
-bottleneck of your financial aid program will simply be lack of funds.</p>
-<h2>Confusing parts and sad truths</h2>
-<h3>No-shows</h3>
-<p>A lot of people will not show up, and not notify you (or notify you in
-the days around the conference). Sometimes, there's good reasons
-(illness, emergencies...). Sometimes, the reasons are less
-great. Sometimes, you won't know the reason.</p>
-<p>From the perspective of the Financial Aid Chair, no-shows are
-terrible. It's a dead grant: money that's been allocated that can't
-easily be translated into an extra attendee. Hence, many of the
-suggestions I make for running financial aid processes are focused on
-minimizing no-shows.</p>
-<h3>Visas and travel</h3>
-<p>Many recipients have to cancel because they are unable to acquire
-visas to Canada or the United States. In some cases, the visa process
-took several months and simply did not complete in time for the
-conference. In others the visas were declined for various reasons.</p>
-<p>Occam's razor tells me that many countries, particularly the United
-States, to some extent now Canada, but also Schengen zone countries
-are simply actively hostile to foreigners visiting their country.</p>
-<h2>Planning</h2>
-<h3>Stand by your Chair</h3>
-<p>At the end of the day, someone's responsible for making your
-conference all it can be. That position is typically called the
-Conference Chair. They get help from teams like the Program Committee
-and Financial Aid to make that happen. At the end of the day they make
-the hard calls, and you have to execute within their guidelines. That
-typically includes the budget, but it also includes how you want to
-allocate grants. You will almost certainly be resource-constrained, so
-there are trade-offs to be made:</p>
-<ul>
-<li>Do you want to help newbies, or advanced programmers?</li>
-<li>Do you want to help marginalized groups? Which ones? How much?</li>
-<li>Do you want repeat attendees, or first timers?</li>
-<li>Do you want a few people from all over the globe, or many locals?</li>
-<li>Do you want to benefit people who directly contribute to the
-  conference? Which ones (speakers, staff...)? How much?</li>
-<li>Do we care if people are receiving funds from other places? What if
-  their employer is paying? What if their employer is also a sponsor?
-  Does it make sense for them to give us <em>x</em> sponsorship fees when
-  we're giving them a significant portion of that back in financial
-  aid?</li>
-</ul>
-<p>Your budget is, unfortunately, zero sum. Every group you benefit means
-less for everyone else. Helping everyone is the same as helping
-no-one. Everyone wants to help everyone, but it's unlikely you'll get
-to do that. Make everyone understands exactly what you want to
-accomplish; you don't want to have this argument in the middle of
-trying to run a financial aid process.</p>
-<h3>Free or reduced-price tickets</h3>
-<p>For many conferences, the tickets themselves can be quite
-expensive. It makes sense to provide them to financial aid recipients
-at no (or reduced) charge as part of their grant.</p>
-<p>PyCon previously provided free registration, but now provides
-reduced-cost registration. This helps with no-shows, giving
-applicants a financial incentive to let you know if they can't attend.</p>
-<p>Make sure that you document clearly that people will be receiving
-tickets, at what price they'll be receiving them, and that their spots
-are reserved. Common concerns from financial aid applicants:</p>
-<ul>
-<li>"Your conference blog says that you're sold out, and I haven't
-  received financial aid yet. Will I be able to attend?"</li>
-<li>"I've already registered to reserve my spot; what do I do now that I
-  get financial aid?"</li>
-<li>"I'm a student. Will I still be able to register at the student rate
-  if I apply for financial aid?"</li>
-<li>"I applied for a larger amount because I didn't think ticket price
-  would be included." (Unfortunately, most people tell you this far
-  too late.)</li>
-</ul>
-<p>As usual, clarity in communication is key here.</p>
-<p>Previous years, PyCon optionally provided free registration for people
-who asked. This optional part was somewhat confusing. Whatever you do,
-make it part of the default grant application. That also means that
-you should probably offer the reduced-price ticket to anyone who
-applies for financial aid, even if you can't otherwise give them a
-grant. Otherwise, someone who applies for financial aid for whom you
-simply don't have enough funds will get punished twice: no financial
-aid, and no access to early bird ticket price.</p>
-<h3>Housing</h3>
-<p>Housing, in the context of financial aid, means that you pay for a
-bunch of hotel rooms for various dates at your conference, and then
-put financial aid recipients in them. To save costs, you want to pair
-them up, and you want to utilize the rooms maximally.</p>
-<p>Some people think that it's a good idea to organize housing as part of
-your travel grants. Those people are mistaken. Housing is a terrible
-idea all round:</p>
-<ul>
-<li>It doesn't scale, up or down. If you're small, you can't negotiate a
-  worthwhile hotel block contract. If you're big, the system crashes
-  under its /O(N²)/ weight (see below).</li>
-<li>It's not good for the financial aid recipients. While there are many
-  nice things to be said about conference hotels, they are typically
-  not economical. When we still organized housing, many financial aid
-  recipients opted out: they could get significantly more bang for
-  their buck otherwise.</li>
-<li>It's not good for the conference. People leave, people join, people
-  change dates, people have preferences (or hard constraints) about
-  who they'll stay with... Doing this for any nontrivial number of
-  people is a logistic nightmare; doing it for trivial number of
-  people isn't worth it.</li>
-</ul>
-<p>Having humans solve the allocation problem produces inefficiencies at
-larger scales (i.e. humans typically come up with fairly suboptimal
-solutions). It's a pretty tricky problem to solve even with computers
-(believe me, I've <a href="https://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html">tried</a> <a href="http://www.lvh.io/posts/2014/03/optimal-hotel-room-pairing.html">extensively</a>), but computers
-will never solve the logistic issues caused by human factors.</p>
-<p>PyCon used to manage housing for financial aid recipients. Getting rid
-of this was the single best decision I've ever made for the financial
-aid process.</p>
-<p>It worked out quite well for the attendees too. Providing simple tools
-(i.e. the equivalent of a classifieds section) is more than ample to
-help people find great groups to room-share with. This <em>increased</em>
-opportunities for roomsharing, because it made it much less of a
-hassle to mix-and-match between financial aid recipients and other
-attendees.</p>
-<p>Plenty of FA people stayed in large AirBnBs or the like in groups of 6
-or more, and ended up getting fantastic deals that allowed them to
-stay an extra few days to attend other events like sprints and
-tutorials.</p>
-<h2>Before the conference: from applications to allocation</h2>
-<h3>Applications</h3>
-<p>Keep it simple. Use a form generator (Google Forms or Wufoo or
-something) for data collection. All of the processing was done with
-simple Python scripts, most of it in an IPython/Jupyter notebook. This
-enables you to create well-documented processes, which helps
-everyone. CSV files are your best friend.</p>
-<p>Make as many fields on the application form as possible directly
-translatable to something in your allocation process. Multiple choice
-and boolean values are your friend; the review process will make sure
-the applications are accurate. Have free-form fields for documenting
-things, but only use them in the review process. For example, you can
-have a multiple choice field for Python expertise ranging from
-beginner to expert, and then have a free-form field for applicants'
-portfolios.</p>
-<p>Names are weird. There are lots of falsehoods programmers believe
-about names <a href="http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/">(link)</a>. You probably want to ask for a legal
-name; it's quite likely that you need to keep the legal name around
-for your records. Ask a lawyer and/or an accountant for
-details. However, you probably want to ask for an (optional) preferred
-name as well, which you should always use when communicating with
-them. There's a bunch of reasons those might be different, and people
-may have excellent reasons for not using their legal names. For
-example, a legal name might give someone away as being
-transgender. Sometimes, you want to do that just for your /own/
-convenience. People will put all sorts of stuff down as their "name",
-but full legal names are quite consistent. This can be useful to match
-up records from different sources, such as your registration database.</p>
-<p>Speaking of gender, asking for people's gender is also tricky. Make
-sure you have at least a cursory understanding of how gender works
-before you ask. Always have a "decline to answer" button, which is
-distinct from "other/nonbinary". If all you really want to know is
-whether someone qualifies for earmarked funds, just ask the specific
-question you want to know; e.g. "Apply for a PyLadies grant (people
-who self-identify as women only, please)".</p>
-<p>As usual in programming, state is the bane of your existence. Keep it
-in one place whenever possible. A (Google Drive) spreadsheet works
-just fine. Your scripts should operate on data extracted from them
-(again, CSV works fine), but not store any state. This is trickier
-than it sounds, but the alternative is that you'll probably end up
-destroying some data.</p>
-<h3>Review</h3>
-<p>Reviews are easy to do in parallel, so get help from volunteers if
-needed. Establish clear guidelines for what your discrete values
-(e.g. Python experience) mean; not everyone agrees on what "expert"
-means.</p>
-<h3>Allocation</h3>
-<p>I've <a href="https://www.lvh.io/posts/2014/03/optimization-problems-and-pycon-financial-aid.html">written about allocation before</a>.</p>
-<p>PyCon allocates approximately 15% over budget; i.e. the budget that we
-allocate is 1.15x the actual grant budget. This does not include aid
-in the form of e.g. reduced ticket prices; remember to account for
-those separately!</p>
-<p>PyCon's no-show rate is somewhere between 10% and 20%, but it's very
-hard to predict if the factors that contribute to that will affect
-your conference equally.</p>
-<p>As mentioned in that previous blog post, you don't always want to
-allocate the full grant asked for. People will still be able to attend
-with partial grants but typically wouldn't with an empty
-grant. Therefore it typically makes sense to reduce everyone's grant
-slightly if that allows you to provide more grants.</p>
-<p>We ended up going with a fairly simple "flood fill" algorithm. An
-applicant's score maps to a fraction of the budget:</p>
-<p>$$f_i = \frac{s_i}{\sum_j s_j}$$</p>
-<p>Where \(f_i\) is the fraction of the budget you're willing to assign
-to applicant \(i\), \(s_i\) is an applicant's score.</p>
-<p>If \(f_i \ge q \cdot r_i\) (where \(q\) is the fraction of the
-grant you're willing to allocate and \(r_i\) is what the applicant
-requested, you grant them \(q \cdot r_i\); otherwise, grant them 0.</p>
-<p>Some applicants will be below this fraction, some will be above. They
-could be below this fraction because they have a very high score
-(e.g. they are a speaker), or because they're "low hanging fruit" and
-not asking for very much money.</p>
-<p>That means that if you run the algorithm again, the fractions will be
-bigger; the people that received allocations in the previous round
-were allocated less than what would've been their "fair share". Rinse,
-repeat until you're out of money.</p>
-<h2>Communications</h2>
-<p>Have a central website where people can see their current status and
-updates, both specific to the applicant and generic to the entire
-process. Training people to expect information there will drastically
-reduce the number of repetitive questions you get to answer by e-mail,
-which will contribute enormously to your happiness. Therefore, if
-people ask questions that are answered there; answer, be kind, but
-point out where they could have gotten that information from.</p>
-<p>Most of the things you will have to say will be generic points about
-the process. Nonetheless, I have spent huge amounts of time answering
-individual questions about that generic process, which got get quite
-tedious. Hence, even a static page that doesn't show any information
-specific to the applicant, but just explaining the process in detail
-is extremely valuable.</p>
-<p>Being up-front about how your process works is also great for
-prospective applicants who wouldn't feel comfortable asking. This also
-attracts speakers to submit talk proposals; many speakers would not
-propose a talk because they know they can't afford to come without
-financial aid. Therefore, it's important to communicate clearly if you
-intend to support speakers, both through your financial aid
-communication and your call for papers.</p>
-<p>Once that fails, send e-mail. Once you're over a dozen or so
-recipients, use <a href="http://www.mailgun.com/">Mailgun</a>. Emails
-particularly automated from your personal email account is a good way
-to get stuck in spam filters.</p>
-<h2>Disbursement (giving out money)</h2>
-<p>First off, talk to your treasurer. Possibly talk to a lawyer,
-too. It's quite possible, particularly if you're in the United States,
-that giving out a bunch of money as a non-profit comes with some
-fairly complex strings attached. For example, you probably have
-certain standards in terms of what records you have to keep.</p>
-<p>As a European, I found it somewhat comical to still see checks in
-active use, but hey; it works. For many parts of the world (apparently
-not the United States, though) wire transfers are how you send money
-to people. PayPal seems to work better for larger, established
-organizations that use it often. There is less of a problem with the
-accounts or funds being frozen. It does actively restrict (or, perhaps
-more accurately, enforces restrictions on) sending funds to certain
-countries, including Brazil and India.</p>
-<p>Cash works, but is hard to scale. With PyCon's budget of well over
-$100,000.00, managing cash is clearly less than ideal.</p>
-<p>At the end of the day, be pragmatic. Do whatever your recipients can
-accept. Be sure to ask ahead of time, as your financial aid programs
-may prove to be successful in bringing people in from very different
-countries, with very different cultures and very different means
-available to them for accepting your grant. This is the case for
-PyCon, but I consider that a superb problem to have.</p>
-<h2>Conclusion</h2>
-<p>I'd like to thank the following people in no particular order:</p>
-<ul>
-<li>Ewa Jodlowska, for managing PyCon and being the love of my life</li>
-<li>Van Lindberg, for continuously inspiring me to serve</li>
-<li>Diana Clarke, for Charing PyCon US in Montreal</li>
-</ul>
-</div>
-    </div>
     </article>
 </div>
 
         <ul class="pager postindexpager clearfix">
-<li class="previous"><a href="." rel="prev">Newer posts</a></li>
+<li class="previous"><a href="index-6.html" rel="prev">Newer posts</a></li>
             <li class="next"><a href="index-4.html" rel="next">Older posts</a></li>
         </ul>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
-        </script><!--End of body content--><footer id="footer">
+<!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>

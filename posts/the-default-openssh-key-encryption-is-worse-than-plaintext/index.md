@@ -2,10 +2,10 @@
 .. title: The default OpenSSH key encryption is worse than plaintext
 .. slug: the-default-openssh-key-encryption-is-worse-than-plaintext
 .. date: 2018-08-03 19:00:18 UTC-07:00
-.. tags: security, cryptography 
-.. category: 
-.. link: 
-.. description: 
+.. tags: security, cryptography
+.. category:
+.. link:
+.. description:
 .. type: text
 -->
 
@@ -18,7 +18,7 @@ user@work /tmp $ ssh-keygen
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/user/.ssh/id_rsa): mykey
 ...
-user@work /tmp $ head -n 5 mykey  
+user@work /tmp $ head -n 5 mykey
 -----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-128-CBC,CB973D5520E952B8D5A6B86716C6223F

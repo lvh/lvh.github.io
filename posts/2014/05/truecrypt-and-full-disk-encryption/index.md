@@ -1,10 +1,10 @@
 <!--
-.. title: On TrueCrypt and full-disk encryption
+.. title: TrueCrypt and full-disk encryption
 .. date: 2014/05/29 10:53
-.. slug: on-truecrypt-and-full-disk-encryption
+.. slug: truecrypt-and-full-disk-encryption
 .. link:
 .. description:
-.. tags: crypto
+.. tags: cryptography
 -->
 
 
