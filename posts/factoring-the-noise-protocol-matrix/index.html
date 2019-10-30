@@ -16,10 +16,16 @@
 <meta property="og:site_name" content="lvh">
 <meta property="og:title" content="Factoring the Noise protocol matrix">
 <meta property="og:url" content="https://www.lvh.io/posts/factoring-the-noise-protocol-matrix/">
-<meta property="og:description" content="TL;DR: if I ever told you to use Noise, I probably meant Noise_IK and should
-have been more specific.
-The Noise protocol is one of the best things to happen to encrypted protocol
-design. WireGuard inh">
+<meta property="og:description" content='.matrix {
+        position: relative;
+        margin: auto;
+        margin-bottom: 2em;
+    }
+    .matrix:before, .matrix:after {
+        content: "";
+        position: absolute;
+        top: 0;
+     '>
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2018-07-18T10:59:00-07:00">
 <meta property="article:tag" content="security">
@@ -101,15 +107,46 @@ navbar-dark bg-dark
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p>TL;DR: if I ever told you to use Noise, I probably meant Noise_IK and should
-have been more specific.</p>
+<style>
+    .matrix {
+        position: relative;
+        margin: auto;
+        margin-bottom: 2em;
+    }
+    .matrix:before, .matrix:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        border: 3px solid #000;
+        width: 20px;
+        height: 100%;
+    }
+    .matrix:before {
+        left: -10px;
+        border-right: 0;
+    }
+    .matrix:after {
+        right: -10px;
+        border-left: 0;
+    }
+    .matrix td {
+        vertical-align: middle;
+        min-width: 100px;
+        margin-bottom: 10px;
+    }
+    .matrix td p {
+        vertical-align: middle;
+        text-align: center;
+        margin: auto;
+    }
+</style>
 <p>The Noise protocol is one of the best things to happen to encrypted protocol
 design. <a href="https://www.wireguard.com">WireGuard</a> inherits its elegance from Noise.
 Noise is a cryptography engineer's darling spec. It's important not to get
 blindsided while fawning over it and to pay attention to where implementers run
 into trouble. Someone raised a concern I had run into before: Noise has a
 matrix.</p>
-<table><tbody>
+<table class="matrix" style="width:100%"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span>N(rs):<br>  ← s<br>  ...<br>  → e, es</span></p>
@@ -166,28 +203,26 @@ matrix.</p>
             </td>
         </tr>
 </tbody></table>
-<p>To a cryptography engineer, this matrix is beautiful. These eldritch
-runes describe a grammar: the number of ways you can meaningfully
-compose the phrases that can make up a Noise handshake into a proper
-protocol. The rest of the document describes what the trade-offs between
-them are: whether the protocol is one-way or interactive, whether you
-get resistance against key-compromise impersonation, what sort of
-privacy guarantees you get, et cetera.</p>
-<p>(Key-compromise impersonation means that if I steal your key, I can
-impersonate anyone to you.)</p>
-<p>To the layperson implementer, the matrix is terrifying. They hadn't
-thought about key-compromise impersonation or the distinction between
-known-key, hidden-key and exposed-key protocols or even forward secrecy.
-They're going to fall back to something else: something probably less
-secure but at least unambiguous on what to do.</p>
-<p>As Noise matures into a repository for protocol templates with wider
-requirements, this gets worse, not better. The most recent revision of
-the Noise protocol adds 23 new "deferred" variants. It's unlikely these
-will be the last additions.</p>
-<p>Which Noise variant should they use? Depends on the application of
-course, but we can make some reasonable assumptions for most apps.
-Ignoring variants, we have:</p>
-<table style="text-align: center"><tbody>
+<p>To a cryptography engineer, this matrix is beautiful. These eldritch runes
+describe a grammar: the number of ways you can meaningfully compose the phrases
+that can make up a Noise handshake into a proper protocol. The rest of the
+document describes what the trade-offs between them are: whether the protocol is
+one-way or interactive, whether you get resistance against key-compromise
+impersonation, what sort of privacy guarantees you get, et cetera.
+(Key-compromise impersonation means that if I steal your key, I can impersonate
+anyone to you.)</p>
+<p>To the layperson implementer, the matrix is terrifying. They hadn't thought
+about key-compromise impersonation or the distinction between known-key,
+hidden-key and exposed-key protocols or even forward secrecy. They're going to
+fall back to something else: something probably less secure but at least
+unambiguous on what to do. As Noise matures into a repository for protocol
+templates with wider requirements, this gets worse, not better. The most recent
+revision of the Noise protocol adds 23 new "deferred" variants. It's unlikely
+these will be the last additions.</p>
+<p>Which Noise variant should that layperson use? Depends on the application of
+course, but we can make some reasonable assumptions for most apps. Ignoring
+variants, we have:</p>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span>N</span></p>
@@ -244,7 +279,7 @@ Ignoring variants, we have:</p>
 initiator and responder can send messages to each other as opposed to
 just initiator to responder. That gets rid of the first column of the
 matrix.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -298,28 +333,26 @@ matrix.</p>
         </tr>
 </tbody></table>
 <p>The other protocols are defined by two letters. From the spec:</p>
-<p></p>
-<hr>
-The first character refers to the initiator\'s static key:
+<blockquote>
+<p>The first character refers to the initiator's static key:</p>
 <ul>
 <li>N = No static key for initiator</li>
 <li>K = Static key for initiator Known to responder</li>
-<li>X = Static key for initiator Xmitted (\"transmitted\") to responder</li>
+<li>X = Static key for initiator Xmitted ("transmitted") to responder</li>
 <li>I = Static key for initiator Immediately transmitted to responder, despite reduced or absent identity hiding</li>
 </ul>
-<p>The second character refers to the responder\'s static key:</p>
+<p>The second character refers to the responder's static key:</p>
 <ul>
 <li>N = No static key for responder</li>
 <li>K = Static key for responder Known to initiator</li>
-<li>X = Static key for responder Xmitted (\"transmitted\") to initiator
-<hr>
-</li>
+<li>X = Static key for responder Xmitted ("transmitted") to initiator</li>
 </ul>
+</blockquote>
 <p>NN provides confidentiality against a passive attacker but neither party
 has any idea who you're talking to because no static (long-term) keys
 are involved. For most applications none of the *N suites make a ton of
 sense: they imply the initiator does not care who they're connecting to.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -376,7 +409,7 @@ sense: they imply the initiator does not care who they're connecting to.</p>
 static key so we have a convenient cryptographic identity for clients
 over time. So really, if you wanted something with an N in it, you'd
 know.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -434,7 +467,7 @@ happens to show up. This mostly makes sense if you have one central initiator
 that reaches out to a lot of responders: something like an MDM or sensor data
 collection perhaps. In practice, you often end up doing egress from those
 devices anyway for reasons that have nothing to do with Noise. So, K* is out.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -491,8 +524,7 @@ devices anyway for reasons that have nothing to do with Noise. So, K* is out.</p
 identify participants) for latency (how many round trips are needed).</p>
 <p>IX doesn't provide privacy for the initiator at all, but that's the side you
 usually care about. It still has the roundtrip downside, making it a niche
-variant.</p>
-<p>XX and XK require an extra round trip before they send over the
+variant. XX and XK require an extra round trip before they send over the
 initiator's static key. Flip side: they have the strongest possible
 privacy protection for the initiator, whose identity is only sent to the
 responder after they've been authenticated and forward secrecy has been
@@ -514,13 +546,15 @@ initiator's privacy than you do about handshake latency, you want
 Noise_XK. If you're doing a peer-to-peer IoT system where device
 privacy matters, you might end up with Noise_XX. (It's no accident
 that IK, XK and XX are in the last set of protocols standing.)</p>
-<p><em>Protocol variants</em> Ignore deferred variants for now. If you needed them you'd
+<h3>Protocol variants</h3>
+<p>Ignore deferred variants for now. If you needed them you'd
 know. PSK is an interesting quantum computer hedge. We'll talk more about
 quantum key exchanges in a different post, but briefly: a shared PSK among
 several participants protects against a passive adversary that records
 everything and acquires a quantum computer some time in the future, while
 retaining the convenient key distribution of public keys.</p>
-<p><em>Conclusion</em> It's incredible how much has happened in the last few years
+<h3>Conclusion</h3>
+<p>It's incredible how much has happened in the last few years
 to make protocols safer, between secure protocol templates like Noise,
 new proof systems like Tamarin, and ubiquitous libraries of safer
 primitives like libsodium. So far, the right answer for a safe transport

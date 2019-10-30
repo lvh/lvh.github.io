@@ -4,13 +4,20 @@
     font-size: 16pt;
 }
 
-.body-content p, li {
+.body-content p, .body-content li, .body-content blockquote {
+    font-weight: normal;
     line-height: 180%;
 }
 
-.body-content p {
+.body-content p, .body-content blockquote {
     text-align: justify;
     margin-bottom: 1.5em;
+}
+
+.body-content blockquote {
+    border-left: 0.3em solid #383234;
+    background-color: #e7e4e5;
+    padding: 1em 1em 0.1em 1em;
 }
 
 h1 {
@@ -43,6 +50,22 @@ a:hover {
 .entry-content a[href] {
     text-decoration: underline;
 }
+
+s {
+    position: relative;
+    text-decoration-line: none;
+}
+
+s::after {
+    border-bottom: 0.2em solid red;
+    content: "";
+    left: 0;
+    margin-top: calc(0.2em / 2 * -1);
+    position: absolute;
+    right: 0;
+    top: 50%;
+}
+
 
 @media (max-width: 1024px) {
     img#logo {

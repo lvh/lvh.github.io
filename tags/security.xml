@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/security.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 03:13:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about security)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/security.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 14:32:46 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
 &lt;h2&gt;You don’t really want a signature&lt;/h2&gt;
 &lt;p&gt;When cryptography engineers say "signature" they tend to mean something asymmetric, like RSA or ECDSA. Developers reach for asymmetric tools too often. There are a lot of ways to screw them up. By comparison, symmetric “signing” (MACs) are easy to use and hard to screw up. HMAC is bulletproof and ubiquitous.&lt;/p&gt;
 &lt;p&gt;Unless you have a good reason why you need an (asymmetric) signature, you want a MAC. If you really do want a signature, check out our Cryptographic Right Answers post to make that as safe as possible. For the rest of this blog post, "signing" means symmetrically, and in practice that means HMAC.&lt;/p&gt;
@@ -97,15 +97,47 @@
 &lt;p&gt;We want to provide a better answer to this. On the one hand, aws-vault has shown the way by moving credentials off disk and into keychains. Another parallel approach is to move development into partitioned environments. Finally, most startups should consider not having long-held SSH keys, instead using temporary credentials issued by an SSH CA, ideally gated on SSO. Unfortunately this doesn't work for GitHub.&lt;/p&gt;
 &lt;p&gt;PS: It’s hard to find an authoritative source, but from my memory: the versioned parameter in the PEM-like OpenSSH private key format only affect the encryption method. That doesn’t matter in the slightest: it’s the KDF that’s broken. That’s an argument against piecemeal negotiating parts of protocols, I’m sure. We’ll get you a blog post on that later.&lt;/p&gt;
 &lt;p&gt;The full key is available here, just in case you feel like running john the ripper on something today: &lt;a href="https://gist.github.com/lvh/c532c8fd46115d2857f40a433a2416fd"&gt;gist.github.com/lvh/c532c...&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/the-default-openssh-key-encryption-is-worse-than-plaintext/</guid><pubDate>Sat, 04 Aug 2018 02:00:18 GMT</pubDate></item><item><title>Factoring the Noise protocol matrix</title><link>https://www.lvh.io/posts/factoring-the-noise-protocol-matrix/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;TL;DR: if I ever told you to use Noise, I probably meant Noise_IK and should
-have been more specific.&lt;/p&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/the-default-openssh-key-encryption-is-worse-than-plaintext/</guid><pubDate>Sat, 04 Aug 2018 02:00:18 GMT</pubDate></item><item><title>Factoring the Noise protocol matrix</title><link>https://www.lvh.io/posts/factoring-the-noise-protocol-matrix/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;style&gt;
+    .matrix {
+        position: relative;
+        margin: auto;
+        margin-bottom: 2em;
+    }
+    .matrix:before, .matrix:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        border: 3px solid #000;
+        width: 20px;
+        height: 100%;
+    }
+    .matrix:before {
+        left: -10px;
+        border-right: 0;
+    }
+    .matrix:after {
+        right: -10px;
+        border-left: 0;
+    }
+    .matrix td {
+        vertical-align: middle;
+        min-width: 100px;
+        margin-bottom: 10px;
+    }
+    .matrix td p {
+        vertical-align: middle;
+        text-align: center;
+        margin: auto;
+    }
+&lt;/style&gt;
+
 &lt;p&gt;The Noise protocol is one of the best things to happen to encrypted protocol
 design. &lt;a href="https://www.wireguard.com"&gt;WireGuard&lt;/a&gt; inherits its elegance from Noise.
 Noise is a cryptography engineer's darling spec. It's important not to get
 blindsided while fawning over it and to pay attention to where implementers run
 into trouble. Someone raised a concern I had run into before: Noise has a
 matrix.&lt;/p&gt;
-&lt;table&gt;
+&lt;table class="matrix" style="width:100%"&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
             &lt;td colspan="1" rowspan="1"&gt;
@@ -165,28 +197,26 @@ matrix.&lt;/p&gt;
     &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;To a cryptography engineer, this matrix is beautiful. These eldritch
-runes describe a grammar: the number of ways you can meaningfully
-compose the phrases that can make up a Noise handshake into a proper
-protocol. The rest of the document describes what the trade-offs between
-them are: whether the protocol is one-way or interactive, whether you
-get resistance against key-compromise impersonation, what sort of
-privacy guarantees you get, et cetera.&lt;/p&gt;
-&lt;p&gt;(Key-compromise impersonation means that if I steal your key, I can
-impersonate anyone to you.)&lt;/p&gt;
-&lt;p&gt;To the layperson implementer, the matrix is terrifying. They hadn't
-thought about key-compromise impersonation or the distinction between
-known-key, hidden-key and exposed-key protocols or even forward secrecy.
-They're going to fall back to something else: something probably less
-secure but at least unambiguous on what to do.&lt;/p&gt;
-&lt;p&gt;As Noise matures into a repository for protocol templates with wider
-requirements, this gets worse, not better. The most recent revision of
-the Noise protocol adds 23 new "deferred" variants. It's unlikely these
-will be the last additions.&lt;/p&gt;
-&lt;p&gt;Which Noise variant should they use? Depends on the application of
-course, but we can make some reasonable assumptions for most apps.
-Ignoring variants, we have:&lt;/p&gt;
-&lt;table style="text-align: center"&gt;
+&lt;p&gt;To a cryptography engineer, this matrix is beautiful. These eldritch runes
+describe a grammar: the number of ways you can meaningfully compose the phrases
+that can make up a Noise handshake into a proper protocol. The rest of the
+document describes what the trade-offs between them are: whether the protocol is
+one-way or interactive, whether you get resistance against key-compromise
+impersonation, what sort of privacy guarantees you get, et cetera.
+(Key-compromise impersonation means that if I steal your key, I can impersonate
+anyone to you.)&lt;/p&gt;
+&lt;p&gt;To the layperson implementer, the matrix is terrifying. They hadn't thought
+about key-compromise impersonation or the distinction between known-key,
+hidden-key and exposed-key protocols or even forward secrecy. They're going to
+fall back to something else: something probably less secure but at least
+unambiguous on what to do. As Noise matures into a repository for protocol
+templates with wider requirements, this gets worse, not better. The most recent
+revision of the Noise protocol adds 23 new "deferred" variants. It's unlikely
+these will be the last additions.&lt;/p&gt;
+&lt;p&gt;Which Noise variant should that layperson use? Depends on the application of
+course, but we can make some reasonable assumptions for most apps. Ignoring
+variants, we have:&lt;/p&gt;
+&lt;table style="text-align: center" class="matrix"&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
             &lt;td colspan="1" rowspan="1"&gt;
@@ -246,7 +276,7 @@ Ignoring variants, we have:&lt;/p&gt;
 initiator and responder can send messages to each other as opposed to
 just initiator to responder. That gets rid of the first column of the
 matrix.&lt;/p&gt;
-&lt;table style="text-align: center"&gt;
+&lt;table style="text-align: center" class="matrix"&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
             &lt;td colspan="1" rowspan="1"&gt;
@@ -303,26 +333,26 @@ matrix.&lt;/p&gt;
 &lt;/table&gt;
 
 &lt;p&gt;The other protocols are defined by two letters. From the spec:&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;&lt;hr&gt;
-The first character refers to the initiator\'s static key:
+&lt;blockquote&gt;
+&lt;p&gt;The first character refers to the initiator's static key:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;N = No static key for initiator&lt;/li&gt;
 &lt;li&gt;K = Static key for initiator Known to responder&lt;/li&gt;
-&lt;li&gt;X = Static key for initiator Xmitted (\"transmitted\") to responder&lt;/li&gt;
+&lt;li&gt;X = Static key for initiator Xmitted ("transmitted") to responder&lt;/li&gt;
 &lt;li&gt;I = Static key for initiator Immediately transmitted to responder, despite reduced or absent identity hiding&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The second character refers to the responder\'s static key:&lt;/p&gt;
+&lt;p&gt;The second character refers to the responder's static key:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;N = No static key for responder&lt;/li&gt;
 &lt;li&gt;K = Static key for responder Known to initiator&lt;/li&gt;
-&lt;li&gt;X = Static key for responder Xmitted (\"transmitted\") to initiator
-&lt;hr&gt;&lt;/li&gt;
+&lt;li&gt;X = Static key for responder Xmitted ("transmitted") to initiator&lt;/li&gt;
 &lt;/ul&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;NN provides confidentiality against a passive attacker but neither party
 has any idea who you're talking to because no static (long-term) keys
 are involved. For most applications none of the *N suites make a ton of
 sense: they imply the initiator does not care who they're connecting to.&lt;/p&gt;
-&lt;table style="text-align: center"&gt;
+&lt;table style="text-align: center" class="matrix"&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
             &lt;td colspan="1" rowspan="1"&gt;
@@ -382,7 +412,7 @@ sense: they imply the initiator does not care who they're connecting to.&lt;/p&g
 static key so we have a convenient cryptographic identity for clients
 over time. So really, if you wanted something with an N in it, you'd
 know.&lt;/p&gt;
-&lt;table style="text-align: center"&gt;
+&lt;table style="text-align: center" class="matrix"&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
             &lt;td colspan="1" rowspan="1"&gt;
@@ -443,7 +473,7 @@ happens to show up. This mostly makes sense if you have one central initiator
 that reaches out to a lot of responders: something like an MDM or sensor data
 collection perhaps. In practice, you often end up doing egress from those
 devices anyway for reasons that have nothing to do with Noise. So, K* is out.&lt;/p&gt;
-&lt;table style="text-align: center"&gt;
+&lt;table style="text-align: center" class="matrix"&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
             &lt;td colspan="1" rowspan="1"&gt;
@@ -503,8 +533,7 @@ devices anyway for reasons that have nothing to do with Noise. So, K* is out.&lt
 identify participants) for latency (how many round trips are needed).&lt;/p&gt;
 &lt;p&gt;IX doesn't provide privacy for the initiator at all, but that's the side you
 usually care about. It still has the roundtrip downside, making it a niche
-variant.&lt;/p&gt;
-&lt;p&gt;XX and XK require an extra round trip before they send over the
+variant. XX and XK require an extra round trip before they send over the
 initiator's static key. Flip side: they have the strongest possible
 privacy protection for the initiator, whose identity is only sent to the
 responder after they've been authenticated and forward secrecy has been
@@ -526,13 +555,15 @@ initiator's privacy than you do about handshake latency, you want
 Noise_XK. If you're doing a peer-to-peer IoT system where device
 privacy matters, you might end up with Noise_XX. (It's no accident
 that IK, XK and XX are in the last set of protocols standing.)&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Protocol variants&lt;/em&gt; Ignore deferred variants for now. If you needed them you'd
+&lt;h3&gt;Protocol variants&lt;/h3&gt;
+&lt;p&gt;Ignore deferred variants for now. If you needed them you'd
 know. PSK is an interesting quantum computer hedge. We'll talk more about
 quantum key exchanges in a different post, but briefly: a shared PSK among
 several participants protects against a passive adversary that records
 everything and acquires a quantum computer some time in the future, while
 retaining the convenient key distribution of public keys.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Conclusion&lt;/em&gt; It's incredible how much has happened in the last few years
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;It's incredible how much has happened in the last few years
 to make protocols safer, between secure protocol templates like Noise,
 new proof systems like Tamarin, and ubiquitous libraries of safer
 primitives like libsodium. So far, the right answer for a safe transport

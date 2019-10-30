@@ -2,15 +2,46 @@
 .. title: Factoring the Noise protocol matrix
 .. slug: factoring-the-noise-protocol-matrix
 .. date: 2018-07-18 10:59
-.. tags: security 
-.. category: 
-.. link: 
-.. description: 
+.. tags: security
+.. category:
+.. link:
+.. description:
 .. type: text
 -->
 
-TL;DR: if I ever told you to use Noise, I probably meant Noise\_IK and should
-have been more specific.
+<style>
+    .matrix {
+        position: relative;
+        margin: auto;
+        margin-bottom: 2em;
+    }
+    .matrix:before, .matrix:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        border: 3px solid #000;
+        width: 20px;
+        height: 100%;
+    }
+    .matrix:before {
+        left: -10px;
+        border-right: 0;
+    }
+    .matrix:after {
+        right: -10px;
+        border-left: 0;
+    }
+    .matrix td {
+        vertical-align: middle;
+        min-width: 100px;
+        margin-bottom: 10px;
+    }
+    .matrix td p {
+        vertical-align: middle;
+        text-align: center;
+        margin: auto;
+    }
+</style>
 
 The Noise protocol is one of the best things to happen to encrypted protocol
 design. [WireGuard](https://www.wireguard.com) inherits its elegance from Noise.
@@ -19,7 +50,7 @@ blindsided while fawning over it and to pay attention to where implementers run
 into trouble. Someone raised a concern I had run into before: Noise has a
 matrix.
 
-<table>
+<table class="matrix" style="width:100%">
     <tbody>
         <tr>
             <td colspan="1" rowspan="1">
@@ -79,33 +110,29 @@ matrix.
     </tbody>
 </table>
 
-To a cryptography engineer, this matrix is beautiful. These eldritch
-runes describe a grammar: the number of ways you can meaningfully
-compose the phrases that can make up a Noise handshake into a proper
-protocol. The rest of the document describes what the trade-offs between
-them are: whether the protocol is one-way or interactive, whether you
-get resistance against key-compromise impersonation, what sort of
-privacy guarantees you get, et cetera.
+To a cryptography engineer, this matrix is beautiful. These eldritch runes
+describe a grammar: the number of ways you can meaningfully compose the phrases
+that can make up a Noise handshake into a proper protocol. The rest of the
+document describes what the trade-offs between them are: whether the protocol is
+one-way or interactive, whether you get resistance against key-compromise
+impersonation, what sort of privacy guarantees you get, et cetera.
+(Key-compromise impersonation means that if I steal your key, I can impersonate
+anyone to you.)
 
-(Key-compromise impersonation means that if I steal your key, I can
-impersonate anyone to you.)
+To the layperson implementer, the matrix is terrifying. They hadn't thought
+about key-compromise impersonation or the distinction between known-key,
+hidden-key and exposed-key protocols or even forward secrecy. They're going to
+fall back to something else: something probably less secure but at least
+unambiguous on what to do. As Noise matures into a repository for protocol
+templates with wider requirements, this gets worse, not better. The most recent
+revision of the Noise protocol adds 23 new "deferred" variants. It's unlikely
+these will be the last additions.
 
-To the layperson implementer, the matrix is terrifying. They hadn't
-thought about key-compromise impersonation or the distinction between
-known-key, hidden-key and exposed-key protocols or even forward secrecy.
-They're going to fall back to something else: something probably less
-secure but at least unambiguous on what to do.
+Which Noise variant should that layperson use? Depends on the application of
+course, but we can make some reasonable assumptions for most apps. Ignoring
+variants, we have:
 
-As Noise matures into a repository for protocol templates with wider
-requirements, this gets worse, not better. The most recent revision of
-the Noise protocol adds 23 new "deferred" variants. It's unlikely these
-will be the last additions.
-
-Which Noise variant should they use? Depends on the application of
-course, but we can make some reasonable assumptions for most apps.
-Ignoring variants, we have:
-
-<table style="text-align: center">
+<table style="text-align: center" class="matrix">
     <tbody>
         <tr>
             <td colspan="1" rowspan="1">
@@ -166,7 +193,7 @@ initiator and responder can send messages to each other as opposed to
 just initiator to responder. That gets rid of the first column of the
 matrix.
 
-<table style="text-align: center">
+<table style="text-align: center" class="matrix">
     <tbody>
         <tr>
             <td colspan="1" rowspan="1">
@@ -224,27 +251,25 @@ matrix.
 
 The other protocols are defined by two letters. From the spec:
 
-<hr>
-The first character refers to the initiator\'s static key:
-
-* N = No static key for initiator
-* K = Static key for initiator Known to responder
-* X = Static key for initiator Xmitted (\"transmitted\") to responder
-* I = Static key for initiator Immediately transmitted to responder, despite reduced or absent identity hiding
-
-The second character refers to the responder\'s static key:
-
-* N = No static key for responder
-* K = Static key for responder Known to initiator
-* X = Static key for responder Xmitted (\"transmitted\") to initiator
-<hr>
+> The first character refers to the initiator's static key:
+>
+> * N = No static key for initiator
+> * K = Static key for initiator Known to responder
+> * X = Static key for initiator Xmitted ("transmitted") to responder
+> * I = Static key for initiator Immediately transmitted to responder, despite reduced or absent identity hiding
+>
+> The second character refers to the responder's static key:
+>
+> * N = No static key for responder
+> * K = Static key for responder Known to initiator
+> * X = Static key for responder Xmitted ("transmitted") to initiator
 
 NN provides confidentiality against a passive attacker but neither party
 has any idea who you're talking to because no static (long-term) keys
 are involved. For most applications none of the \*N suites make a ton of
 sense: they imply the initiator does not care who they're connecting to.
 
-<table style="text-align: center">
+<table style="text-align: center" class="matrix">
     <tbody>
         <tr>
             <td colspan="1" rowspan="1">
@@ -306,7 +331,7 @@ static key so we have a convenient cryptographic identity for clients
 over time. So really, if you wanted something with an N in it, you'd
 know.
 
-<table style="text-align: center">
+<table style="text-align: center" class="matrix">
     <tbody>
         <tr>
             <td colspan="1" rowspan="1">
@@ -368,7 +393,7 @@ that reaches out to a lot of responders: something like an MDM or sensor data
 collection perhaps. In practice, you often end up doing egress from those
 devices anyway for reasons that have nothing to do with Noise. So, K\* is out.
 
-<table style="text-align: center">
+<table style="text-align: center" class="matrix">
     <tbody>
         <tr>
             <td colspan="1" rowspan="1">
@@ -429,9 +454,7 @@ identify participants) for latency (how many round trips are needed).
 
 IX doesn't provide privacy for the initiator at all, but that's the side you
 usually care about. It still has the roundtrip downside, making it a niche
-variant.
-
-XX and XK require an extra round trip before they send over the
+variant. XX and XK require an extra round trip before they send over the
 initiator's static key. Flip side: they have the strongest possible
 privacy protection for the initiator, whose identity is only sent to the
 responder after they've been authenticated and forward secrecy has been
@@ -456,14 +479,18 @@ Noise\_XK. If you're doing a peer-to-peer IoT system where device
 privacy matters, you might end up with Noise\_XX. (It's no accident
 that IK, XK and XX are in the last set of protocols standing.)
 
-*Protocol variants* Ignore deferred variants for now. If you needed them you'd
+## Protocol variants
+
+Ignore deferred variants for now. If you needed them you'd
 know. PSK is an interesting quantum computer hedge. We'll talk more about
 quantum key exchanges in a different post, but briefly: a shared PSK among
 several participants protects against a passive adversary that records
 everything and acquires a quantum computer some time in the future, while
 retaining the convenient key distribution of public keys.
 
-*Conclusion* It's incredible how much has happened in the last few years
+## Conclusion
+
+It's incredible how much has happened in the last few years
 to make protocols safer, between secure protocol templates like Noise,
 new proof systems like Tamarin, and ubiquitous libraries of safer
 primitives like libsodium. So far, the right answer for a safe transport

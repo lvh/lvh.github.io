@@ -161,6 +161,49 @@ navbar-dark bg-dark
 <p>(This post was syndicated on the Latacora blog.)</p>
 </div>
     </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/" class="u-url">Analyzing a simple encryption scheme using GitHub SSH keys</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/" rel="bookmark">
+            <time class="published dt-published" datetime="2018-09-30T12:54:00-07:00" itemprop="datePublished" title="2018-09-30 12:54">2018-09-30 12:54</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>(This is an introductory level analysis of a scheme involving RSA. If you're already comfortable with Bleichenbacher oracles you should skip it.)</p>
+<p>Someone pointed me at the following suggestion on the Internet for encrypting secrets to people based on their GitHub SSH keys. I like the idea of making it easier for people to leverage key material and tools they already have.  The encryption instructions are:</p>
+<pre class="code literal-block"><span></span><span class="nb">echo</span> <span class="s2">"my secret"</span> &gt; message.txt
+curl -q github.com/<span class="nv">$USER</span>.keys <span class="p">|</span> head -n <span class="m">1</span> &gt; recipient.pub
+ssh-keygen -e -m pkcs8 -f recipient.pub &gt; recipient.pem
+openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</span>
+    -in message.txt -out encrypted.txt
+</pre>
+
+
+<p>Anything using an openssl command line tool makes me a little uncomfortable. Let's poke at it a little.</p>
+<p>We'll assume that that first key is really an RSA key and we don't have to worry about EdDSA or ECDSA (or heaven forbid, DSA). You're encrypting a password for someone. The straightforward threat model is an attacker who has the public key and ciphertext (but no plaintext) and wants to decrypt the ciphertext.</p>
+<p>There are a few ways you can try to attack RSA schemes. You could attack the underlying math: maybe the keys were generated with insufficient entropy (e.g. <a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/%5Bcve.mitre.org/cgi-bin/c...%5D(http:/cve.mitre.org/cgi-bin/cvename.cgi?name=cve-2008-0166)">the Debian weak SSH keys problem</a>) or bogus prime generation (e.g. <a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/%5Bcve.mitre.org/cgi-bin/c...%5D(https:/cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-15361)">ROCA</a>). In either case, you can generate the private key from the public key. These keys off of GitHub are likely OpenSSH-generated SSH keys generated on developer laptops and hence unlikely to have that sort of problem. It's also not specific to this scheme. (A real attacker would still check.)</p>
+<p>Other attacks depend on the type of RSA padding used. The thing that sticks out about that <code>openssl rsautl -encrypt</code> is the <code>-ssl</code> flag. The man page claims:</p>
+<blockquote>
+<p>-pkcs, -oaep, -ssl, -raw</p>
+<p>the padding to use: PKCS#1 v1.5 (the default), PKCS#1 OAEP, special padding used in SSL v2
+   backwards compatible handshakes, or no padding, respectively.  For signatures, only -pkcs
+   and -raw can be used.</p>
+</blockquote>
+<p>iA! iA! I forgot that SSLv2 has its own weird padding variant: I remembered it as PKCSv15 from the last time I looked (DROWN). After some source diving (thanks pbsd!) I figured out that backwards-compatible SSLv2 padding is like PKCS1v15, but the first 8 bytes of the random padding are <code>0x03</code> (<a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/%5Bgithub.com/openssl/o...%5D(https:/github.com/openssl/openssl/blob/1212818eb07add297fe562eba80ac46a9893781e/crypto/rsa/rsa_pk1.c#L117-L152)">PKCS1v15 code</a>, <a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/%5Bgithub.com/openssl/o...%5D(https:/github.com/openssl/openssl/blob/1212818eb07add297fe562eba80ac46a9893781e/crypto/rsa/rsa_ssl.c#L16-L53)">SSLv2 code</a>). That's weird, but OK: let's just say it's weird PKCSv15 and move on.</p>
+<p>PKCS1v15 and its SSLv2 variant are both vulnerable to Bleichenbacher's oracle attack. That attack relies on being able to mess with a ciphertext and learn from how it fails decryption via an error message or a timing side channel. That doesn't work here: this model is "offline": the attacker gets a ciphertext and a public key, but they don't get to talk to anything that knows how to decrypt.  Hence, they don't get to try to get it to decrypt maliciously modified ciphertexts either.</p>
+<p>There are lots of ways unpadded ("textbook") RSA is unsafe, but one of them is that it's deterministic. If <em>c = m<sup>e</sup> mod N</em> and an attacker is given a <em>c</em> and they can guess a bunch of <em>m</em>, they know <em>which</em> <em>m</em> produced a particular <em>c</em>, and so decrypted the ciphertext. That sounds like a weird model at first, since the attacker comes up with <em>m</em> and just "confirms" it's the right one. It would work here regardless: passwords are often low-entropy and can be enumerated, that's the premise of modern password cracking.</p>
+<p>But that's raw RSA, not PKCS1v15 padding, which is <code>EB = 00 || BT || PS || 00 || D</code> (see <a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/%5Btools.ietf.org/html/rfc2...%5D(https:/tools.ietf.org/html/rfc2313)">RFC</a>), where BT is the block type (here 02 for public key encryption). D is the data you're encrypting. PS is the  "padding string", which is a little confusing because the entire operation is padding. It's randomly generated when you're doing an RSA encryption operation. If you call the maximum size we can run through RSA k (the modulus size), the maximum length for PS is k - D - 3 (one for each null byte and one for the BT byte). The spec insists (and OpenSSL correctly enforces) this to be at least 8 bytes, or 64 bits of entropy. You can do about 50k/s public key operations on my dinky virtualized and heavily power throttled laptop. 64 bits is a bunch but not infinity. That's still not a very satisfactory result.</p>
+<p>But wait--it's <em>not</em> PKCS1V15, it's that weird SSLv2 padding which sets the first 8 bytes of the padding string to 0x03 bytes. If the padding string is just 8 bytes long, that means the padding string is entirely determined. We can verify that by trying to encrypt a message of the appropriate size. For a 2048 bit RSA key, that's 2048 // 8 == 256 bytes worth of modulus, 3 bytes worth of header bytes and 8 bytes worth of padding, so a 256 - 8 - 3 == 245 byte message. You can go check that any 245 message encrypts to the same ciphertext every time. There's no lower bound on the amount of entropy in the ciphertext. A 244 byte message will encrypt to one of 256 ciphertexts: one for each possible pseudorandom padding value.</p>
+<p>Practically, is this still fine? Probably, but only within narrow parameters. If the message you're encrypting is very close to 245 bytes and has plenty of structure known to the attacker, it isn't. If I can get you to generate a lot of these (say, a CI system automating the same scheme), it won't be. It's the kind of crypto that makes me vaguely uncomfortable but you'll probably get away with because there's no justice in the world.</p>
+<p>There's a straightforward way to improve this. Remember how I said <code>-ssl</code> was weird? Not specifying anything would've resulted in the better-still-not-great PKCS1v15 padding. If you are going to specify a padding strategy, specify <code>-oaep</code>. OAEP is the good RSA encryption padding. By default, OpenSSL uses SHA1 with it (for both the message digest and in MGF1), which is fine for this purpose. That gives you 160 bits of randomness, which ought to be plenty.</p>
+<p>This is why most schemes use RSA to encrypt a symmetric key.</p>
+<p>Future blog posts: how to fix this, creative scenarios in which we mess with those parameters so it breaks, and how to do the same with ECDSA/EdDSA keys. For the latter: I asked a smart person and the "obvious" thing to them was not the thing I'd have done. For EdDSA, my first choice would be to convert the public key from Ed25519 to X25519 and then use NaCl box. They'd use the EdDSA key directly. So, if you're interested, we'll could do a post on that. And then we'd probably talk about why you use NIST P-256 for both signatures and ECDH, but different curve formats in djb country: Ed25519 for signatures and X25519 for ECDH. Oh, and we should do some entropy estimation. People often know how to do that for passwords, but for this threat model we also need to do that for English prose.</p>
+</div>
+    </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-default-openssh-key-encryption-is-worse-than-plaintext/" class="u-url">The default OpenSSH key encryption is worse than plaintext</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
@@ -212,15 +255,46 @@ navbar-dark bg-dark
         </div>
     </header><div class="e-content entry-content">
     <div>
-<p>TL;DR: if I ever told you to use Noise, I probably meant Noise_IK and should
-have been more specific.</p>
+<style>
+    .matrix {
+        position: relative;
+        margin: auto;
+        margin-bottom: 2em;
+    }
+    .matrix:before, .matrix:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        border: 3px solid #000;
+        width: 20px;
+        height: 100%;
+    }
+    .matrix:before {
+        left: -10px;
+        border-right: 0;
+    }
+    .matrix:after {
+        right: -10px;
+        border-left: 0;
+    }
+    .matrix td {
+        vertical-align: middle;
+        min-width: 100px;
+        margin-bottom: 10px;
+    }
+    .matrix td p {
+        vertical-align: middle;
+        text-align: center;
+        margin: auto;
+    }
+</style>
 <p>The Noise protocol is one of the best things to happen to encrypted protocol
 design. <a href="https://www.wireguard.com">WireGuard</a> inherits its elegance from Noise.
 Noise is a cryptography engineer's darling spec. It's important not to get
 blindsided while fawning over it and to pay attention to where implementers run
 into trouble. Someone raised a concern I had run into before: Noise has a
 matrix.</p>
-<table><tbody>
+<table class="matrix" style="width:100%"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span>N(rs):<br>  ← s<br>  ...<br>  → e, es</span></p>
@@ -277,28 +351,26 @@ matrix.</p>
             </td>
         </tr>
 </tbody></table>
-<p>To a cryptography engineer, this matrix is beautiful. These eldritch
-runes describe a grammar: the number of ways you can meaningfully
-compose the phrases that can make up a Noise handshake into a proper
-protocol. The rest of the document describes what the trade-offs between
-them are: whether the protocol is one-way or interactive, whether you
-get resistance against key-compromise impersonation, what sort of
-privacy guarantees you get, et cetera.</p>
-<p>(Key-compromise impersonation means that if I steal your key, I can
-impersonate anyone to you.)</p>
-<p>To the layperson implementer, the matrix is terrifying. They hadn't
-thought about key-compromise impersonation or the distinction between
-known-key, hidden-key and exposed-key protocols or even forward secrecy.
-They're going to fall back to something else: something probably less
-secure but at least unambiguous on what to do.</p>
-<p>As Noise matures into a repository for protocol templates with wider
-requirements, this gets worse, not better. The most recent revision of
-the Noise protocol adds 23 new "deferred" variants. It's unlikely these
-will be the last additions.</p>
-<p>Which Noise variant should they use? Depends on the application of
-course, but we can make some reasonable assumptions for most apps.
-Ignoring variants, we have:</p>
-<table style="text-align: center"><tbody>
+<p>To a cryptography engineer, this matrix is beautiful. These eldritch runes
+describe a grammar: the number of ways you can meaningfully compose the phrases
+that can make up a Noise handshake into a proper protocol. The rest of the
+document describes what the trade-offs between them are: whether the protocol is
+one-way or interactive, whether you get resistance against key-compromise
+impersonation, what sort of privacy guarantees you get, et cetera.
+(Key-compromise impersonation means that if I steal your key, I can impersonate
+anyone to you.)</p>
+<p>To the layperson implementer, the matrix is terrifying. They hadn't thought
+about key-compromise impersonation or the distinction between known-key,
+hidden-key and exposed-key protocols or even forward secrecy. They're going to
+fall back to something else: something probably less secure but at least
+unambiguous on what to do. As Noise matures into a repository for protocol
+templates with wider requirements, this gets worse, not better. The most recent
+revision of the Noise protocol adds 23 new "deferred" variants. It's unlikely
+these will be the last additions.</p>
+<p>Which Noise variant should that layperson use? Depends on the application of
+course, but we can make some reasonable assumptions for most apps. Ignoring
+variants, we have:</p>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span>N</span></p>
@@ -355,7 +427,7 @@ Ignoring variants, we have:</p>
 initiator and responder can send messages to each other as opposed to
 just initiator to responder. That gets rid of the first column of the
 matrix.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -409,28 +481,26 @@ matrix.</p>
         </tr>
 </tbody></table>
 <p>The other protocols are defined by two letters. From the spec:</p>
-<p></p>
-<hr>
-The first character refers to the initiator\'s static key:
+<blockquote>
+<p>The first character refers to the initiator's static key:</p>
 <ul>
 <li>N = No static key for initiator</li>
 <li>K = Static key for initiator Known to responder</li>
-<li>X = Static key for initiator Xmitted (\"transmitted\") to responder</li>
+<li>X = Static key for initiator Xmitted ("transmitted") to responder</li>
 <li>I = Static key for initiator Immediately transmitted to responder, despite reduced or absent identity hiding</li>
 </ul>
-<p>The second character refers to the responder\'s static key:</p>
+<p>The second character refers to the responder's static key:</p>
 <ul>
 <li>N = No static key for responder</li>
 <li>K = Static key for responder Known to initiator</li>
-<li>X = Static key for responder Xmitted (\"transmitted\") to initiator
-<hr>
-</li>
+<li>X = Static key for responder Xmitted ("transmitted") to initiator</li>
 </ul>
+</blockquote>
 <p>NN provides confidentiality against a passive attacker but neither party
 has any idea who you're talking to because no static (long-term) keys
 are involved. For most applications none of the *N suites make a ton of
 sense: they imply the initiator does not care who they're connecting to.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -487,7 +557,7 @@ sense: they imply the initiator does not care who they're connecting to.</p>
 static key so we have a convenient cryptographic identity for clients
 over time. So really, if you wanted something with an N in it, you'd
 know.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -545,7 +615,7 @@ happens to show up. This mostly makes sense if you have one central initiator
 that reaches out to a lot of responders: something like an MDM or sensor data
 collection perhaps. In practice, you often end up doing egress from those
 devices anyway for reasons that have nothing to do with Noise. So, K* is out.</p>
-<table style="text-align: center"><tbody>
+<table style="text-align: center" class="matrix"><tbody>
 <tr>
 <td colspan="1" rowspan="1">
                 <p><span><s>N</s></span></p>
@@ -602,8 +672,7 @@ devices anyway for reasons that have nothing to do with Noise. So, K* is out.</p
 identify participants) for latency (how many round trips are needed).</p>
 <p>IX doesn't provide privacy for the initiator at all, but that's the side you
 usually care about. It still has the roundtrip downside, making it a niche
-variant.</p>
-<p>XX and XK require an extra round trip before they send over the
+variant. XX and XK require an extra round trip before they send over the
 initiator's static key. Flip side: they have the strongest possible
 privacy protection for the initiator, whose identity is only sent to the
 responder after they've been authenticated and forward secrecy has been
@@ -625,13 +694,15 @@ initiator's privacy than you do about handshake latency, you want
 Noise_XK. If you're doing a peer-to-peer IoT system where device
 privacy matters, you might end up with Noise_XX. (It's no accident
 that IK, XK and XX are in the last set of protocols standing.)</p>
-<p><em>Protocol variants</em> Ignore deferred variants for now. If you needed them you'd
+<h3>Protocol variants</h3>
+<p>Ignore deferred variants for now. If you needed them you'd
 know. PSK is an interesting quantum computer hedge. We'll talk more about
 quantum key exchanges in a different post, but briefly: a shared PSK among
 several participants protects against a passive adversary that records
 everything and acquires a quantum computer some time in the future, while
 retaining the convenient key distribution of public keys.</p>
-<p><em>Conclusion</em> It's incredible how much has happened in the last few years
+<h3>Conclusion</h3>
+<p>It's incredible how much has happened in the last few years
 to make protocols safer, between secure protocol templates like Noise,
 new proof systems like Tamarin, and ubiquitous libraries of safer
 primitives like libsodium. So far, the right answer for a safe transport
@@ -1522,81 +1593,6 @@ w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
 singular.). Finally, I'd like to thank all the people who reviewed drafts of
 this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
 Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.</em></p>
-</div>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport/" class="u-url">Introducing Teleport</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                lvh
-            </span></p>
-            <p class="dateline">
-            <a href="posts/introducing-teleport/" rel="bookmark">
-            <time class="published dt-published" datetime="2016-03-12T09:35:56-08:00" itemprop="datePublished" title="2016-03-12 09:35">2016-03-12 09:35</time></a>
-            </p>
-        </div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>I'm happy to introduce <a href="https://github.com/gravitational/teleport">Teleport</a>, a new open source platform for
-managing SSH infrastructure. Teleport is built by <a href="http://www.gravitational.com/">Gravitational</a>, a Y
-Combinator company that ships SaaS on any platform. While I'm not a part of
-Gravitational, I have been advising them on the Teleport project.</p>
-<p>Most teams don't have a great authentication story. Some rely on passing
-passwords around haphazardly, while others rely on copying everyone's
-<code>~/.ssh/id_rsa.pub</code> to every new box. More complex homegrown systems quickly
-become unwieldy. These methods are problematic both operationally and from a
-security perspective: when security and usability are at odds, security tends
-to lose out. For a lot of teams, a single compromised key off of a developer
-machine spells disaster, on-boarding new team members is painful, and key
-rotation doesn't happen.</p>
-<p>In the last few years, strong multi-factor authentication has become the
-norm. Tokens are only valid for a brief period of time, use challenge-response
-protocols, or both. Teleport helps bring the same level of sophistication to
-infrastructure. It helps system administrators leverage the security benefits
-of short-lived certificates, while keeping the operational benefits of
-decoupling server authentication from user authentication. It lets you run
-isolated clusters, so that a compromise of staging credentials doesn't lead to
-a compromise in production. It automatically maintains clear audit logs: who
-logged in, when and where they logged in, and what they did once they got
-there.</p>
-<p>Teleport comes with a beautiful, usable UI, making it easy to visualize
-different clusters and the available machines within them. The UI is optional:
-many system administrators will prefer to use their existing SSH client, and
-Teleport supports that natively.  Because it implements the <code>SSH_AUTH_SOCK</code>
-protocol, integrating your current CLI workflow is a simple matter of setting
-a single environment variable.</p>
-<p>As someone with an open-source background, I'm glad to see this software
-released and developed out in the open. A decent SSH key management story
-should be available to everyone, and that's what Teleport does. I believe
-making this technology more accessible is good for everyone, including
-commercial vendors. Democratizing a decent DIY story helps turn their product
-into the battle-hardened and commercially supported version of industry best
-practice; and as such, I hope this helps grow that market. As a principal
-engineer at <a href="https://www.rackspace.com/security/">Rackspace Managed Security</a>, I'm excited to start working
-towards better authentication stories, both internally and for our customers,
-with Teleport as the new baseline.</p>
-<p>Releasing early and often is also an important part of open source
-culture. That can be at odds with doing due diligence when releasing
-security-critical systems like Teleport, especially when those systems have
-non-trivial cryptographic components. We feel Teleport is ready to show to the
-public now. To make sure we act as responsibly as possible, I've helped the
-Teleport team to join forces with a competent independent third-party
-auditor. We're not recommending that you bet the farm on Teleport by running
-it in production as your only authentication method just yet, but we do think
-it's ready for motivated individuals to start experimenting with it.</p>
-<p>Some people might feel that a better SSH story means you're solving the wrong
-problem. It seems at odds with the ideas behind immutable infrastructure and
-treating servers as <a href="https://blog.engineyard.com/2014/pets-vs-cattle">cattle, not pets</a>. I don't think that's
-true. Firstly, even with immutable infrastructure, being able to SSH into a
-box to debug and monitor is still incredibly important. Being able to rapidly
-deploy a bunch of fixed images quickly may be good, but you still have to know
-what to fix first. Secondly, existing systems don't always work that way. It
-may not be possible, let alone economically rational, to "port" them
-effectively. It's easy to think of existing systems as legacy eyesores that
-only exist until you can eradicate them, but they do exist, they're typically
-here to stay, and they need a real security story, too.</p>
-<p>Teleport is still in its early stages. It's usable today, and I'm convinced it
-has a bright future ahead of it. It's written in a beautiful, hackable Go
-codebase, and <a href="https://github.com/gravitational/teleport">available on Github</a> starting today.</p>
 </div>
     </div>
     </article>

@@ -73,7 +73,82 @@ navbar-dark bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container/" class="u-url">Don't expose the Docker socket (not even to a container)</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport/" class="u-url">Introducing Teleport</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/introducing-teleport/" rel="bookmark">
+            <time class="published dt-published" datetime="2016-03-12T09:35:56-08:00" itemprop="datePublished" title="2016-03-12 09:35">2016-03-12 09:35</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>I'm happy to introduce <a href="https://github.com/gravitational/teleport">Teleport</a>, a new open source platform for
+managing SSH infrastructure. Teleport is built by <a href="http://www.gravitational.com/">Gravitational</a>, a Y
+Combinator company that ships SaaS on any platform. While I'm not a part of
+Gravitational, I have been advising them on the Teleport project.</p>
+<p>Most teams don't have a great authentication story. Some rely on passing
+passwords around haphazardly, while others rely on copying everyone's
+<code>~/.ssh/id_rsa.pub</code> to every new box. More complex homegrown systems quickly
+become unwieldy. These methods are problematic both operationally and from a
+security perspective: when security and usability are at odds, security tends
+to lose out. For a lot of teams, a single compromised key off of a developer
+machine spells disaster, on-boarding new team members is painful, and key
+rotation doesn't happen.</p>
+<p>In the last few years, strong multi-factor authentication has become the
+norm. Tokens are only valid for a brief period of time, use challenge-response
+protocols, or both. Teleport helps bring the same level of sophistication to
+infrastructure. It helps system administrators leverage the security benefits
+of short-lived certificates, while keeping the operational benefits of
+decoupling server authentication from user authentication. It lets you run
+isolated clusters, so that a compromise of staging credentials doesn't lead to
+a compromise in production. It automatically maintains clear audit logs: who
+logged in, when and where they logged in, and what they did once they got
+there.</p>
+<p>Teleport comes with a beautiful, usable UI, making it easy to visualize
+different clusters and the available machines within them. The UI is optional:
+many system administrators will prefer to use their existing SSH client, and
+Teleport supports that natively.  Because it implements the <code>SSH_AUTH_SOCK</code>
+protocol, integrating your current CLI workflow is a simple matter of setting
+a single environment variable.</p>
+<p>As someone with an open-source background, I'm glad to see this software
+released and developed out in the open. A decent SSH key management story
+should be available to everyone, and that's what Teleport does. I believe
+making this technology more accessible is good for everyone, including
+commercial vendors. Democratizing a decent DIY story helps turn their product
+into the battle-hardened and commercially supported version of industry best
+practice; and as such, I hope this helps grow that market. As a principal
+engineer at <a href="https://www.rackspace.com/security/">Rackspace Managed Security</a>, I'm excited to start working
+towards better authentication stories, both internally and for our customers,
+with Teleport as the new baseline.</p>
+<p>Releasing early and often is also an important part of open source
+culture. That can be at odds with doing due diligence when releasing
+security-critical systems like Teleport, especially when those systems have
+non-trivial cryptographic components. We feel Teleport is ready to show to the
+public now. To make sure we act as responsibly as possible, I've helped the
+Teleport team to join forces with a competent independent third-party
+auditor. We're not recommending that you bet the farm on Teleport by running
+it in production as your only authentication method just yet, but we do think
+it's ready for motivated individuals to start experimenting with it.</p>
+<p>Some people might feel that a better SSH story means you're solving the wrong
+problem. It seems at odds with the ideas behind immutable infrastructure and
+treating servers as <a href="https://blog.engineyard.com/2014/pets-vs-cattle">cattle, not pets</a>. I don't think that's
+true. Firstly, even with immutable infrastructure, being able to SSH into a
+box to debug and monitor is still incredibly important. Being able to rapidly
+deploy a bunch of fixed images quickly may be good, but you still have to know
+what to fix first. Secondly, existing systems don't always work that way. It
+may not be possible, let alone economically rational, to "port" them
+effectively. It's easy to think of existing systems as legacy eyesores that
+only exist until you can eradicate them, but they do exist, they're typically
+here to stay, and they need a real security story, too.</p>
+<p>Teleport is still in its early stages. It's usable today, and I'm convinced it
+has a bright future ahead of it. It's written in a beautiful, hackable Go
+codebase, and <a href="https://github.com/gravitational/teleport">available on Github</a> starting today.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container/" class="u-url">Don't expose the Docker socket (not even to a container)</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh
