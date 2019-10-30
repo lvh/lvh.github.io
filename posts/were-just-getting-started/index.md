@@ -2,7 +2,7 @@
 .. title: We're just getting started
 .. slug: were-just-getting-started
 .. date: 2015-03-02 17:06:41 UTC-08:00
-.. tags: security, crypto
+.. tags: security, cryptography
 .. link:
 .. description:
 .. type: text

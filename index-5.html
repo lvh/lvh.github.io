@@ -34,16 +34,16 @@ navbar-dark bg-dark
         <div class="collapse navbar-collapse" id="bs-navbar">
             <ul class="navbar-nav mr-auto">
 <li class="nav-item">
-<a href="about.html" class="nav-link">About</a>
+<a href="about/" class="nav-link">About</a>
                 </li>
 <li class="nav-item">
-<a href="archive.html" class="nav-link">Archive</a>
+<a href="archive/" class="nav-link">Archive</a>
                 </li>
 <li class="nav-item">
-<a href="categories/index.html" class="nav-link">Tags</a>
+<a href="tags/" class="nav-link">Tags</a>
                 </li>
 <li class="nav-item">
-<a href="talks.html" class="nav-link">Talks</a>
+<a href="talks/" class="nav-link">Talks</a>
                 </li>
 <li class="nav-item">
 <a href="rss.xml" class="nav-link">RSS feed</a>
@@ -73,7 +73,325 @@ navbar-dark bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/they-do-take-security-seriously/" class="u-url">They do take security seriously</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container/" class="u-url">Don't expose the Docker socket (not even to a container)</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/dont-expose-the-docker-socket-not-even-to-a-container/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-09-23T14:54:24-07:00" itemprop="datePublished" title="2015-09-23 14:54">2015-09-23 14:54</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Docker primarily works as a client that communicates with a daemon
+process (<code>dockerd</code>). Typically that socket is a UNIX domain socket
+called <code>/var/run/docker.sock</code>. That daemon is highly privileged;
+effectively having root access. Any process that can write to the
+<code>dockerd</code> socket <em>also</em> effectively has root access.</p>
+<p>This is no big secret. Docker clearly documents this in a bunch of
+places, including the introductory documentation. It's an excellent
+reason to use Docker Machine for development purposes, even on
+Linux. If your regular user can write to the <code>dockerd</code> socket, then
+every code execution vulnerability comes with a free privilege
+escalation.</p>
+<p>The warnings around the Docker socket typically come with a (sometimes
+implicit) context of being on the host to begin with. Write access to
+the socket as an unprivileged user on the host may mean privileged
+access to the host, but there seems to be some confusion about what
+happens when you get write access to the socket <em>from a
+container</em>.</p>
+<p>The two most common misconceptions seem to be that it either doesn't
+grant elevated privileges at all, or that it grants you privileged
+access within the container (and without a way to break out). This is
+false; write access to the Docker socket is root on the host,
+regardless on where that write comes from. This is different from
+<a href="https://github.com/jpetazzo/dind">Jerome Pettazoni's <code>dind</code></a>, which gives you Docker-in-Docker;
+we're talking about access to the host's Docker socket.</p>
+<p>The process works like this:</p>
+<ol>
+<li>The Docker container gets a <code>docker</code> client of its own, pointed at
+   the <code>/var/run/docker.sock</code>.</li>
+<li>The Docker container launches a new container mounting <code>/</code> on
+   <code>/host</code>. This is the <em>host</em> root filesystem, not the first
+   container.</li>
+<li>The second container chroots to <code>/host</code>, and is now effectively
+   root on the host. (There are a few differences between this and a
+   clean login shell; for example, <code>/proc/self/cgroups</code> will still show
+   Docker cgroups. However, the attacker has all of the permissions
+   necessary to work around this.)</li>
+</ol>
+<p>This is identical to the process you'd use to escalate from outside of
+a container. Write access to the Docker socket is root on the host,
+full stop; who's writing, or where they're writing from, doesn't
+matter.</p>
+<p>Unfortunately, there are plenty of development teams unaware of this
+property. I recently came across one, and ended up making a screencast
+to unambiguously demonstrate the flaw in their setup (which involved a
+container with write access to the Docker socket).</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CB9Aa6QeRaI" frameborder="0" allowfullscreen></iframe>
+
+<p>This isn't new; it's been a known property of the way Docker works
+ever since the (unfortunately trivially cross-site scriptable) REST
+API listening on a local TCP port was replaced with the
+<code>/var/run/docker.sock</code> UNIX domain socket.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/" class="u-url">querySelectorAll from an element probably doesn't do what you think it does</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-08-21T12:11:23-07:00" itemprop="datePublished" title="2015-08-21 12:11">2015-08-21 12:11</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Modern browsers have APIs called <code>querySelector</code> and <code>querySelectorAll</code>. They
+find one or more elements matching a CSS selector. I'm assuming basic
+familiarity with CSS selectors: how you select elements, classes and ids. If
+you haven't used them, the Mozilla Developer Network has an excellent
+<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors">introduction</a>.</p>
+<p>Imagine the following HTML page:</p>
+<pre class="code literal-block"><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">img</span> <span class="na">id</span><span class="o">=</span><span class="s">"outside"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"my-id"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">img</span> <span class="na">id</span><span class="o">=</span><span class="s">"inside"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"lonely"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"outer"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"inner"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre>
+
+
+<p><code>document.querySelectorAll("div")</code> returns a <code>NodeList</code> of all of the <code>&lt;div&gt;</code>
+elements on the page. <code>document.querySelector("div.lonely")</code> returns that
+single lonely div.</p>
+<p><code>document</code> supports both <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"><code>querySelector</code></a> and
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"><code>querySelectorAll</code></a>, letting you find elements in the entire
+document. Elements themselves also support both <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector"><code>querySelector</code></a> and
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>querySelectorAll</code></a>, letting you query for elements that are
+descendants of that element. For example, the following expression will find
+images that are descendants of <code>#my-id</code>:</p>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"img"</span><span class="p">)</span>
+</pre>
+
+
+<p>In the sample HTML page above, it will find <code>&lt;img id="inside"&gt;</code> but not <code>&lt;img
+id="outside"&gt;</code>.</p>
+<p>With that in mind, what do these two expressions do?</p>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">);</span>
+</pre>
+
+
+<p>You might reasonably expect them to be equivalent. After all, one asks for
+<code>div</code> elements inside <code>div</code> elements inside <code>#my-id</code>, and the other asks for
+<code>div</code> elements inside <code>div</code> elements that are <em>descendants</em> of
+<code>#my-id</code>. However, when you look at <a href="http://jsbin.com/hineco/edit?html,js,output">this JSbin</a>, you'll see that they
+produce very different results:</p>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"#my-id div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div div"</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">3</span><span class="p">;</span>
+</pre>
+
+
+<p>What is going on here?</p>
+<p>It turns out that <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"><code>element.querySelectorAll</code></a> doesn't match elements
+starting from <code>element</code>. Instead, it matches elements matching the query that
+are also descendants of <code>element</code>. Therefore, we're seeing three <code>div</code>
+elements: <code>div.lonely</code>, <code>div.outer</code>, <code>div.inner</code>. We're seeing them because
+they both match the <code>div div</code> selector and are all descendants of <code>#my-id</code>.</p>
+<p>The trick to remembering this is that CSS selectors are absolute. They are not
+relative to any particular element, not even the element you're calling
+<code>querySelectorAll</code> on.</p>
+<p>This even works with elements <em>outside</em> the element you're calling
+<code>querySelectorAll</code> on. For example, this selector:</p>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"div div div"</span><span class="p">)</span>
+</pre>
+
+
+<p>... matches <code>div.inner</code> in this snippet (<a href="http://jsbin.com/woropuc/edit?html,js,output">JSbin</a>):</p>
+<pre class="code literal-block"><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"my-id"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"inner"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre>
+
+
+<p>I think this API is surprising, and the front-end engineers I've asked seem to
+agree with me. This is, however, not a bug. It's how the spec defines it to
+work, and browsers consistently implement it that way.
+Safari. <a href="http://ejohn.org/blog/thoughts-on-queryselectorall/">John Resig commented</a> how he and others felt this behavior
+was quite confusing back when the spec came out.</p>
+<p>If you can't easily rewrite the selector to be absolute like we did above,
+there are two alternatives: the <code>:scope</code> CSS pseudo-selector, and
+<code>query</code>/<code>queryAll</code>.</p>
+<p>The <code>:scope</code> pseudo-selector matches against the current scope. The
+name comes from the <a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped">CSS scoping</a>, which limits the scope
+of styles to part of the document. The element we're calling
+<code>querySelectorAll</code> on also counts as a scope, so this expression only
+matches <code>div.inner</code>:</p>
+<pre class="code literal-block"><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#my-id"</span><span class="p">).</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">":scope div div"</span><span class="p">);</span>
+</pre>
+
+
+<p>Unfortunately, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility">browser support</a> for scoped CSS and the <code>:scope</code>
+pseudo-selector is extremely limited. Only recent versions of Firefox support
+it by default. Blink-based browsers like Chrome and Opera require the
+well-hidden experimental features flag to be turned on. Safari has a buggy
+implementation. Internet Explorer doesn't support it at all.</p>
+<p>The other alternative is <code>element.query</code>/<code>queryAll</code>. These are alternative
+methods to <code>querySelector</code> and <code>querySelectorAll</code> that exist on DOM parent
+nodes. They also take selectors, except these selectors are interpreted
+relative to the element being queried from.  Unfortunately, these methods are
+even more obscure: they are not referenced on MDN or <code>caniuse.com</code>, and are
+missing from the <a href="http://www.w3.org/TR/dom/#interface-parentnode">current DOM4 working draft</a>, dated 18
+June 2015. They were still present in <a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode">an older version</a>, dated 4
+February 2014, as well as in the <a href="https://dom.spec.whatwg.org/#interface-parentnode">WHATWG Living Document</a> version
+of the spec. They have also been implemented by at least two polyfills:</p>
+<ul>
+<li><a href="https://webreflection.github.io/dom4/">Dom4</a></li>
+<li><a href="https://github.com/barberboy/dom-elements">dom-elements</a></li>
+</ul>
+<p>In conclusion, the DOM spec doesn't always necessarily do the most obvious
+thing. It's important to know pitfalls like these, because they're difficult
+to discover from just the behavior. Fortunately, you can often rewrite your
+selector so that it isn't a problem. If you can't, there's always a polyfill
+to give you the modern API you want. Alternatively, libraries like jQuery can
+also help you get a consistent, friendly interface for querying the DOM.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops/" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                lvh
+            </span></p>
+            <p class="dateline">
+            <a href="posts/todays-openssl-bug-for-techies-without-infosec-chops/" rel="bookmark">
+            <time class="published dt-published" datetime="2015-07-09T08:26:58-07:00" itemprop="datePublished" title="2015-07-09 08:26">2015-07-09 08:26</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<h2>What happened?</h2>
+<p>OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
+alternative certificate chain when the first one fails. The logic in
+that feature had a bug in it, such that it didn't properly verify if
+the certificates in the alternative chain had the appropriate
+permissions; specifically, it didn't check if those certificates are
+certificate authorities.</p>
+<p>Specifically, this means that an attacker who has a valid certificate
+for any domain, can use that certificate to produce new
+certificates. Those normally wouldn't work, but the algorithm for
+finding the alternative trust chain doesn't check if the valid
+certificate can act as a certificate authority.</p>
+<h2>What's a certificate (chain)?</h2>
+<p>A certificate is a bit like an ID card: it has some information about
+you (like your name), and is authenticated by a certificate authority
+(in the case of an ID, usually your government).</p>
+<h2>What's a certificate authority?</h2>
+<p>A certificate authority is an entity that's allowed to authenticate
+certificates. Your computer typically ships with the identity of those
+certificate authorities, so it knows how to recognize certificates
+authorized by them.</p>
+<p>In the ID analogy, your computer knows how to recognize photo IDs
+issued by e.g. California.</p>
+<p>The issue here is that in some cases, OpenSSL was willing to accept
+signatures authenticated by certificates that don't have certificate
+authority powers. In the analogy, it would mean that it accepted
+CostCo cards as valid ID, too.</p>
+<h2>Why did they say it wouldn't affect most users?</h2>
+<p>This basically means "we're assuming most users are using OpenSSL for
+vanilla servers", which is probably true. Most servers do use OpenSSL,
+and most clients (browsers) don't.</p>
+<p>The bug affects anyone trying to authenticate their peer. That
+includes regular clients, and servers doing client
+authentication. Regular servers aren't affected, because they don't
+authenticate their peer.</p>
+<p>Servers doing client authentication are fairly rare. The biggest
+concern is with clients. While browsers typically don't use OpenSSL, a
+lot of API clients do. For those few people affected by the bug and
+with clients that use OpenSSL, the bug is catastrophic.</p>
+<h2>What's client authentication?</h2>
+<p>The vast majority of TLS connections only authenticate the
+server. When the client opens the connection, the server sends its
+certificate. The client checks the certificate chain against the list
+of certificate authorities that it knows about. The client is
+typically authenticated, but over the protocol spoken inside of TLS
+(usually HTTP), not at a TLS level.</p>
+<p>That isn't the only way TLS can work. TLS also supports authenticating
+clients with certificates, just like it authenticates servers. This is
+called mutually authenticated TLS, because both peers authenticate
+each other. At Rackspace Managed Security, we use this for all
+communication between internal nodes. We also operate our own
+certificate authority to sign all of those certificates.</p>
+<h2>What's TLS?</h2>
+<p>TLS is what SSL has been called for way over a decade. The old name
+stuck (particularly in the name "OpenSSL"), but you should probably
+stop using it when you're talking about the secure protocol, since all
+of the versions of the protocol that were called "SSL" have crippling
+security bugs.</p>
+<h2>Why wasn't this found by automated testing?</h2>
+<p>I'm not sure. I wish automated testing this stuff was easier. Since
+I'm both a user and a big fan of client authentication, which is a
+pretty rare feature, I hope to spend more time in the future creating
+easy-to-use automated testing tools for this kind of scenario.</p>
+<h2>How big is the window?</h2>
+<p>1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
+and 1.0.2d, were released today, on 9 Jul 2015.</p>
+<p>The "good news" is that the bad releases are recent. Most people who
+have an affected version will be updating regularly, so the number of
+people affected is small.</p>
+<p>The bug affected following platforms (non-exhaustive):</p>
+<ul>
+<li>It did not affect stock OS X, because they still ship
+  0.9.8. However, the bug does affect a stable version shipped through
+  Homebrew (1.0.2c).</li>
+<li>
+<a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html">Ubuntu is mostly not affected</a>. The only affected version
+  is the unreleased 15.10 (Wily). Ubuntu has already released an
+  update for it.</li>
+<li>The bug affects stable releases of Fedora. I previously mistakenly
+  reported that the contrary, but that information was based on their
+  package version numbers, which did not match upstream. Fedora
+  backported the faulty logic to their version of 1.0.1k, which was
+  available in Fedora 21 and 22. They have since released patches; see
+  <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544">this ticket</a> for details. Thanks to Major Hayden for the
+  correction!</li>
+<li>The bug does not affect Debian stable, but it does affect
+  <a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl">testing and unstable</a>.</li>
+<li>The bug affects <a href="https://www.archlinux.org/packages/?sort=-last_update">ArchLinux testing</a>.</li>
+</ul>
+<h2>In conclusion</h2>
+<p>The bug is disastrous, but affects few people. If you're running
+stable versions of your operating system, you're almost certainly
+safe.</p>
+<p>The biggest concern is with software developers using OS X. That
+audience uses HTTPS APIs frequently, and the clients to connect to
+those APIs typically use OpenSSL. OS X comes with 0.9.8zf by default
+now, which is a recent revision of an ancient branch. Therefore,
+people have a strong motivation to get their OpenSSL from a
+third-party source. The most popular source is Homebrew, which up
+until earlier this morning shipped 1.0.2c. The bug affects that
+version. If you installed OpenSSL through Homebrew, you should go
+update right now.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/they-do-take-security-seriously/" class="u-url">They do take security seriously</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 lvh

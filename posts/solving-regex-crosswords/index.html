@@ -42,16 +42,16 @@ navbar-dark bg-dark
         <div class="collapse navbar-collapse" id="bs-navbar">
             <ul class="navbar-nav mr-auto">
 <li class="nav-item">
-<a href="../../about.html" class="nav-link">About</a>
+<a href="../../about/" class="nav-link">About</a>
                 </li>
 <li class="nav-item">
-<a href="../../archive.html" class="nav-link">Archive</a>
+<a href="../../archive/" class="nav-link">Archive</a>
                 </li>
 <li class="nav-item">
-<a href="../../categories/index.html" class="nav-link">Tags</a>
+<a href="../../tags/" class="nav-link">Tags</a>
                 </li>
 <li class="nav-item">
-<a href="../../talks.html" class="nav-link">Talks</a>
+<a href="../../talks/" class="nav-link">Talks</a>
                 </li>
 <li class="nav-item">
 <a href="../../rss.xml" class="nav-link">RSS feed</a>
@@ -285,6 +285,7 @@ literals that contain multiple characters, but our parser produces neither and
 I'd rather work from real examples. Plus, we have to implement alternation
 anyway.)</p>
 <h2>Alternation</h2>
+<h3>Parse trees</h3>
 <p>Let's look at a few parse trees for some simple alternations:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span>
 <span class="c1">;; =&gt;</span>
@@ -306,7 +307,8 @@ different length.</p>
    <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
     <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
     <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>
+   <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
 </pre>
 
 
@@ -321,11 +323,27 @@ different length.</p>
 </pre>
 
 
-<p>We need a way to express disjunction</p>
+<h3>Alternation in logic</h3>
+<p>Again, we write a simple test:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-alternation-test</span>
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span> <span class="sc">\B</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span> <span class="p">[</span><span class="nv">q</span><span class="p">])))))</span>
+</pre>
+
+
+<p>We need a way to express disjunction. Like <code>l/and*</code>, there's a <code>l/or*</code>.</p>
 <p>This primer is a little unorthodox because we're walking through a problem that
-requires rule generation. Most introductory texts make you write simple, static
-rules and build up from there. Just like <code>l/and*</code> had a macro variant <code>l/all</code>,
-disjunction is much more commonly expressed with the macro <code>l/conde</code>.</p>
+requires rule generation. Most introductory texts make you build up static
+rules. Just like <code>l/and*</code> had a macro variant <code>l/all</code>, disjunction is usually
+expressed with the macro <code>l/conde</code>. One difference is that <code>conde</code> can express a
+disjunction of conjunctions in one go:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">conde</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">b</span><span class="p">]</span> <span class="p">[</span><span class="nv">c</span><span class="p">])</span>
+<span class="c1">;; is equivalent to</span>
+<span class="p">(</span><span class="nf">or*</span> <span class="p">[(</span><span class="nf">and*</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="nv">c</span><span class="p">])</span>
+</pre>
+
+
 <h2>Fixing :concatenation</h2>
 <p>As we discovered earlier: concatenation is broken. It assumes each part is a
 character, and specifically that each part is length 1.</p>
@@ -467,7 +485,7 @@ speed anything up much even if you discount the initial step.</p>
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
-<li><a class="tag p-category" href="../../categories/clojure/" rel="tag">clojure</a></li>
+<li><a class="tag p-category" href="../../tags/clojure/" rel="tag">clojure</a></li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             

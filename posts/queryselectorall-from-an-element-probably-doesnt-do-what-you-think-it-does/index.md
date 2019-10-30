@@ -2,7 +2,7 @@
 .. title: querySelectorAll from an element probably doesn't do what you think it does
 .. slug: queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does
 .. date: 2015-08-21 12:11:23 UTC-07:00
-.. tags: css, webdev, dom
+.. tags: web
 .. category:
 .. link:
 .. description:

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about gamedev)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/gamedev.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 03:13:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
+V, are sequential in nature. A player makes a move, then the next
+player makes a move, and so on. The details can vary, for example:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;There could be two players, or multiple. This number is tightly
+bound for scaling reasons, which we'll discuss later.&lt;/li&gt;
+&lt;li&gt;The game could have perfect information, like chess, where all
+players see a move as soon as it is played. The game could also have
+imperfect information, like Civilization V, where players see part
+of a move, but the effets may be obscured by fog of war.&lt;/li&gt;
+&lt;li&gt;The players may play in a consistent order (chess, Civilization V),
+or in a somewhat random one (D&amp;amp;D's initiative system).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All of those things are more or less orthogonal to the turn system.
+Players play turns sequentially, so I'm going to call these
+&lt;em&gt;sequential turn-based games&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Sequential turns make scaling the number of players up difficult. Even
+with only 8 players, any given player will spend most of their time
+waiting. While 8 players are a lot for most turn-based games, it's
+nothing compared to an MMORPG.&lt;/p&gt;
+&lt;p&gt;An alternative to &lt;em&gt;sequential&lt;/em&gt; turn-based play is &lt;em&gt;simultaneous&lt;/em&gt;
+turn-based play. In simultaneous turn-based play all players issue
+their moves at the same time, and all moves are played out at the same
+time. The simplest example is rock-paper-scissors, but Diplomacy works
+the same way. More recently, this system has been explored by the
+top-down tactical game &lt;a class="reference external" href="http://www.frozensynapse.com/"&gt;Frozen Synapse&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;While simultaneous turn-based play gets us closer to making massively
+multiplayer turn-based games feasible by turning a linear scaling
+problem into a constant time one, we're not quite out of the woods
+yet.&lt;/p&gt;
+&lt;p&gt;Consider what happens when a player does not make a move. There are a
+few reasons that might happen:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;The player is not playing the game right now.&lt;/li&gt;
+&lt;li&gt;The player has stopped playing the game altogether.&lt;/li&gt;
+&lt;li&gt;The player may be in a hopeless position, where stalling is better
+than losing. (Stalling may tie up lots of enemy resources.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you've ever gotten frustrated at a multiplayer game that has a
+"ready" system before you begin a game, but had to wait because one of
+the players disappeared; this is essentially the problem turn-based
+games face &lt;em&gt;every turn&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;There are a number of ways to mitigate this problem. Games can
+duplicate playing fields. That works for both sequential games like
+Hero Academy and simultaneous ones like Frozen Synapse. If a player
+doesn't make a move, that particular instance of the game world
+doesn't go anywhere; but you can play any number of games
+simultaneously.&lt;/p&gt;
+&lt;p&gt;For this strategy to work, the playing fields have to be independent.
+You don't lose heroes or soldiers because they're stuck on some stale
+game. The worst possible outcome is that your game statistics don't
+reflect reality.&lt;/p&gt;
+&lt;p&gt;That works, but rules out a permanent game world with shared
+resources. If there's a larger story being told, you would want these
+worlds to be linked somehow: be it through shared resources, or
+because they're literally the same game world.&lt;/p&gt;
+&lt;p&gt;There's a number of creative ways to get out from under that problem,
+usually by involving wall-clock time. For example, if a player doesn't
+respond within a fixed amount of time, they may forfeit their turn.
+Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#f1" id="id1"&gt;[1]&lt;/a&gt;
+There's a lot of degrees of freedom here. Do you use a global clock,
+or one local to a particular area?&lt;/p&gt;
+&lt;p&gt;A global clock is probably simpler, but poses some game play
+challenges. How long is the tick? Too fast, and a player may see their
+empire annihilated while they're sleeping. Too slow, and the most
+trivial action takes forever. There isn't necessarily one right
+answer, either. In an all-out cataclysmic struggle between two
+superpowers, a complete tactical battle plan may take a long time. Any
+timescale that isn't frustratingly short for that situation will be
+frustratingly long for anyone trying to guide their spaceship (or
+kodo, depending which universe you're in) across the Barrens.&lt;/p&gt;
+&lt;p&gt;Local clocks have their own share of difficulties. You still need to
+answer what happens for anything that isn't in a particular battle;
+you still need to answer what happens when battles merge or diverge.&lt;/p&gt;
+&lt;p&gt;I'm currently exploring the shared global clock. In order to mitigate
+the issues I described, I'm contemplating two ideas:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Allow programmable units; a la Screeps, CodeWars...&lt;/li&gt;
+&lt;li&gt;Allow players to plan several turns ahead of time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These are, of course, not mutually exclusive.&lt;/p&gt;
+&lt;p class="rubric"&gt;Footnotes&lt;/p&gt;
+&lt;table class="docutils footnote" frame="void" id="f1" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't particularly like this, because it "breaks the fourth
+wall" in a sense. If my engines are still consuming fuel real
+time, why can't the enemy fire missiles? Either time is
+stopped, or it isn't. Sure, games can be abstract, but that
+feels like an undue inconsistency.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;</description><category>gamedev</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</link><dc:creator>lvh</dc:creator><description>&lt;div class="section" id="hypercathexis"&gt;
+&lt;h2&gt;hypercathexis&lt;/h2&gt;
+&lt;blockquote class="epigraph"&gt;
+hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
+excessive concentration of desire upon a particular object&lt;/blockquote&gt;
+&lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
+because then it can be about a hyper cat in a bunch of hexes.&lt;/p&gt;
+&lt;p&gt;The only real constraints I started with was that I wanted a
+simultaneous turn-based space game on a hex grid.&lt;/p&gt;
+&lt;p&gt;Amit Patel from &lt;a class="reference external" href="http://www.redblobgames.com"&gt;Red Blob Games&lt;/a&gt; has basically the awesomest page
+about &lt;a class="reference external" href="http://www.redblobgames.com/grids/hexagons/"&gt;hex grids&lt;/a&gt;, and a ton of awesome pages about many other areas
+of game development. I think it's a fantastic resource for programmers
+like myself who don't do game dev as a day job, but just want to make
+a little game on the side.&lt;/p&gt;
+&lt;p&gt;Simultaneous turn-based means that all players plan their moves
+simultaneously, and they are then also executed simultaneously. This
+has an interesting scaling effect. On the one hand, it clearly scales
+better to many players, because players "play" simultaneously. On the
+other hand, you start getting interesting problems. For example, clock
+synchronization. Does the entire world advance with the same tick-tock
+pattern? What happens when a player does &lt;em&gt;not&lt;/em&gt; make a move within the
+allotted time? If you allow different clocks in the world, does time
+advance faster if both players submit a move, or do you always wait
+until the maximum timeout?&lt;/p&gt;
+&lt;p&gt;I wanted an excuse to play with &lt;a class="reference external" href="https://github.com/swannodette/om"&gt;Om&lt;/a&gt; and found &lt;a class="reference external" href="https://github.com/plexus/chestnut"&gt;Chestnut&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;a class="reference external" href="https://github.com/lvh/hypercathexis/tree/d454da2b1d8c1cf491fc3cd7dba83ee1b2bd4c76"&gt;first version&lt;/a&gt; had a working hex grid, but displayed it using
+offset coordinates. I wanted to work using axial coordinates as much
+as possible, because it makes a lot of math so much easier. Axial
+coordinates work together with the "grain" of the hex map:&lt;/p&gt;
+&lt;object data="https://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
+axial base vectors&lt;/object&gt;
+&lt;p&gt;Second thing I did was move from individual &lt;tt class="docutils literal"&gt;&amp;lt;img&amp;gt;&lt;/tt&gt; tags produced by
+Om to a single &lt;tt class="docutils literal"&gt;&amp;lt;svg&amp;gt;&lt;/tt&gt; with hexes (&lt;tt class="docutils literal"&gt;&amp;lt;polygon&amp;gt;&lt;/tt&gt;) inside it. This
+fixed a number of annoying placement issues with CSS. CSS really wants
+to position things based on bounding box, not midpoints. That's great
+for web pages, not so much for my hex grid. I ran into a number of
+annoying issues where certain hex borders would be wider than others.
+Browsers aren't made to draw hex grids based on left/right offsets, I
+guess...&lt;/p&gt;
+&lt;p&gt;I started by expressing distances in the SVG in terms of the hex
+width, which would become my unit. The height would then be
+\(\sqrt{3}/2\). Then, I realized that I could make my life easier by
+expressing all x coordinates in terms of a single hex width, and all y
+coordinates in terms of a single hex height; then I could just scale
+differently across x and y at the end.&lt;/p&gt;
+&lt;img alt="Simple SVG hex grid" src="https://www.lvh.io/img/BasicSVGHexGrid.png"&gt;
+&lt;p&gt;Developing in Firefox was mostly painless, but I discovered many
+discrepancies once trying it in Chrome. Things that should be the same
+aren't, particularly when it comes to transforms. For example, Chrome
+would occasionally literally do the inverse of the scaling it was
+supposed to:&lt;/p&gt;
+&lt;img alt="Differences in scaling behavior across browsers" src="https://www.lvh.io/img/HexGridCrossBrowserScalingIssues.png"&gt;
+&lt;p&gt;I guess trying to implement things in browsers was a mistake.&lt;/p&gt;
+&lt;/div&gt;</description><category>gamedev</category><guid>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</guid><pubDate>Sat, 18 Oct 2014 13:55:15 GMT</pubDate></item></channel></rss>

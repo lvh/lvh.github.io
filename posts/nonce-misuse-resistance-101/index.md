@@ -2,7 +2,7 @@
 .. title: Nonce misuse resistance 101
 .. slug: nonce-misuse-resistance-101
 .. date: 2016-05-19 12:25:44 UTC-07:00
-.. tags: security, crypto
+.. tags: security, cryptography
 .. category:
 .. link:
 .. description: An introduction to nonce-misuse resistant cryptosystems

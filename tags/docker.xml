@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about docker)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/docker.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 03:13:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
+runtime environment. Many platforms have different requirements when you're
+generating a runnable artifact than when you're running it.&lt;/p&gt;
+&lt;p&gt;In languages like Go, Rust or C, where the most common implementations produce
+native binaries, the resulting artifact may require nothing from the environment
+at all, or perhaps as little as a C standard library. Even in languages like
+Python that don't typically have a build step, you might indirectly use code
+that still requires compilation. Common examples include OpenSSL with
+pyca/cryptography or NETLIB and other numerical libraries with numpy/scipy.&lt;/p&gt;
+&lt;p&gt;In Clojure, you can easily build "uberjars" with both lein and boot. These are
+jars (the standard JVM deployable artifact) that come with all dependencies
+prepackaged, requiring nothing beyond what's in the Java standard library
+(rt.jar). While this still requires a JRE to run, that is still much smaller
+than the full development environment.&lt;/p&gt;
+&lt;p&gt;There are a few advantages to separating environments. It all boils down to them
+not having anything in them they don't need. That has clear performance
+advantages, although Docker has historically mitigated this problem with layered
+pulls. It can have security benefits as well: you can't have bugs in software
+you don't ship. Even software that isn't directly used in the build process can
+be affected: some build environments will contain plenty of software that is
+never used that would normally carry over into your production environments.&lt;/p&gt;
+&lt;p&gt;Historically, most users of Docker haven't bothered. Even if there are
+advantages, they aren't worth the hassle of having separate Docker environments
+and ferrying data between them. While different ways of effectively sharing data
+between containers have been available for years, people who wanted a shared
+build step have mostly had to write their own tooling. For example,
+my &lt;a href="https://github.com/lvh/icecap/blob/master/utils/build-libsodium-package.sh"&gt;icecap&lt;/a&gt; project has a batch file with an embedded Dockerfile that builds
+libsodium debs.&lt;/p&gt;
+&lt;p&gt;The upcoming release of Docker will add support for a new feature called
+multi-stage builds, where this pattern is much simpler. Dockerfiles themselves
+know about your precursor environments now, and future containers have full
+access to previous containers for copying build artifacts around. This
+requires Docker 17.05 or newer.&lt;/p&gt;
+&lt;p&gt;Here's an example Dockerfile that builds an uberjar from a standard lein-based
+app, and puts it in a new JRE image:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;clojure&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;
+&lt;span class="n"&gt;WORKDIR&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
+&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="n"&gt;project&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;clj&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;lein&lt;/span&gt; &lt;span class="n"&gt;deps&lt;/span&gt;
+&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
+&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;mv&lt;/span&gt; &lt;span class="ss"&gt;"$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')"&lt;/span&gt; &lt;span class="n"&gt;myapp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;standalone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jar&lt;/span&gt;
+
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;openjdk&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;jre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;alpine&lt;/span&gt;
+&lt;span class="n"&gt;WORKDIR&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
+&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="c1"&gt;--from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar&lt;/span&gt;
+&lt;span class="n"&gt;ENTRYPOINT&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;"java"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;"-jar"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;"/myapp/myapp.jar"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;This captures the uberjar name from the &lt;code&gt;lein uberjar&lt;/code&gt; output. If your uberjar
+name doesn't end in &lt;code&gt;.standalone.jar&lt;/code&gt;, that won't work. You can change the name
+of the uberjar with the &lt;code&gt;:uberjar-name&lt;/code&gt; setting in &lt;code&gt;project.clj&lt;/code&gt;. If you set it
+to &lt;code&gt;myapp-standalone.jar&lt;/code&gt;, you don't need the gnarly &lt;code&gt;sed&lt;/code&gt; expression anymore at
+all, and can just call &lt;code&gt;lein uberjar&lt;/code&gt;. (Thanks to Łukasz Korecki for the
+suggestion!)&lt;/p&gt;
+&lt;p&gt;The full clojure base image is a whopping 629MB (according to &lt;code&gt;docker images&lt;/code&gt;),
+whereas &lt;code&gt;openjdk:8-jre-alpine&lt;/code&gt; clocks in at 81.4MB. That's a little bit of an
+unfair comparison: &lt;code&gt;clojure&lt;/code&gt; also has an alpine-based image. However, this still
+illustrates the savings compared to the most commonly used Docker image.&lt;/p&gt;
+&lt;p&gt;There are still good reasons for not using multi-stage builds. In the icecap
+example above, the entire point is to use Docker as a build system to produce
+a deb artifact &lt;em&gt;outside of Docker&lt;/em&gt;. However, that's a pretty exotic use case:
+for most people this will hopefully make smaller Docker images an easy
+reality.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edited:&lt;/em&gt; The original blog post said that the Docker version to support this
+feature was in beta at time of writing. That was/is correct, but it's since
+been released, so I updated the post.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edited:&lt;/em&gt;* Łukasz Korecki pointed out that &lt;code&gt;project.clj&lt;/code&gt; has an &lt;code&gt;:uberjar-name&lt;/code&gt;
+parameter which can be used to avoid the gnarly &lt;code&gt;sed&lt;/code&gt; expression. Thanks Łukasz!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><category>docker</category><guid>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</guid><pubDate>Fri, 16 Jun 2017 17:12:46 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
+process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
+called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
+effectively having root access. Any process that can write to the
+&lt;code&gt;dockerd&lt;/code&gt; socket &lt;em&gt;also&lt;/em&gt; effectively has root access.&lt;/p&gt;
+&lt;p&gt;This is no big secret. Docker clearly documents this in a bunch of
+places, including the introductory documentation. It's an excellent
+reason to use Docker Machine for development purposes, even on
+Linux. If your regular user can write to the &lt;code&gt;dockerd&lt;/code&gt; socket, then
+every code execution vulnerability comes with a free privilege
+escalation.&lt;/p&gt;
+&lt;p&gt;The warnings around the Docker socket typically come with a (sometimes
+implicit) context of being on the host to begin with. Write access to
+the socket as an unprivileged user on the host may mean privileged
+access to the host, but there seems to be some confusion about what
+happens when you get write access to the socket &lt;em&gt;from a
+container&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The two most common misconceptions seem to be that it either doesn't
+grant elevated privileges at all, or that it grants you privileged
+access within the container (and without a way to break out). This is
+false; write access to the Docker socket is root on the host,
+regardless on where that write comes from. This is different from
+&lt;a href="https://github.com/jpetazzo/dind"&gt;Jerome Pettazoni's &lt;code&gt;dind&lt;/code&gt;&lt;/a&gt;, which gives you Docker-in-Docker;
+we're talking about access to the host's Docker socket.&lt;/p&gt;
+&lt;p&gt;The process works like this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The Docker container gets a &lt;code&gt;docker&lt;/code&gt; client of its own, pointed at
+   the &lt;code&gt;/var/run/docker.sock&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The Docker container launches a new container mounting &lt;code&gt;/&lt;/code&gt; on
+   &lt;code&gt;/host&lt;/code&gt;. This is the &lt;em&gt;host&lt;/em&gt; root filesystem, not the first
+   container.&lt;/li&gt;
+&lt;li&gt;The second container chroots to &lt;code&gt;/host&lt;/code&gt;, and is now effectively
+   root on the host. (There are a few differences between this and a
+   clean login shell; for example, &lt;code&gt;/proc/self/cgroups&lt;/code&gt; will still show
+   Docker cgroups. However, the attacker has all of the permissions
+   necessary to work around this.)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is identical to the process you'd use to escalate from outside of
+a container. Write access to the Docker socket is root on the host,
+full stop; who's writing, or where they're writing from, doesn't
+matter.&lt;/p&gt;
+&lt;p&gt;Unfortunately, there are plenty of development teams unaware of this
+property. I recently came across one, and ended up making a screencast
+to unambiguously demonstrate the flaw in their setup (which involved a
+container with write access to the Docker socket).&lt;/p&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/CB9Aa6QeRaI" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;This isn't new; it's been a known property of the way Docker works
+ever since the (unfortunately trivially cross-site scriptable) REST
+API listening on a local TCP port was replaced with the
+&lt;code&gt;/var/run/docker.sock&lt;/code&gt; UNIX domain socket.&lt;/p&gt;&lt;/div&gt;</description><category>docker</category><category>security</category><guid>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</guid><pubDate>Wed, 23 Sep 2015 21:54:24 GMT</pubDate></item></channel></rss>

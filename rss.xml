@@ -1,5 +1,548 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 27 Oct 2019 15:10:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 03:13:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
+&lt;h2&gt;You don’t really want a signature&lt;/h2&gt;
+&lt;p&gt;When cryptography engineers say "signature" they tend to mean something asymmetric, like RSA or ECDSA. Developers reach for asymmetric tools too often. There are a lot of ways to screw them up. By comparison, symmetric “signing” (MACs) are easy to use and hard to screw up. HMAC is bulletproof and ubiquitous.&lt;/p&gt;
+&lt;p&gt;Unless you have a good reason why you need an (asymmetric) signature, you want a MAC. If you really do want a signature, check out our Cryptographic Right Answers post to make that as safe as possible. For the rest of this blog post, "signing" means symmetrically, and in practice that means HMAC.&lt;/p&gt;
+&lt;h2&gt;How to sign a JSON object&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Serialize however you want.&lt;/li&gt;
+&lt;li&gt;HMAC. With SHA256? Sure, whatever. We did &lt;a href="https://latacora.singles/2018/04/03/cryptographic-right-answers.html"&gt;a blog post&lt;/a&gt; on that too.&lt;/li&gt;
+&lt;li&gt;Concatenate the tag with the message, maybe with a comma in between for easy parsing or something.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Wait, isn’t that basically a HS256 JWT?&lt;/h2&gt;
+&lt;p&gt;Shut up. Anyway, no, because you need to parse a header to read the JWT, so you inherit all of the problems that stem from that.&lt;/p&gt;
+&lt;h2&gt;How &lt;em&gt;not&lt;/em&gt; to sign a JSON object, if you can help it&lt;/h2&gt;
+&lt;p&gt;Someone asked how to sign a JSON object "in-band": where the tag is part of the object you’re signing itself. That's a niche use case, but it happens. You have a JSON object that a bunch of intermediate systems want to read and it’s important  none of them mess with its contents. You can't just send &lt;code&gt;tag || json&lt;/code&gt;: that may be the cryptographically right answer, but now it's not a JSON object anymore so third party services and middleboxes will barf. You also can't get them to reliably pass the tag around as metadata (via a HTTP header or something). You need to put the key &lt;em&gt;on the JSON object&lt;/em&gt;, somehow, to "transparently" sign it. Anyone who cares about validating the signature can, and anyone who cares that the JSON object has a particular structure doesn't break (because the blob is still JSON and it still has the data it's supposed to have in all the familiar places).&lt;/p&gt;
+&lt;p&gt;This problem sort-of reminds me of format-preserving encryption. I don’t mean that in a nice way, because there’s no nice way to mean that. Format-preserving encryption means you encrypt a credit card number and the result still sorta looks like a credit card number. It’s terrible and you only do it because you have to. Same with in-band JSON signing.&lt;/p&gt;
+&lt;p&gt;As stated, in-band JSON signing means modifying a JSON object (e.g. removing the HMAC tag) and validating that it’s the same thing that was signed. You do that by computing the HMAC again and validating the result. Unfortunately there are infinitely many equal JSON objects with distinct byte-level representations (for some useful definition of equality, like Python’s builtin ==).&lt;/p&gt;
+&lt;p&gt;Some of those differences are trivial, while others are fiendishly complicated. You can add as many spaces as you want between some parts of the grammar, like after the colon and before the value in an object. You can reorder the keys in an object. You can escape a character using a Unicode escape sequence (\u2603) instead of using the UTF-8 representation. "UTF-8" may be a serialization format for Unicode, but it’s not a canonicalization technique. If a character has multiple diacritics, they might occur in different orders. Some characters can be written as a base character plus a diacritic, but there’s also an equivalent single character. You can’t always know what the “right” character out of context: is this the symbol for the unit of resistance (U+2126 OHM SIGN) or a Greek capital letter Omega (U+03A9)? Don’t even get me started on the different ways you can write the same floating point number!&lt;/p&gt;
+&lt;p&gt;Three approaches:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Canonicalize the JSON.&lt;/li&gt;
+&lt;li&gt;Add the tag and the exact string you signed to the object, validate the signature and then validate that the JSON object is the same as the one you got.&lt;/li&gt;
+&lt;li&gt;Create an alternative format with an easier canonicalization than JSON.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Canonicalization&lt;/h3&gt;
+&lt;p&gt;Canonicalization means taking an object and producing a unique representation for it. Two objects that mean the same thing ("are equal") but are expressed differently canonicalize to the same representation.&lt;/p&gt;
+&lt;p&gt;Canonicalization is a quagnet, which is a term of art in vulnerability research meaning quagmire and vulnerability magnet. You can tell it’s bad just by how hard it is to type ‘canonicalization’.&lt;/p&gt;
+&lt;p&gt;My favorite canonicalization bug in recent memory is probably Kelby Ludwig’s SAML bug. Hold onto your butts, because this bug broke basically every SAML implementation under the sun in a masterful stroke. It used NameIds (SAML-speak for "the entity this assertion is about") that look like this:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;NameId&amp;gt;&lt;/span&gt;barney@latacora.com&lt;span class="c"&gt;&amp;lt;!----&amp;gt;&lt;/span&gt;.evil.com&lt;span class="nt"&gt;&amp;lt;/NameId&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;The common canonicalization strategy ("exc-c14n") will remove comments, so that side sees “barney@latacora.com.evil.com”. The common parsing strategy (“yolo”) disagrees, and sees a text node, a comment, and another text node. Since everyone is expecting a NameId to have one text node, you grab the first one. But that says barney@latacora.com, which isn’t what the IdP signed or your XML-DSIG library validated.&lt;/p&gt;
+&lt;p&gt;Not to worry: we said we were doing JSON, and JSON is not XML. It’s simpler! Right? There are at least two specs here: Canonical JSON (from OLPC) and an IETF draft (https://tools.ietf.org/id/draft-rundgren-json-canonicalization-scheme-05.html). They work? Probably? But they’re not fun to implement.&lt;/p&gt;
+&lt;h3&gt;Include the exact thing you’re signing&lt;/h3&gt;
+&lt;p&gt;If you interpret the problem as "to validate a signature I need an exact byte representation of what to sign" and canonicalization is just the default mechanism for getting to an exact byte representation, you could also just attach a specific byte serialization to the object with a tag for it.&lt;/p&gt;
+&lt;p&gt;You validate the tag matches the specific serialization, and then you validate that the specific serialization matches the outside object with the tag and specific serialization removed. The upside is that you don’t need to worry about canonicalization; the downside is your messages are about twice the size that they need to be. You can maybe make that a little better with compression, since the repeated data is likely to compress well.&lt;/p&gt;
+&lt;h3&gt;The regex bait and switch trick&lt;/h3&gt;
+&lt;p&gt;If you interpret the problem as being about already having a perfectly fine serialization to compute a tag over, but the JSON parser/serializer roundtrip screwing it up after you compute the tag, you might try to do something to the serialized format that doesn't know it's JSON. This is a variant of the previous approach: you're just not adding a &lt;em&gt;second&lt;/em&gt; serialization to compute the tag over.&lt;/p&gt;
+&lt;p&gt;The clever trick here is to add a field of the appropriate size for your tag with a well-known fake value, then HMAC, then swap the value. For example, if you know the tag is HMAC-SHA256, your tag size is 256 bits aka 32 bytes aka 64 hex chars. You add a unique key (something like &lt;code&gt;__hmac_tag&lt;/code&gt;) with a value of 64 well-known bytes, e.g. 64 ASCII zero bytes. Serialize the object and compute its HMAC. If you document some subset of JSON serialization (e.g. where CRLFs can occur or where extra spaces can occur), you know that the string &lt;code&gt;"__hmac_tag": “000...”&lt;/code&gt; will occur in the serialized byte stream. Now, you can use string replacement to shiv in the real HMAC value. Upon receipt, the decoder finds the tag, reads the HMAC value, replaces it with zeroes, computes the expected tag and compares against the previously read value.&lt;/p&gt;
+&lt;p&gt;Because there’s no JSON roundtripping, the parser can’t mess up the JSON object’s specific serialization. The key needs to be unique because of course the string replacement or regular expression doesn’t know how to parse JSON.&lt;/p&gt;
+&lt;p&gt;This feels weirdly gross? But at the same time probably less annoying than canonicalization. And it doesn't work if any of the middleboxes modiy the JSON through a parse/re-serialize cycle.&lt;/p&gt;
+&lt;h3&gt;An alternative format&lt;/h3&gt;
+&lt;p&gt;If you interpret the problem as "canonicalization is hard because JSON is more complex than what I really want to sign", you might think the answer is to reformat the data you want to sign in a format where canonicalization is easy or even automatic.  AWS Signatures do this: there’s a serialization format that’s far less flexible than JSON where you put some key parameters, and then you HMAC that. (There’s an interesting part to it where it also incorporates the hash of the exact message you’re signing -- but we’ll get to that later.)&lt;/p&gt;
+&lt;p&gt;This is particularly attractive if there’s a fixed set of simple values you have to sign, or more generally if the thing you’re signing has a predictable format.&lt;/p&gt;
+&lt;h2&gt;Request signing in practice&lt;/h2&gt;
+&lt;p&gt;Let’s apply this model to a case study of request signing has worked through the years in some popular services. These are not examples of how to do it well, but rather cautionary tales.&lt;/p&gt;
+&lt;p&gt;First off, AWS. AWS requires you to sign API requests. The current spec is "v4", which tells you that there is probably at least one interesting version that preceded it.&lt;/p&gt;
+&lt;h3&gt;AWS Signing v1&lt;/h3&gt;
+&lt;p&gt;Let’s say an AWS operation CreateWidget takes attribute Name which can be any ASCII string. It also takes an attribute Unsafe, which is false by default and the attacker wishes were true. V1 concatenates the key-value pairs you’re signing, so something like Operation=CreateWidget&amp;amp;Name=iddqd became OperationCreateWidgetNameiddqd. You then signed the resulting string using HMAC.&lt;/p&gt;
+&lt;p&gt;The problem with this is if I can get you to sign messages for creating widgets with arbitrary names, I can get you to sign operations for arbitrary CreateWidget requests: I just put all the extra keys and values I want in the value you’re signing for me. For example, the request signature for creating a widget named &lt;code&gt;iddqdUnsafetrue&lt;/code&gt; is exactly the same as a request signature for creating a widget named &lt;code&gt;iddqd&lt;/code&gt; with Unsafe equal to true: OperationCreateWidgetNameiddqdUnsafetrue.&lt;/p&gt;
+&lt;h3&gt;AWS Signing V2&lt;/h3&gt;
+&lt;p&gt;Security-wise: fine.&lt;/p&gt;
+&lt;p&gt;Implementation-wise: it’s limited to query-style requests (query parameters for GET, x-www-form-urlencoded for POST bodies) and didn’t support other methods, let alone non-HTTP requests. Sorting request parameters is a burden for big enough requests. Nothing for chunked requests either.&lt;/p&gt;
+&lt;p&gt;(Some context: even though most AWS SDKs present you with a uniform interface, there are several different protocol styles in use within AWS. For example, EC2 and S3 are their own thing, some protocols use Query Requests (basically query params in GET queries and POST formencoded bodies), others use REST+JSON, some use REST+XML… There’s even some SOAP! But I think that’s on its way out.)&lt;/p&gt;
+&lt;h3&gt;AWS Signing V3&lt;/h3&gt;
+&lt;p&gt;AWS doesn’t seem to like V3 very much. The &lt;a href="https://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html"&gt;"what’s new in v4 document"&lt;/a&gt; all but disavows it’s existence, and no live services appear to implement it. It had some annoying problems like distinguishing between signed and unsigned headers (leaving the service to figure it out) and devolving to effectively a bearer token when used over TLS (which is great, as long as it actually gets used over TLS).&lt;/p&gt;
+&lt;p&gt;Given how AWS scrubbed it away, it’s hard to say anything with confidence. I’ve found implementations, but that’s not good enough: an implementation may only use a portion of the spec while the badness can be hiding in the rest.&lt;/p&gt;
+&lt;h3&gt;AWS Signing V4&lt;/h3&gt;
+&lt;p&gt;Security-wise: fine.&lt;/p&gt;
+&lt;p&gt;Addressed some problems noted in V2; for example: just signs the raw body bytes and doesn’t care about parameter ordering. This is pretty close to the original recommendation: don’t do inline signing at all, just sign the exact message you’re sending and put a MAC tag on the outside. A traditional objection is that several equivalent requests would have a different representation, e.g. the same arguments but in a different order. It just turns out that in most cases that doesn’t matter, and API auth is one of those cases.&lt;/p&gt;
+&lt;p&gt;Also note that all of these schemes are really outside signing, but they’re still interesting because they had a lot of the problems you see on an inline signing scheme (they were just mostly unforced errors).&lt;/p&gt;
+&lt;h3&gt;AWS Signing V0&lt;/h3&gt;
+&lt;p&gt;For completeness. It is even harder to find than V3: you have to spelunk some SDKs for it. I hear it might have been HMAC(k, service || operation || timestamp), so it didn’t really sign much of the request.&lt;/p&gt;
+&lt;h3&gt;Flickr’s API signing&lt;/h3&gt;
+&lt;p&gt;One commonality of the AWS vulnerabilities is that none of them attacked the primitive. All of them used HMAC and HMAC has always been safe. Flickr had exactly the same bug as AWS V1 signing, but also used a bad MAC. The tag you sent was MD5(secret + your_concatenated_key_value_pairs). We’ll leave the details of extension attacks for a different time, but the punchline is that if you know the value of H(secret + message) and don’t know s, you get to compute H(secret + message + glue + message2), where glue is some binary nonsense and message2 is an arbitrary attacker controlled string.&lt;/p&gt;
+&lt;p&gt;A typical protocol where this gets exploited looks somewhat like query parameters. The simplest implementation will just loop over every key-value pair and assign the value into an associative array. So if you have user=lvh&amp;amp;role=user, I might be able to extend that to a valid signature for user=lvh&amp;amp;role=userSOMEBINARYGARBAGE&amp;amp;role=admin.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Just go ahead and always enforce TLS for your APIs.&lt;/li&gt;
+&lt;li&gt;Maybe you don’t need request signing? A bearer token header is fine, or HMAC(k, timestamp) if you’re feeling fancy, or mTLS if you really care.&lt;/li&gt;
+&lt;li&gt;Canonicalization is fiendishly difficult.&lt;/li&gt;
+&lt;li&gt;Add a signature on the outside of the request body, make sure the request body is complete, and don’t worry about "signing what is said versus what is meant" -- it’s OK to sign the exact byte sequence.&lt;/li&gt;
+&lt;li&gt;The corollary here is that it’s way harder to do request signing for a REST API (where stuff like headers and paths and methods matter) than it is to do signing for an RPC-like API.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</guid><pubDate>Thu, 25 Jul 2019 01:56:06 GMT</pubDate></item><item><title>The default OpenSSH key encryption is worse than plaintext</title><link>https://www.lvh.io/posts/the-default-openssh-key-encryption-is-worse-than-plaintext/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;The eslint-scope npm package got compromised recently, stealing npm credentials from your home directory. We started running tabletop exercises: what else would you smash-and-grab, and how can we mitigate that risk?&lt;/p&gt;
+&lt;p&gt;Most people have an RSA SSH key laying around. That SSH key has all sorts of privileges: typically logging into prod and GitHub access. Unlike an npm credential, an SSH key is encrypted, so perhaps it’s safe even if it leaks? Let’s find out!&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;user&lt;/span&gt;&lt;span class="o"&gt;@&lt;/span&gt;&lt;span class="nv"&gt;work&lt;/span&gt; &lt;span class="nv"&gt;/tmp&lt;/span&gt; &lt;span class="nv"&gt;$&lt;/span&gt; &lt;span class="nv"&gt;ssh-keygen&lt;/span&gt;
+&lt;span class="nv"&gt;Generating&lt;/span&gt; &lt;span class="nv"&gt;public/private&lt;/span&gt; &lt;span class="nv"&gt;rsa&lt;/span&gt; &lt;span class="nb"&gt;key &lt;/span&gt;&lt;span class="nv"&gt;pair.&lt;/span&gt;
+&lt;span class="nv"&gt;Enter&lt;/span&gt; &lt;span class="nv"&gt;file&lt;/span&gt; &lt;span class="nv"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;which&lt;/span&gt; &lt;span class="nv"&gt;to&lt;/span&gt; &lt;span class="nv"&gt;save&lt;/span&gt; &lt;span class="nv"&gt;the&lt;/span&gt; &lt;span class="nb"&gt;key &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;/home/user/.ssh/id_rsa&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="nv"&gt;mykey&lt;/span&gt;
+&lt;span class="nv"&gt;...&lt;/span&gt;
+&lt;span class="nv"&gt;user&lt;/span&gt;&lt;span class="o"&gt;@&lt;/span&gt;&lt;span class="nv"&gt;work&lt;/span&gt; &lt;span class="nv"&gt;/tmp&lt;/span&gt; &lt;span class="nv"&gt;$&lt;/span&gt; &lt;span class="nv"&gt;head&lt;/span&gt; &lt;span class="nv"&gt;-n&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="nv"&gt;mykey&lt;/span&gt;  
+&lt;span class="nv"&gt;-----BEGIN&lt;/span&gt; &lt;span class="nv"&gt;RSA&lt;/span&gt; &lt;span class="nv"&gt;PRIVATE&lt;/span&gt; &lt;span class="nv"&gt;KEY-----&lt;/span&gt;
+&lt;span class="nv"&gt;Proc-Type&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;,&lt;span class="nv"&gt;ENCRYPTED&lt;/span&gt;
+&lt;span class="nv"&gt;DEK-Info&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="nv"&gt;AES-128-CBC&lt;/span&gt;,&lt;span class="nv"&gt;CB973D5520E952B8D5A6B86716C6223F&lt;/span&gt;
+
+&lt;span class="nv"&gt;+5ZVNE65kl8kwZ808e4+Y7Pr8IFstgoArpZJ/bkOs7rB9eAfYrx2CLBqLATk1RT/&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;You can tell it’s encrypted because it says so right there. It also doesn’t start with &lt;code&gt;MII&lt;/code&gt; -- the base64 DER clue that an RSA key follows. And AES! That’s good, right? CBC with ostensibly a random IV, even! No MAC, but without something like a padding oracle to try modified ciphertexts on, so that might be OK?&lt;/p&gt;
+&lt;p&gt;It’s tricky to find out what this DEK-Info stuff means. Searching the openssh-portable repo for the string DEK-Info only shows sample keys. The punchline is that the AES key is just MD5(password || IV[:8]). That’s not good at all: password storage best practice holds that passwords are bad (low entropy) and in order to turn them into cryptographic key material you need an expensive function like Argon2. MD5 is very cheap to compute. The only thing this design has going for it is that the salt goes after the password, so you can’t just compute the intermediate state of MD5(IV[8:]) and try passwords from there. That’s faint praise, especially in a world where I can rent a machine that tries billions of MD5 calls per second. There just aren’t that many passwords.&lt;/p&gt;
+&lt;p&gt;You might ask yourself how OpenSSH ended up with this. The sad answer is the OpenSSL command line tool had it as a default, and now we’re stuck with it.&lt;/p&gt;
+&lt;p&gt;That’s a fair argument to say that standard password-encrypted keys are about as good as plaintext: the encryption is ineffective. But I made a stronger statement: it’s &lt;em&gt;worse&lt;/em&gt;. The argument there is simple: an SSH key password is unlikely to be managed by a password manager: instead it’s something you remember. If you remember it, you probably reused it somewhere. Perhaps it’s even your device password. This leaked key provides an oracle: if I guess the password correctly (and that’s feasible because the KDF is bad), I know I guessed correctly because I can check against your public key.&lt;/p&gt;
+&lt;p&gt;There’s nothing wrong with the RSA key pair itself: it’s just the symmetric encryption of the private key. You can’t mount this attack from just a public key.&lt;/p&gt;
+&lt;p&gt;How do you fix this? OpenSSH has a new key format that you should use. “New” means 2013. This format uses bcrypt_pbkdf, which is essentially bcrypt with fixed difficulty, operated in a PBKDF2 construction. Conveniently, you always get the new format when generating Ed25519 keys, because the old SSH key format doesn’t support newer key types. That’s a weird argument: you don’t really need your key format to define how Ed25519 serialization works since Ed25519 itself already defines how serialization works. But if that’s how we get good KDFs, that’s not the pedantic hill I want to die on. Hence, one answer is ssh-keygen -t ed25519. If, for compatibility reasons, you need to stick to RSA, you can use ssh-keygen -o. That will produce the new format, even for old key types. You can upgrade existing keys with ssh-keygen -p -o -f PRIVATEKEY. If your keys live on a Yubikey or a smart card, you don't have this problem either.&lt;/p&gt;
+&lt;p&gt;We want to provide a better answer to this. On the one hand, aws-vault has shown the way by moving credentials off disk and into keychains. Another parallel approach is to move development into partitioned environments. Finally, most startups should consider not having long-held SSH keys, instead using temporary credentials issued by an SSH CA, ideally gated on SSO. Unfortunately this doesn't work for GitHub.&lt;/p&gt;
+&lt;p&gt;PS: It’s hard to find an authoritative source, but from my memory: the versioned parameter in the PEM-like OpenSSH private key format only affect the encryption method. That doesn’t matter in the slightest: it’s the KDF that’s broken. That’s an argument against piecemeal negotiating parts of protocols, I’m sure. We’ll get you a blog post on that later.&lt;/p&gt;
+&lt;p&gt;The full key is available here, just in case you feel like running john the ripper on something today: &lt;a href="https://gist.github.com/lvh/c532c8fd46115d2857f40a433a2416fd"&gt;gist.github.com/lvh/c532c...&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/the-default-openssh-key-encryption-is-worse-than-plaintext/</guid><pubDate>Sat, 04 Aug 2018 02:00:18 GMT</pubDate></item><item><title>Factoring the Noise protocol matrix</title><link>https://www.lvh.io/posts/factoring-the-noise-protocol-matrix/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;TL;DR: if I ever told you to use Noise, I probably meant Noise_IK and should
+have been more specific.&lt;/p&gt;
+&lt;p&gt;The Noise protocol is one of the best things to happen to encrypted protocol
+design. &lt;a href="https://www.wireguard.com"&gt;WireGuard&lt;/a&gt; inherits its elegance from Noise.
+Noise is a cryptography engineer's darling spec. It's important not to get
+blindsided while fawning over it and to pay attention to where implementers run
+into trouble. Someone raised a concern I had run into before: Noise has a
+matrix.&lt;/p&gt;
+&lt;table&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;N(rs):&lt;br&gt;  ← s&lt;br&gt;  ...&lt;br&gt;  → e, es&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NN:&lt;br&gt;  → e&lt;br&gt;  ← e, ee&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KN:&lt;br&gt; → s&lt;/span&gt;&lt;br&gt;&lt;span&gt;  ...&lt;br&gt; → e&lt;br&gt; ← e, ee, se&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XN:&lt;br&gt;  → e&lt;br&gt;  ← e, ee&lt;br&gt;  → s, se&lt;/span&gt;&lt;/p&gt;
+                &lt;p&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IN:&lt;/span&gt;&lt;br&gt;&lt;span&gt;  → e, s&lt;br&gt;  ← e, ee, se&lt;/span&gt;&lt;br&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;K(s, rs):&lt;br&gt;  → s&lt;br&gt;  ← s&lt;br&gt;  ...&lt;br&gt;  → e, es, ss&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NK:&lt;br&gt;  ← s&lt;br&gt;  ...&lt;br&gt;  → e, es&lt;br&gt;  ← e, ee&lt;/span&gt;&lt;/p&gt;
+                &lt;p&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KK:&lt;/span&gt;&lt;br&gt;&lt;span&gt;  → s&lt;/span&gt;&lt;br&gt;&lt;span&gt;  ← s&lt;/span&gt;&lt;br&gt;&lt;span&gt;  …&lt;/span&gt;&lt;br&gt;&lt;span&gt;  → e, es, ss&lt;/span&gt;&lt;br&gt;&lt;span&gt;  ← e, ee, se&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XK:&lt;br&gt;  ← s&lt;br&gt;  ...&lt;br&gt;  → e, es&lt;br&gt;  ← e, ee&lt;br&gt;  → s, se&lt;/span&gt;&lt;/p&gt;
+                &lt;p&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IK:&lt;/span&gt;&lt;br&gt;&lt;span&gt;  ← s&lt;br&gt;  ...&lt;br&gt;  → e, es, s, ss&lt;br&gt;  ← e, ee, se&lt;/span&gt;&lt;br&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;X(s, rs):&lt;br&gt;  ← s&lt;br&gt;  ...&lt;br&gt;  → e, es, s, ss&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NX:&lt;br&gt;  → e&lt;br&gt;  ← e, ee, s, es&lt;/span&gt;&lt;/p&gt;
+                &lt;p&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KX:&lt;br&gt;  → s&lt;br&gt;  ...&lt;br&gt;  → e&lt;br&gt;  ← e, ee, se, s, es&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XX:&lt;br&gt;  → e&lt;br&gt;  ← e, ee, s, es&lt;br&gt;  → s, se&lt;/span&gt;&lt;br&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt; IX:&lt;/span&gt;&lt;br&gt;&lt;span&gt;  → e, s&lt;/span&gt;&lt;br&gt;&lt;span&gt;  ← e, ee, se, s, es&lt;/span&gt;&lt;br&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;To a cryptography engineer, this matrix is beautiful. These eldritch
+runes describe a grammar: the number of ways you can meaningfully
+compose the phrases that can make up a Noise handshake into a proper
+protocol. The rest of the document describes what the trade-offs between
+them are: whether the protocol is one-way or interactive, whether you
+get resistance against key-compromise impersonation, what sort of
+privacy guarantees you get, et cetera.&lt;/p&gt;
+&lt;p&gt;(Key-compromise impersonation means that if I steal your key, I can
+impersonate anyone to you.)&lt;/p&gt;
+&lt;p&gt;To the layperson implementer, the matrix is terrifying. They hadn't
+thought about key-compromise impersonation or the distinction between
+known-key, hidden-key and exposed-key protocols or even forward secrecy.
+They're going to fall back to something else: something probably less
+secure but at least unambiguous on what to do.&lt;/p&gt;
+&lt;p&gt;As Noise matures into a repository for protocol templates with wider
+requirements, this gets worse, not better. The most recent revision of
+the Noise protocol adds 23 new "deferred" variants. It's unlikely these
+will be the last additions.&lt;/p&gt;
+&lt;p&gt;Which Noise variant should they use? Depends on the application of
+course, but we can make some reasonable assumptions for most apps.
+Ignoring variants, we have:&lt;/p&gt;
+&lt;table style="text-align: center"&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;N&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;K&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;X&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Firstly, let's assume you need bidirectional communication, meaning
+initiator and responder can send messages to each other as opposed to
+just initiator to responder. That gets rid of the first column of the
+matrix.&lt;/p&gt;
+&lt;table style="text-align: center"&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;N&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IN&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;K&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;X&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The other protocols are defined by two letters. From the spec:&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;hr&gt;
+The first character refers to the initiator\'s static key:
+&lt;ul&gt;
+&lt;li&gt;N = No static key for initiator&lt;/li&gt;
+&lt;li&gt;K = Static key for initiator Known to responder&lt;/li&gt;
+&lt;li&gt;X = Static key for initiator Xmitted (\"transmitted\") to responder&lt;/li&gt;
+&lt;li&gt;I = Static key for initiator Immediately transmitted to responder, despite reduced or absent identity hiding&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The second character refers to the responder\'s static key:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;N = No static key for responder&lt;/li&gt;
+&lt;li&gt;K = Static key for responder Known to initiator&lt;/li&gt;
+&lt;li&gt;X = Static key for responder Xmitted (\"transmitted\") to initiator
+&lt;hr&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;NN provides confidentiality against a passive attacker but neither party
+has any idea who you're talking to because no static (long-term) keys
+are involved. For most applications none of the *N suites make a ton of
+sense: they imply the initiator does not care who they're connecting to.&lt;/p&gt;
+&lt;table style="text-align: center"&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;N&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;NN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;KN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;XN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;IN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;K&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;X&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;NX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;For most applications the client (initiator) ought to have a fixed
+static key so we have a convenient cryptographic identity for clients
+over time. So really, if you wanted something with an N in it, you'd
+know.&lt;/p&gt;
+&lt;table style="text-align: center"&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;N&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;NN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;KN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;XN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;IN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;K&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;NK&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;X&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;NX&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;KX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The responder usually doesn't know what the key is for any initiator that
+happens to show up. This mostly makes sense if you have one central initiator
+that reaches out to a lot of responders: something like an MDM or sensor data
+collection perhaps. In practice, you often end up doing egress from those
+devices anyway for reasons that have nothing to do with Noise. So, K* is out.&lt;/p&gt;
+&lt;table style="text-align: center"&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;N&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;NN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;KN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;XN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;IN&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;K&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;NK&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;KK&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IK&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;X&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;NX&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;&lt;s&gt;KX&lt;/s&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;XX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td colspan="1" rowspan="1"&gt;
+                &lt;p&gt;&lt;span&gt;IX&lt;/span&gt;&lt;/p&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;These remaining suites generally trade privacy (how easily can you
+identify participants) for latency (how many round trips are needed).&lt;/p&gt;
+&lt;p&gt;IX doesn't provide privacy for the initiator at all, but that's the side you
+usually care about. It still has the roundtrip downside, making it a niche
+variant.&lt;/p&gt;
+&lt;p&gt;XX and XK require an extra round trip before they send over the
+initiator's static key. Flip side: they have the strongest possible
+privacy protection for the initiator, whose identity is only sent to the
+responder after they've been authenticated and forward secrecy has been
+established.&lt;/p&gt;
+&lt;p&gt;IK provides a reasonable tradeoff: no extra round trip and the
+initiator's key is encrypted to the responder's static key. That means
+that the initiator's key is only disclosed if the responder's key is
+compromised. You probably don't care about that. It does require the
+initiator to know the static key of the responder ahead of time but
+that's probably true anyway: you want to check that key against a
+trusted value. You can also try private keys for the responder offline
+but that doesn't matter unless you gratuitously messed up key
+generation. In conclusion, you probably want IK.&lt;/p&gt;
+&lt;p&gt;This breakdown only works if you're writing a client-server application
+that plausibly might've used mTLS instead. WireGuard, for example, is
+built on Noise_IK. The other variants aren't pointless: they're just
+good at different things. If you care more about protecting your
+initiator's privacy than you do about handshake latency, you want
+Noise_XK. If you're doing a peer-to-peer IoT system where device
+privacy matters, you might end up with Noise_XX. (It's no accident
+that IK, XK and XX are in the last set of protocols standing.)&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Protocol variants&lt;/em&gt; Ignore deferred variants for now. If you needed them you'd
+know. PSK is an interesting quantum computer hedge. We'll talk more about
+quantum key exchanges in a different post, but briefly: a shared PSK among
+several participants protects against a passive adversary that records
+everything and acquires a quantum computer some time in the future, while
+retaining the convenient key distribution of public keys.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Conclusion&lt;/em&gt; It's incredible how much has happened in the last few years
+to make protocols safer, between secure protocol templates like Noise,
+new proof systems like Tamarin, and ubiquitous libraries of safer
+primitives like libsodium. So far, the right answer for a safe transport
+has almost always been TLS, perhaps mutually authenticated. That's not
+going to change right away, but if you control both sides of the network
+and you need properties hard to get out of TLS, Noise is definitely The
+Right Answer. Just don't stare at the eldritch rune matrix too long. You
+probably want Noise_IK. Or, you know, ask your security person :)&lt;/p&gt;
+&lt;p&gt;Thanks to Katriel Cohn-Gordon for reviewing this blog post.&lt;/p&gt;
+&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/factoring-the-noise-protocol-matrix/</guid><pubDate>Wed, 18 Jul 2018 17:59:00 GMT</pubDate></item><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
 runtime environment. Many platforms have different requirements when you're
 generating a runnable artifact than when you're running it.&lt;/p&gt;
 &lt;p&gt;In languages like Go, Rust or C, where the most common implementations produce
@@ -324,7 +867,7 @@ we should be flexible in our input types. We can work around the unknown type
 problems with reflection using explicitly annotated call sites. That means
 we're dispatching on types, which comes with its own set of issues. In the
 next blog post, I'll go into more detail on how that works, with a bunch of
-benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
+benchmarks. Stay tuned!&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><guid>https://www.lvh.io/posts/crypto-apis-and-jvm-byte-types/</guid><pubDate>Mon, 11 Jul 2016 21:00:00 GMT</pubDate></item><item><title>Tradeoffs in cryptographic API design</title><link>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Producing cryptographic software is a difficult and specialized endeavor. One
 of the pitfalls is that getting it wrong looks exactly like getting it
 right. Much like a latent memory corruption bug or a broken distributed
 consensus algorithm, a piece of cryptographic software can appear to be
@@ -403,7 +946,7 @@ should &lt;a href="https://twitter.com/lvh"&gt;follow me on Twitter&lt;/a&gt; or
 support for memory pinning since PyPy will support it in the upcoming
 5.2 release, although that means I'll no longer be able to make
 &lt;a href="https://github.com/reaperhulk"&gt;Paul Kehrer of PyCA fame&lt;/a&gt; jealous with the pinning support in
-&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
+&lt;a href="https://github.com/lvh/caesium"&gt;caesium&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><guid>https://www.lvh.io/posts/tradeoffs-in-cryptographic-api-design/</guid><pubDate>Sat, 18 Jun 2016 20:45:35 GMT</pubDate></item><item><title>Nonce misuse resistance 101</title><link>https://www.lvh.io/posts/nonce-misuse-resistance-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
@@ -549,7 +1092,7 @@ cancelling out the messages themselves as well.&lt;/p&gt;
 scanned before the nonce can be computed. For some protocols, that may not be
 acceptable, although plenty of protocols work around this assumption by simply
 making individual messages sufficiently small.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101/</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+&lt;p&gt;&lt;em&gt;Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/nonce-misuse-resistance-101/</guid><pubDate>Thu, 19 May 2016 19:25:44 GMT</pubDate></item><item><title>Supersingular isogeny Diffie-Hellman 101</title><link>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a &lt;a href="https://eprint.iacr.org/2016/413"&gt;paper&lt;/a&gt; on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
@@ -789,7 +1332,7 @@ an excellent educational tool; and Watson Ladd for pointing out a correction
 w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
 singular.). Finally, I'd like to thank all the people who reviewed drafts of
 this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
-Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
+Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><category>security</category><guid>https://www.lvh.io/posts/supersingular-isogeny-diffie-hellman-101/</guid><pubDate>Sat, 30 Apr 2016 16:00:28 GMT</pubDate></item><item><title>Introducing Teleport</title><link>https://www.lvh.io/posts/introducing-teleport/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;I'm happy to introduce &lt;a href="https://github.com/gravitational/teleport"&gt;Teleport&lt;/a&gt;, a new open source platform for
 managing SSH infrastructure. Teleport is built by &lt;a href="http://www.gravitational.com/"&gt;Gravitational&lt;/a&gt;, a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
 Gravitational, I have been advising them on the Teleport project.&lt;/p&gt;
@@ -849,276 +1392,4 @@ only exist until you can eradicate them, but they do exist, they're typically
 here to stay, and they need a real security story, too.&lt;/p&gt;
 &lt;p&gt;Teleport is still in its early stages. It's usable today, and I'm convinced it
 has a bright future ahead of it. It's written in a beautiful, hackable Go
-codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport/</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item><item><title>Don't expose the Docker socket (not even to a container)</title><link>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Docker primarily works as a client that communicates with a daemon
-process (&lt;code&gt;dockerd&lt;/code&gt;). Typically that socket is a UNIX domain socket
-called &lt;code&gt;/var/run/docker.sock&lt;/code&gt;. That daemon is highly privileged;
-effectively having root access. Any process that can write to the
-&lt;code&gt;dockerd&lt;/code&gt; socket &lt;em&gt;also&lt;/em&gt; effectively has root access.&lt;/p&gt;
-&lt;p&gt;This is no big secret. Docker clearly documents this in a bunch of
-places, including the introductory documentation. It's an excellent
-reason to use Docker Machine for development purposes, even on
-Linux. If your regular user can write to the &lt;code&gt;dockerd&lt;/code&gt; socket, then
-every code execution vulnerability comes with a free privilege
-escalation.&lt;/p&gt;
-&lt;p&gt;The warnings around the Docker socket typically come with a (sometimes
-implicit) context of being on the host to begin with. Write access to
-the socket as an unprivileged user on the host may mean privileged
-access to the host, but there seems to be some confusion about what
-happens when you get write access to the socket &lt;em&gt;from a
-container&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;The two most common misconceptions seem to be that it either doesn't
-grant elevated privileges at all, or that it grants you privileged
-access within the container (and without a way to break out). This is
-false; write access to the Docker socket is root on the host,
-regardless on where that write comes from. This is different from
-&lt;a href="https://github.com/jpetazzo/dind"&gt;Jerome Pettazoni's &lt;code&gt;dind&lt;/code&gt;&lt;/a&gt;, which gives you Docker-in-Docker;
-we're talking about access to the host's Docker socket.&lt;/p&gt;
-&lt;p&gt;The process works like this:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;The Docker container gets a &lt;code&gt;docker&lt;/code&gt; client of its own, pointed at
-   the &lt;code&gt;/var/run/docker.sock&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;The Docker container launches a new container mounting &lt;code&gt;/&lt;/code&gt; on
-   &lt;code&gt;/host&lt;/code&gt;. This is the &lt;em&gt;host&lt;/em&gt; root filesystem, not the first
-   container.&lt;/li&gt;
-&lt;li&gt;The second container chroots to &lt;code&gt;/host&lt;/code&gt;, and is now effectively
-   root on the host. (There are a few differences between this and a
-   clean login shell; for example, &lt;code&gt;/proc/self/cgroups&lt;/code&gt; will still show
-   Docker cgroups. However, the attacker has all of the permissions
-   necessary to work around this.)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;This is identical to the process you'd use to escalate from outside of
-a container. Write access to the Docker socket is root on the host,
-full stop; who's writing, or where they're writing from, doesn't
-matter.&lt;/p&gt;
-&lt;p&gt;Unfortunately, there are plenty of development teams unaware of this
-property. I recently came across one, and ended up making a screencast
-to unambiguously demonstrate the flaw in their setup (which involved a
-container with write access to the Docker socket).&lt;/p&gt;
-&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/CB9Aa6QeRaI" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
-
-&lt;p&gt;This isn't new; it's been a known property of the way Docker works
-ever since the (unfortunately trivially cross-site scriptable) REST
-API listening on a local TCP port was replaced with the
-&lt;code&gt;/var/run/docker.sock&lt;/code&gt; UNIX domain socket.&lt;/p&gt;&lt;/div&gt;</description><category>docker</category><category>security</category><guid>https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/</guid><pubDate>Wed, 23 Sep 2015 21:54:24 GMT</pubDate></item><item><title>querySelectorAll from an element probably doesn't do what you think it does</title><link>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Modern browsers have APIs called &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt;. They
-find one or more elements matching a CSS selector. I'm assuming basic
-familiarity with CSS selectors: how you select elements, classes and ids. If
-you haven't used them, the Mozilla Developer Network has an excellent
-&lt;a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors"&gt;introduction&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Imagine the following HTML page:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;img&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"outside"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"my-id"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;img&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"inside"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"lonely"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"outer"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-            &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"inner"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;&lt;code&gt;document.querySelectorAll("div")&lt;/code&gt; returns a &lt;code&gt;NodeList&lt;/code&gt; of all of the &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt;
-elements on the page. &lt;code&gt;document.querySelector("div.lonely")&lt;/code&gt; returns that
-single lonely div.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;document&lt;/code&gt; supports both &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"&gt;&lt;code&gt;querySelector&lt;/code&gt;&lt;/a&gt; and
-&lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll"&gt;&lt;code&gt;querySelectorAll&lt;/code&gt;&lt;/a&gt;, letting you find elements in the entire
-document. Elements themselves also support both &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector"&gt;&lt;code&gt;querySelector&lt;/code&gt;&lt;/a&gt; and
-&lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;querySelectorAll&lt;/code&gt;&lt;/a&gt;, letting you query for elements that are
-descendants of that element. For example, the following expression will find
-images that are descendants of &lt;code&gt;#my-id&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"img"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;In the sample HTML page above, it will find &lt;code&gt;&amp;lt;img id="inside"&amp;gt;&lt;/code&gt; but not &lt;code&gt;&amp;lt;img
-id="outside"&amp;gt;&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;With that in mind, what do these two expressions do?&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;You might reasonably expect them to be equivalent. After all, one asks for
-&lt;code&gt;div&lt;/code&gt; elements inside &lt;code&gt;div&lt;/code&gt; elements inside &lt;code&gt;#my-id&lt;/code&gt;, and the other asks for
-&lt;code&gt;div&lt;/code&gt; elements inside &lt;code&gt;div&lt;/code&gt; elements that are &lt;em&gt;descendants&lt;/em&gt; of
-&lt;code&gt;#my-id&lt;/code&gt;. However, when you look at &lt;a href="http://jsbin.com/hineco/edit?html,js,output"&gt;this JSbin&lt;/a&gt;, you'll see that they
-produce very different results:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id div div"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"div div"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;What is going on here?&lt;/p&gt;
-&lt;p&gt;It turns out that &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll"&gt;&lt;code&gt;element.querySelectorAll&lt;/code&gt;&lt;/a&gt; doesn't match elements
-starting from &lt;code&gt;element&lt;/code&gt;. Instead, it matches elements matching the query that
-are also descendants of &lt;code&gt;element&lt;/code&gt;. Therefore, we're seeing three &lt;code&gt;div&lt;/code&gt;
-elements: &lt;code&gt;div.lonely&lt;/code&gt;, &lt;code&gt;div.outer&lt;/code&gt;, &lt;code&gt;div.inner&lt;/code&gt;. We're seeing them because
-they both match the &lt;code&gt;div div&lt;/code&gt; selector and are all descendants of &lt;code&gt;#my-id&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The trick to remembering this is that CSS selectors are absolute. They are not
-relative to any particular element, not even the element you're calling
-&lt;code&gt;querySelectorAll&lt;/code&gt; on.&lt;/p&gt;
-&lt;p&gt;This even works with elements &lt;em&gt;outside&lt;/em&gt; the element you're calling
-&lt;code&gt;querySelectorAll&lt;/code&gt; on. For example, this selector:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"div div div"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;... matches &lt;code&gt;div.inner&lt;/code&gt; in this snippet (&lt;a href="http://jsbin.com/woropuc/edit?html,js,output"&gt;JSbin&lt;/a&gt;):&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-  &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-      &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"my-id"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"inner"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-      &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-  &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;I think this API is surprising, and the front-end engineers I've asked seem to
-agree with me. This is, however, not a bug. It's how the spec defines it to
-work, and browsers consistently implement it that way.
-Safari. &lt;a href="http://ejohn.org/blog/thoughts-on-queryselectorall/"&gt;John Resig commented&lt;/a&gt; how he and others felt this behavior
-was quite confusing back when the spec came out.&lt;/p&gt;
-&lt;p&gt;If you can't easily rewrite the selector to be absolute like we did above,
-there are two alternatives: the &lt;code&gt;:scope&lt;/code&gt; CSS pseudo-selector, and
-&lt;code&gt;query&lt;/code&gt;/&lt;code&gt;queryAll&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;:scope&lt;/code&gt; pseudo-selector matches against the current scope. The
-name comes from the &lt;a href="https://html.spec.whatwg.org/multipage/semantics.html#attr-style-scoped"&gt;CSS scoping&lt;/a&gt;, which limits the scope
-of styles to part of the document. The element we're calling
-&lt;code&gt;querySelectorAll&lt;/code&gt; on also counts as a scope, so this expression only
-matches &lt;code&gt;div.inner&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;querySelector&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"#my-id"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;querySelectorAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;":scope div div"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Unfortunately, &lt;a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope#Browser_compatibility"&gt;browser support&lt;/a&gt; for scoped CSS and the &lt;code&gt;:scope&lt;/code&gt;
-pseudo-selector is extremely limited. Only recent versions of Firefox support
-it by default. Blink-based browsers like Chrome and Opera require the
-well-hidden experimental features flag to be turned on. Safari has a buggy
-implementation. Internet Explorer doesn't support it at all.&lt;/p&gt;
-&lt;p&gt;The other alternative is &lt;code&gt;element.query&lt;/code&gt;/&lt;code&gt;queryAll&lt;/code&gt;. These are alternative
-methods to &lt;code&gt;querySelector&lt;/code&gt; and &lt;code&gt;querySelectorAll&lt;/code&gt; that exist on DOM parent
-nodes. They also take selectors, except these selectors are interpreted
-relative to the element being queried from.  Unfortunately, these methods are
-even more obscure: they are not referenced on MDN or &lt;code&gt;caniuse.com&lt;/code&gt;, and are
-missing from the &lt;a href="http://www.w3.org/TR/dom/#interface-parentnode"&gt;current DOM4 working draft&lt;/a&gt;, dated 18
-June 2015. They were still present in &lt;a href="http://www.w3.org/TR/2014/WD-dom-20140204/#interface-parentnode"&gt;an older version&lt;/a&gt;, dated 4
-February 2014, as well as in the &lt;a href="https://dom.spec.whatwg.org/#interface-parentnode"&gt;WHATWG Living Document&lt;/a&gt; version
-of the spec. They have also been implemented by at least two polyfills:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://webreflection.github.io/dom4/"&gt;Dom4&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/barberboy/dom-elements"&gt;dom-elements&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;In conclusion, the DOM spec doesn't always necessarily do the most obvious
-thing. It's important to know pitfalls like these, because they're difficult
-to discover from just the behavior. Fortunately, you can often rewrite your
-selector so that it isn't a problem. If you can't, there's always a polyfill
-to give you the modern API you want. Alternatively, libraries like jQuery can
-also help you get a consistent, friendly interface for querying the DOM.&lt;/p&gt;&lt;/div&gt;</description><category>css</category><category>dom</category><category>webdev</category><guid>https://www.lvh.io/posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/</guid><pubDate>Fri, 21 Aug 2015 19:11:23 GMT</pubDate></item><item><title>Today's OpenSSL bug (for techies without infosec chops)</title><link>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;h2&gt;What happened?&lt;/h2&gt;
-&lt;p&gt;OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
-alternative certificate chain when the first one fails. The logic in
-that feature had a bug in it, such that it didn't properly verify if
-the certificates in the alternative chain had the appropriate
-permissions; specifically, it didn't check if those certificates are
-certificate authorities.&lt;/p&gt;
-&lt;p&gt;Specifically, this means that an attacker who has a valid certificate
-for any domain, can use that certificate to produce new
-certificates. Those normally wouldn't work, but the algorithm for
-finding the alternative trust chain doesn't check if the valid
-certificate can act as a certificate authority.&lt;/p&gt;
-&lt;h2&gt;What's a certificate (chain)?&lt;/h2&gt;
-&lt;p&gt;A certificate is a bit like an ID card: it has some information about
-you (like your name), and is authenticated by a certificate authority
-(in the case of an ID, usually your government).&lt;/p&gt;
-&lt;h2&gt;What's a certificate authority?&lt;/h2&gt;
-&lt;p&gt;A certificate authority is an entity that's allowed to authenticate
-certificates. Your computer typically ships with the identity of those
-certificate authorities, so it knows how to recognize certificates
-authorized by them.&lt;/p&gt;
-&lt;p&gt;In the ID analogy, your computer knows how to recognize photo IDs
-issued by e.g. California.&lt;/p&gt;
-&lt;p&gt;The issue here is that in some cases, OpenSSL was willing to accept
-signatures authenticated by certificates that don't have certificate
-authority powers. In the analogy, it would mean that it accepted
-CostCo cards as valid ID, too.&lt;/p&gt;
-&lt;h2&gt;Why did they say it wouldn't affect most users?&lt;/h2&gt;
-&lt;p&gt;This basically means "we're assuming most users are using OpenSSL for
-vanilla servers", which is probably true. Most servers do use OpenSSL,
-and most clients (browsers) don't.&lt;/p&gt;
-&lt;p&gt;The bug affects anyone trying to authenticate their peer. That
-includes regular clients, and servers doing client
-authentication. Regular servers aren't affected, because they don't
-authenticate their peer.&lt;/p&gt;
-&lt;p&gt;Servers doing client authentication are fairly rare. The biggest
-concern is with clients. While browsers typically don't use OpenSSL, a
-lot of API clients do. For those few people affected by the bug and
-with clients that use OpenSSL, the bug is catastrophic.&lt;/p&gt;
-&lt;h2&gt;What's client authentication?&lt;/h2&gt;
-&lt;p&gt;The vast majority of TLS connections only authenticate the
-server. When the client opens the connection, the server sends its
-certificate. The client checks the certificate chain against the list
-of certificate authorities that it knows about. The client is
-typically authenticated, but over the protocol spoken inside of TLS
-(usually HTTP), not at a TLS level.&lt;/p&gt;
-&lt;p&gt;That isn't the only way TLS can work. TLS also supports authenticating
-clients with certificates, just like it authenticates servers. This is
-called mutually authenticated TLS, because both peers authenticate
-each other. At Rackspace Managed Security, we use this for all
-communication between internal nodes. We also operate our own
-certificate authority to sign all of those certificates.&lt;/p&gt;
-&lt;h2&gt;What's TLS?&lt;/h2&gt;
-&lt;p&gt;TLS is what SSL has been called for way over a decade. The old name
-stuck (particularly in the name "OpenSSL"), but you should probably
-stop using it when you're talking about the secure protocol, since all
-of the versions of the protocol that were called "SSL" have crippling
-security bugs.&lt;/p&gt;
-&lt;h2&gt;Why wasn't this found by automated testing?&lt;/h2&gt;
-&lt;p&gt;I'm not sure. I wish automated testing this stuff was easier. Since
-I'm both a user and a big fan of client authentication, which is a
-pretty rare feature, I hope to spend more time in the future creating
-easy-to-use automated testing tools for this kind of scenario.&lt;/p&gt;
-&lt;h2&gt;How big is the window?&lt;/h2&gt;
-&lt;p&gt;1.0.1n and 1.0.2b were both released on 11 Jun 2015. The fixes, 1.0.1p
-and 1.0.2d, were released today, on 9 Jul 2015.&lt;/p&gt;
-&lt;p&gt;The "good news" is that the bad releases are recent. Most people who
-have an affected version will be updating regularly, so the number of
-people affected is small.&lt;/p&gt;
-&lt;p&gt;The bug affected following platforms (non-exhaustive):&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;It did not affect stock OS X, because they still ship
-  0.9.8. However, the bug does affect a stable version shipped through
-  Homebrew (1.0.2c).&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-1793.html"&gt;Ubuntu is mostly not affected&lt;/a&gt;. The only affected version
-  is the unreleased 15.10 (Wily). Ubuntu has already released an
-  update for it.&lt;/li&gt;
-&lt;li&gt;The bug affects stable releases of Fedora. I previously mistakenly
-  reported that the contrary, but that information was based on their
-  package version numbers, which did not match upstream. Fedora
-  backported the faulty logic to their version of 1.0.1k, which was
-  available in Fedora 21 and 22. They have since released patches; see
-  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1241544"&gt;this ticket&lt;/a&gt; for details. Thanks to Major Hayden for the
-  correction!&lt;/li&gt;
-&lt;li&gt;The bug does not affect Debian stable, but it does affect
-  &lt;a href="https://security-tracker.debian.org/tracker/CVE-2015-1793s=openssl"&gt;testing and unstable&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;The bug affects &lt;a href="https://www.archlinux.org/packages/?sort=-last_update"&gt;ArchLinux testing&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;In conclusion&lt;/h2&gt;
-&lt;p&gt;The bug is disastrous, but affects few people. If you're running
-stable versions of your operating system, you're almost certainly
-safe.&lt;/p&gt;
-&lt;p&gt;The biggest concern is with software developers using OS X. That
-audience uses HTTPS APIs frequently, and the clients to connect to
-those APIs typically use OpenSSL. OS X comes with 0.9.8zf by default
-now, which is a recent revision of an ancient branch. Therefore,
-people have a strong motivation to get their OpenSSL from a
-third-party source. The most popular source is Homebrew, which up
-until earlier this morning shipped 1.0.2c. The bug affects that
-version. If you installed OpenSSL through Homebrew, you should go
-update right now.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/todays-openssl-bug-for-techies-without-infosec-chops/</guid><pubDate>Thu, 09 Jul 2015 15:26:58 GMT</pubDate></item></channel></rss>
+codebase, and &lt;a href="https://github.com/gravitational/teleport"&gt;available on Github&lt;/a&gt; starting today.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/introducing-teleport/</guid><pubDate>Sat, 12 Mar 2016 17:35:56 GMT</pubDate></item></channel></rss>

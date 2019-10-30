@@ -234,6 +234,8 @@ anyway.)
 
 # Alternation
 
+## Parse trees
+
 Let's look at a few parse trees for some simple alternations:
 
 ```clojure
@@ -258,7 +260,8 @@ different length.
    ({:type :character, :character \A}
     {:type :character, :character \A}
     {:type :character, :character \A})}
-  {:type :concatenation, :elements ({:type :character, :character \B})})}
+  {:type :concatenation
+   :elements ({:type :character, :character \B})})}
 ```
 
 It's also probably a good idea to consider something with more than two alternatives:
@@ -273,12 +276,29 @@ It's also probably a good idea to consider something with more than two alternat
   {:type :concatenation, :elements ({:type :character, :character \C})})}
 ```
 
-We need a way to express disjunction
+## Alternation in logic
+
+Again, we write a simple test:
+
+```clojure
+(t/deftest re->goal-alternation-test
+  (t/is (= '(\A \B)
+           (l/run* [q]
+             (rcl/re->goal (cre/parse "A|B") [q])))))
+```
+We need a way to express disjunction. Like `l/and*`, there's a `l/or*`.
 
 This primer is a little unorthodox because we're walking through a problem that
-requires rule generation. Most introductory texts make you write simple, static
-rules and build up from there. Just like `l/and*` had a macro variant `l/all`,
-disjunction is much more commonly expressed with the macro `l/conde`.
+requires rule generation. Most introductory texts make you build up static
+rules. Just like `l/and*` had a macro variant `l/all`, disjunction is usually
+expressed with the macro `l/conde`. One difference is that `conde` can express a
+disjunction of conjunctions in one go:
+
+```clojure
+(conde [a b] [c])
+;; is equivalent to
+(or* [(and* a b) c])
+```
 
 # Fixing :concatenation
 

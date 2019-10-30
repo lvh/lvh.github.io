@@ -832,10 +832,17 @@ ul.pager li a {
     font-size: 16pt;
 }
 
+.body-content p, li {
+    line-height: 180%;
+}
+
 .body-content p {
     text-align: justify;
     margin-bottom: 1.5em;
-    line-height: 180%;
+}
+
+h1 {
+    font-size: 220%;
 }
 
 h1, h2, h3, h4, h5 {

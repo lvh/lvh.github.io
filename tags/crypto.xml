@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about crypto)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/crypto.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 03:13:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On TrueCrypt and full-disk encryption</title><link>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Since the early hours of May 29th (CEST), &lt;a href="https://www.truecrypt.org"&gt;the TrueCrypt website
+(&lt;code&gt;https://www.truecrypt.org&lt;/code&gt;)&lt;/a&gt; has pointed
+to &lt;code&gt;http://truecrypt.sourceforge.net/&lt;/code&gt;, with an ominous-looking error
+message:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;WARNING: Using TrueCrypt is not secure as it may contain unfixed
+security issues&lt;/p&gt;
+&lt;p&gt;This page exists only to help migrate existing data encrypted by
+TrueCrypt.&lt;/p&gt;
+&lt;p&gt;The development of TrueCrypt was ended in 5/2014 after Microsoft
+terminated support of Windows XP. Windows 8/7/Vista and later offer
+integrated support for encrypted disks and virtual disk images. Such
+integrated support is also available on other platforms (click here
+for more information). You should migrate any data encrypted by
+TrueCrypt to encrypted disks or virtual disk images supported on
+your platform.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The website then explains how you can install BitLocker, a proprietary
+disk encryption system available in many versions of Windows, as well
+as how you could "rescue" existing TrueCrypt volumes.&lt;/p&gt;
+&lt;p&gt;People were pretty unhappy, for a variety of reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lack of trust in proprietary full-disk encryption software.&lt;/li&gt;
+&lt;li&gt;Many versions of Windows didn't even ship with BitLocker, only a few
+  "premium" versions did.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As a proprietary system, BitLocker is not susceptible to the same
+amount of public scrutiny as a publicly available system. This is in
+stark contrast with TrueCrypt, where Matt Green recently raised around
+70k USD to perform an &lt;a href="http://istruecryptauditedyet.com/"&gt;audit&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are variety of scenarios that could've caused the TrueCypt
+website to suddenly sport that message. The live Internet audience has
+speculated wildly. I'll share my thoughts on that near the end of this
+post, but there are two points I'd like to make that I think are far
+more important:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Consider if full-disk encryption is really what you want.&lt;/li&gt;
+&lt;li&gt;If it is, consider if it should be TrueCrypt.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4&gt;Full-disk encryption&lt;/h4&gt;
+&lt;p&gt;Something I learned from the inimitable &lt;a href="https://zooko.com"&gt;Zooko&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Security isn't about perfect versus imperfect or about better versus
+worse, it's about &lt;em&gt;this&lt;/em&gt; attack surface versus &lt;em&gt;that&lt;/em&gt; attack
+surface.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;You can't just add more crypto junk to something and expect to somehow
+get better security. You have to consider what it is buying you, and
+what it's costing you.&lt;/p&gt;
+&lt;p&gt;Full-disk encryption buys you one simple thing: if someone steals your
+device while the encrypted volume is locked, they probably can't read
+it.&lt;/p&gt;
+&lt;p&gt;If the encrypted volume is unlocked, it's over; and that's the state
+it's probably usually in. If the key lives in RAM (it usually does),
+there's a variety of ways that can be extracted. There's devices that
+have complete direct memory access, including everything that speaks
+FireWire or has FireWire-compatibility built-in. Even if you shut off
+your machine, cold boot attacks mean that the key can be extracted for
+a limited about of time. Various jurisdictions can try to force you to
+hand over the keys.&lt;/p&gt;
+&lt;p&gt;If an attacker can write to the (encrypted!) volume, it's probably
+over. Virtually all sector-level full-disk encryption formats are
+unauthenticated (with good reason), they're all malleable and
+vulnerable to (adaptive) chosen-ciphertext attacks.&lt;/p&gt;
+&lt;p&gt;If you're encrypting files or blobs of data within other files, an
+authenticated encryption scheme like GPG is far more useful.&lt;/p&gt;
+&lt;p&gt;Don't get me wrong. Full-disk encryption is a good idea, and you
+should do it. I'm just saying that what it actually protects against
+is pretty limited. If there's files you want to keep secret, full-disk
+encryption is probably not enough.&lt;/p&gt;
+&lt;p&gt;For more details, try Thomas &amp;amp; Erin Ptacek's
+&lt;a href="http://sockpuppet.org/blog/2014/04/30/you-dont-want-xts/"&gt;blog post&lt;/a&gt;
+on why XTS isn't what you want. XTS is a way to build tweakable
+ciphers that can be used to create full-disk encryption; but the post
+applies to full-disk encryption generically as well.&lt;/p&gt;
+&lt;h4&gt;TrueCrypt as a full-disk encryption mechanism&lt;/h4&gt;
+&lt;p&gt;So, you probably want full-disk encryption, and you probably want to
+make sure that sensitive data is encrypted on top of that. Great. What
+full-disk encryption scheme do you use?&lt;/p&gt;
+&lt;p&gt;I don't want to bash TrueCrypt. It is (was, perhaps?) a great go-to
+project for full-disk encryption. It got a lot of things right. It
+also got a bunch of things wrong.&lt;/p&gt;
+&lt;p&gt;TrueCrypt was made by a bunch of people we don't know occasionally
+throwing a bunch of binaries over the wall. The source is available
+(under a non-OSI license), so you could audit that and compile your
+own binaries, but the truth is that the vast majority of TrueCrypt
+users never actually did that.&lt;/p&gt;
+&lt;p&gt;The TrueCrypt disk format and encryption standards are a bit iffy. It
+has terrible file system support. It has major performance issues,
+partially due to questionable cryptographic practices such as cipher
+cascades. It was great for when it was originally conceived and
+full-disk encryption was still new and exciting, it's still pretty
+decent now, but we can certainly do better.&lt;/p&gt;
+&lt;h4&gt;What actually happened to the website?&lt;/h4&gt;
+&lt;p&gt;We don't really know. There's a couple of guesses.&lt;/p&gt;
+&lt;p&gt;First of all, it looks like it are the original authors that folded:
+the key is the same one that was being used to sign releases months
+ago. Of course, that could mean that it was compromised or that they
+were forced to hand it over.&lt;/p&gt;
+&lt;p&gt;Since the DNS records changed, the e-mail server behavior changed, the
+same key was used, the Sourceforge client was involved, and fairly
+major changes to the source code were involved, it's unlikely that
+it's a simple defacement.&lt;/p&gt;
+&lt;p&gt;It's unlikely that they folded because they felt discovery of some
+backdoor was imminent. Folding wouldn't actually stop that discovery,
+because the source was already open.&lt;/p&gt;
+&lt;p&gt;It's strange that they would point to alternatives like Bitlocker for
+Windows and even more dubious alternatives for other operating
+systems. The authors certainly knew that this would not be an
+acceptable alternative for the vast majority of their users.&lt;/p&gt;
+&lt;p&gt;Additionally, the support window for XP ending isn't a particularly
+convincing impetus for migrating away from TrueCrypt &lt;em&gt;right now&lt;/em&gt;. This
+has lead some to believe that it's an automated release. Worse, it
+could be a gagged response: a big and powerful three-letter agency
+might be twisting their arm and forcing them to fold, in return for
+something else (like, say, not being thrown in a Gitmo cell and
+forgotten about). Again: pure speculation.&lt;/p&gt;
+&lt;p&gt;Another option is that some of the developers just really, genuinely
+folded. They felt that for atechnical users, BitLocker was good
+enough, while the particularly discerning TrueCrypt user would be able
+to find some other alternative.&lt;/p&gt;
+&lt;p&gt;Bottom line is that none of this really matters. What matters is what
+you should do next if you want to have full-disk encryption.&lt;/p&gt;
+&lt;h4&gt;So what do I do now?&lt;/h4&gt;
+&lt;p&gt;I think LUKS is probably the best system that we have right now, and
+one of the few that actually improves on TrueCrypt.&lt;/p&gt;
+&lt;p&gt;If you're on Linux, dm-crypt + cryptsetup + LUKS is probably what you
+want. If you're on OS X, FileVault 2 is probably what you want. If
+you're on Windows, your options are looking a bit thin right now:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Keep using old versions of TrueCrypt.&lt;/li&gt;
+&lt;li&gt;Give up and use BitLocker.&lt;/li&gt;
+&lt;li&gt;Use a Linux virtual machine to use dm-crypt/LUKS, eventually
+  migrating to native support.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Personally, I think the first option is the most reasonable right now,
+and then wait until someone actually writes the native LUKS support.&lt;/p&gt;
+&lt;p&gt;Oh, and you should probably install GPG to encrypt some of those files
+stored on that encrypted volume.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/2014/05/on-truecrypt-and-full-disk-encryption/</guid><pubDate>Thu, 29 May 2014 17:53:00 GMT</pubDate></item><item><title>Thoughts on RDRAND in Linux</title><link>https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;This has been brewing since I read &lt;a href="https://www.change.org/en-GB/petitions/linus-torvalds-remove-rdrand-from-dev-random-4/responses/9066"&gt;Linus' response to the petition to
+remove &lt;code&gt;RDRAND&lt;/code&gt; from /dev/random&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For those of you who don't know, &lt;code&gt;RDRAND&lt;/code&gt; is a CPU instruction
+introduced by Intel on recent CPUs. It (supposedly) uses a hardware
+entropy source, and runs it through AES in CBC-MAC mode, to produce
+random numbers.&lt;/p&gt;
+&lt;p&gt;Out of fear that &lt;code&gt;RDRAND&lt;/code&gt; may somehow be backdoored, someone
+petitioned to remove &lt;code&gt;RDRAND&lt;/code&gt; support to "improve the overall security
+of the kernel". If &lt;code&gt;RDRAND&lt;/code&gt; contains a back door, and an unknown
+attacker can control the output, that could break pretty much all
+userland crypto.&lt;/p&gt;
+&lt;p&gt;Linus fulminated, as he is wont to do. He suggested we go read
+&lt;code&gt;drivers/char/random.c&lt;/code&gt;. I quote (expletives and insults omitted):&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;we use rdrand as &lt;em&gt;one&lt;/em&gt; of many inputs into the random pool, and we
+use it as a way to &lt;em&gt;improve&lt;/em&gt; that random pool. So even if rdrand
+were to be back-doored by the NSA, our use of rdrand actually
+improves the quality of the random numbers you get from
+/dev/random.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I went ahead and read &lt;code&gt;random.c&lt;/code&gt;. You can read it for yourself &lt;a href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/char/random.c"&gt;in
+Linus' tree&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Disclaimer: I am not an expert in this piece of code. I have no doubt
+Linus is far more familiar with it than I am. I'd love to be proven
+wrong. I'm just taking his advice and reading some code.&lt;/p&gt;
+&lt;p&gt;The function I'm interested in is &lt;code&gt;extract_buf&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class="cm"&gt;/*&lt;/span&gt;
+&lt;span class="cm"&gt;     * If we have a architectural hardware random number&lt;/span&gt;
+&lt;span class="cm"&gt;     * generator, mix that in, too.&lt;/span&gt;
+&lt;span class="cm"&gt;     */&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;LONGS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;EXTRACT_SIZE&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;arch_get_random_long&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;^=&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;This is in the extraction phase. This is after the hash is being mixed
+back in to the pool (and that's for backtracking attacks: not intended
+as an input to the pool). It seems to me like the output of
+&lt;code&gt;arch_get_random_long&lt;/code&gt; is being XORed in with the extracted output,
+not with the pool.&lt;/p&gt;
+&lt;p&gt;If I were to put on my tin-foil hat, I would suggest that the
+difficulty has now been moved from being able to subvert the pool as
+one of its entropy sources (which we think is impossible), versus
+being able to see what you're about to be XORed with. The latter seems
+a lot closer to the realm of stuff a microcode instruction can do.&lt;/p&gt;
+&lt;p&gt;To put it into Python:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;inspect&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;currentframe&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;getrandbits&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;extract_buf&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="sd"&gt;"""Gets 16 bytes from the pool, and mixes them with RDRAND output.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    """&lt;/span&gt;
+    &lt;span class="n"&gt;pool_bits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;extract_from_pool&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;rdrand_bits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdrand&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt;  &lt;span class="n"&gt;pool_bits&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;rdrand_bits&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;extract_from_pool&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="sd"&gt;"""Pretend to get some good, unpredictable bytes from the pool.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Actually gets a long with some non-cryptographically secure random&lt;/span&gt;
+&lt;span class="sd"&gt;    bits from random.getrandbits, which is usually a Mersenne Twister.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    """&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;getrandbits&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;rdrand&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="sd"&gt;"""&lt;/span&gt;
+&lt;span class="sd"&gt;    A malicious hardware instruction.&lt;/span&gt;
+&lt;span class="sd"&gt;    """&lt;/span&gt;
+    &lt;span class="n"&gt;pool_bits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;currentframe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f_back&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f_locals&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;"pool_bits"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pool_bits&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mh"&gt;0xabad1dea&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;extract_buf&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mh"&gt;0xabad1dea&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Why can't RDRAND work like this?&lt;/p&gt;
+&lt;p&gt;Some comments based on feedback I've gotten so far:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;This attack does not need to know where the PRNG state lives in
+memory. First of all, this isn't an attack on the PRNG state, it's on
+the PRNG output. Secondly, the instruction only needs to peek ahead at
+what is about to happen (specifically, what's about to be XORed with)
+the RDRAND output. That doesn't require knowing where the PRNG state
+(or its output) is being stored in memory; we're already talking
+register level at that point.&lt;/li&gt;
+&lt;li&gt;While it's certainly true that if you can't trust the CPU, you
+can't trust anything, that doesn't really make this problem go away.
+&lt;code&gt;RDRAND&lt;/code&gt; being broken wouldn't make software crash, which is a lot
+harder for almost all other instructions. &lt;code&gt;RDRAND&lt;/code&gt; being broken
+wouldn't result in measurable side-effects, unlike what would happen
+if &lt;code&gt;PCLMULDQ&lt;/code&gt; contained a back door. Furthermore, it's a lot easier to
+backdoor one single microcode instruction and a lot more plausible and
+feasible for a CSPRNG to be backdoored than it is to think of a CPU as
+some kind of intelligent being that's actively malicious or being
+remotely controlled.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For what it's worth, it seems &lt;a href="https://twitter.com/zooko/status/392334674690723840"&gt;Zooko agrees with me&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>crypto</category><guid>https://www.lvh.io/posts/2013/10/thoughts-on-rdrand-in-linux/</guid><pubDate>Sun, 20 Oct 2013 04:47:00 GMT</pubDate></item></channel></rss>
