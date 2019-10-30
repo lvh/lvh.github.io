@@ -3,3 +3,5 @@ output/*
 *.py[co]
 *.db
 .DS_Store
+.doit*
+state_data.json
