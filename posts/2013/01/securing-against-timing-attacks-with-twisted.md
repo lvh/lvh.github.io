@@ -4,7 +4,7 @@
 .. slug: securing-against-timing-attacks-with-twisted
 .. link:
 .. description:
-.. tags: twisted, security, amp
+.. tags: security, python
 -->
 
 
