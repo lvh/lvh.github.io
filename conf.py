@@ -102,7 +102,9 @@ NAVIGATION_LINKS = {
 }
 
 # Name of the theme to use.
-THEME = "custom"
+THEME = "lvh"
+THEME_COLOR = "#383234"
+CODE_COLOR_SCHEME = "vs"
 
 # Below this point, everything is optional
 
