@@ -2,7 +2,7 @@
 .. title: Supersingular isogeny Diffie-Hellman 101
 .. slug: supersingular-isogeny-diffie-hellman-101
 .. date: 2016-04-30 09:00:28 UTC-07:00
-.. tags: crypto, security
+.. tags: security, cryptography
 .. category:
 .. link:
 .. description:

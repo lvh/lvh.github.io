@@ -1,7 +1,7 @@
 .. title: Secure key derivation performance
 .. slug: secure-key-derivation-performance
 .. date: 2014-08-04 04:29:15 UTC-07:00
-.. tags: crypto, security
+.. tags: security, private, cryptography
 .. type: text
 .. has_math: yes
 .. status: private
