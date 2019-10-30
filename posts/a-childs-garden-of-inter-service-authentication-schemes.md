@@ -2,8 +2,8 @@
 .. title: A child's garden of inter-service authentication schemes
 .. slug: a-childs-garden-of-inter-service-authentication-schemes
 .. date: 2018-06-12 15:27
-.. tags:
-.. category: security, cryptography
+.. tags: security, cryptography
+.. category:
 .. link:
 .. description:
 .. type: text
