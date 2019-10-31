@@ -884,12 +884,12 @@ probably want Noise_IK. Or, you know, ask your security person :)</p>
 tradition has been around forever: people recognized the need to highlight
 you're not just some random shmoe.</p>
 <p>These days we have lots of snazzy shell magic. You might still su, but you're
-more likely to sudo. We still temporarily assume extra privileges. If
-you have access to more than one set of systems, like production and staging,
-you probably have ways of putting on a particular hat. Some combination of
-setting an environment variable, adding a key to ssh-agent, or assuming aws AWS
-role with <a href="https://github.com/99designs/aws-vault">aws-vault</a>. You know, so you don't accidentally blow away
-prod.</p>
+more likely to sudo. We still temporarily assume extra privileges. If you have
+access to more than one set of systems, like production and staging, you
+probably have ways of putting on a particular hat. Some combination of setting
+an environment variable, adding a key to ssh-agent, or assuming aws AWS role
+with <a href="https://github.com/99designs/aws-vault">aws-vault</a>. You know, so you don't
+accidentally blow away prod.</p>
 <p>If a privilege is important enough not to have around all the time, it's
 important enough to be reminded you have it. You're likely to have more than one
 terminal open. You might want to be reminded when your extra privileges are
@@ -913,8 +913,9 @@ indiscriminately and so your fancy prompt gets clobbered.</p>
 <li>Sourcing scripts</li>
 <li>Crazy hacks like PROMPT_COMMAND or precmd or reconstituted rcfiles</li>
 </ul>
-<p><strong>rcless shells</strong> If you interpret the problem as shells having configuration, you
-can disable that. Unfortunately, the flags for this are different across shells:</p>
+<h2>rcless shells</h2>
+<p>If you interpret the problem as shells having configuration, you can disable
+that. Unfortunately, the flags for this are different across shells:</p>
 <ul>
 <li>bash uses the --norc flag</li>
 <li>zsh uses the --no-rcs flag</li>
@@ -937,11 +938,11 @@ that rcless shells will work pretty much anywhere. The bad news is that the
 shell customization people are used to is gone: aliases, paths, colors, shell
 history et cetera. If people don't love the shell you give them, odds are
 they're going to look for a workaround.</p>
-<p><strong>Dedicated environment variables</strong> If you interpret the problem as setting PS1
-being fundamentally wrong because that's the shell configuration's job, you
-could argue that the shell configuration should also just set the prompt
-correctly. Your job is not to set the prompt, but to give the shell everything
-it needs to set it for you.</p>
+<h2>Dedicated environment variables</h2>
+<p>If you interpret the problem as setting PS1 being fundamentally wrong because
+that's the shell configuration's job, you could argue that the shell
+configuration should also just set the prompt correctly. Your job is not to set
+the prompt, but to give the shell everything it needs to set it for you.</p>
 <p>As an example, aws-vault already conveniently sets an environment variable for
 you, so you can do this in your zshrc:</p>
 <pre class="code literal-block"><span></span><span class="k">if</span> <span class="o">[</span> -n <span class="s2">"</span><span class="si">${</span><span class="nv">AWS_VAULT</span><span class="si">}</span><span class="s2">"</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
@@ -972,17 +973,19 @@ manually entering escape codes:</p>
 </ol>
 <p>The downside to this is that it fails open. If nobody changes PS1 you don't
 get a fancy prompt. It's a pain to enforce this via MDM.</p>
-<p><strong>source</strong> If you reinterpret the problem as trying to create a subshell at all,
-you could try to modify the shell you're in. You can do that simply by calling
-<em>source somefile</em>. This is how Python's virtualenv works.</p>
+<h3><code>source</code></h3>
+<p>If you reinterpret the problem as trying to create a subshell at all, you could
+try to modify the shell you're in. You can do that simply by calling <em>source
+somefile</em>. This is how Python's virtualenv works.</p>
 <p>The upside is that it's pretty clean, the downside is that it's pretty custom
 per shell. If you're careful, odds are you can write it in POSIX sh and cover
 sh, bash, zsh in one go, though. Unless you need to support fish. Or eshell or
 whatever it is that one person on your team uses.</p>
-<p><strong>PROMPT_COMMAND</strong> Let's say you have no shame and you interpret the problem as
-shells refusing to bend to your eternal will. You can get past the above
-restriction with the rarely used PROMPT_COMMAND environment variable. <a href="http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x264.html">Quoth
-the docs</a>:</p>
+<h2>PROMPT_COMMAND</h2>
+<p>Let's say you have no shame and you interpret the problem as shells refusing to
+bend to your eternal will. You can get past the above restriction with the
+rarely used PROMPT_COMMAND environment variable. <a href="http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x264.html">Quoth the
+docs</a>:</p>
 <blockquote>
 <p>Bash provides an environment variable called PROMPT_COMMAND. The contents of
 this variable are executed as a regular Bash command just before Bash displays
@@ -997,14 +1000,15 @@ know, something like:</p>
 </pre>
 
 
-<p>Of course, you have now forfeited any pretense of being reasonable. This doesn't play well with others. Another
-downside is that this doesn't work in zsh. That has an equivalent precmd()
-function but won't grab it from an environment variable. Which brings us to our
-final trick:</p>
-<p><strong>Reconstituted rcfiles</strong> If you absolutely must, you could technically just
-cobble together the entire rcfile, including the parts that the shell would
-ordinarily source itself. I don't really want to help you do that, but it'd
-probably look something like this:</p>
+<p>Of course, you have now forfeited any pretense of being reasonable. This doesn't
+play well with others. Another downside is that this doesn't work in zsh. That
+has an equivalent precmd() function but won't grab it from an environment
+variable. Which brings us to our final trick:</p>
+<h2>Reconstituted rcfile</h2>
+<p>If you absolutely must, you could technically just cobble together the entire
+rcfile, including the parts that the shell would ordinarily source itself. I
+don't really want to help you do that, but it'd probably look something like
+this:</p>
 <pre class="code literal-block"><span></span>$ zsh --rcs &lt;<span class="o">(</span><span class="nb">echo</span> <span class="s2">"echo why are you like this"</span><span class="o">)</span>
 why are you like this
 </pre>

@@ -7,15 +7,11 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>https://www.lvh.io/rss.xml</loc>
-  <lastmod>2019-10-30T16:22:00Z</lastmod>
+  <lastmod>2019-10-31T22:20:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/sitemap.xml</loc>
-  <lastmod>2019-10-30T16:22:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>https://www.lvh.io/tags/cat_security-cryptography.xml</loc>
-  <lastmod>2019-10-30T16:22:00Z</lastmod>
+  <lastmod>2019-10-31T22:20:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/clojure.xml</loc>
@@ -23,7 +19,7 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/cryptography.xml</loc>
-  <lastmod>2019-10-30T16:22:00Z</lastmod>
+  <lastmod>2019-10-30T16:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/docker.xml</loc>
@@ -47,7 +43,7 @@
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/security.xml</loc>
-  <lastmod>2019-10-30T16:22:00Z</lastmod>
+  <lastmod>2019-10-30T16:24:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://www.lvh.io/tags/web.xml</loc>

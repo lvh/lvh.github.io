@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 16:24:09 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Thu, 31 Oct 2019 22:20:14 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
 &lt;h2&gt;You don’t really want a signature&lt;/h2&gt;
 &lt;p&gt;When cryptography engineers say "signature" they tend to mean something asymmetric, like RSA or ECDSA. Developers reach for asymmetric tools too often. There are a lot of ways to screw them up. By comparison, symmetric “signing” (MACs) are easy to use and hard to screw up. HMAC is bulletproof and ubiquitous.&lt;/p&gt;
 &lt;p&gt;Unless you have a good reason why you need an (asymmetric) signature, you want a MAC. If you really do want a signature, check out our Cryptographic Right Answers post to make that as safe as possible. For the rest of this blog post, "signing" means symmetrically, and in practice that means HMAC.&lt;/p&gt;
@@ -728,12 +728,12 @@ probably want Noise_IK. Or, you know, ask your security person :)&lt;/p&gt;
 tradition has been around forever: people recognized the need to highlight
 you're not just some random shmoe.&lt;/p&gt;
 &lt;p&gt;These days we have lots of snazzy shell magic. You might still su, but you're
-more likely to sudo. We still temporarily assume extra privileges. If
-you have access to more than one set of systems, like production and staging,
-you probably have ways of putting on a particular hat. Some combination of
-setting an environment variable, adding a key to ssh-agent, or assuming aws AWS
-role with &lt;a href="https://github.com/99designs/aws-vault"&gt;aws-vault&lt;/a&gt;. You know, so you don't accidentally blow away
-prod.&lt;/p&gt;
+more likely to sudo. We still temporarily assume extra privileges. If you have
+access to more than one set of systems, like production and staging, you
+probably have ways of putting on a particular hat. Some combination of setting
+an environment variable, adding a key to ssh-agent, or assuming aws AWS role
+with &lt;a href="https://github.com/99designs/aws-vault"&gt;aws-vault&lt;/a&gt;. You know, so you don't
+accidentally blow away prod.&lt;/p&gt;
 &lt;p&gt;If a privilege is important enough not to have around all the time, it's
 important enough to be reminded you have it. You're likely to have more than one
 terminal open. You might want to be reminded when your extra privileges are
@@ -757,8 +757,9 @@ indiscriminately and so your fancy prompt gets clobbered.&lt;/p&gt;
 &lt;li&gt;Sourcing scripts&lt;/li&gt;
 &lt;li&gt;Crazy hacks like PROMPT_COMMAND or precmd or reconstituted rcfiles&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;rcless shells&lt;/strong&gt; If you interpret the problem as shells having configuration, you
-can disable that. Unfortunately, the flags for this are different across shells:&lt;/p&gt;
+&lt;h2&gt;rcless shells&lt;/h2&gt;
+&lt;p&gt;If you interpret the problem as shells having configuration, you can disable
+that. Unfortunately, the flags for this are different across shells:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;bash uses the --norc flag&lt;/li&gt;
 &lt;li&gt;zsh uses the --no-rcs flag&lt;/li&gt;
@@ -781,11 +782,11 @@ that rcless shells will work pretty much anywhere. The bad news is that the
 shell customization people are used to is gone: aliases, paths, colors, shell
 history et cetera. If people don't love the shell you give them, odds are
 they're going to look for a workaround.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Dedicated environment variables&lt;/strong&gt; If you interpret the problem as setting PS1
-being fundamentally wrong because that's the shell configuration's job, you
-could argue that the shell configuration should also just set the prompt
-correctly. Your job is not to set the prompt, but to give the shell everything
-it needs to set it for you.&lt;/p&gt;
+&lt;h2&gt;Dedicated environment variables&lt;/h2&gt;
+&lt;p&gt;If you interpret the problem as setting PS1 being fundamentally wrong because
+that's the shell configuration's job, you could argue that the shell
+configuration should also just set the prompt correctly. Your job is not to set
+the prompt, but to give the shell everything it needs to set it for you.&lt;/p&gt;
 &lt;p&gt;As an example, aws-vault already conveniently sets an environment variable for
 you, so you can do this in your zshrc:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -n &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;AWS_VAULT&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
@@ -816,17 +817,19 @@ manually entering escape codes:&lt;/p&gt;
 &lt;/ol&gt;
 &lt;p&gt;The downside to this is that it fails open. If nobody changes PS1 you don't
 get a fancy prompt. It's a pain to enforce this via MDM.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;source&lt;/strong&gt; If you reinterpret the problem as trying to create a subshell at all,
-you could try to modify the shell you're in. You can do that simply by calling
-&lt;em&gt;source somefile&lt;/em&gt;. This is how Python's virtualenv works.&lt;/p&gt;
+&lt;h3&gt;&lt;code&gt;source&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;If you reinterpret the problem as trying to create a subshell at all, you could
+try to modify the shell you're in. You can do that simply by calling &lt;em&gt;source
+somefile&lt;/em&gt;. This is how Python's virtualenv works.&lt;/p&gt;
 &lt;p&gt;The upside is that it's pretty clean, the downside is that it's pretty custom
 per shell. If you're careful, odds are you can write it in POSIX sh and cover
 sh, bash, zsh in one go, though. Unless you need to support fish. Or eshell or
 whatever it is that one person on your team uses.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;PROMPT_COMMAND&lt;/strong&gt; Let's say you have no shame and you interpret the problem as
-shells refusing to bend to your eternal will. You can get past the above
-restriction with the rarely used PROMPT_COMMAND environment variable. &lt;a href="http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x264.html"&gt;Quoth
-the docs&lt;/a&gt;:&lt;/p&gt;
+&lt;h2&gt;PROMPT_COMMAND&lt;/h2&gt;
+&lt;p&gt;Let's say you have no shame and you interpret the problem as shells refusing to
+bend to your eternal will. You can get past the above restriction with the
+rarely used PROMPT_COMMAND environment variable. &lt;a href="http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x264.html"&gt;Quoth the
+docs&lt;/a&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Bash provides an environment variable called PROMPT_COMMAND. The contents of
 this variable are executed as a regular Bash command just before Bash displays
@@ -841,14 +844,15 @@ know, something like:&lt;/p&gt;
 &lt;/pre&gt;
 
 
-&lt;p&gt;Of course, you have now forfeited any pretense of being reasonable. This doesn't play well with others. Another
-downside is that this doesn't work in zsh. That has an equivalent precmd()
-function but won't grab it from an environment variable. Which brings us to our
-final trick:&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Reconstituted rcfiles&lt;/strong&gt; If you absolutely must, you could technically just
-cobble together the entire rcfile, including the parts that the shell would
-ordinarily source itself. I don't really want to help you do that, but it'd
-probably look something like this:&lt;/p&gt;
+&lt;p&gt;Of course, you have now forfeited any pretense of being reasonable. This doesn't
+play well with others. Another downside is that this doesn't work in zsh. That
+has an equivalent precmd() function but won't grab it from an environment
+variable. Which brings us to our final trick:&lt;/p&gt;
+&lt;h2&gt;Reconstituted rcfile&lt;/h2&gt;
+&lt;p&gt;If you absolutely must, you could technically just cobble together the entire
+rcfile, including the parts that the shell would ordinarily source itself. I
+don't really want to help you do that, but it'd probably look something like
+this:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;$ zsh --rcs &amp;lt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"echo why are you like this"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 why are you like this
 &lt;/pre&gt;

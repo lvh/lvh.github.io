@@ -15,7 +15,7 @@
 [Regex Crossword](https://regexcrossword.com/) is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
 on GitHub as [`lvh/regex-crossword`](https://github.com/lvh/regex-crossword).
-This blog post walks you through how I wrote it using logic programming. 
+This blog post walks you through how I wrote it using logic programming.
 
 To me this game feels more like Sudoku than a crossword. When you solve a
 crossword, you start by filling out the words you're certain of and use those
@@ -99,7 +99,7 @@ To parse, we use `[com.gfredericks.test.chuck.regexes :as cre]`.
 ```
 
 Progress! It is indeed an alternation (a or b) of a concatenation of H and E, or
-L and L, or the letter O one or more times. 
+L and L, or the letter O one or more times.
 
 # Logic machinery
 
@@ -142,17 +142,15 @@ Finally, we need a way to actually run the logic programming engine. that's
 
 ... will return `('fred)` (the 1-list with the symbol `'fred` in it) because
 there's only one answer for `q` that makes all the goals (here just one goal)
-succeed. `run` has a sibling `run*` that gets you all the answers. It returns
-the same result, because there's only one value for `q` that makes all goals
-succeed.
+succeed. `run` takes the _maximum number of answers_ as a parameter. Since
+you're describing what the answer looks like, there might be zero, one, or any
+other number of answers. Sometimes the engine will be able to prove there are no
+other options (because the search was exhaustive) and it'll return fewer. Some
+programs run forever, some so long it might as well be forever. `run` has a
+sibling `run*` that gets you all the answers. It returns the same result,
+because there's only one value for `q` that makes all goals succeed.
 
-It takes the _maximum number of answers_ as a parameter. Since you're describing
-what the answer looks like, there might be zero, one, or any other number of
-answers. Sometimes the engine will be able to prove there are no other options
-(because the search was exhaustive) and it'll return fewer. Some pathological
-programs run forever, some so long it might as well be forever.
-
-# Direct match
+# Character match
 
 The simplest possible regular expression is just a character, which matches
 itself: `A`. In our parse tree, this is an entry of `:type` `:character`. We'll
@@ -183,20 +181,111 @@ We'll write a test to verify this works.
              (rcl/re->goal {:type :character :character \A} [q])))))
 ```
 
+# Alternation
+
+Let's look at a few parse trees for some simple alternations:
+
+```clojure
+(cre/parse "A|B")
+;; =>
+{:type :alternation,
+ :elements
+ ({:type :concatenation, :elements ({:type :character, :character \A})}
+  {:type :concatenation, :elements ({:type :character, :character \B})})}
+```
+
+Here's an example where the options are different length.
+
+```clojure
+(cre/parse "AAA|B")
+;; =>
+{:type :alternation,
+ :elements
+ ({:type :concatenation,
+   :elements
+   ({:type :character, :character \A}
+    {:type :character, :character \A}
+    {:type :character, :character \A})}
+  {:type :concatenation
+   :elements ({:type :character, :character \B})})}
+```
+
+It's also probably a good idea to consider something with more than two alternatives:
+
+```clojure
+(cre/parse "A|B|C")
+;; =>
+{:type :alternation,
+ :elements
+ ({:type :concatenation, :elements ({:type :character, :character \A})}
+  {:type :concatenation, :elements ({:type :character, :character \B})}
+  {:type :concatenation, :elements ({:type :character, :character \C})})}
+```
+
+Note the parser will always create concatenations as elements of alternations
+even if the element is really just a single character. We can't handle
+concatenations yet, so while we generally prefer things that the parser actually
+produces, we'll cheat with an alternation of characters first.
+
+## Alternation in logic
+
+The obvious test to write is:
+
+```clojure
+(t/deftest re->goal-alternation-test
+  (t/is (= '(\A \B)
+           (l/run* [q]
+             (rcl/re->goal (cre/parse "A|B") [q])))))
+```
+
+... but as we saw above, that introduces concatenations. Instead:
+
+```clojure
+  (t/is (= '(\A \B)
+           (l/run* [q]
+             ;; "A|B" with the internal concatenations removed
+             (rcl/re->goal {:type :alternation
+                            :elements
+                            [{:type :character :character \A}
+                             {:type :character :character \B}]}
+                           [q]))))
+
+  (t/is (= '(\A \B \C)
+           (l/run* [q]
+             ;; "A|B|C" with the internal concatenations removed
+             (rcl/re->goal {:type :alternation
+                            :elements
+                            [{:type :character :character \A}
+                             {:type :character :character \B}
+                             {:type :character :character \C}]}
+                           [q]))))
+```
+
+We need a way to express disjunction. Like `l/and*`, there's a `l/or*`. This
+primer is a little unorthodox because we're walking through a problem that
+requires rule generation. Most introductory texts make you build up static
+rules. Just like `l/and*` had a macro variant `l/all`, disjunction is usually
+expressed with the macro `l/conde`. One difference is that `conde` can express a
+disjunction of conjunctions in one go:
+
+```clojure
+(conde [a b] [c])
+;; is equivalent to
+(or* [(and* a b) c])
+```
+
 # Concatenation
 
 We want to be able to solve squares, not just individual letters. The simplest
 example of that is concatenation. The simplest case is a concatenation of two
 letters:
 
-```clojure
-(def a {:type :character :character \A})
-(def aa {:type :concatenation :elements [a a]})
-```
-
 A simple test:
 
 ```clojure
+(def a {:type :character :character \A})
+(def aa {:type :concatenation :elements [a a]})
+
 (t/deftest re->goal-concatenation-test
   (t/is (= '((\A \A))
            (l/run* [p q]
@@ -232,73 +321,102 @@ literals that contain multiple characters, but our parser produces neither and
 I'd rather work from real examples. Plus, we have to implement alternation
 anyway.)
 
-# Alternation
+## Distributing lvars over groups
 
-## Parse trees
 
-Let's look at a few parse trees for some simple alternations:
 
 ```clojure
-(cre/parse "A|B")
-;; =>
-{:type :alternation,
- :elements
- ({:type :concatenation, :elements ({:type :character, :character \A})}
-  {:type :concatenation, :elements ({:type :character, :character \B})})}
+(l/run* [q]
+  (l/fresh [x y z]
+    (l/== [x y z] q)
+    (f/in x y z (f/interval 2 5))
+    (f/eq (= 10 (+ x y z)))))
 ```
 
-Per our note above, we should also think of an example where the options are
-different length.
 
 ```clojure
-(cre/parse "AAA|B")
-;; =>
-{:type :alternation,
- :elements
- ({:type :concatenation,
-   :elements
-   ({:type :character, :character \A}
-    {:type :character, :character \A}
-    {:type :character, :character \A})}
-  {:type :concatenation
-   :elements ({:type :character, :character \B})})}
+(ns lvh.regex-crossword.partition
+  (:refer [clojure.core.logic :as l]))
+
+(defn reduceo
+  "Given a binary operator goal, return an n-ary one.
+
+  If the given goal has shape `(⊕ x y z)` meaning `x ⊕ y = z`, `(reduceo ⊕ z
+  vars)` computes `z = vars[0] ⊕ vars[1] ⊕ vars[2]...`."
+  ;; lower case are input vars (a, b, c, d...)
+  ;; upper case are intermediate accumulator lvars ("running totals")
+  ;; Ω is the final result
+  ;;     a ⊕ b = A
+  ;;     A ⊕ c = B
+  ;;       ...
+  ;;     W ⊕ y = X
+  ;;     X ⊕ z = Ω
+  ;;     |   |   |
+  ;;     |   |   \_ (concat accumulators (list result))
+  ;;     |   \_ (rest lvars)
+  ;;     \_ (cons (first lvars) (butlast accumulators))
+  ;;
+  ;; There are two fewer accumulators than there are input lvars. The middle
+  ;; equations all use 2 accumulators each: one to carry the previous result and
+  ;; one to carry it to the next equation. The first equation uses 2 input vars
+  ;; and 1 accumulator, and the last equation uses 1 input var, 1 accumulator
+  ;; and the result (which may be an lvar, but it's not _our_ lvar -- and in
+  ;; common uses we expect it to be a normal value).
+  ;;
+  ;; We don't need the butlast because map will only use the shortest coll argument.
+  [binop result lvars]
+  (let [results (-> lvars count (- 2) (repeatedly l/lvar) (conj result) reverse)
+        lefts (cons (first lvars) results)
+        rights (rest lvars)]
+    (l/and* (map binop lefts rights results))))
+
+(def sumo (partial reduceo f/+))
+(def concato (partial reduceo l/appendo))
+
+(defn summands
+  "Find ways you can add some numbers up to a given total.
+
+  For each number (summand) provide bounds `[min max]` or `nil` if you don't
+  know. Possible assignments are returned in the same order."
+  [total bounds]
+  (let [lvars (repeatedly (count bounds) l/lvar)
+        bounds-goals (map
+                      (fn [v [min max]]
+                        (f/in v (f/interval (or min 0) (or max total))))
+                      lvars bounds)]
+    (l/run* [q]
+      (l/== q lvars)
+      (l/and* bounds-goals)
+      (sumo total lvars))))
+
+(defn partition-by-weights
+  [weights coll]
+  (loop [[weight & rest-weights] weights
+         coll coll
+         acc []]
+    (if (some? weight)
+      (recur
+       rest-weights
+       (drop weight coll)
+       (conj acc (take weight coll)))
+      acc)))
 ```
 
-It's also probably a good idea to consider something with more than two alternatives:
+There's an alternative way to write this using `appendo`: `(l/appendo a b c)` is
+like `append` but for lvars. You can create a version that supports multiple
+lists (let's call it `concato`) using the same machinery:
 
 ```clojure
-(cre/parse "A|B|C")
-;; =>
-{:type :alternation,
- :elements
- ({:type :concatenation, :elements ({:type :character, :character \A})}
-  {:type :concatenation, :elements ({:type :character, :character \B})}
-  {:type :concatenation, :elements ({:type :character, :character \C})})}
+(def concato (partial reduceo l/appendo))
 ```
 
-## Alternation in logic
-
-Again, we write a simple test:
-
-```clojure
-(t/deftest re->goal-alternation-test
-  (t/is (= '(\A \B)
-           (l/run* [q]
-             (rcl/re->goal (cre/parse "A|B") [q])))))
-```
-We need a way to express disjunction. Like `l/and*`, there's a `l/or*`.
-
-This primer is a little unorthodox because we're walking through a problem that
-requires rule generation. Most introductory texts make you build up static
-rules. Just like `l/and*` had a macro variant `l/all`, disjunction is usually
-expressed with the macro `l/conde`. One difference is that `conde` can express a
-disjunction of conjunctions in one go:
-
-```clojure
-(conde [a b] [c])
-;; is equivalent to
-(or* [(and* a b) c])
-```
+In a sense `concato` is more direct: the lists are the lists you want, there's
+no `partition-by-weights` to translate from your numeric answer to the list
+partitions you need. I prefer to use the version with explicit bounds because
+it's more general, and we're going to need bounds when we handle repetition
+anyway. You could enforce those bounds too, but the only way I can think of is
+`project`, which is non-relational and so arguably not "cleaner" than the
+previous version.
 
 # Fixing :concatenation
 

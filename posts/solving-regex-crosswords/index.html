@@ -104,7 +104,7 @@ navbar-dark bg-dark
 <p><a href="https://regexcrossword.com/">Regex Crossword</a> is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
 on GitHub as <a href="https://github.com/lvh/regex-crossword"><code>lvh/regex-crossword</code></a>.
-This blog post walks you through how I wrote it using logic programming. </p>
+This blog post walks you through how I wrote it using logic programming.</p>
 <p>To me this game feels more like Sudoku than a crossword. When you solve a
 crossword, you start by filling out the words you're certain of and use those
 answers as hints for the rest. Backtracking is relatively rare. In a sudoku, you
@@ -172,7 +172,7 @@ tricky edge cases for now.</p>
 
 
 <p>Progress! It is indeed an alternation (a or b) of a concatenation of H and E, or
-L and L, or the letter O one or more times. </p>
+L and L, or the letter O one or more times.</p>
 <h2>Logic machinery</h2>
 <p>The logic programming engine is going to search a tree of possibilities for
 solutions that fit your constraints. Logic programming is inherently
@@ -207,15 +207,14 @@ at least it's not magic.)</p>
 
 <p>... will return <code>('fred)</code> (the 1-list with the symbol <code>'fred</code> in it) because
 there's only one answer for <code>q</code> that makes all the goals (here just one goal)
-succeed. <code>run</code> has a sibling <code>run*</code> that gets you all the answers. It returns
-the same result, because there's only one value for <code>q</code> that makes all goals
-succeed.</p>
-<p>It takes the <em>maximum number of answers</em> as a parameter. Since you're describing
-what the answer looks like, there might be zero, one, or any other number of
-answers. Sometimes the engine will be able to prove there are no other options
-(because the search was exhaustive) and it'll return fewer. Some pathological
-programs run forever, some so long it might as well be forever.</p>
-<h2>Direct match</h2>
+succeed. <code>run</code> takes the <em>maximum number of answers</em> as a parameter. Since
+you're describing what the answer looks like, there might be zero, one, or any
+other number of answers. Sometimes the engine will be able to prove there are no
+other options (because the search was exhaustive) and it'll return fewer. Some
+programs run forever, some so long it might as well be forever. <code>run</code> has a
+sibling <code>run*</code> that gets you all the answers. It returns the same result,
+because there's only one value for <code>q</code> that makes all goals succeed.</p>
+<h2>Character match</h2>
 <p>The simplest possible regular expression is just a character, which matches
 itself: <code>A</code>. In our parse tree, this is an entry of <code>:type</code> <code>:character</code>. We'll
 write a multimethod dispatching on <code>:type</code> to make this work so we can implement
@@ -242,17 +241,99 @@ be just one, so we can destructure it as well.</p>
 </pre>
 
 
+<h2>Alternation</h2>
+<p>Let's look at a few parse trees for some simple alternations:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
+</pre>
+
+
+<p>Here's an example where the options are different length.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"AAA|B"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
+    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
+    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>
+   <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
+</pre>
+
+
+<p>It's also probably a good idea to consider something with more than two alternatives:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B|C"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})}</span>
+  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\C</span><span class="p">})})}</span>
+</pre>
+
+
+<p>Note the parser will always create concatenations as elements of alternations
+even if the element is really just a single character. We can't handle
+concatenations yet, so while we generally prefer things that the parser actually
+produces, we'll cheat with an alternation of characters first.</p>
+<h3>Alternation in logic</h3>
+<p>The obvious test to write is:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-alternation-test</span>
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span> <span class="sc">\B</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span> <span class="p">[</span><span class="nv">q</span><span class="p">])))))</span>
+</pre>
+
+
+<p>... but as we saw above, that introduces concatenations. Instead:</p>
+<pre class="code literal-block"><span></span>  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span> <span class="sc">\B</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+             <span class="c1">;; "A|B" with the internal concatenations removed</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>
+                            <span class="ss">:elements</span>
+                            <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
+                             <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\B</span><span class="p">}]}</span>
+                           <span class="p">[</span><span class="nv">q</span><span class="p">]))))</span>
+
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span> <span class="sc">\B</span> <span class="sc">\C</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+             <span class="c1">;; "A|B|C" with the internal concatenations removed</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>
+                            <span class="ss">:elements</span>
+                            <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
+                             <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\B</span><span class="p">}</span>
+                             <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\C</span><span class="p">}]}</span>
+                           <span class="p">[</span><span class="nv">q</span><span class="p">]))))</span>
+</pre>
+
+
+<p>We need a way to express disjunction. Like <code>l/and*</code>, there's a <code>l/or*</code>. This
+primer is a little unorthodox because we're walking through a problem that
+requires rule generation. Most introductory texts make you build up static
+rules. Just like <code>l/and*</code> had a macro variant <code>l/all</code>, disjunction is usually
+expressed with the macro <code>l/conde</code>. One difference is that <code>conde</code> can express a
+disjunction of conjunctions in one go:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">conde</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">b</span><span class="p">]</span> <span class="p">[</span><span class="nv">c</span><span class="p">])</span>
+<span class="c1">;; is equivalent to</span>
+<span class="p">(</span><span class="nf">or*</span> <span class="p">[(</span><span class="nf">and*</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="nv">c</span><span class="p">])</span>
+</pre>
+
+
 <h2>Concatenation</h2>
 <p>We want to be able to solve squares, not just individual letters. The simplest
 example of that is concatenation. The simplest case is a concatenation of two
 letters:</p>
+<p>A simple test:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">a</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})</span>
 <span class="p">(</span><span class="k">def </span><span class="nv">aa</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span> <span class="ss">:elements</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">a</span><span class="p">]})</span>
-</pre>
 
-
-<p>A simple test:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-concatenation-test</span>
+<span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-concatenation-test</span>
   <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">((</span><span class="sc">\A</span> <span class="sc">\A</span><span class="p">))</span>
            <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span> <span class="nv">q</span><span class="p">]</span>
              <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="nv">aa</span> <span class="p">[</span><span class="nv">p</span> <span class="nv">q</span><span class="p">])))))</span>
@@ -284,66 +365,97 @@ next.</p>
 literals that contain multiple characters, but our parser produces neither and
 I'd rather work from real examples. Plus, we have to implement alternation
 anyway.)</p>
-<h2>Alternation</h2>
-<h3>Parse trees</h3>
-<p>Let's look at a few parse trees for some simple alternations:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
+<h3>Distributing lvars over groups</h3>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">l/fresh</span> <span class="p">[</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">]</span>
+    <span class="p">(</span><span class="nf">l/==</span> <span class="p">[</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">]</span> <span class="nv">q</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">f/in</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> <span class="p">(</span><span class="nf">f/interval</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">f/eq</span> <span class="p">(</span><span class="nb">= </span><span class="mi">10</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">)))))</span>
 </pre>
 
 
-<p>Per our note above, we should also think of an example where the options are
-different length.</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"AAA|B"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
-   <span class="ss">:elements</span>
-   <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
-    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">}</span>
-    <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>
-   <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})})}</span>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">lvh.regex-crossword.partition</span>
+  <span class="p">(</span><span class="ss">:refer</span> <span class="p">[</span><span class="nv">clojure.core.logic</span> <span class="ss">:as</span> <span class="nv">l</span><span class="p">]))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">reduceo</span>
+  <span class="s">"Given a binary operator goal, return an n-ary one.</span>
+
+<span class="s">  If the given goal has shape `(⊕ x y z)` meaning `x ⊕ y = z`, `(reduceo ⊕ z</span>
+<span class="s">  vars)` computes `z = vars[0] ⊕ vars[1] ⊕ vars[2]...`."</span>
+  <span class="c1">;; lower case are input vars (a, b, c, d...)</span>
+  <span class="c1">;; upper case are intermediate accumulator lvars ("running totals")</span>
+  <span class="c1">;; Ω is the final result</span>
+  <span class="c1">;;     a ⊕ b = A</span>
+  <span class="c1">;;     A ⊕ c = B</span>
+  <span class="c1">;;       ...</span>
+  <span class="c1">;;     W ⊕ y = X</span>
+  <span class="c1">;;     X ⊕ z = Ω</span>
+  <span class="c1">;;     |   |   |</span>
+  <span class="c1">;;     |   |   \_ (concat accumulators (list result))</span>
+  <span class="c1">;;     |   \_ (rest lvars)</span>
+  <span class="c1">;;     \_ (cons (first lvars) (butlast accumulators))</span>
+  <span class="c1">;;</span>
+  <span class="c1">;; There are two fewer accumulators than there are input lvars. The middle</span>
+  <span class="c1">;; equations all use 2 accumulators each: one to carry the previous result and</span>
+  <span class="c1">;; one to carry it to the next equation. The first equation uses 2 input vars</span>
+  <span class="c1">;; and 1 accumulator, and the last equation uses 1 input var, 1 accumulator</span>
+  <span class="c1">;; and the result (which may be an lvar, but it's not _our_ lvar -- and in</span>
+  <span class="c1">;; common uses we expect it to be a normal value).</span>
+  <span class="c1">;;</span>
+  <span class="c1">;; We don't need the butlast because map will only use the shortest coll argument.</span>
+  <span class="p">[</span><span class="nv">binop</span> <span class="nv">result</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">results</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lvars</span> <span class="nb">count </span><span class="p">(</span><span class="nb">- </span><span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nf">repeatedly</span> <span class="nv">l/lvar</span><span class="p">)</span> <span class="p">(</span><span class="nb">conj </span><span class="nv">result</span><span class="p">)</span> <span class="nv">reverse</span><span class="p">)</span>
+        <span class="nb">lefts </span><span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">first </span><span class="nv">lvars</span><span class="p">)</span> <span class="nv">results</span><span class="p">)</span>
+        <span class="nb">rights </span><span class="p">(</span><span class="nb">rest </span><span class="nv">lvars</span><span class="p">)]</span>
+    <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">map </span><span class="nv">binop</span> <span class="nb">lefts rights </span><span class="nv">results</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">sumo</span> <span class="p">(</span><span class="nb">partial </span><span class="nv">reduceo</span> <span class="nv">f/+</span><span class="p">))</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">concato</span> <span class="p">(</span><span class="nb">partial </span><span class="nv">reduceo</span> <span class="nv">l/appendo</span><span class="p">))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">summands</span>
+  <span class="s">"Find ways you can add some numbers up to a given total.</span>
+
+<span class="s">  For each number (summand) provide bounds `[min max]` or `nil` if you don't</span>
+<span class="s">  know. Possible assignments are returned in the same order."</span>
+  <span class="p">[</span><span class="nv">total</span> <span class="nv">bounds</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">lvars</span> <span class="p">(</span><span class="nf">repeatedly</span> <span class="p">(</span><span class="nb">count </span><span class="nv">bounds</span><span class="p">)</span> <span class="nv">l/lvar</span><span class="p">)</span>
+        <span class="nv">bounds-goals</span> <span class="p">(</span><span class="nf">map</span>
+                      <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">v</span> <span class="p">[</span><span class="nb">min </span><span class="nv">max</span><span class="p">]]</span>
+                        <span class="p">(</span><span class="nf">f/in</span> <span class="nv">v</span> <span class="p">(</span><span class="nf">f/interval</span> <span class="p">(</span><span class="nb">or min </span><span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">or max </span><span class="nv">total</span><span class="p">))))</span>
+                      <span class="nv">lvars</span> <span class="nv">bounds</span><span class="p">)]</span>
+    <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+      <span class="p">(</span><span class="nf">l/==</span> <span class="nv">q</span> <span class="nv">lvars</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">l/and*</span> <span class="nv">bounds-goals</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">sumo</span> <span class="nv">total</span> <span class="nv">lvars</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">partition-by-weights</span>
+  <span class="p">[</span><span class="nv">weights</span> <span class="nv">coll</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">loop </span><span class="p">[[</span><span class="nv">weight</span> <span class="o">&amp;</span> <span class="nv">rest-weights</span><span class="p">]</span> <span class="nv">weights</span>
+         <span class="nv">coll</span> <span class="nv">coll</span>
+         <span class="nv">acc</span> <span class="p">[]]</span>
+    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">some?</span> <span class="nv">weight</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">recur</span>
+       <span class="nv">rest-weights</span>
+       <span class="p">(</span><span class="nb">drop </span><span class="nv">weight</span> <span class="nv">coll</span><span class="p">)</span>
+       <span class="p">(</span><span class="nb">conj </span><span class="nv">acc</span> <span class="p">(</span><span class="nb">take </span><span class="nv">weight</span> <span class="nv">coll</span><span class="p">)))</span>
+      <span class="nv">acc</span><span class="p">)))</span>
 </pre>
 
 
-<p>It's also probably a good idea to consider something with more than two alternatives:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B|C"</span><span class="p">)</span>
-<span class="c1">;; =&gt;</span>
-<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
- <span class="ss">:elements</span>
- <span class="p">({</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\B</span><span class="p">})}</span>
-  <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>, <span class="ss">:elements</span> <span class="p">({</span><span class="ss">:type</span> <span class="ss">:character</span>, <span class="ss">:character</span> <span class="sc">\C</span><span class="p">})})}</span>
+<p>There's an alternative way to write this using <code>appendo</code>: <code>(l/appendo a b c)</code> is
+like <code>append</code> but for lvars. You can create a version that supports multiple
+lists (let's call it <code>concato</code>) using the same machinery:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">concato</span> <span class="p">(</span><span class="nb">partial </span><span class="nv">reduceo</span> <span class="nv">l/appendo</span><span class="p">))</span>
 </pre>
 
 
-<h3>Alternation in logic</h3>
-<p>Again, we write a simple test:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/deftest</span> <span class="nv">re-&gt;goal-alternation-test</span>
-  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span> <span class="sc">\B</span><span class="p">)</span>
-           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
-             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"A|B"</span><span class="p">)</span> <span class="p">[</span><span class="nv">q</span><span class="p">])))))</span>
-</pre>
-
-
-<p>We need a way to express disjunction. Like <code>l/and*</code>, there's a <code>l/or*</code>.</p>
-<p>This primer is a little unorthodox because we're walking through a problem that
-requires rule generation. Most introductory texts make you build up static
-rules. Just like <code>l/and*</code> had a macro variant <code>l/all</code>, disjunction is usually
-expressed with the macro <code>l/conde</code>. One difference is that <code>conde</code> can express a
-disjunction of conjunctions in one go:</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">conde</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">b</span><span class="p">]</span> <span class="p">[</span><span class="nv">c</span><span class="p">])</span>
-<span class="c1">;; is equivalent to</span>
-<span class="p">(</span><span class="nf">or*</span> <span class="p">[(</span><span class="nf">and*</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="nv">c</span><span class="p">])</span>
-</pre>
-
-
+<p>In a sense <code>concato</code> is more direct: the lists are the lists you want, there's
+no <code>partition-by-weights</code> to translate from your numeric answer to the list
+partitions you need. I prefer to use the version with explicit bounds because
+it's more general, and we're going to need bounds when we handle repetition
+anyway. You could enforce those bounds too, but the only way I can think of is
+<code>project</code>, which is non-relational and so arguably not "cleaner" than the
+previous version.</p>
 <h2>Fixing :concatenation</h2>
 <p>As we discovered earlier: concatenation is broken. It assumes each part is a
 character, and specifically that each part is length 1.</p>

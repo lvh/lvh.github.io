@@ -14,12 +14,12 @@ tradition has been around forever: people recognized the need to highlight
 you're not just some random shmoe.
 
 These days we have lots of snazzy shell magic. You might still su, but you're
-more likely to sudo. We still temporarily assume extra privileges. If
-you have access to more than one set of systems, like production and staging,
-you probably have ways of putting on a particular hat. Some combination of
-setting an environment variable, adding a key to ssh-agent, or assuming aws AWS
-role with [aws-vault](https://github.com/99designs/aws-vault). You know, so you don't accidentally blow away
-prod.
+more likely to sudo. We still temporarily assume extra privileges. If you have
+access to more than one set of systems, like production and staging, you
+probably have ways of putting on a particular hat. Some combination of setting
+an environment variable, adding a key to ssh-agent, or assuming aws AWS role
+with [aws-vault](https://github.com/99designs/aws-vault). You know, so you don't
+accidentally blow away prod.
 
 If a privilege is important enough not to have around all the time, it's
 important enough to be reminded you have it. You're likely to have more than one
@@ -47,8 +47,10 @@ So what do you do? Major techniques:
 * Sourcing scripts
 * Crazy hacks like PROMPT_COMMAND or precmd or reconstituted rcfiles
 
-**rcless shells** If you interpret the problem as shells having configuration, you
-can disable that. Unfortunately, the flags for this are different across shells:
+# rcless shells
+
+If you interpret the problem as shells having configuration, you can disable
+that. Unfortunately, the flags for this are different across shells:
 
 * bash uses the --norc flag
 * zsh uses the --no-rcs flag
@@ -73,11 +75,12 @@ shell customization people are used to is gone: aliases, paths, colors, shell
 history et cetera. If people don't love the shell you give them, odds are
 they're going to look for a workaround.
 
-**Dedicated environment variables** If you interpret the problem as setting PS1
-being fundamentally wrong because that's the shell configuration's job, you
-could argue that the shell configuration should also just set the prompt
-correctly. Your job is not to set the prompt, but to give the shell everything
-it needs to set it for you.
+# Dedicated environment variables
+
+If you interpret the problem as setting PS1 being fundamentally wrong because
+that's the shell configuration's job, you could argue that the shell
+configuration should also just set the prompt correctly. Your job is not to set
+the prompt, but to give the shell everything it needs to set it for you.
 
 As an example, aws-vault already conveniently sets an environment variable for
 you, so you can do this in your zshrc:
@@ -113,19 +116,23 @@ manually entering escape codes:
 The downside to this is that it fails open. If nobody changes PS1 you don't
 get a fancy prompt. It's a pain to enforce this via MDM.
 
-**source** If you reinterpret the problem as trying to create a subshell at all,
-you could try to modify the shell you're in. You can do that simply by calling
-*source somefile*. This is how Python's virtualenv works.
+## `source`
+
+If you reinterpret the problem as trying to create a subshell at all, you could
+try to modify the shell you're in. You can do that simply by calling *source
+somefile*. This is how Python's virtualenv works.
 
 The upside is that it's pretty clean, the downside is that it's pretty custom
 per shell. If you're careful, odds are you can write it in POSIX sh and cover
 sh, bash, zsh in one go, though. Unless you need to support fish. Or eshell or
 whatever it is that one person on your team uses.
 
-**PROMPT_COMMAND** Let's say you have no shame and you interpret the problem as
-shells refusing to bend to your eternal will. You can get past the above
-restriction with the rarely used PROMPT_COMMAND environment variable. [Quoth
-the docs](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x264.html):
+# PROMPT_COMMAND
+
+Let's say you have no shame and you interpret the problem as shells refusing to
+bend to your eternal will. You can get past the above restriction with the
+rarely used PROMPT_COMMAND environment variable. [Quoth the
+docs](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x264.html):
 
 > Bash provides an environment variable called PROMPT_COMMAND. The contents of
 > this variable are executed as a regular Bash command just before Bash displays
@@ -141,15 +148,17 @@ know, something like:
 PROMPT_COMMAND='PS1="${PS1} butwhy>";unset PROMPT_COMMAND'
 ```
 
-Of course, you have now forfeited any pretense of being reasonable. This doesn't play well with others. Another
-downside is that this doesn't work in zsh. That has an equivalent precmd()
-function but won't grab it from an environment variable. Which brings us to our
-final trick:
+Of course, you have now forfeited any pretense of being reasonable. This doesn't
+play well with others. Another downside is that this doesn't work in zsh. That
+has an equivalent precmd() function but won't grab it from an environment
+variable. Which brings us to our final trick:
 
-**Reconstituted rcfiles** If you absolutely must, you could technically just
-cobble together the entire rcfile, including the parts that the shell would
-ordinarily source itself. I don't really want to help you do that, but it'd
-probably look something like this:
+# Reconstituted rcfile
+
+If you absolutely must, you could technically just cobble together the entire
+rcfile, including the parts that the shell would ordinarily source itself. I
+don't really want to help you do that, but it'd probably look something like
+this:
 
 ```sh
 $ zsh --rcs <(echo "echo why are you like this")
