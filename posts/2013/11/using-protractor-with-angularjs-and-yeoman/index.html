@@ -82,10 +82,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Using protractor with AngularJS and Yeoman</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -113,8 +114,8 @@ probably an upgrade :-)</p>
 <li>In the root of your app, install protractor and the Selenium
    standalone server.</li>
 </ol>
-<pre class="code literal-block"><span></span><span class="n">npm</span> <span class="n">install</span> <span class="c1">--save-dev protractor</span>
-<span class="p">.</span><span class="o">/</span><span class="n">node_modules</span><span class="o">/</span><span class="n">protractor</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">install_selenium_standalone</span>
+<pre class="code literal-block"><span></span>npm install --save-dev protractor
+./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
 
@@ -157,24 +158,24 @@ probably an upgrade :-)</p>
 <li>If you're using Coffeescript, change your Gruntfile to build your
    integration tests:</li>
 </ol>
-<pre class="code literal-block"><span></span>  <span class="n">grunt</span><span class="p">.</span><span class="n">initConfig</span><span class="p">(</span><span class="err">{</span>
-    <span class="o">//</span> <span class="p">...</span>
-    <span class="n">coffee</span><span class="p">:</span> <span class="err">{</span>
-      <span class="o">//</span> <span class="p">...</span>
-      <span class="n">test</span><span class="p">:</span> <span class="err">{</span>
-        <span class="n">files</span><span class="p">:</span> <span class="p">[</span>
-        <span class="o">//</span> <span class="p">...</span>
-        <span class="err">{</span>
-          <span class="n">expand</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
-          <span class="n">cwd</span><span class="p">:</span> <span class="s1">'test/integration'</span><span class="p">,</span>
-          <span class="n">src</span><span class="p">:</span> <span class="s1">'{,*/}*.coffee'</span><span class="p">,</span>
-          <span class="n">dest</span><span class="p">:</span> <span class="s1">'.tmp/integration'</span><span class="p">,</span>
-          <span class="n">ext</span><span class="p">:</span> <span class="s1">'.js'</span>
-        <span class="err">}</span><span class="p">]</span>
-      <span class="err">}</span>
-    <span class="err">}</span><span class="p">,</span>
-  <span class="o">//</span> <span class="p">...</span>
-<span class="err">}</span><span class="p">)</span>
+<pre class="code literal-block"><span></span>  grunt.initConfig({
+    // ...
+    coffee: {
+      // ...
+      test: {
+        files: [
+        // ...
+        {
+          expand: true,
+          cwd: 'test/integration',
+          src: '{,*/}*.coffee',
+          dest: '.tmp/integration',
+          ext: '.js'
+        }]
+      }
+    },
+  // ...
+})
 </pre>
 
 
@@ -186,12 +187,12 @@ probably an upgrade :-)</p>
 <p>You can now manually run your tests. First run Selenium:</p>
 </li>
 </ol>
-<pre class="code literal-block"><span></span><span class="p">.</span><span class="o">/</span><span class="n">node_modules</span><span class="o">/</span><span class="n">protractor</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">install_selenium_standalone</span>
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
 
 <p>Then run your tests:</p>
-<pre class="code literal-block"><span></span><span class="p">.</span><span class="o">/</span><span class="n">node_modules</span><span class="o">/</span><span class="n">protractor</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">protractor</span> <span class="n">protractor</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">js</span>
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/protractor protractor.conf.js
 </pre>
 
 
@@ -208,6 +209,7 @@ know.</p>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

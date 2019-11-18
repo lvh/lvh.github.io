@@ -67,6 +67,7 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 
     
 
@@ -120,17 +121,17 @@ access to previous containers for copying build artifacts around. This
 requires Docker 17.05 or newer.</p>
 <p>Here's an example Dockerfile that builds an uberjar from a standard lein-based
 app, and puts it in a new JRE image:</p>
-<pre class="code literal-block"><span></span><span class="k">FROM</span> <span class="n">clojure</span> <span class="k">AS</span> <span class="n">build</span><span class="o">-</span><span class="n">env</span>
-<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">myapp</span>
-<span class="k">COPY</span> <span class="n">project</span><span class="p">.</span><span class="n">clj</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">myapp</span><span class="o">/</span>
-<span class="n">RUN</span> <span class="n">lein</span> <span class="n">deps</span>
-<span class="k">COPY</span> <span class="p">.</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">myapp</span>
-<span class="n">RUN</span> <span class="n">mv</span> <span class="ss">"$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')"</span> <span class="n">myapp</span><span class="o">-</span><span class="n">standalone</span><span class="p">.</span><span class="n">jar</span>
+<pre class="code literal-block"><span></span>FROM clojure AS build-env
+WORKDIR /usr/src/myapp
+COPY project.clj /usr/src/myapp/
+RUN lein deps
+COPY . /usr/src/myapp
+RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
 
-<span class="k">FROM</span> <span class="n">openjdk</span><span class="p">:</span><span class="mi">8</span><span class="o">-</span><span class="n">jre</span><span class="o">-</span><span class="n">alpine</span>
-<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">myapp</span>
-<span class="k">COPY</span> <span class="c1">--from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar</span>
-<span class="n">ENTRYPOINT</span> <span class="p">[</span><span class="ss">"java"</span><span class="p">,</span> <span class="ss">"-jar"</span><span class="p">,</span> <span class="ss">"/myapp/myapp.jar"</span><span class="p">]</span>
+FROM openjdk:8-jre-alpine
+WORKDIR /myapp
+COPY --from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar
+ENTRYPOINT ["java", "-jar", "/myapp/myapp.jar"]
 </pre>
 
 
@@ -235,7 +236,7 @@ and OWC claims February 2017.</p>
 <h2>WiFi failing with USB-C devices plugged in</h2>
 <p>Just as I was going to start writing this post, I noticed that I wasn't able
 to sync my blog repository from GitHub:</p>
-<pre class="code literal-block"><span></span><span class="nv">Get</span> <span class="nv">https</span>:<span class="o">//</span><span class="nv">api</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">repos</span><span class="o">/</span><span class="nv">lvh</span><span class="o">/</span><span class="nv">lvh</span>.<span class="nv">github</span>.<span class="nv">io</span>: <span class="nv">dial</span> <span class="nv">tcp</span> <span class="mi">192</span>.<span class="mi">30</span>.<span class="mi">253</span>.<span class="mi">116</span>:<span class="mi">443</span>: <span class="k">connect</span>: <span class="nv">network</span> <span class="nv">is</span> <span class="nv">unreachable</span>
+<pre class="code literal-block"><span></span>Get https://api.github.com/repos/lvh/lvh.github.io: dial tcp 192.30.253.116:443: connect: network is unreachable
 </pre>
 
 
@@ -283,6 +284,7 @@ high-quality docks are available.</p>
         </ul>
 <!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

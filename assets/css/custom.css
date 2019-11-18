@@ -47,6 +47,21 @@ a:hover {
     color: #534a4d;
 }
 
+
+figure {
+    border: 1px solid #ccc;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+    padding: 20px;
+}
+
+figure figcaption::before {
+    content: "Fig.:";
+    font-style: italic;
+}
+
 .entry-content a[href] {
     text-decoration: underline;
 }

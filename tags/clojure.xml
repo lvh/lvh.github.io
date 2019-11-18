@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about clojure)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/clojure.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 16:22:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about clojure)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/clojure.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 04 Nov 2019 17:00:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
 runtime environment. Many platforms have different requirements when you're
 generating a runnable artifact than when you're running it.&lt;/p&gt;
 &lt;p&gt;In languages like Go, Rust or C, where the most common implementations produce
@@ -34,17 +34,17 @@ access to previous containers for copying build artifacts around. This
 requires Docker 17.05 or newer.&lt;/p&gt;
 &lt;p&gt;Here's an example Dockerfile that builds an uberjar from a standard lein-based
 app, and puts it in a new JRE image:&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;clojure&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;
-&lt;span class="n"&gt;WORKDIR&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
-&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="n"&gt;project&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;clj&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
-&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;lein&lt;/span&gt; &lt;span class="n"&gt;deps&lt;/span&gt;
-&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
-&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;mv&lt;/span&gt; &lt;span class="ss"&gt;"$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')"&lt;/span&gt; &lt;span class="n"&gt;myapp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;standalone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jar&lt;/span&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;FROM clojure AS build-env
+WORKDIR /usr/src/myapp
+COPY project.clj /usr/src/myapp/
+RUN lein deps
+COPY . /usr/src/myapp
+RUN mv "$(lein uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" myapp-standalone.jar
 
-&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;openjdk&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;jre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;alpine&lt;/span&gt;
-&lt;span class="n"&gt;WORKDIR&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myapp&lt;/span&gt;
-&lt;span class="k"&gt;COPY&lt;/span&gt; &lt;span class="c1"&gt;--from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar&lt;/span&gt;
-&lt;span class="n"&gt;ENTRYPOINT&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;"java"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;"-jar"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;"/myapp/myapp.jar"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+FROM openjdk:8-jre-alpine
+WORKDIR /myapp
+COPY --from=build-env /usr/src/myapp/myapp-standalone.jar /myapp/myapp.jar
+ENTRYPOINT ["java", "-jar", "/myapp/myapp.jar"]
 &lt;/pre&gt;
 
 
@@ -69,53 +69,41 @@ been released, so I updated the post.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edited:&lt;/em&gt;* Łukasz Korecki pointed out that &lt;code&gt;project.clj&lt;/code&gt; has an &lt;code&gt;:uberjar-name&lt;/code&gt;
 parameter which can be used to avoid the gnarly &lt;code&gt;sed&lt;/code&gt; expression. Thanks Łukasz!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><category>docker</category><guid>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</guid><pubDate>Fri, 16 Jun 2017 17:12:46 GMT</pubDate></item><item><title>What the heck is a clojure.lang.IFn$LO?</title><link>https://www.lvh.io/posts/what-the-heck-is-a-clojurelangifnlo/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;It's no secret that I love Clojure. Like any tool though, it isn't
 perfect. Today, I was trying to write unit tests that use
-&lt;tt class="docutils literal"&gt;clojure.core.async/timeout&lt;/tt&gt;, so I wrote a test double analogous to
-Twisted's &lt;tt class="docutils literal"&gt;Clock&lt;/tt&gt;. As I tried to &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;with-redefs&lt;/span&gt;&lt;/tt&gt; it in, I got the
-most inscrutable error message out: &lt;tt class="docutils literal"&gt;java.lang.ClassCastException:
+&lt;code class="docutils literal"&gt;clojure.core.async/timeout&lt;/code&gt;, so I wrote a test double analogous to
+Twisted's &lt;code class="docutils literal"&gt;Clock&lt;/code&gt;. As I tried to &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;with-redefs&lt;/span&gt;&lt;/code&gt; it in, I got the
+most inscrutable error message out: &lt;code class="docutils literal"&gt;java.lang.ClassCastException:
 icecap.handlers.delay_test$fake_timeout$timeout__22934 cannot be cast
-to clojure.lang.IFn$LO&lt;/tt&gt;.&lt;/p&gt;
-&lt;p&gt;Wha? I know &lt;tt class="docutils literal"&gt;clojure.lang.IFn&lt;/tt&gt;, Clojure's function type, but what
-the heck is a &lt;tt class="docutils literal"&gt;clojure.lang.IFn$LO&lt;/tt&gt;?&lt;/p&gt;
+to clojure.lang.IFn$LO&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Wha? I know &lt;code class="docutils literal"&gt;clojure.lang.IFn&lt;/code&gt;, Clojure's function type, but what
+the heck is a &lt;code class="docutils literal"&gt;clojure.lang.IFn$LO&lt;/code&gt;?&lt;/p&gt;
 &lt;p&gt;Searching for the term didn't give any particularly useful results. It
-was clear this happened when I was redeffing the original &lt;tt class="docutils literal"&gt;timeout&lt;/tt&gt;,
+was clear this happened when I was redeffing the original &lt;code class="docutils literal"&gt;timeout&lt;/code&gt;,
 so I looked at its documentation:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-clojure.core.async/timeout
+&lt;pre class="literal-block"&gt;clojure.core.async/timeout
 ([msecs])
-Returns a channel that will close after msecs
-&lt;/pre&gt;
+Returns a channel that will close after msecs&lt;/pre&gt;
 &lt;p&gt;Doesn't look too special to me. What's the type of that thing, anyway?
 Let's find out:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type timeout))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-&lt;/pre&gt;
-&lt;p&gt;Aha! So that is actually part of &lt;tt class="docutils literal"&gt;timeout&lt;/tt&gt;, not something else wonky
+&lt;pre class="literal-block"&gt;&amp;gt; (parents (type timeout))
+#{clojure.lang.IFn$LO clojure.lang.AFunction}&lt;/pre&gt;
+&lt;p&gt;Aha! So that is actually part of &lt;code class="docutils literal"&gt;timeout&lt;/code&gt;, not something else wonky
 going on. What does the source say? It's a pretty lame shim:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-(defn timeout
+&lt;pre class="literal-block"&gt;(defn timeout
 "Returns a channel that will close after msecs"
 [^long msecs]
-(timers/timeout msecs))
-&lt;/pre&gt;
+(timers/timeout msecs))&lt;/pre&gt;
 &lt;p&gt;I mean, nothing interesting there, just a type hint.&lt;/p&gt;
-&lt;p&gt;Oh. Wait. That's not just a type hint. &lt;tt class="docutils literal"&gt;long&lt;/tt&gt; is a primitive.
+&lt;p&gt;Oh. Wait. That's not just a type hint. &lt;code class="docutils literal"&gt;long&lt;/code&gt; is a primitive.
 Testing:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type (fn [^long x] x)))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;&amp;gt; (parents (type (fn [^long x] x)))
+#{clojure.lang.IFn$LO clojure.lang.AFunction}&lt;/pre&gt;
 &lt;p&gt;Aha! Due to a JVM quirk, functions with a primitive type hint are
 special. That works for doubles, too:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type (fn [^double x] x)))
-#{clojure.lang.IFn$DO clojure.lang.AFunction}
-&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;&amp;gt; (parents (type (fn [^double x] x)))
+#{clojure.lang.IFn$DO clojure.lang.AFunction}&lt;/pre&gt;
 &lt;p&gt;And multiple arguments:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt; (parents (type (fn [^double x ^double y] x)))
+&lt;pre class="literal-block"&gt;&amp;gt; (parents (type (fn [^double x ^double y] x)))
 #{clojure.lang.IFn$DDO clojure.lang.AFunction}
 &amp;gt; (parents (type (fn [^double x ^long y] x)))
-#{clojure.lang.IFn$DLO clojure.lang.AFunction}
-&lt;/pre&gt;
+#{clojure.lang.IFn$DLO clojure.lang.AFunction}&lt;/pre&gt;
 &lt;p&gt;Adding a simple type hint to the function fixed it. Success!&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><guid>https://www.lvh.io/posts/what-the-heck-is-a-clojurelangifnlo/</guid><pubDate>Thu, 02 Oct 2014 13:15:17 GMT</pubDate></item></channel></rss>

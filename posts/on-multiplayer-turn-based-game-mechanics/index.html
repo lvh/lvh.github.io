@@ -81,10 +81,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">On multiplayer turn-based game mechanics</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -103,14 +104,14 @@ navbar-dark bg-dark
 V, are sequential in nature. A player makes a move, then the next
 player makes a move, and so on. The details can vary, for example:</p>
 <ul class="simple">
-<li>There could be two players, or multiple. This number is tightly
-bound for scaling reasons, which we'll discuss later.</li>
-<li>The game could have perfect information, like chess, where all
+<li><p>There could be two players, or multiple. This number is tightly
+bound for scaling reasons, which we'll discuss later.</p></li>
+<li><p>The game could have perfect information, like chess, where all
 players see a move as soon as it is played. The game could also have
 imperfect information, like Civilization V, where players see part
-of a move, but the effets may be obscured by fog of war.</li>
-<li>The players may play in a consistent order (chess, Civilization V),
-or in a somewhat random one (D&amp;D's initiative system).</li>
+of a move, but the effets may be obscured by fog of war.</p></li>
+<li><p>The players may play in a consistent order (chess, Civilization V),
+or in a somewhat random one (D&amp;D's initiative system).</p></li>
 </ul>
 <p>All of those things are more or less orthogonal to the turn system.
 Players play turns sequentially, so I'm going to call these
@@ -132,10 +133,10 @@ yet.</p>
 <p>Consider what happens when a player does not make a move. There are a
 few reasons that might happen:</p>
 <ul class="simple">
-<li>The player is not playing the game right now.</li>
-<li>The player has stopped playing the game altogether.</li>
-<li>The player may be in a hopeless position, where stalling is better
-than losing. (Stalling may tie up lots of enemy resources.)</li>
+<li><p>The player is not playing the game right now.</p></li>
+<li><p>The player has stopped playing the game altogether.</p></li>
+<li><p>The player may be in a hopeless position, where stalling is better
+than losing. (Stalling may tie up lots of enemy resources.)</p></li>
 </ul>
 <p>If you've ever gotten frustrated at a multiplayer game that has a
 "ready" system before you begin a game, but had to wait because one of
@@ -158,7 +159,7 @@ because they're literally the same game world.</p>
 <p>There's a number of creative ways to get out from under that problem,
 usually by involving wall-clock time. For example, if a player doesn't
 respond within a fixed amount of time, they may forfeit their turn.
-Fuel consumption might be based on wall-clock time, not turns. <a class="footnote-reference" href="#f1" id="id1">[1]</a>
+Fuel consumption might be based on wall-clock time, not turns. <a class="footnote-reference brackets" href="#f1" id="id1">1</a>
 There's a lot of degrees of freedom here. Do you use a global clock,
 or one local to a particular area?</p>
 <p>A global clock is probably simpler, but poses some game play
@@ -176,25 +177,21 @@ you still need to answer what happens when battles merge or diverge.</p>
 <p>I'm currently exploring the shared global clock. In order to mitigate
 the issues I described, I'm contemplating two ideas:</p>
 <ul class="simple">
-<li>Allow programmable units; a la Screeps, CodeWars...</li>
-<li>Allow players to plan several turns ahead of time.</li>
+<li><p>Allow programmable units; a la Screeps, CodeWars...</p></li>
+<li><p>Allow players to plan several turns ahead of time.</p></li>
 </ul>
 <p>These are, of course, not mutually exclusive.</p>
 <p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="f1" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="#id1">[1]</a></td>
-<td>I don't particularly like this, because it "breaks the fourth
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd>
+<p>I don't particularly like this, because it "breaks the fourth
 wall" in a sense. If my engines are still consuming fuel real
 time, why can't the enemy fire missiles? Either time is
 stopped, or it isn't. Sure, games can be abstract, but that
-feels like an undue inconsistency.</td>
-</tr></tbody>
-</table>
+feels like an undue inconsistency.</p>
+</dd>
+</dl>
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
@@ -209,6 +206,7 @@ feels like an undue inconsistency.</td>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

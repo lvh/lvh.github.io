@@ -83,10 +83,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">On discussing software security improvements</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -122,9 +123,10 @@ the issues with a proposal can be discussed and potentially rectified.</p>
 to be a useful way to discuss security changes and their tradeoffs. As
 Zooko has taught me:</p>
 <blockquote>
-Security isn't about perfect versus imperfect or about better versus
+<p>Security isn't about perfect versus imperfect or about better versus
 worse, it's about <em>this</em> attack surface versus <em>that</em> attack
-surface.</blockquote>
+surface.</p>
+</blockquote>
 <p>This document aims to be the equivalent of an <a class="reference external" href="http://www.sscce.org/">SSCCE</a> for generic bug
 reports: a blueprint for making suggestions likely to lead to
 productive discourse, as long as we can agree that we're trying to
@@ -134,17 +136,17 @@ development environment.</p>
 <h2>Important points</h2>
 <p>A good proposal should contain:</p>
 <ol class="arabic simple">
-<li>A brief description of what you're suggesting.</li>
-<li>A description of the attack model you're considering, why the
+<li><p>A brief description of what you're suggesting.</p></li>
+<li><p>A description of the attack model you're considering, why the
 current system does not address this issue, and why the suggested
-system <em>does</em> address this issue.</li>
-<li>A motivation of the attack model. Why is it important that this
-issue is actually addressed?</li>
-<li>How does this change affect the attack surface (i.e. all of the
-ways an attacker can attempt to attack a system)?</li>
-<li>What does the user experience for all users of the system look
+system <em>does</em> address this issue.</p></li>
+<li><p>A motivation of the attack model. Why is it important that this
+issue is actually addressed?</p></li>
+<li><p>How does this change affect the attack surface (i.e. all of the
+ways an attacker can attempt to attack a system)?</p></li>
+<li><p>What does the user experience for all users of the system look
 like? Many cryptosystems fall over because they're simply unusable
-for most users of the system.</li>
+for most users of the system.</p></li>
 </ol>
 </div>
 <div class="section" id="an-example">
@@ -171,41 +173,47 @@ it serves you.</p>
 <p>Bob believes WuPI could solve this by using GPG signatures.</p>
 <p>He starts with a brief description of the suggestion:</p>
 <blockquote>
-I would like to suggest that WuPI grows support for GPG signatures
+<p>I would like to suggest that WuPI grows support for GPG signatures
 of packages. These signatures would be created when a package author
 uploads a package. They would optionally be verified when the user
-downloads a package.</blockquote>
+downloads a package.</p>
+</blockquote>
 <p>He continues with the attack model being considered:</p>
 <blockquote>
-I believe this would secure WuPI consumers against a malicious WuPI
+<p>I believe this would secure WuPI consumers against a malicious WuPI
 endpoints. A malicious WuPI endpoint (assuming it acquires an
 appropriate certificate) is currently free to deliver whatever
-packages it wants.</blockquote>
+packages it wants.</p>
+</blockquote>
 <p>He explains why the current model doesn't address this:</p>
 <blockquote>
-The current system assures authenticity and secrecy of the stream
+<p>The current system assures authenticity and secrecy of the stream
 (through TLS), and it ensures that the server authenticates itself
 with a WuPI/WuF certificate. It does not ensure that the package is
-what the author uploaded.</blockquote>
+what the author uploaded.</p>
+</blockquote>
 <p>He explains why he believes his model does address this:</p>
 <blockquote>
-Because the signatures are produced by the author's GPG key, a
+<p>Because the signatures are produced by the author's GPG key, a
 malicious WuPI endpoint would not be able to forge them. Therefore,
 a consumer is sure that a package with a valid signature is indeed
-from the author.</blockquote>
+from the author.</p>
+</blockquote>
 <p>He explains why this attack model is important:</p>
 <blockquote>
-With the new CDN support, the number of people with access to such a
+<p>With the new CDN support, the number of people with access to such a
 certificate has greatly increased. While I certainly trust all of
 the volunteers involved, it would be nice if we didn't <em>have</em> to.
 Furthermore, the software on the servers can always be vulnerable to
 attack; as a high-value target, it certainly isn't inconceivable
 that an attacker would use an unknown vulnerability to take over a
-WuPI endpoint.</blockquote>
+WuPI endpoint.</p>
+</blockquote>
 <p>He (believes to) address the attack surface:</p>
 <blockquote>
-Because the signatures are optional, the attack surface remains the
-same.</blockquote>
+<p>Because the signatures are optional, the attack surface remains the
+same.</p>
+</blockquote>
 <p>Finally, he addresses the user experience:</p>
 <blockquote>
 <p>The weak point of this scheme is most likely the user experience,
@@ -215,20 +223,23 @@ web of trust will mean that more people participate.</p>
 </blockquote>
 <p>Alice reviews this, and notes a flaw in the proposal:</p>
 <blockquote>
-This proposal aims to address a security flaw when the WuPI endpoint
+<p>This proposal aims to address a security flaw when the WuPI endpoint
 is malicious by adding signatures. However, a malicious WuPI
 endpoint can lie by omission, and claim a package was never signed
-by the author.</blockquote>
+by the author.</p>
+</blockquote>
 <p>Bob now realizes this issue, and suggests an improvement:</p>
 <blockquote>
-This could be rectified if the user insists on a signature for
-packages they expect to be signed.</blockquote>
+<p>This could be rectified if the user insists on a signature for
+packages they expect to be signed.</p>
+</blockquote>
 <p>As a side note, Alice notes that the attack surface does increase:</p>
 <blockquote>
-This places trust in author's ability to manage private keys, which
+<p>This places trust in author's ability to manage private keys, which
 has historically been shown to be problematic. That introduces a new
 attack vector: an attacker can attempt to go after the author's
-private key.</blockquote>
+private key.</p>
+</blockquote>
 <p>Regardless of the outcome of this conversation, there actually was a
 conversation. I believe this to be an improvement over the overall
 status quo.</p>
@@ -249,6 +260,7 @@ status quo.</p>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

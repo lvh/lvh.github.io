@@ -83,10 +83,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">What the heck is a clojure.lang.IFn$LO?</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -103,55 +104,43 @@ navbar-dark bg-dark
     <div>
 <p>It's no secret that I love Clojure. Like any tool though, it isn't
 perfect. Today, I was trying to write unit tests that use
-<tt class="docutils literal">clojure.core.async/timeout</tt>, so I wrote a test double analogous to
-Twisted's <tt class="docutils literal">Clock</tt>. As I tried to <tt class="docutils literal"><span class="pre">with-redefs</span></tt> it in, I got the
-most inscrutable error message out: <tt class="docutils literal">java.lang.ClassCastException:
+<code class="docutils literal">clojure.core.async/timeout</code>, so I wrote a test double analogous to
+Twisted's <code class="docutils literal">Clock</code>. As I tried to <code class="docutils literal"><span class="pre">with-redefs</span></code> it in, I got the
+most inscrutable error message out: <code class="docutils literal">java.lang.ClassCastException:
 icecap.handlers.delay_test$fake_timeout$timeout__22934 cannot be cast
-to clojure.lang.IFn$LO</tt>.</p>
-<p>Wha? I know <tt class="docutils literal">clojure.lang.IFn</tt>, Clojure's function type, but what
-the heck is a <tt class="docutils literal">clojure.lang.IFn$LO</tt>?</p>
+to clojure.lang.IFn$LO</code>.</p>
+<p>Wha? I know <code class="docutils literal">clojure.lang.IFn</code>, Clojure's function type, but what
+the heck is a <code class="docutils literal">clojure.lang.IFn$LO</code>?</p>
 <p>Searching for the term didn't give any particularly useful results. It
-was clear this happened when I was redeffing the original <tt class="docutils literal">timeout</tt>,
+was clear this happened when I was redeffing the original <code class="docutils literal">timeout</code>,
 so I looked at its documentation:</p>
-<pre class="literal-block">
-clojure.core.async/timeout
+<pre class="literal-block">clojure.core.async/timeout
 ([msecs])
-Returns a channel that will close after msecs
-</pre>
+Returns a channel that will close after msecs</pre>
 <p>Doesn't look too special to me. What's the type of that thing, anyway?
 Let's find out:</p>
-<pre class="literal-block">
-&gt; (parents (type timeout))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-</pre>
-<p>Aha! So that is actually part of <tt class="docutils literal">timeout</tt>, not something else wonky
+<pre class="literal-block">&gt; (parents (type timeout))
+#{clojure.lang.IFn$LO clojure.lang.AFunction}</pre>
+<p>Aha! So that is actually part of <code class="docutils literal">timeout</code>, not something else wonky
 going on. What does the source say? It's a pretty lame shim:</p>
-<pre class="literal-block">
-(defn timeout
+<pre class="literal-block">(defn timeout
 "Returns a channel that will close after msecs"
 [^long msecs]
-(timers/timeout msecs))
-</pre>
+(timers/timeout msecs))</pre>
 <p>I mean, nothing interesting there, just a type hint.</p>
-<p>Oh. Wait. That's not just a type hint. <tt class="docutils literal">long</tt> is a primitive.
+<p>Oh. Wait. That's not just a type hint. <code class="docutils literal">long</code> is a primitive.
 Testing:</p>
-<pre class="literal-block">
-&gt; (parents (type (fn [^long x] x)))
-#{clojure.lang.IFn$LO clojure.lang.AFunction}
-</pre>
+<pre class="literal-block">&gt; (parents (type (fn [^long x] x)))
+#{clojure.lang.IFn$LO clojure.lang.AFunction}</pre>
 <p>Aha! Due to a JVM quirk, functions with a primitive type hint are
 special. That works for doubles, too:</p>
-<pre class="literal-block">
-&gt; (parents (type (fn [^double x] x)))
-#{clojure.lang.IFn$DO clojure.lang.AFunction}
-</pre>
+<pre class="literal-block">&gt; (parents (type (fn [^double x] x)))
+#{clojure.lang.IFn$DO clojure.lang.AFunction}</pre>
 <p>And multiple arguments:</p>
-<pre class="literal-block">
-&gt; (parents (type (fn [^double x ^double y] x)))
+<pre class="literal-block">&gt; (parents (type (fn [^double x ^double y] x)))
 #{clojure.lang.IFn$DDO clojure.lang.AFunction}
 &gt; (parents (type (fn [^double x ^long y] x)))
-#{clojure.lang.IFn$DLO clojure.lang.AFunction}
-</pre>
+#{clojure.lang.IFn$DLO clojure.lang.AFunction}</pre>
 <p>Adding a simple type hint to the function fixed it. Success!</p>
 </div>
     </div>
@@ -167,6 +156,7 @@ special. That works for doubles, too:</p>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

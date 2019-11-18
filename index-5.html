@@ -67,6 +67,7 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 
     
 
@@ -369,19 +370,19 @@ the same key. You can remember this by the mnemonic that a <em>nonce</em> is a
 repeat. That means that an attacker can take the two ciphertexts and XOR them
 to compute the XOR of the plaintexts. If <code>C_n</code> are ciphertexts, <code>P_n</code>
 plaintexts, <code>K_n</code> keystreams, and <code>^</code> is bitwise exclusive or:</p>
-<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span>
-<span class="n">C_2</span> <span class="o">=</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+<pre class="code literal-block"><span></span>C_1 = K_1 ^ P_1
+C_2 = K_2 ^ P_2
 </pre>
 
 
 <p>The attacker just XORs <code>C_1</code> and <code>C_2</code> together:</p>
-<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+<pre class="code literal-block"><span></span>C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
 </pre>
 
 
 <p>Since XOR is commutative (you can rearrange the order), <code>K_1 = K_2</code>, and
 XOR'ing two equal values cancels them out:</p>
-<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">P_2</span>
+<pre class="code literal-block"><span></span>C_1 ^ C_2 = P_1 ^ P_2
 </pre>
 
 
@@ -675,7 +676,7 @@ remember from high school math; it's a single number that tells you something
 interesting about the underlying curve. There are different formulas for
 curves in different forms. For example, for a curve in short Weierstrass form
 <code>y^2 = x^3 + ax + b</code>, the j-invariant is:</p>
-<pre class="code literal-block"><span></span><span class="n">j</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1728</span> <span class="o">*</span> <span class="mi">4</span><span class="n">a</span><span class="o">^</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="n">a</span><span class="o">^</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">27</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+<pre class="code literal-block"><span></span>j(E) = (1728 * 4a^3)/(4a^3 + 27b^2)
 </pre>
 
 
@@ -691,7 +692,7 @@ the DH exchange.</p>
 curve: P_A, Q_A, P_B, Q_B.</p>
 <p>Alice picks two random integers, m_A and n_A. She takes a linear combination
 of those two integers with P_A and Q_A to produce a random point R_A, so:</p>
-<pre class="code literal-block"><span></span><span class="n">R_A</span> <span class="o">=</span> <span class="n">n_A</span> <span class="o">*</span> <span class="n">P_A</span> <span class="o">+</span> <span class="n">m_A</span> <span class="o">*</span> <span class="n">Q_A</span>
+<pre class="code literal-block"><span></span>R_A = n_A * P_A + m_A * Q_A
 </pre>
 
 
@@ -1293,6 +1294,7 @@ talks; are they just not that useful?</p>
         </ul>
 <!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

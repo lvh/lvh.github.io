@@ -82,10 +82,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Nonce misuse resistance 101</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -121,19 +122,19 @@ the same key. You can remember this by the mnemonic that a <em>nonce</em> is a
 repeat. That means that an attacker can take the two ciphertexts and XOR them
 to compute the XOR of the plaintexts. If <code>C_n</code> are ciphertexts, <code>P_n</code>
 plaintexts, <code>K_n</code> keystreams, and <code>^</code> is bitwise exclusive or:</p>
-<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span>
-<span class="n">C_2</span> <span class="o">=</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+<pre class="code literal-block"><span></span>C_1 = K_1 ^ P_1
+C_2 = K_2 ^ P_2
 </pre>
 
 
 <p>The attacker just XORs <code>C_1</code> and <code>C_2</code> together:</p>
-<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">K_1</span> <span class="o">^</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">K_2</span> <span class="o">^</span> <span class="n">P_2</span>
+<pre class="code literal-block"><span></span>C_1 ^ C_2 = K_1 ^ P_1 ^ K_2 ^ P_2
 </pre>
 
 
 <p>Since XOR is commutative (you can rearrange the order), <code>K_1 = K_2</code>, and
 XOR'ing two equal values cancels them out:</p>
-<pre class="code literal-block"><span></span><span class="n">C_1</span> <span class="o">^</span> <span class="n">C_2</span> <span class="o">=</span> <span class="n">P_1</span> <span class="o">^</span> <span class="n">P_2</span>
+<pre class="code literal-block"><span></span>C_1 ^ C_2 = P_1 ^ P_2
 </pre>
 
 
@@ -262,6 +263,7 @@ making individual messages sufficiently small.</p>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

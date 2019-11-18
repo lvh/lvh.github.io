@@ -66,6 +66,7 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 
     
 
@@ -841,26 +842,26 @@ probably want Noise_IK. Or, you know, ask your security person :)</p>
 
 
 <p>We can check that it works:</p>
-<pre class="code literal-block"><span></span><span class="n">zpickle</span> <span class="o">=</span> <span class="n">zdumps</span><span class="p">([</span><span class="ss">"a"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">pickle</span> <span class="o">=</span> <span class="n">dumps</span><span class="p">([</span><span class="ss">"a"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+<pre class="code literal-block"><span></span>zpickle = zdumps(["a"] * 100)
+pickle = dumps(["a"] * 100)
 
-<span class="n">loads</span><span class="p">(</span><span class="n">pickle</span><span class="p">)</span> <span class="o">==</span> <span class="n">loads</span><span class="p">(</span><span class="n">zpickle</span><span class="p">)</span>
-<span class="o">#</span> <span class="o">=&gt;</span> <span class="k">True</span>
-<span class="n">len</span><span class="p">(</span><span class="n">zpickle</span><span class="p">),</span> <span class="n">len</span><span class="p">(</span><span class="n">pickle</span><span class="p">)</span>
-<span class="o">#</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="mi">82</span><span class="p">,</span> <span class="mi">214</span><span class="p">)</span>
+loads(pickle) == loads(zpickle)
+# =&gt; True
+len(zpickle), len(pickle)
+# =&gt; (82, 214)
 </pre>
 
 
 <p>Internally, the structure for this looks as follows:</p>
-<pre class="code literal-block"><span></span>   <span class="mi">0</span>: \<span class="nv">x80</span> <span class="nv">PROTO</span>      <span class="mi">3</span>
-   <span class="mi">2</span>: <span class="nv">c</span>    <span class="nv">GLOBAL</span>     <span class="s1">'</span><span class="s">_pickle loads</span><span class="s1">'</span>
-   <span class="mi">17</span>: <span class="nv">c</span>    <span class="nv">GLOBAL</span>     <span class="s1">'</span><span class="s">zlib decompress</span><span class="s1">'</span>
-   <span class="mi">34</span>: <span class="nv">C</span>    <span class="nv">SHORT_BINBYTES</span> <span class="nv">b</span><span class="s1">'</span><span class="s">x\xdak`\x8e-d\xd0\x88`d``H,d\xcc\x18\x160U\x0f\x00W\xb6+\xd4</span><span class="s1">'</span>     <span class="o">&lt;=</span> <span class="nv">this</span> <span class="nv">is</span> <span class="nv">zlib</span><span class="o">-</span><span class="nv">compressed</span> <span class="nv">pickle</span>
-   <span class="mi">63</span>: \<span class="nv">x85</span> <span class="nv">TUPLE1</span>   <span class="o">&lt;=</span> <span class="nv">set</span> <span class="nv">up</span> <span class="nv">arguments</span> <span class="k">for</span> <span class="nv">zlib</span> <span class="nv">decompress</span>
-   <span class="mi">64</span>: <span class="nv">R</span>    <span class="nv">REDUCE</span>   <span class="o">&lt;=</span> <span class="k">call</span> <span class="nl">zlib</span> <span class="nv">decompress</span>
-   <span class="mi">65</span>: \<span class="nv">x85</span> <span class="nv">TUPLE1</span>   <span class="o">&lt;=</span> <span class="nv">set</span> <span class="nv">up</span> <span class="nv">arguments</span> <span class="k">for</span> <span class="nv">pickle</span> <span class="nv">load</span>
-   <span class="mi">66</span>: <span class="nv">R</span>    <span class="nv">REDUCE</span>    <span class="o">&lt;=</span>  <span class="k">call</span> <span class="nl">pickle</span> <span class="nv">load</span>
-   <span class="mi">67</span>: .    <span class="nv">STOP</span>
+<pre class="code literal-block"><span></span>   0: \x80 PROTO      3
+   2: c    GLOBAL     '_pickle loads'
+   17: c    GLOBAL     'zlib decompress'
+   34: C    SHORT_BINBYTES b'x\xdak`\x8e-d\xd0\x88`d``H,d\xcc\x18\x160U\x0f\x00W\xb6+\xd4'     &lt;= this is zlib-compressed pickle
+   63: \x85 TUPLE1   &lt;= set up arguments for zlib decompress
+   64: R    REDUCE   &lt;= call zlib decompress
+   65: \x85 TUPLE1   &lt;= set up arguments for pickle load
+   66: R    REDUCE    &lt;=  call pickle load
+   67: .    STOP
 </pre>
 
 
@@ -1445,6 +1446,7 @@ board@company.com is going to be pretty effective.</p>
         </ul>
 <!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

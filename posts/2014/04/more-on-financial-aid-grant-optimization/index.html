@@ -85,10 +85,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">More on financial aid grant optimization</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -136,7 +137,7 @@ alternatively:</p>
 <p>The greater-than-zero constraint for individual grants is fairly
 important, otherwise the algorithm might casually give you answers
 like:</p>
-<pre class="code literal-block"><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">20</span><span class="p">.</span> <span class="o">-</span><span class="mi">20</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
+<pre class="code literal-block"><span></span>k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
 </pre>
 
 
@@ -216,15 +217,15 @@ equal to zero.</p>
 (<a href="http://nbviewer.ipython.org/gist/lvh/10107818">viewer</a>,
 <a href="https://gist.github.com/lvh/10107818">gist</a>).</p>
 <p>This produced the following results:</p>
-<pre class="code literal-block"><span></span><span class="n">scores</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">5</span><span class="p">]</span>
-<span class="n">requested</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span> <span class="mi">20</span> <span class="mi">30</span> <span class="mi">30</span> <span class="mi">50</span> <span class="mi">10</span> <span class="mi">50</span><span class="p">]</span> <span class="n">total</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">budget</span><span class="p">:</span> <span class="mi">150</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">20</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>   <span class="mi">0</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="o">-</span><span class="mi">0</span><span class="p">.</span>   <span class="mi">0</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>   <span class="mi">7</span><span class="p">.</span>  <span class="mi">27</span><span class="p">.</span>  <span class="mi">36</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>   <span class="mi">9</span><span class="p">.</span>  <span class="mi">25</span><span class="p">.</span>  <span class="mi">35</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">24</span><span class="p">.</span>  <span class="mi">35</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">10</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">23</span><span class="p">.</span>  <span class="mi">35</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">100</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">23</span><span class="p">.</span>  <span class="mi">34</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
+<pre class="code literal-block"><span></span>scores: [1 1 1 2 3 5 5]
+requested: [10 20 30 30 50 10 50] total: 200, budget: 150
+k = 1/0.5: [ 10.  20.  30.  30.  50.  10.   0.], sum: 150.0
+k = 1/1: [ 10.  -0.   0.  30.  50.  10.  50.], sum: 150.0
+k = 1/2: [ 10.  10.   7.  27.  36.  10.  50.], sum: 150.0
+k = 1/3: [ 10.  11.   9.  25.  35.  10.  50.], sum: 150.0
+k = 1/5: [ 10.  11.  10.  24.  35.  10.  50.], sum: 150.0
+k = 1/10: [ 10.  11.  11.  23.  35.  10.  50.], sum: 150.0
+k = 1/100: [ 10.  11.  11.  23.  34.  10.  50.], sum: 150.0
 </pre>
 
 
@@ -262,10 +263,11 @@ metrics.</p>
             <li class="next">
                 <a href="../../05/truecrypt-and-full-disk-encryption/" rel="next" title="TrueCrypt and full-disk encryption">Next post</a>
             </li>
-        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

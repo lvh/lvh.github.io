@@ -82,10 +82,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Reverse ungineering</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -114,17 +115,19 @@ engineering disciplines, Glyph compares software to civil engineering.</p>
 <p>For example, when it comes to getting things done, we're just not very
 good:</p>
 <blockquote>
-Most software projects fail; as of 2009, 44% are late, over budget,
+<p>Most software projects fail; as of 2009, 44% are late, over budget,
 or out of specification, and an additional 24% are canceled
 entirely. Only a third of projects succeed according to those
-criteria of being under budget, within specification, and complete.</blockquote>
+criteria of being under budget, within specification, and complete.</p>
+</blockquote>
 <p>Such shenanigans would never be accepted in a Serious Engineering
 Discipline, like civil engineering:</p>
 <blockquote>
-Would you want to live in a city where almost a quarter of all the
+<p>Would you want to live in a city where almost a quarter of all the
 buildings were simply abandoned half-constructed, or fell down
 during construction? Where almost half of the buildings were missing
-floors, had rents in the millions of dollars, or both?</blockquote>
+floors, had rents in the millions of dollars, or both?</p>
+</blockquote>
 <p>I certainly wouldn't.</p>
 <p>Computers are terrible, but not quite <em>that</em> bad, as Glyph points
 out. "Failure" simply means something different for software projects
@@ -151,7 +154,7 @@ unable to stick to these standards because it's not engineering, or is
 civil engineering the only thing that sticks to them because <em>they
 have no other choice</em>? Conversely, do we fail early and often because
 we're not engineering, or because, unlike civil engineering projects,
-we <em>can</em>? <a class="footnote-reference" href="#anthropic" id="id1">[1]</a></p>
+we <em>can</em>? <a class="footnote-reference brackets" href="#anthropic" id="id1">1</a></p>
 <p>Finally, software has existed for decades, but buildings have for
 millennia. Bridges used to collapse all the time. Tacoma Narrows
 wasn't so long ago. If the tour guide on my trip to Paris is to be
@@ -166,13 +169,13 @@ word "engineering".</p>
 <p>I feel this characterization is incongruent with the daily reality of
 engineering.</p>
 <p>Consider the civil engineer, presumably the engineeringest engineer
-there is. <a class="footnote-reference" href="#civil" id="id2">[2]</a> If you ask me to dimension an I-beam for
+there is. <a class="footnote-reference brackets" href="#civil" id="id2">2</a> If you ask me to dimension an I-beam for
 you, I would:</p>
 <ul class="simple">
-<li>spitball the load,</li>
-<li>draw a free-body diagram,</li>
-<li>probably draw a shear and moment diagram,</li>
-<li>and pick the smallest standard beam that'll do what you want.</li>
+<li><p>spitball the load,</p></li>
+<li><p>draw a free-body diagram,</p></li>
+<li><p>probably draw a shear and moment diagram,</p></li>
+<li><p>and pick the smallest standard beam that'll do what you want.</p></li>
 </ul>
 <p>If you want to know how far that beam is going to go, I'll draw you
 some conjugate beams. I would also definitely <em>not</em> use the
@@ -182,7 +185,7 @@ reasonable uses of an I-beam.</p>
 Euler-Bernouilli beam theory, for example. Very heavy textbooks with
 very heavy math. Neither my physical therapist nor my regular one
 expect me to ever <em>truly</em> recover. Nonetheless, area moments and
-section moduli are the only way to understand where the <tt class="docutils literal">I</tt> in
+section moduli are the only way to understand where the <code class="docutils literal">I</code> in
 I-beam comes from.</p>
 <p>Nasty math didn't prevent me from dimensioning that I-beam. And I do
 really mean <em>math</em>, not physics: Euler-Bernouilli is a math hack. You
@@ -204,7 +207,7 @@ just trying to understand this circuit!</p>
 <p>This isn't just how engineers happen to do their jobs in practice,
 either. Engineering breakthroughs live on both sides of science's
 cutting edge. When Shockley et al. first managed to get a transistor
-to work, we didn't really understand what was going on. <a class="footnote-reference" href="#tor" id="id3">[3]</a> Carnot
+to work, we didn't really understand what was going on. <a class="footnote-reference brackets" href="#tor" id="id3">3</a> Carnot
 was building engines long before anyone realized he had stumbled upon
 one of the most fundamental properties of the universe. Nobody was
 doing metaphysics. Sadi wanted a better steam engine.</p>
@@ -249,52 +252,36 @@ Khalifa wasn't a consequence of a human following an algorithm.</p>
 essentially just because our field is a little younger. We're all
 hackers here; and we're all engineers, too.</p>
 <p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="anthropic" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="#id1">[1]</a></td>
-<td>I suppose this is really analogous to the anthropic
+<dl class="footnote brackets">
+<dt class="label" id="anthropic"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd>
+<p>I suppose this is really analogous to the anthropic
 principle, except applied to engineering disciplines
-instead of humans.</td>
-</tr></tbody>
-</table>
-<table class="docutils footnote" frame="void" id="civil" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="#id2">[2]</a></td>
-<td>I'm using civil engineer here in the strict American sense
+instead of humans.</p>
+</dd>
+<dt class="label" id="civil"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd>
+<p>I'm using civil engineer here in the strict American sense
 of person who builds targets, as opposed to the military
 engineer, who builds weapons. Jokes aside, perhaps this is
 related to the disagreement. Where I come from, "civil
 engineer" means "advanced engineering degree", and
 encompasses many disciplines, including architectural (for
 lack of better word; I mean the American "civil engineer"
-here), chemical, electrical, and yes, computer.</td>
-</tr></tbody>
-</table>
-<table class="docutils footnote" frame="void" id="tor" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="#id3">[3]</a></td>
-<td>While it is very easy to make up a sensible-sounding
+here), chemical, electrical, and yes, computer.</p>
+</dd>
+<dt class="label" id="tor"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd>
+<p>While it is very easy to make up a sensible-sounding
 narrative time line after the fact for the breakthroughs in
 physics and engineering that eventually made the transistor
 possible, this ignores the strong disagreements between
 theoretical predictions and practical measurements of the
 time. Regardless of their cause, it would be foolish to
 assume that Shockley just sat down and applied some theory.
-The theory just wasn't there yet.</td>
-</tr></tbody>
-</table>
+The theory just wasn't there yet.</p>
+</dd>
+</dl>
 <!-- LocalWords:  engineeringest -->
 </div>
 </div>
@@ -308,6 +295,7 @@ The theory just wasn't there yet.</td>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

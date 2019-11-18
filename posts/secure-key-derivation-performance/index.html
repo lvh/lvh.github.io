@@ -82,10 +82,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Secure key derivation performance</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -109,12 +110,12 @@ choices.</p>
 <div class="section" id="requirements">
 <h2>Requirements</h2>
 <ul class="simple">
-<li>The function takes two bytestrings with at least 128 bits of entropy
-each, and produces a bytestring of length 64 (bytes).</li>
-<li>The key derivation function must be secure.</li>
-<li>The key derivation must support <a class="reference external" href="http://tools.ietf.org/html/rfc5869#section-3.2">HKDF-style info parameter</a>.</li>
-<li>The key derivation must be fast.</li>
-<li>Wide support is preferred, but not a blocker.</li>
+<li><p>The function takes two bytestrings with at least 128 bits of entropy
+each, and produces a bytestring of length 64 (bytes).</p></li>
+<li><p>The key derivation function must be secure.</p></li>
+<li><p>The key derivation must support <a class="reference external" href="http://tools.ietf.org/html/rfc5869#section-3.2">HKDF-style info parameter</a>.</p></li>
+<li><p>The key derivation must be fast.</p></li>
+<li><p>Wide support is preferred, but not a blocker.</p></li>
 </ul>
 </div>
 <div class="section" id="contenders">
@@ -158,9 +159,9 @@ add a few Dockerfiles, that would be much appreciated.</p>
 <p>Both the HKDF implementation and the BLAKE2 implementation come in
 "one pass" and "multipass" varieties:</p>
 <ul class="simple">
-<li>in "one pass" mode, the total amount of key material is generated
-once and then chopped up into separate Python strings.</li>
-<li>in "multipass" mode, the key material is generated separately.</li>
+<li><p>in "one pass" mode, the total amount of key material is generated
+once and then chopped up into separate Python strings.</p></li>
+<li><p>in "multipass" mode, the key material is generated separately.</p></li>
 </ul>
 </div>
 <div class="section" id="results">
@@ -173,10 +174,10 @@ bars! This might as well be total nonsense!</p>
 <p>Results are available here: <a class="reference external" href="https://gist.github.com/lvh/e2e4dfd0ce0d90776616">https://gist.github.com/lvh/e2e4dfd0ce0d90776616</a></p>
 <p>TL;DR:</p>
 <ul class="simple">
-<li>BLAKE2 outperforms the HMAC-SHA256 setup by ~80x (multipass) to
-~100x (one-pass).</li>
-<li>Multipass is only about 7% slower than one-pass for BLAKE2, but the
-difference is almost 20% for HMAC-SHA256.</li>
+<li><p>BLAKE2 outperforms the HMAC-SHA256 setup by ~80x (multipass) to
+~100x (one-pass).</p></li>
+<li><p>Multipass is only about 7% slower than one-pass for BLAKE2, but the
+difference is almost 20% for HMAC-SHA256.</p></li>
 </ul>
 <p>This is somewhat to be expected; keep in mind that the HKDF
 implementation is pure Python, whereas the BLAKE2 implementation is a
@@ -190,10 +191,11 @@ pyblake2 doesn't work on PyPy.</p>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../tags/cryptography/" rel="tag">cryptography</a></li>
             <li><a class="tag p-category" href="../../tags/security/" rel="tag">security</a></li>
-        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

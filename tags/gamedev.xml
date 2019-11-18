@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about gamedev)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/gamedev.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 30 Oct 2019 16:22:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about gamedev)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/gamedev.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 04 Nov 2019 17:00:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
 V, are sequential in nature. A player makes a move, then the next
 player makes a move, and so on. The details can vary, for example:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;There could be two players, or multiple. This number is tightly
-bound for scaling reasons, which we'll discuss later.&lt;/li&gt;
-&lt;li&gt;The game could have perfect information, like chess, where all
+&lt;li&gt;&lt;p&gt;There could be two players, or multiple. This number is tightly
+bound for scaling reasons, which we'll discuss later.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The game could have perfect information, like chess, where all
 players see a move as soon as it is played. The game could also have
 imperfect information, like Civilization V, where players see part
-of a move, but the effets may be obscured by fog of war.&lt;/li&gt;
-&lt;li&gt;The players may play in a consistent order (chess, Civilization V),
-or in a somewhat random one (D&amp;amp;D's initiative system).&lt;/li&gt;
+of a move, but the effets may be obscured by fog of war.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The players may play in a consistent order (chess, Civilization V),
+or in a somewhat random one (D&amp;amp;D's initiative system).&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;All of those things are more or less orthogonal to the turn system.
 Players play turns sequentially, so I'm going to call these
@@ -32,10 +32,10 @@ yet.&lt;/p&gt;
 &lt;p&gt;Consider what happens when a player does not make a move. There are a
 few reasons that might happen:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;The player is not playing the game right now.&lt;/li&gt;
-&lt;li&gt;The player has stopped playing the game altogether.&lt;/li&gt;
-&lt;li&gt;The player may be in a hopeless position, where stalling is better
-than losing. (Stalling may tie up lots of enemy resources.)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The player is not playing the game right now.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The player has stopped playing the game altogether.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The player may be in a hopeless position, where stalling is better
+than losing. (Stalling may tie up lots of enemy resources.)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you've ever gotten frustrated at a multiplayer game that has a
 "ready" system before you begin a game, but had to wait because one of
@@ -58,7 +58,7 @@ because they're literally the same game world.&lt;/p&gt;
 &lt;p&gt;There's a number of creative ways to get out from under that problem,
 usually by involving wall-clock time. For example, if a player doesn't
 respond within a fixed amount of time, they may forfeit their turn.
-Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#f1" id="id1"&gt;[1]&lt;/a&gt;
+Fuel consumption might be based on wall-clock time, not turns. &lt;a class="footnote-reference brackets" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#f1" id="id1"&gt;1&lt;/a&gt;
 There's a lot of degrees of freedom here. Do you use a global clock,
 or one local to a particular area?&lt;/p&gt;
 &lt;p&gt;A global clock is probably simpler, but poses some game play
@@ -76,25 +76,25 @@ you still need to answer what happens when battles merge or diverge.&lt;/p&gt;
 &lt;p&gt;I'm currently exploring the shared global clock. In order to mitigate
 the issues I described, I'm contemplating two ideas:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Allow programmable units; a la Screeps, CodeWars...&lt;/li&gt;
-&lt;li&gt;Allow players to plan several turns ahead of time.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Allow programmable units; a la Screeps, CodeWars...&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Allow players to plan several turns ahead of time.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;These are, of course, not mutually exclusive.&lt;/p&gt;
 &lt;p class="rubric"&gt;Footnotes&lt;/p&gt;
-&lt;table class="docutils footnote" frame="void" id="f1" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I don't particularly like this, because it "breaks the fourth
+&lt;dl class="footnote brackets"&gt;
+&lt;dt class="label" id="f1"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;I don't particularly like this, because it "breaks the fourth
 wall" in a sense. If my engines are still consuming fuel real
 time, why can't the enemy fire missiles? Either time is
 stopped, or it isn't. Sure, games can be abstract, but that
-feels like an undue inconsistency.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>gamedev</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</link><dc:creator>lvh</dc:creator><description>&lt;div class="section" id="hypercathexis"&gt;
+feels like an undue inconsistency.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;&lt;/div&gt;</description><category>gamedev</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</link><dc:creator>lvh</dc:creator><description>&lt;div class="section" id="hypercathexis"&gt;
 &lt;h2&gt;hypercathexis&lt;/h2&gt;
 &lt;blockquote class="epigraph"&gt;
-hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
-excessive concentration of desire upon a particular object&lt;/blockquote&gt;
+&lt;p&gt;hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:
+excessive concentration of desire upon a particular object&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;I'm considering renaming the project to its plural, hypercathexes,
 because then it can be about a hyper cat in a bunch of hexes.&lt;/p&gt;
 &lt;p&gt;The only real constraints I started with was that I wanted a
@@ -119,10 +119,9 @@ until the maximum timeout?&lt;/p&gt;
 offset coordinates. I wanted to work using axial coordinates as much
 as possible, because it makes a lot of math so much easier. Axial
 coordinates work together with the "grain" of the hex map:&lt;/p&gt;
-&lt;object data="https://www.lvh.io/img/AxialBaseVectors.svg" type="image/svg+xml"&gt;
-axial base vectors&lt;/object&gt;
-&lt;p&gt;Second thing I did was move from individual &lt;tt class="docutils literal"&gt;&amp;lt;img&amp;gt;&lt;/tt&gt; tags produced by
-Om to a single &lt;tt class="docutils literal"&gt;&amp;lt;svg&amp;gt;&lt;/tt&gt; with hexes (&lt;tt class="docutils literal"&gt;&amp;lt;polygon&amp;gt;&lt;/tt&gt;) inside it. This
+&lt;img alt="axial base vectors" src="https://www.lvh.io/img/AxialBaseVectors.svg"&gt;
+&lt;p&gt;Second thing I did was move from individual &lt;code class="docutils literal"&gt;&amp;lt;img&amp;gt;&lt;/code&gt; tags produced by
+Om to a single &lt;code class="docutils literal"&gt;&amp;lt;svg&amp;gt;&lt;/code&gt; with hexes (&lt;code class="docutils literal"&gt;&amp;lt;polygon&amp;gt;&lt;/code&gt;) inside it. This
 fixed a number of annoying placement issues with CSS. CSS really wants
 to position things based on bounding box, not midpoints. That's great
 for web pages, not so much for my hex grid. I ran into a number of

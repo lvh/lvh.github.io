@@ -489,6 +489,7 @@ div.system-message {
   min-width: 0;
   word-wrap: break-word;
   background-color: #fff;
+  color: #212529;
   background-clip: border-box;
   border: 1px solid rgba(0,0,0,.125);
   border-radius: .25rem;
@@ -866,6 +867,21 @@ a {
 
 a:hover {
     color: #534a4d;
+}
+
+
+figure {
+    border: 1px solid #ccc;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+    padding: 20px;
+}
+
+figure figcaption::before {
+    content: "Fig.:";
+    font-style: italic;
 }
 
 .entry-content a[href] {

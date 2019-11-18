@@ -45,7 +45,10 @@ just follow along, but reading a tutorial wouldn't hurt.
 
 Let's take a look at the first beginner puzzle:
 
-<img src="/img/regex-crossword/beginner1.png">
+<figure>
+<img src="/img/regex-crossword/beginner1.png" alt="the first regex crossword level in the Beginner set">
+<figcaption>The first level in the Beginner set, <a href="https://regexcrossword.com/challenges/beginner/puzzles/1">"Beatles"</a>.</figcaption>
+</figure>
 
 Each regex part applies to some number of unknowns (empty boxes). The first row
 regex `HE|LL|O+` applies to the unknowns of the first row. The first column
@@ -127,10 +130,6 @@ of the tree this doesn't work out: `a` and `b` will already be bound to
 incompatible values. In that case, the goal is said to fail. Unification is just
 one of many goals, but it's the most important one in most programs including
 ours.
-
-(You'll probably be happy to learn `l/==`, full name `clojure.core.logic/==`, is
-just a function. It requires learning a ton of deep logic machinery to grok, but
-at least it's not magic.)
 
 Finally, we need a way to actually run the logic programming engine. that's
 `clojure.core.logic/run`'s job. Something like:
@@ -261,12 +260,19 @@ The obvious test to write is:
                            [q]))))
 ```
 
-We need a way to express disjunction. Like `l/and*`, there's a `l/or*`. This
-primer is a little unorthodox because we're walking through a problem that
+We need a way to express disjunction. Like `l/and*`, there's a `l/or*`. Once we
+have that, alternation is straightforward:
+
+```clojure
+(defmethod re->goal :alternation
+  [{:keys [elements]} lvars]
+  (l/or* (map #(re->goal % lvars) elements)))
+```
+
+This primer is a little unorthodox because we're walking through a problem that
 requires rule generation. Most introductory texts make you build up static
-rules. Just like `l/and*` had a macro variant `l/all`, disjunction is usually
-expressed with the macro `l/conde`. One difference is that `conde` can express a
-disjunction of conjunctions in one go:
+rules. Disjunction is usually expressed with the macro `l/conde`. One difference
+is that `conde` can express a disjunction of conjunctions in one go:
 
 ```clojure
 (conde [a b] [c])
@@ -277,10 +283,7 @@ disjunction of conjunctions in one go:
 # Concatenation
 
 We want to be able to solve squares, not just individual letters. The simplest
-example of that is concatenation. The simplest case is a concatenation of two
-letters:
-
-A simple test:
+case is a concatenation of two characters, like `AA`.
 
 ```clojure
 (def a {:type :character :character \A})
@@ -306,38 +309,50 @@ A simple implementation passes this test:
 succeed. We'd use the macro version `l/all` if we were explicitly writing out
 our goals. Because we're generating them, it's easier to use a function.)
 
-This passes the test, but we're clearly abusing the fact that we happen to know
-that the parts are characters and therefore length 1. Those constituent parts
-could be anything, and so they could be longer than 1. We can't write a test for
-that yet, because we don't have any regex parses that express different options
-yet. Concatenations of characters only match exactly one thing, so they have
-fixed length. We already saw the remaining two things to implement in our first
-parse tree: `:alternation` (*or*, `A|B`) and `:repetition` (`A{x,y}` plus
-shorthand spellings `A*` and `A+`). Alternation came first, so let's try that
-next.
-
-(We could technically produce a concatenation of concatenations, or character
-literals that contain multiple characters, but our parser produces neither and
-I'd rather work from real examples. Plus, we have to implement alternation
-anyway.)
+We're clearly abusing the fact that we happen to know that the parts are
+characters and therefore length 1. But the parts could be repetitions, or an
+alternation between concatenations each of length >1.
 
 ## Distributing lvars over groups
 
+Next, we need to find the ways lvars can be distributed over the individual
+elements. We know that each lvar represents a square and each square must be
+assigned, so we know that the sum of the lengths of the elements must be the
+total number of lvars.
 
+We can actually solve this sub-problem using logic programming as well! We'll
+use CLP(FD), which means "constraint logic programming over finite domains".
 
 ```clojure
+;; [clojure.core.logic.fd :as f]
+
 (l/run* [q]
   (l/fresh [x y z]
     (l/== [x y z] q)
     (f/in x y z (f/interval 2 5))
     (f/eq (= 10 (+ x y z)))))
+
+;; => ([2 3 5] [3 2 5] [2 4 4] [2 5 3] [4 2 4] [3 3 4]
+;;     [3 4 3] [5 2 3] [4 3 3] [3 5 2] [4 4 2] [5 3 2])
 ```
 
+As mentioned before, the approach we've taken to this problem is unique because
+we're _generating_ rules. Most logic programs have a static structure and
+dynamic data, while our data informs the structure itself. We need to know how
+many groups there are to know how many lvars to create with `fresh`. `f/eq` is
+itself a convenience macro that rewrites "normal" Lisp-style equations (like `(=
+10 (+ x y z))`) to a form the logic engine knows how to solve directly.
+
+One way to solve that problem is with macros and `eval`, but that might impede our
+ability to port to e.g. ClojureScript and native-image. Plus, I wanted to learn
+more about how the finite domain magic works internally.
+
+The main thing `f/eq` does here is introduce intermediate variables. The
+underlying goal `f/+` only takes 3 arguments: two summands and a sum result. To
+express a sum over many summands you need intermediate "running total" lvars. I
+wrote that:
 
 ```clojure
-(ns lvh.regex-crossword.partition
-  (:refer [clojure.core.logic :as l]))
-
 (defn reduceo
   "Given a binary operator goal, return an n-ary one.
 
@@ -369,9 +384,13 @@ anyway.)
         lefts (cons (first lvars) results)
         rights (rest lvars)]
     (l/and* (map binop lefts rights results))))
+```
 
+This lets us define a sum goal and a helper function that runs the logic engine
+for us to find all the ways we can sum up to a number, with some bounds:
+
+```clojure
 (def sumo (partial reduceo f/+))
-(def concato (partial reduceo l/appendo))
 
 (defn summands
   "Find ways you can add some numbers up to a given total.
@@ -388,7 +407,11 @@ anyway.)
       (l/== q lvars)
       (l/and* bounds-goals)
       (sumo total lvars))))
+```
 
+Finally we need a way to use these weights to partition up a collection:
+
+```clojure
 (defn partition-by-weights
   [weights coll]
   (loop [[weight & rest-weights] weights
@@ -412,30 +435,40 @@ lists (let's call it `concato`) using the same machinery:
 
 In a sense `concato` is more direct: the lists are the lists you want, there's
 no `partition-by-weights` to translate from your numeric answer to the list
-partitions you need. I prefer to use the version with explicit bounds because
-it's more general, and we're going to need bounds when we handle repetition
-anyway. You could enforce those bounds too, but the only way I can think of is
-`project`, which is non-relational and so arguably not "cleaner" than the
-previous version.
+partitions you need. With all of these goals in place we can implement
+concatenation. We find each possible weight distribution, and for each
+distribution, each group must match that set of lvars.
 
-# Fixing :concatenation
+```clojure
+(defmethod re->goal :concatenation
+  [{:keys [elements]} lvars]
+  (let [n-vars (count lvars)
+        n-elems (count elements)
+        bounds [0 n-vars]]
+    (l/or*
+     (for [weights (summands n-vars (repeat n-elems bounds))
+           :let [lvar-groups (partition-by-weights weights lvars)]]
+       (l/and* (map re->goal elements lvar-groups))))))
+```
 
-As we discovered earlier: concatenation is broken. It assumes each part is a
-character, and specifically that each part is length 1.
 
 # Fixing :character
 
-What the concatenation problem tells us is that character is broken, too. It
-returned a successful goal when given more than one lvar.
+What the concatenation problem tells us is that character is broken, too.
+Concatenation may attempt to assign 2 lvars to a single character. Right now,
+that returns a goal unifying the first lvar with that character: if there were
+more, the remaining lvars would simply go unconstrained:
+
+```clojure
+(defmethod re->goal :character
+  [{:keys [character]} [lvar]]
+  (l/== character lvar))
+```
 
 We communicate a problem with a failing goal. If some goal fails, the engine
 will stop exploring that branch. The always-failing goal `l/fail` is designed
 for this sort of thing. (You can probably guess what its counterpart `l/succeed`
-does.)
-
-We wrote our `:character` rule to assume that there would only be one lvar. That
-made sense because we knew that was always the case. But now `:concatenation`
-may attempt to call it with more, so we use `l/fail` to communicate the problem.
+does.) The amended version looks like this:
 
 ```clojure
 (defmethod re->goal :character
@@ -521,14 +554,311 @@ does this so it can support regexes with pathologically large sizes (longer than
 a `long`, a signed 64-bit integer). We can ignore that distinction: both behave
 identically for our purposes.
 
+## Implementing repetition
+
+Repetition has a generalization of the `:character` behavior we fixed earlier TKTK multiple vars
+
+```clojure
+(defmethod re->goal :repetition
+  [{[elem] :elements [lower upper] :bounds} lvars]
+  (let [n-vars (count lvars)
+        lower (-> lower (or 0))
+        upper (-> upper (or n-vars) (max n-vars))]
+    ;; Even though e.g. the empty string matches "A*", we get the lvars from the
+    ;; structure of the puzzle, so we know all lvars have to be matched.
+
+    ;; Consequence 1: 0 reps only works if there are 0 vars to match.
+    (if (zero? n-vars)
+      (if (zero? lower) l/succeed l/fail)
+      (l/or*
+       (for [reps (range (max lower 1) (inc upper))
+             ;; Consequence 2: can't have any leftovers: must match all parts
+             :when (zero? (rem n-vars reps))
+             :let [group-size (quot n-vars reps)
+                   groups (partition group-size lvars)]]
+         (l/and* (map (partial re->goal elem) groups)))))))
+
+```
+
+# Trying to solve a few puzzles
+
+We've done quite a bit of work but still haven't solved any real puzzles. We'd
+like to solve the game's own puzzles, so let's start from its internal
+representation. Remember the first puzzle from the beginner set:
+
+<figure>
+<img src="/img/regex-crossword/beginner1.png" alt="the first regex crossword level in the Beginner set">
+<figcaption>The first level in the Beginner set, <a href="https://regexcrossword.com/challenges/beginner/puzzles/1">"Beatles"</a>.</figcaption>
+</figure>
+
+Its internal representation looks like this:
+
+```
+$ jq '.[1].puzzles[0]' challenges.json
+{
+  "id": "475e811a-da59-4ce8-9b80-3124b33cc041",
+  "name": "Beatles",
+  "patternsX": [
+    [
+      "[^SPEAK]+"
+    ],
+    [
+      "EP|IP|EF"
+    ]
+  ],
+  "patternsY": [
+    [
+      "HE|LL|O+"
+    ],
+    [
+      "[PLEASE]+"
+    ]
+  ]
+}
+```
+
+(We'll turn the keys to kebab-case-keywords so it looks a bit more Clojure-y.)
+There's something strange about the sample data: `:patterns-x` and `:patterns-y`
+are both seqs of seqs of patterns. You may have expected them to be seqs of
+patterns directly. This data structure choice isn't obvious until you hit a
+later puzzle such as the first level in the "Double Cross" set:
+
+<figure>
+<img src="/img/regex-crossword/doublecross.png" alt="the first regex crossword level in the Double Cross set">
+<figcaption>The first level in the Double Cross set, <a href="https://regexcrossword.com/challenges/doublecross/puzzles/1">"Telekinesis"</a>.</figcaption>
+</figure>
+
+This puzzle is represented internally as:
+
+```clojure
+{:id "f0f06b00-ec0a-4572-935d-7459e2a13064"
+ :name "Telekinesis"
+ :patterns-x [["[D-HJ-M]" "[^F-KM-Z]"] ["[^A-RU-Z]" "[A-KS-V]"]]
+ :patterns-y [["[A-GN-Z]+" "[^A-DI-S]+"]]}
+```
+
+As you can see this just represents different patterns affecting the same row.
+Ironically while this is presumably intended to make the puzzle harder, the
+extra constraints probably just make the logic engine's life easier. Either way,
+solving means we make some lvars for each box, carve them up by rows and
+columns, and then apply the regex goals:
+
+```clojure
+(defn solve
+  ([puzzle]
+   (solve puzzle nil))
+  ([{:keys [patterns-x patterns-y] :as puzzle} {:keys [n] :as opts :or {n 10}}]
+   (let [n-vars (* (count patterns-x) (count patterns-y))
+         vars (repeatedly n-vars l/lvar)
+         rows (partition (count patterns-x) vars)
+         cols (apply mapv vector rows)
+         pattern-goals (map
+                        (fn [patterns lvars]
+                          (l/and*
+                           (map #(-> % cre/parse (re->goal lvars)) patterns)))
+                        (concat patterns-x patterns-y)
+                        (concat cols rows))]
+     (->> (l/run n [q]
+            (l/== q vars)
+            (l/and* pattern-goals))))))
+```
+
+We can use this to solve the first tutorial puzzle:
+
+```clojure
+(solve
+ {:id "272901bb-0855-4157-9b45-272935da8c93"
+  :name "The OR symbol"
+  :patterns-x [["A|B"]]
+  :patterns-y [["A|Z"]]})
+;; => (((\A)))
+```
+
+Unfortunately, the second one has character classes, so we have to implement
+that next.
+
+```clojure
+{:id "6915fafc-3323-484d-b801-5daac73ddb56"
+ :name "A Range of characters"
+ :patterns-x [["[ABC]"]]
+ :patterns-y [["[BDF]"]]}
+```
+
+# Character classes
+
+Let's look at another parse:
+
+```clojure
+(cre/parse "[A]")
+;; =>
+{:type :alternation,
+ :elements
+ [{:type :concatenation,
+   :elements
+   [{:type :class,
+     :elements
+     [{:type :class-intersection,
+       :elements
+       [{:type :class-union
+         :elements [{:type :class-base :chars #{\A}}]}]}]
+     :brackets? true}]}]}
+```
+
+Whoa! This parses to something a lot trickier than you might've guessed. Class
+sets (intersections, unions and subtraction) are somewhat obscure set of regex
+features with slightly differing support across platforms and slightly different
+syntax. They're particularly useful when you have a full Unicode regex engine
+and you want to say things like "match characters in this script, but not digits
+or punctuation". In Java, Ruby and Python, they are spelled something like
+`[α&&[β]&&[γ]]` where `αβγ` are all their own class specs.
+
+This is a side-effect of using a parser intended for parsing Java regular
+expressions. JavaScript doesn't support these features. Fortunately, they're
+pretty easy to implement. As usual, we'll tackle the simple base case first.
+
+```clojure
+(= '(\A)
+  (l/run* [p]
+  (rcl/re->goal {:type :class-base :chars #{\A}} [p])))
+```
+
+```clojure
+(defmethod re->goal :class-base
+  [{:keys [chars]} [lvar :as lvars]]
+  ;; It appears class-base will only ever have one char, but I'm writing this
+  ;; defensively since I have no proof I've exhausted all the parser cases.
+  (if (-> lvars count (= 1))
+    (l/membero lvar (vec chars)) ;; vec, bc membero doesn't work with sets
+    l/fail))
+```
+
+## Class union and intersection
+
+While we could cheat implementing class union and intersection since the
+original JavaScript puzzle would never have them, they're trivial to express in
+logic, so let's just do them properly:
+
+```clojure
+(t/testing "class-union"
+  (t/is (= '(\A)
+           (l/run* [p]
+             (rcl/re->goal
+              {:type :class-union
+               :elements [{:type :class-base :chars #{\A}}]}
+              [p]))))
+
+  (t/is (= '(\A \B)
+           (l/run* [p]
+             (rcl/re->goal
+              {:type :class-union
+               :elements [{:type :class-base :chars #{\A}}
+                          {:type :class-base :chars #{\B}}]}
+              [p])))))
+
+(t/testing "class-intersection"
+  (t/is (= '(\A)
+           (l/run* [p]
+             (rcl/re->goal
+              {:type :class-intersection
+               :elements [{:type :class-base :chars #{\A}}]}
+              [p]))))
+
+  (t/is (= '(\A)
+           (l/run* [p]
+             (rcl/re->goal
+              {:type :class-intersection
+               :elements [{:type :class-base :chars #{\A}}
+                          {:type :class-base :chars #{\A}}]}
+              [p]))))
+
+  (t/is (= '()
+           (l/run* [p]
+             (rcl/re->goal
+              {:type :class-intersection
+               :elements [{:type :class-base :chars #{\A}}
+                          {:type :class-base :chars #{\B}}]}
+              [p])))))
+```
+
+Implemented by:
+
+```clojure
+(defmethod re->goal :class-union
+  [{:keys [elements]} lvars]
+  (l/or* (map #(re->goal % lvars) elements)))
+
+(defmethod re->goal :class-intersection
+  [{:keys [elements]} lvars]
+  (l/and* (map #(re->goal % lvars) elements)))
+```
+
+## Ranges
+
+You're probably catching on. Implementing ranges uses a bunch of logic machinery
+we already use, and just a Clojure description of what a range *is*:
+
+```clojure
+(t/is (= '(\A \B \C \D \E \F)
+          (l/run* [q]
+            (-> "[A-F]" cre/parse (rcl/re->goal [q])))))
+```
+
+```clojure
+(defmethod re->goal :range
+  [{:keys [elements]} [lvar :as lvars]]
+  (if (-> lvars count (= 1))
+    (let [[lower upper] (map (comp int :character) elements)
+          chars (map char (range lower (inc upper)))]
+      (l/membero lvar chars))
+    l/fail))
+```
+
+Because ranges like `A-Z0-9` are implemented using `:class-union`, they just
+magically work.
+
+## Simple classes
+
+# Class negation
+
+```clojure
+(defmethod re->goal :class-negation
+    [{:keys [elements]} lvars]
+    (l/and*
+     (for [e elements] (l/nafc re->goal e lvars))))
+```
+
+```clojure
+(defmethod re->goal :class-negation
+  [{:keys [elements]} lvars]
+  (let [neg-goal (l/and* (for [e elements] (l/nafc re->goal e lvars)))
+        domain (->> (range (int \A) (inc (int \Z))) (map char))
+        ground-hack (l/and* (for [v lvars] (l/membero v domain)))]
+    ;; HACK: nafc only works if the vars are ground. Docstring claims execution
+    ;; will be delayed if they aren't... but that doesn't appear to be true.
+    ;; https://clojure.atlassian.net/browse/LOGIC-172
+    (l/all ground-hack neg-goal)))
+```
+
+A different way to implement this would be to walk this part of the parse tree
+manually.
+
+# Backrefs
+
+Like class negation, one way to implement this would be to walk the parse tree
+in advance instead of just trying to recursively walk it once.
+
+
+
 # Conclusion
 
 This introduction was a little unorthodox. Most texts focus on introducing
 different primitives, have you write small static rules and build up from there.
-You'll see `conde` long before anyone talks to you about `or*`. That's just a
-consequence of how I wrote this post, not a principled stance. Reading [The
-Little Schemer][tls] is still a good idea if you want to learn to write your own
-programs.
+You'll see `conde` long before anyone talks to you about `or*`.
+Negation-as-failure, which we used for classes, is exotic and non-relational.
+The way we implemented backrefs works but is inelegant. That's all just a
+consequence of the problem we solved, not a principled stance on how to use
+`core.logic` let alone teach it. Reading [The Little Schemer][tls] is still a
+good idea if you want to learn to write your own programs.
 
 # Next steps
 

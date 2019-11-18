@@ -67,6 +67,7 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 
     
 
@@ -271,7 +272,7 @@ alternatively:</p>
 <p>The greater-than-zero constraint for individual grants is fairly
 important, otherwise the algorithm might casually give you answers
 like:</p>
-<pre class="code literal-block"><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">20</span><span class="p">.</span> <span class="o">-</span><span class="mi">20</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
+<pre class="code literal-block"><span></span>k = 1: [ 10.  20. -20.  30.  50.  10.  50.], sum: 150.0
 </pre>
 
 
@@ -351,15 +352,15 @@ equal to zero.</p>
 (<a href="http://nbviewer.ipython.org/gist/lvh/10107818">viewer</a>,
 <a href="https://gist.github.com/lvh/10107818">gist</a>).</p>
 <p>This produced the following results:</p>
-<pre class="code literal-block"><span></span><span class="n">scores</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">5</span><span class="p">]</span>
-<span class="n">requested</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span> <span class="mi">20</span> <span class="mi">30</span> <span class="mi">30</span> <span class="mi">50</span> <span class="mi">10</span> <span class="mi">50</span><span class="p">]</span> <span class="n">total</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">budget</span><span class="p">:</span> <span class="mi">150</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">20</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>   <span class="mi">0</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="o">-</span><span class="mi">0</span><span class="p">.</span>   <span class="mi">0</span><span class="p">.</span>  <span class="mi">30</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>   <span class="mi">7</span><span class="p">.</span>  <span class="mi">27</span><span class="p">.</span>  <span class="mi">36</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>   <span class="mi">9</span><span class="p">.</span>  <span class="mi">25</span><span class="p">.</span>  <span class="mi">35</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">24</span><span class="p">.</span>  <span class="mi">35</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">10</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">23</span><span class="p">.</span>  <span class="mi">35</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">100</span><span class="p">:</span> <span class="p">[</span> <span class="mi">10</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">11</span><span class="p">.</span>  <span class="mi">23</span><span class="p">.</span>  <span class="mi">34</span><span class="p">.</span>  <span class="mi">10</span><span class="p">.</span>  <span class="mi">50</span><span class="p">.],</span> <span class="k">sum</span><span class="p">:</span> <span class="mi">150</span><span class="p">.</span><span class="mi">0</span>
+<pre class="code literal-block"><span></span>scores: [1 1 1 2 3 5 5]
+requested: [10 20 30 30 50 10 50] total: 200, budget: 150
+k = 1/0.5: [ 10.  20.  30.  30.  50.  10.   0.], sum: 150.0
+k = 1/1: [ 10.  -0.   0.  30.  50.  10.  50.], sum: 150.0
+k = 1/2: [ 10.  10.   7.  27.  36.  10.  50.], sum: 150.0
+k = 1/3: [ 10.  11.   9.  25.  35.  10.  50.], sum: 150.0
+k = 1/5: [ 10.  11.  10.  24.  35.  10.  50.], sum: 150.0
+k = 1/10: [ 10.  11.  11.  23.  35.  10.  50.], sum: 150.0
+k = 1/100: [ 10.  11.  11.  23.  34.  10.  50.], sum: 150.0
 </pre>
 
 
@@ -788,8 +789,8 @@ probably an upgrade :-)</p>
 <li>In the root of your app, install protractor and the Selenium
    standalone server.</li>
 </ol>
-<pre class="code literal-block"><span></span><span class="n">npm</span> <span class="n">install</span> <span class="c1">--save-dev protractor</span>
-<span class="p">.</span><span class="o">/</span><span class="n">node_modules</span><span class="o">/</span><span class="n">protractor</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">install_selenium_standalone</span>
+<pre class="code literal-block"><span></span>npm install --save-dev protractor
+./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
 
@@ -832,24 +833,24 @@ probably an upgrade :-)</p>
 <li>If you're using Coffeescript, change your Gruntfile to build your
    integration tests:</li>
 </ol>
-<pre class="code literal-block"><span></span>  <span class="n">grunt</span><span class="p">.</span><span class="n">initConfig</span><span class="p">(</span><span class="err">{</span>
-    <span class="o">//</span> <span class="p">...</span>
-    <span class="n">coffee</span><span class="p">:</span> <span class="err">{</span>
-      <span class="o">//</span> <span class="p">...</span>
-      <span class="n">test</span><span class="p">:</span> <span class="err">{</span>
-        <span class="n">files</span><span class="p">:</span> <span class="p">[</span>
-        <span class="o">//</span> <span class="p">...</span>
-        <span class="err">{</span>
-          <span class="n">expand</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
-          <span class="n">cwd</span><span class="p">:</span> <span class="s1">'test/integration'</span><span class="p">,</span>
-          <span class="n">src</span><span class="p">:</span> <span class="s1">'{,*/}*.coffee'</span><span class="p">,</span>
-          <span class="n">dest</span><span class="p">:</span> <span class="s1">'.tmp/integration'</span><span class="p">,</span>
-          <span class="n">ext</span><span class="p">:</span> <span class="s1">'.js'</span>
-        <span class="err">}</span><span class="p">]</span>
-      <span class="err">}</span>
-    <span class="err">}</span><span class="p">,</span>
-  <span class="o">//</span> <span class="p">...</span>
-<span class="err">}</span><span class="p">)</span>
+<pre class="code literal-block"><span></span>  grunt.initConfig({
+    // ...
+    coffee: {
+      // ...
+      test: {
+        files: [
+        // ...
+        {
+          expand: true,
+          cwd: 'test/integration',
+          src: '{,*/}*.coffee',
+          dest: '.tmp/integration',
+          ext: '.js'
+        }]
+      }
+    },
+  // ...
+})
 </pre>
 
 
@@ -861,12 +862,12 @@ probably an upgrade :-)</p>
 <p>You can now manually run your tests. First run Selenium:</p>
 </li>
 </ol>
-<pre class="code literal-block"><span></span><span class="p">.</span><span class="o">/</span><span class="n">node_modules</span><span class="o">/</span><span class="n">protractor</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">install_selenium_standalone</span>
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/install_selenium_standalone
 </pre>
 
 
 <p>Then run your tests:</p>
-<pre class="code literal-block"><span></span><span class="p">.</span><span class="o">/</span><span class="n">node_modules</span><span class="o">/</span><span class="n">protractor</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">protractor</span> <span class="n">protractor</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">js</span>
+<pre class="code literal-block"><span></span>./node_modules/protractor/bin/protractor protractor.conf.js
 </pre>
 
 
@@ -1212,10 +1213,11 @@ The downside is that there are two things. One of them speaks REST, and the othe
 <li class="previous"><a href="index-4.html" rel="prev">Newer posts</a></li>
             <li class="next"><a href="index-2.html" rel="next">Older posts</a></li>
         </ul>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>

@@ -82,10 +82,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Solving regex crosswords</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     lvh
             </span></p>
             <p class="dateline">
@@ -127,8 +128,7 @@ Crossword</a>. I'll also assume you have seen some basic regular
 expressions. Hopefully the Clojure will be piecemeal enough you can
 just follow along, but reading a tutorial wouldn't hurt.</p>
 <p>Let's take a look at the first beginner puzzle:</p>
-<p><img src="../../img/regex-crossword/beginner1.png"></p>
-<p>Each regex part applies to some number of unknowns (empty boxes). The first row
+<figure><img src="../../img/regex-crossword/beginner1.png" alt="the first regex crossword level in the Beginner set"><figcaption>The first level in the Beginner set, <a href="https://regexcrossword.com/challenges/beginner/puzzles/1">"Beatles"</a>.</figcaption></figure><p>Each regex part applies to some number of unknowns (empty boxes). The first row
 regex <code>HE|LL|O+</code> applies to the unknowns of the first row. The first column
 regex <code>[^SPEAK]+</code> applies to the unknowns of the first column. Both constrain
 the top left unknown: we're counting on our logic programming engine at being
@@ -195,9 +195,6 @@ of the tree this doesn't work out: <code>a</code> and <code>b</code> will alread
 incompatible values. In that case, the goal is said to fail. Unification is just
 one of many goals, but it's the most important one in most programs including
 ours.</p>
-<p>(You'll probably be happy to learn <code>l/==</code>, full name <code>clojure.core.logic/==</code>, is
-just a function. It requires learning a ton of deep logic machinery to grok, but
-at least it's not magic.)</p>
 <p>Finally, we need a way to actually run the logic programming engine. that's
 <code>clojure.core.logic/run</code>'s job. Something like:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">l/run</span> <span class="mi">1</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>            <span class="c1">;; run to find up to one answer with logic vars [q]</span>
@@ -313,12 +310,18 @@ produces, we'll cheat with an alternation of characters first.</p>
 </pre>
 
 
-<p>We need a way to express disjunction. Like <code>l/and*</code>, there's a <code>l/or*</code>. This
-primer is a little unorthodox because we're walking through a problem that
+<p>We need a way to express disjunction. Like <code>l/and*</code>, there's a <code>l/or*</code>. Once we
+have that, alternation is straightforward:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:alternation</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">l/or*</span> <span class="p">(</span><span class="nb">map </span><span class="o">#</span><span class="p">(</span><span class="nf">re-&gt;goal</span> <span class="nv">%</span> <span class="nv">lvars</span><span class="p">)</span> <span class="nv">elements</span><span class="p">)))</span>
+</pre>
+
+
+<p>This primer is a little unorthodox because we're walking through a problem that
 requires rule generation. Most introductory texts make you build up static
-rules. Just like <code>l/and*</code> had a macro variant <code>l/all</code>, disjunction is usually
-expressed with the macro <code>l/conde</code>. One difference is that <code>conde</code> can express a
-disjunction of conjunctions in one go:</p>
+rules. Disjunction is usually expressed with the macro <code>l/conde</code>. One difference
+is that <code>conde</code> can express a disjunction of conjunctions in one go:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">conde</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">b</span><span class="p">]</span> <span class="p">[</span><span class="nv">c</span><span class="p">])</span>
 <span class="c1">;; is equivalent to</span>
 <span class="p">(</span><span class="nf">or*</span> <span class="p">[(</span><span class="nf">and*</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="nv">c</span><span class="p">])</span>
@@ -327,9 +330,7 @@ disjunction of conjunctions in one go:</p>
 
 <h2>Concatenation</h2>
 <p>We want to be able to solve squares, not just individual letters. The simplest
-example of that is concatenation. The simplest case is a concatenation of two
-letters:</p>
-<p>A simple test:</p>
+case is a concatenation of two characters, like <code>AA</code>.</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">a</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:character</span> <span class="ss">:character</span> <span class="sc">\A</span><span class="p">})</span>
 <span class="p">(</span><span class="k">def </span><span class="nv">aa</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:concatenation</span> <span class="ss">:elements</span> <span class="p">[</span><span class="nv">a</span> <span class="nv">a</span><span class="p">]})</span>
 
@@ -352,32 +353,43 @@ letters:</p>
 <p>(<code>l/and*</code>is a function that returns a goal that succeeds when all its goals
 succeed. We'd use the macro version <code>l/all</code> if we were explicitly writing out
 our goals. Because we're generating them, it's easier to use a function.)</p>
-<p>This passes the test, but we're clearly abusing the fact that we happen to know
-that the parts are characters and therefore length 1. Those constituent parts
-could be anything, and so they could be longer than 1. We can't write a test for
-that yet, because we don't have any regex parses that express different options
-yet. Concatenations of characters only match exactly one thing, so they have
-fixed length. We already saw the remaining two things to implement in our first
-parse tree: <code>:alternation</code> (<em>or</em>, <code>A|B</code>) and <code>:repetition</code> (<code>A{x,y}</code> plus
-shorthand spellings <code>A*</code> and <code>A+</code>). Alternation came first, so let's try that
-next.</p>
-<p>(We could technically produce a concatenation of concatenations, or character
-literals that contain multiple characters, but our parser produces neither and
-I'd rather work from real examples. Plus, we have to implement alternation
-anyway.)</p>
+<p>We're clearly abusing the fact that we happen to know that the parts are
+characters and therefore length 1. But the parts could be repetitions, or an
+alternation between concatenations each of length &gt;1.</p>
 <h3>Distributing lvars over groups</h3>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+<p>Next, we need to find the ways lvars can be distributed over the individual
+elements. We know that each lvar represents a square and each square must be
+assigned, so we know that the sum of the lengths of the elements must be the
+total number of lvars.</p>
+<p>We can actually solve this sub-problem using logic programming as well! We'll
+use CLP(FD), which means "constraint logic programming over finite domains".</p>
+<pre class="code literal-block"><span></span><span class="c1">;; [clojure.core.logic.fd :as f]</span>
+
+<span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
   <span class="p">(</span><span class="nf">l/fresh</span> <span class="p">[</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">]</span>
     <span class="p">(</span><span class="nf">l/==</span> <span class="p">[</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">]</span> <span class="nv">q</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">f/in</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> <span class="p">(</span><span class="nf">f/interval</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">))</span>
     <span class="p">(</span><span class="nf">f/eq</span> <span class="p">(</span><span class="nb">= </span><span class="mi">10</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">)))))</span>
+
+<span class="c1">;; =&gt; ([2 3 5] [3 2 5] [2 4 4] [2 5 3] [4 2 4] [3 3 4]</span>
+<span class="c1">;;     [3 4 3] [5 2 3] [4 3 3] [3 5 2] [4 4 2] [5 3 2])</span>
 </pre>
 
 
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">ns </span><span class="nv">lvh.regex-crossword.partition</span>
-  <span class="p">(</span><span class="ss">:refer</span> <span class="p">[</span><span class="nv">clojure.core.logic</span> <span class="ss">:as</span> <span class="nv">l</span><span class="p">]))</span>
-
-<span class="p">(</span><span class="kd">defn </span><span class="nv">reduceo</span>
+<p>As mentioned before, the approach we've taken to this problem is unique because
+we're <em>generating</em> rules. Most logic programs have a static structure and
+dynamic data, while our data informs the structure itself. We need to know how
+many groups there are to know how many lvars to create with <code>fresh</code>. <code>f/eq</code> is
+itself a convenience macro that rewrites "normal" Lisp-style equations (like <code>(=
+10 (+ x y z))</code>) to a form the logic engine knows how to solve directly.</p>
+<p>One way to solve that problem is with macros and <code>eval</code>, but that might impede our
+ability to port to e.g. ClojureScript and native-image. Plus, I wanted to learn
+more about how the finite domain magic works internally.</p>
+<p>The main thing <code>f/eq</code> does here is introduce intermediate variables. The
+underlying goal <code>f/+</code> only takes 3 arguments: two summands and a sum result. To
+express a sum over many summands you need intermediate "running total" lvars. I
+wrote that:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">reduceo</span>
   <span class="s">"Given a binary operator goal, return an n-ary one.</span>
 
 <span class="s">  If the given goal has shape `(⊕ x y z)` meaning `x ⊕ y = z`, `(reduceo ⊕ z</span>
@@ -408,9 +420,12 @@ anyway.)</p>
         <span class="nb">lefts </span><span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">first </span><span class="nv">lvars</span><span class="p">)</span> <span class="nv">results</span><span class="p">)</span>
         <span class="nb">rights </span><span class="p">(</span><span class="nb">rest </span><span class="nv">lvars</span><span class="p">)]</span>
     <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">map </span><span class="nv">binop</span> <span class="nb">lefts rights </span><span class="nv">results</span><span class="p">))))</span>
+</pre>
 
-<span class="p">(</span><span class="k">def </span><span class="nv">sumo</span> <span class="p">(</span><span class="nb">partial </span><span class="nv">reduceo</span> <span class="nv">f/+</span><span class="p">))</span>
-<span class="p">(</span><span class="k">def </span><span class="nv">concato</span> <span class="p">(</span><span class="nb">partial </span><span class="nv">reduceo</span> <span class="nv">l/appendo</span><span class="p">))</span>
+
+<p>This lets us define a sum goal and a helper function that runs the logic engine
+for us to find all the ways we can sum up to a number, with some bounds:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="k">def </span><span class="nv">sumo</span> <span class="p">(</span><span class="nb">partial </span><span class="nv">reduceo</span> <span class="nv">f/+</span><span class="p">))</span>
 
 <span class="p">(</span><span class="kd">defn </span><span class="nv">summands</span>
   <span class="s">"Find ways you can add some numbers up to a given total.</span>
@@ -427,8 +442,11 @@ anyway.)</p>
       <span class="p">(</span><span class="nf">l/==</span> <span class="nv">q</span> <span class="nv">lvars</span><span class="p">)</span>
       <span class="p">(</span><span class="nf">l/and*</span> <span class="nv">bounds-goals</span><span class="p">)</span>
       <span class="p">(</span><span class="nf">sumo</span> <span class="nv">total</span> <span class="nv">lvars</span><span class="p">))))</span>
+</pre>
 
-<span class="p">(</span><span class="kd">defn </span><span class="nv">partition-by-weights</span>
+
+<p>Finally we need a way to use these weights to partition up a collection:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">partition-by-weights</span>
   <span class="p">[</span><span class="nv">weights</span> <span class="nv">coll</span><span class="p">]</span>
   <span class="p">(</span><span class="k">loop </span><span class="p">[[</span><span class="nv">weight</span> <span class="o">&amp;</span> <span class="nv">rest-weights</span><span class="p">]</span> <span class="nv">weights</span>
          <span class="nv">coll</span> <span class="nv">coll</span>
@@ -451,24 +469,36 @@ lists (let's call it <code>concato</code>) using the same machinery:</p>
 
 <p>In a sense <code>concato</code> is more direct: the lists are the lists you want, there's
 no <code>partition-by-weights</code> to translate from your numeric answer to the list
-partitions you need. I prefer to use the version with explicit bounds because
-it's more general, and we're going to need bounds when we handle repetition
-anyway. You could enforce those bounds too, but the only way I can think of is
-<code>project</code>, which is non-relational and so arguably not "cleaner" than the
-previous version.</p>
-<h2>Fixing :concatenation</h2>
-<p>As we discovered earlier: concatenation is broken. It assumes each part is a
-character, and specifically that each part is length 1.</p>
+partitions you need. With all of these goals in place we can implement
+concatenation. We find each possible weight distribution, and for each
+distribution, each group must match that set of lvars.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:concatenation</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">n-vars</span> <span class="p">(</span><span class="nb">count </span><span class="nv">lvars</span><span class="p">)</span>
+        <span class="nv">n-elems</span> <span class="p">(</span><span class="nb">count </span><span class="nv">elements</span><span class="p">)</span>
+        <span class="nv">bounds</span> <span class="p">[</span><span class="mi">0</span> <span class="nv">n-vars</span><span class="p">]]</span>
+    <span class="p">(</span><span class="nf">l/or*</span>
+     <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">weights</span> <span class="p">(</span><span class="nf">summands</span> <span class="nv">n-vars</span> <span class="p">(</span><span class="nb">repeat </span><span class="nv">n-elems</span> <span class="nv">bounds</span><span class="p">))</span>
+           <span class="ss">:let</span> <span class="p">[</span><span class="nv">lvar-groups</span> <span class="p">(</span><span class="nf">partition-by-weights</span> <span class="nv">weights</span> <span class="nv">lvars</span><span class="p">)]]</span>
+       <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">map </span><span class="nv">re-&gt;goal</span> <span class="nv">elements</span> <span class="nv">lvar-groups</span><span class="p">))))))</span>
+</pre>
+
+
 <h2>Fixing :character</h2>
-<p>What the concatenation problem tells us is that character is broken, too. It
-returned a successful goal when given more than one lvar.</p>
+<p>What the concatenation problem tells us is that character is broken, too.
+Concatenation may attempt to assign 2 lvars to a single character. Right now,
+that returns a goal unifying the first lvar with that character: if there were
+more, the remaining lvars would simply go unconstrained:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:character</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">character</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span><span class="p">]]</span>
+  <span class="p">(</span><span class="nf">l/==</span> <span class="nv">character</span> <span class="nv">lvar</span><span class="p">))</span>
+</pre>
+
+
 <p>We communicate a problem with a failing goal. If some goal fails, the engine
 will stop exploring that branch. The always-failing goal <code>l/fail</code> is designed
 for this sort of thing. (You can probably guess what its counterpart <code>l/succeed</code>
-does.)</p>
-<p>We wrote our <code>:character</code> rule to assume that there would only be one lvar. That
-made sense because we knew that was always the case. But now <code>:concatenation</code>
-may attempt to call it with more, so we use <code>l/fail</code> to communicate the problem.</p>
+does.) The amended version looks like this:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:character</span>
   <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">character</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span> <span class="ss">:as</span> <span class="nv">lvars</span><span class="p">]]</span>
   <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lvars</span> <span class="nb">count </span><span class="p">(</span><span class="nb">= </span><span class="mi">1</span><span class="p">))</span>
@@ -553,13 +583,272 @@ others as <code>1N</code>. The latter are <code>clojure.lang.BigInts</code>, not
 does this so it can support regexes with pathologically large sizes (longer than
 a <code>long</code>, a signed 64-bit integer). We can ignore that distinction: both behave
 identically for our purposes.</p>
+<h3>Implementing repetition</h3>
+<p>Repetition has a generalization of the <code>:character</code> behavior we fixed earlier TKTK multiple vars</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:repetition</span>
+  <span class="p">[{[</span><span class="nv">elem</span><span class="p">]</span> <span class="ss">:elements</span> <span class="p">[</span><span class="nv">lower</span> <span class="nv">upper</span><span class="p">]</span> <span class="ss">:bounds</span><span class="p">}</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">n-vars</span> <span class="p">(</span><span class="nb">count </span><span class="nv">lvars</span><span class="p">)</span>
+        <span class="nv">lower</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lower</span> <span class="p">(</span><span class="nb">or </span><span class="mi">0</span><span class="p">))</span>
+        <span class="nv">upper</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">upper</span> <span class="p">(</span><span class="nb">or </span><span class="nv">n-vars</span><span class="p">)</span> <span class="p">(</span><span class="nb">max </span><span class="nv">n-vars</span><span class="p">))]</span>
+    <span class="c1">;; Even though e.g. the empty string matches "A*", we get the lvars from the</span>
+    <span class="c1">;; structure of the puzzle, so we know all lvars have to be matched.</span>
+
+    <span class="c1">;; Consequence 1: 0 reps only works if there are 0 vars to match.</span>
+    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">zero? </span><span class="nv">n-vars</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">zero? </span><span class="nv">lower</span><span class="p">)</span> <span class="nv">l/succeed</span> <span class="nv">l/fail</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">l/or*</span>
+       <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">reps</span> <span class="p">(</span><span class="nb">range </span><span class="p">(</span><span class="nb">max </span><span class="nv">lower</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nb">inc </span><span class="nv">upper</span><span class="p">))</span>
+             <span class="c1">;; Consequence 2: can't have any leftovers: must match all parts</span>
+             <span class="ss">:when</span> <span class="p">(</span><span class="nb">zero? </span><span class="p">(</span><span class="nb">rem </span><span class="nv">n-vars</span> <span class="nv">reps</span><span class="p">))</span>
+             <span class="ss">:let</span> <span class="p">[</span><span class="nv">group-size</span> <span class="p">(</span><span class="nb">quot </span><span class="nv">n-vars</span> <span class="nv">reps</span><span class="p">)</span>
+                   <span class="nv">groups</span> <span class="p">(</span><span class="nf">partition</span> <span class="nv">group-size</span> <span class="nv">lvars</span><span class="p">)]]</span>
+         <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="nb">partial </span><span class="nv">re-&gt;goal</span> <span class="nv">elem</span><span class="p">)</span> <span class="nv">groups</span><span class="p">)))))))</span>
+</pre>
+
+
+<h2>Trying to solve a few puzzles</h2>
+<p>We've done quite a bit of work but still haven't solved any real puzzles. We'd
+like to solve the game's own puzzles, so let's start from its internal
+representation. Remember the first puzzle from the beginner set:</p>
+<figure><img src="../../img/regex-crossword/beginner1.png" alt="the first regex crossword level in the Beginner set"><figcaption>The first level in the Beginner set, <a href="https://regexcrossword.com/challenges/beginner/puzzles/1">"Beatles"</a>.</figcaption></figure><p>Its internal representation looks like this:</p>
+<pre class="code literal-block"><span></span>$ jq <span class="s1">'.[1].puzzles[0]'</span> challenges.json
+<span class="o">{</span>
+  <span class="s2">"id"</span>: <span class="s2">"475e811a-da59-4ce8-9b80-3124b33cc041"</span>,
+  <span class="s2">"name"</span>: <span class="s2">"Beatles"</span>,
+  <span class="s2">"patternsX"</span>: <span class="o">[</span>
+    <span class="o">[</span>
+      <span class="s2">"[^SPEAK]+"</span>
+    <span class="o">]</span>,
+    <span class="o">[</span>
+      <span class="s2">"EP|IP|EF"</span>
+    <span class="o">]</span>
+  <span class="o">]</span>,
+  <span class="s2">"patternsY"</span>: <span class="o">[</span>
+    <span class="o">[</span>
+      <span class="s2">"HE|LL|O+"</span>
+    <span class="o">]</span>,
+    <span class="o">[</span>
+      <span class="s2">"[PLEASE]+"</span>
+    <span class="o">]</span>
+  <span class="o">]</span>
+<span class="o">}</span>
+</pre>
+
+
+<p>(We'll turn the keys to kebab-case-keywords so it looks a bit more Clojure-y.)
+There's something strange about the sample data: <code>:patterns-x</code> and <code>:patterns-y</code>
+are both seqs of seqs of patterns. You may have expected them to be seqs of
+patterns directly. This data structure choice isn't obvious until you hit a
+later puzzle such as the first level in the "Double Cross" set:</p>
+<figure><img src="../../img/regex-crossword/doublecross.png" alt="the first regex crossword level in the Double Cross set"><figcaption>The first level in the Double Cross set, <a href="https://regexcrossword.com/challenges/doublecross/puzzles/1">"Telekinesis"</a>.</figcaption></figure><p>This puzzle is represented internally as:</p>
+<pre class="code literal-block"><span></span><span class="p">{</span><span class="ss">:id</span> <span class="s">"f0f06b00-ec0a-4572-935d-7459e2a13064"</span>
+ <span class="ss">:name</span> <span class="s">"Telekinesis"</span>
+ <span class="ss">:patterns-x</span> <span class="p">[[</span><span class="s">"[D-HJ-M]"</span> <span class="s">"[^F-KM-Z]"</span><span class="p">]</span> <span class="p">[</span><span class="s">"[^A-RU-Z]"</span> <span class="s">"[A-KS-V]"</span><span class="p">]]</span>
+ <span class="ss">:patterns-y</span> <span class="p">[[</span><span class="s">"[A-GN-Z]+"</span> <span class="s">"[^A-DI-S]+"</span><span class="p">]]}</span>
+</pre>
+
+
+<p>As you can see this just represents different patterns affecting the same row.
+Ironically while this is presumably intended to make the puzzle harder, the
+extra constraints probably just make the logic engine's life easier. Either way,
+solving means we make some lvars for each box, carve them up by rows and
+columns, and then apply the regex goals:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">solve</span>
+  <span class="p">([</span><span class="nv">puzzle</span><span class="p">]</span>
+   <span class="p">(</span><span class="nf">solve</span> <span class="nv">puzzle</span> <span class="nv">nil</span><span class="p">))</span>
+  <span class="p">([{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">patterns-x</span> <span class="nv">patterns-y</span><span class="p">]</span> <span class="ss">:as</span> <span class="nv">puzzle</span><span class="p">}</span> <span class="p">{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">n</span><span class="p">]</span> <span class="ss">:as</span> <span class="nv">opts</span> <span class="ss">:or</span> <span class="p">{</span><span class="nv">n</span> <span class="mi">10</span><span class="p">}}]</span>
+   <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">n-vars</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">count </span><span class="nv">patterns-x</span><span class="p">)</span> <span class="p">(</span><span class="nb">count </span><span class="nv">patterns-y</span><span class="p">))</span>
+         <span class="nv">vars</span> <span class="p">(</span><span class="nf">repeatedly</span> <span class="nv">n-vars</span> <span class="nv">l/lvar</span><span class="p">)</span>
+         <span class="nv">rows</span> <span class="p">(</span><span class="nf">partition</span> <span class="p">(</span><span class="nb">count </span><span class="nv">patterns-x</span><span class="p">)</span> <span class="nv">vars</span><span class="p">)</span>
+         <span class="nv">cols</span> <span class="p">(</span><span class="nb">apply </span><span class="nv">mapv</span> <span class="nb">vector </span><span class="nv">rows</span><span class="p">)</span>
+         <span class="nv">pattern-goals</span> <span class="p">(</span><span class="nf">map</span>
+                        <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">patterns</span> <span class="nv">lvars</span><span class="p">]</span>
+                          <span class="p">(</span><span class="nf">l/and*</span>
+                           <span class="p">(</span><span class="nb">map </span><span class="o">#</span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">%</span> <span class="nv">cre/parse</span> <span class="p">(</span><span class="nf">re-&gt;goal</span> <span class="nv">lvars</span><span class="p">))</span> <span class="nv">patterns</span><span class="p">)))</span>
+                        <span class="p">(</span><span class="nb">concat </span><span class="nv">patterns-x</span> <span class="nv">patterns-y</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">concat </span><span class="nv">cols</span> <span class="nv">rows</span><span class="p">))]</span>
+     <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nf">l/run</span> <span class="nv">n</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+            <span class="p">(</span><span class="nf">l/==</span> <span class="nv">q</span> <span class="nv">vars</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">l/and*</span> <span class="nv">pattern-goals</span><span class="p">))))))</span>
+</pre>
+
+
+<p>We can use this to solve the first tutorial puzzle:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">solve</span>
+ <span class="p">{</span><span class="ss">:id</span> <span class="s">"272901bb-0855-4157-9b45-272935da8c93"</span>
+  <span class="ss">:name</span> <span class="s">"The OR symbol"</span>
+  <span class="ss">:patterns-x</span> <span class="p">[[</span><span class="s">"A|B"</span><span class="p">]]</span>
+  <span class="ss">:patterns-y</span> <span class="p">[[</span><span class="s">"A|Z"</span><span class="p">]]})</span>
+<span class="c1">;; =&gt; (((\A)))</span>
+</pre>
+
+
+<p>Unfortunately, the second one has character classes, so we have to implement
+that next.</p>
+<pre class="code literal-block"><span></span><span class="p">{</span><span class="ss">:id</span> <span class="s">"6915fafc-3323-484d-b801-5daac73ddb56"</span>
+ <span class="ss">:name</span> <span class="s">"A Range of characters"</span>
+ <span class="ss">:patterns-x</span> <span class="p">[[</span><span class="s">"[ABC]"</span><span class="p">]]</span>
+ <span class="ss">:patterns-y</span> <span class="p">[[</span><span class="s">"[BDF]"</span><span class="p">]]}</span>
+</pre>
+
+
+<h2>Character classes</h2>
+<p>Let's look at another parse:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">cre/parse</span> <span class="s">"[A]"</span><span class="p">)</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">{</span><span class="ss">:type</span> <span class="ss">:alternation</span>,
+ <span class="ss">:elements</span>
+ <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:concatenation</span>,
+   <span class="ss">:elements</span>
+   <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class</span>,
+     <span class="ss">:elements</span>
+     <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-intersection</span>,
+       <span class="ss">:elements</span>
+       <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-union</span>
+         <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}]}]}]</span>
+     <span class="ss">:brackets?</span> <span class="nv">true</span><span class="p">}]}]}</span>
+</pre>
+
+
+<p>Whoa! This parses to something a lot trickier than you might've guessed. Class
+sets (intersections, unions and subtraction) are somewhat obscure set of regex
+features with slightly differing support across platforms and slightly different
+syntax. They're particularly useful when you have a full Unicode regex engine
+and you want to say things like "match characters in this script, but not digits
+or punctuation". In Java, Ruby and Python, they are spelled something like
+<code>[α&amp;&amp;[β]&amp;&amp;[γ]]</code> where <code>αβγ</code> are all their own class specs.</p>
+<p>This is a side-effect of using a parser intended for parsing Java regular
+expressions. JavaScript doesn't support these features. Fortunately, they're
+pretty easy to implement. As usual, we'll tackle the simple base case first.</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}</span> <span class="p">[</span><span class="nv">p</span><span class="p">])))</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:class-base</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">chars</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span> <span class="ss">:as</span> <span class="nv">lvars</span><span class="p">]]</span>
+  <span class="c1">;; It appears class-base will only ever have one char, but I'm writing this</span>
+  <span class="c1">;; defensively since I have no proof I've exhausted all the parser cases.</span>
+  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lvars</span> <span class="nb">count </span><span class="p">(</span><span class="nb">= </span><span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">l/membero</span> <span class="nv">lvar</span> <span class="p">(</span><span class="nf">vec</span> <span class="nv">chars</span><span class="p">))</span> <span class="c1">;; vec, bc membero doesn't work with sets</span>
+    <span class="nv">l/fail</span><span class="p">))</span>
+</pre>
+
+
+<h3>Class union and intersection</h3>
+<p>While we could cheat implementing class union and intersection since the
+original JavaScript puzzle would never have them, they're trivial to express in
+logic, so let's just do them properly:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/testing</span> <span class="s">"class-union"</span>
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span>
+              <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-union</span>
+               <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}]}</span>
+              <span class="p">[</span><span class="nv">p</span><span class="p">]))))</span>
+
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span> <span class="sc">\B</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span>
+              <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-union</span>
+               <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}</span>
+                          <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\B</span><span class="p">}}]}</span>
+              <span class="p">[</span><span class="nv">p</span><span class="p">])))))</span>
+
+<span class="p">(</span><span class="nf">t/testing</span> <span class="s">"class-intersection"</span>
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span>
+              <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-intersection</span>
+               <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}]}</span>
+              <span class="p">[</span><span class="nv">p</span><span class="p">]))))</span>
+
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span>
+              <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-intersection</span>
+               <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}</span>
+                          <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}]}</span>
+              <span class="p">[</span><span class="nv">p</span><span class="p">]))))</span>
+
+  <span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">()</span>
+           <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">p</span><span class="p">]</span>
+             <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span>
+              <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-intersection</span>
+               <span class="ss">:elements</span> <span class="p">[{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\A</span><span class="p">}}</span>
+                          <span class="p">{</span><span class="ss">:type</span> <span class="ss">:class-base</span> <span class="ss">:chars</span> <span class="o">#</span><span class="p">{</span><span class="sc">\B</span><span class="p">}}]}</span>
+              <span class="p">[</span><span class="nv">p</span><span class="p">])))))</span>
+</pre>
+
+
+<p>Implemented by:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:class-union</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">l/or*</span> <span class="p">(</span><span class="nb">map </span><span class="o">#</span><span class="p">(</span><span class="nf">re-&gt;goal</span> <span class="nv">%</span> <span class="nv">lvars</span><span class="p">)</span> <span class="nv">elements</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:class-intersection</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">map </span><span class="o">#</span><span class="p">(</span><span class="nf">re-&gt;goal</span> <span class="nv">%</span> <span class="nv">lvars</span><span class="p">)</span> <span class="nv">elements</span><span class="p">)))</span>
+</pre>
+
+
+<h3>Ranges</h3>
+<p>You're probably catching on. Implementing ranges uses a bunch of logic machinery
+we already use, and just a Clojure description of what a range <em>is</em>:</p>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="nf">t/is</span> <span class="p">(</span><span class="nb">= </span><span class="o">'</span><span class="p">(</span><span class="sc">\A</span> <span class="sc">\B</span> <span class="sc">\C</span> <span class="sc">\D</span> <span class="sc">\E</span> <span class="sc">\F</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">l/run*</span> <span class="p">[</span><span class="nv">q</span><span class="p">]</span>
+            <span class="p">(</span><span class="nb">-&gt; </span><span class="s">"[A-F]"</span> <span class="nv">cre/parse</span> <span class="p">(</span><span class="nf">rcl/re-&gt;goal</span> <span class="p">[</span><span class="nv">q</span><span class="p">])))))</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:range</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span> <span class="ss">:as</span> <span class="nv">lvars</span><span class="p">]]</span>
+  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lvars</span> <span class="nb">count </span><span class="p">(</span><span class="nb">= </span><span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">let </span><span class="p">[[</span><span class="nv">lower</span> <span class="nv">upper</span><span class="p">]</span> <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="nb">comp int </span><span class="ss">:character</span><span class="p">)</span> <span class="nv">elements</span><span class="p">)</span>
+          <span class="nv">chars</span> <span class="p">(</span><span class="nb">map char </span><span class="p">(</span><span class="nb">range </span><span class="nv">lower</span> <span class="p">(</span><span class="nb">inc </span><span class="nv">upper</span><span class="p">)))]</span>
+      <span class="p">(</span><span class="nf">l/membero</span> <span class="nv">lvar</span> <span class="nv">chars</span><span class="p">))</span>
+    <span class="nv">l/fail</span><span class="p">))</span>
+</pre>
+
+
+<p>Because ranges like <code>A-Z0-9</code> are implemented using <code>:class-union</code>, they just
+magically work.</p>
+<h3>Simple classes</h3>
+<h2>Class negation</h2>
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:class-negation</span>
+    <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
+    <span class="p">(</span><span class="nf">l/and*</span>
+     <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">e</span> <span class="nv">elements</span><span class="p">]</span> <span class="p">(</span><span class="nf">l/nafc</span> <span class="nv">re-&gt;goal</span> <span class="nv">e</span> <span class="nv">lvars</span><span class="p">))))</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:class-negation</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">neg-goal</span> <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">e</span> <span class="nv">elements</span><span class="p">]</span> <span class="p">(</span><span class="nf">l/nafc</span> <span class="nv">re-&gt;goal</span> <span class="nv">e</span> <span class="nv">lvars</span><span class="p">)))</span>
+        <span class="nv">domain</span> <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nb">range </span><span class="p">(</span><span class="nb">int </span><span class="sc">\A</span><span class="p">)</span> <span class="p">(</span><span class="nb">inc </span><span class="p">(</span><span class="nb">int </span><span class="sc">\Z</span><span class="p">)))</span> <span class="p">(</span><span class="nb">map </span><span class="nv">char</span><span class="p">))</span>
+        <span class="nv">ground-hack</span> <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">v</span> <span class="nv">lvars</span><span class="p">]</span> <span class="p">(</span><span class="nf">l/membero</span> <span class="nv">v</span> <span class="nv">domain</span><span class="p">)))]</span>
+    <span class="c1">;; HACK: nafc only works if the vars are ground. Docstring claims execution</span>
+    <span class="c1">;; will be delayed if they aren't... but that doesn't appear to be true.</span>
+    <span class="c1">;; https://clojure.atlassian.net/browse/LOGIC-172</span>
+    <span class="p">(</span><span class="nf">l/all</span> <span class="nv">ground-hack</span> <span class="nv">neg-goal</span><span class="p">)))</span>
+</pre>
+
+
+<p>A different way to implement this would be to walk this part of the parse tree
+manually.</p>
+<h2>Backrefs</h2>
+<p>Like class negation, one way to implement this would be to walk the parse tree
+in advance instead of just trying to recursively walk it once.</p>
 <h2>Conclusion</h2>
 <p>This introduction was a little unorthodox. Most texts focus on introducing
 different primitives, have you write small static rules and build up from there.
-You'll see <code>conde</code> long before anyone talks to you about <code>or*</code>. That's just a
-consequence of how I wrote this post, not a principled stance. Reading <a href="https://www.amazon.com/Little-Schemer-Daniel-P-Friedman/dp/0262560992">The
-Little Schemer</a> is still a good idea if you want to learn to write your own
-programs.</p>
+You'll see <code>conde</code> long before anyone talks to you about <code>or*</code>.
+Negation-as-failure, which we used for classes, is exotic and non-relational.
+The way we implemented backrefs works but is inelegant. That's all just a
+consequence of the problem we solved, not a principled stance on how to use
+<code>core.logic</code> let alone teach it. Reading <a href="https://www.amazon.com/Little-Schemer-Daniel-P-Friedman/dp/0262560992">The Little Schemer</a> is still a
+good idea if you want to learn to write your own programs.</p>
 <h2>Next steps</h2>
 <p>These are things I thought were neat but didn't make sense in the original text.</p>
 <h3>Running programs backwards</h3>
@@ -600,6 +889,7 @@ speed anything up much even if you discount the initial step.</p>
 <li><a class="tag p-category" href="../../tags/clojure/" rel="tag">clojure</a></li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
             Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
             
         </footer>
 </div>
