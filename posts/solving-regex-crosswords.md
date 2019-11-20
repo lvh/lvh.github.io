@@ -844,8 +844,16 @@ manually.
 
 # Backrefs
 
+Backreferences are an interesting challenge because so far we've just assumed we
+can recurisvely turn the regex parse tree into goals piecemeal, and backrefs
+break that assumption: they necessarily depend on a totally different part of
+the parse tree. There are two ways to address that:
+
+1. Change the implementation to
+2. Cheat and introduce side effects to propagate data ()
+
 Like class negation, one way to implement this would be to walk the parse tree
-in advance instead of just trying to recursively walk it once.
+instead of just trying to recursively walk it once.
 
 
 
