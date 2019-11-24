@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clojure and native-image on JDK 11-flavored GraalVM (19.3.0+) | lvh</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#383234">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="lvh">
+<link rel="prev" href="../how-not-to-sign-a-json-object/" title="How (not) to sign a JSON object" type="text/html">
+<meta property="og:site_name" content="lvh">
+<meta property="og:title" content="Clojure and native-image on JDK 11-flavored GraalVM (19.3.0+)">
+<meta property="og:url" content="https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/">
+<meta property="og:description" content="My takeaways from the GraalVM 19.3.0 release notes:
+
+JDK code inlining support
+Optional JDK11 support
+Better Windows support
+
+These may not seem like much, but JDK code inlining fixes my one major nig">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-11-24T08:50:15-08:00">
+<meta property="article:tag" content="clojure">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://www.lvh.io/">
+            <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../about/" class="nav-link">About</a>
+                </li>
+<li class="nav-item">
+<a href="../../archive/" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../tags/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../talks/" class="nav-link">Talks</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search --><form method="get" id="search" action="//duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="https://www.lvh.io/"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2" style="margin-top: 4px;"><input type="submit" value="DuckDuckGo Search" style="display: none;">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="../clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="../clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/" class="u-url">Clojure and native-image on JDK 11-flavored GraalVM (19.3.0+)</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    lvh
+            </span></p>
+            <p class="dateline">
+            <a href="../clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/" rel="bookmark">
+            <time class="published dt-published" datetime="2019-11-24T08:50:15-08:00" itemprop="datePublished" title="2019-11-24 08:50">2019-11-24 08:50</time></a>
+            </p>
+            
+        <p class="sourceline"><a href="../clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>My takeaways from <a href="https://www.graalvm.org/docs/release-notes/19_3/">the GraalVM 19.3.0 release notes</a>:</p>
+<ol>
+<li>JDK code inlining support</li>
+<li>Optional JDK11 support</li>
+<li>Better Windows support</li>
+</ol>
+<p>These may not seem like much, but JDK code inlining fixes my one major niggle
+with native-image: it was too hard to get top-notch single-binary TLS, and
+now it just works.</p>
+<p>(There are lots of other great things that happened in this release! They're
+just not in parts of Graal I use.)</p>
+<h2>Updating to JDK 11</h2>
+<p>Updating to JDK 11 is optional, but you might as well get it over with now.</p>
+<h3>A brief summary of Jigsaw (JDK9+) breakage</h3>
+<p>There are two things that bit Clojure-using early adopters of JDK 9, both
+consequences of <a href="https://openjdk.java.net/projects/jigsaw/">Project Jigsaw</a>:</p>
+<ul>
+<li>The module system hiding previously-available classes</li>
+<li>Changes to the way classloaders work</li>
+</ul>
+<p>These two changes broke Clojure and a whole host of common libraries (mostly
+because of the now-unavailable classes) and the two common build tools
+(leiningen and boot, mostly because of the bootclassloader). These were quickly
+resolved and only affect you now if you care about supporting a long range of
+Clojure versions or a long range of JDKs. Since this blog post is about
+native-image, your output is a standalone binary and you get to pick the JDK
+version. However, you still need to know a bit about this background in order to
+understand some of the workarounds necessary for supporting GraalVM native-image
+targeting JDK11 and above. This is happening now because Graal was previously
+targeting JDK8, avoiding all of these issues.</p>
+<p>The two classes that tend to come up that were often used but hidden in modules
+are <code>java.sql.Timestamp</code> and <code>javax.xml.bind.DatatypeConverter</code>. Despite their
+package names, they don't have anything to do with SQL or XML. Clojure used them
+because <code>Timestamp</code> was the good instant type (<code>java.util.Date</code> being famously
+bad), and <code>DatatypeConverter</code> was the good Base64 implementation available
+everywhere.</p>
+<h3>Example: DatatypeConverter in clj-http-lite</h3>
+<p>Outside of Clojure, clj-http and clj-http-lite used <code>DatatypeConverter</code> as well
+(also for base64). clj-http-lite is very popular in native-image Clojure
+projects. Like other libraries, they were quickly patched to support JDK9. The
+patch still attempted to import <code>DatatypeConverter</code> (see <a href="https://github.com/martinklepsch/clj-http-lite/commit/3f41fc53a1b692549c88a8602e753cfb887330ae">the actual patch in
+clj-http-lite</a>), because the Base64 implementation
+replacing it isn't available on every JDK those libraries wanted to support.
+Normally, this is fine: the import fails and the alternative library gets used.
+However, the static analysis step in GraalVM sees the trial import and
+complains:</p>
+<pre class="code literal-block"><span></span><span class="n">Error</span><span class="o">:</span> <span class="n">com</span><span class="o">.</span><span class="na">oracle</span><span class="o">.</span><span class="na">graal</span><span class="o">.</span><span class="na">pointsto</span><span class="o">.</span><span class="na">constraints</span><span class="o">.</span><span class="na">UnresolvedElementException</span><span class="o">:</span> <span class="n">Discovered</span> <span class="n">unresolved</span> <span class="n">type</span> <span class="n">during</span> <span class="n">parsing</span><span class="o">:</span> <span class="n">javax</span><span class="o">.</span><span class="na">xml</span><span class="o">.</span><span class="na">bind</span><span class="o">.</span><span class="na">DatatypeConverter</span><span class="o">.</span> <span class="n">To</span> <span class="n">diagnose</span> <span class="n">the</span> <span class="n">issue</span> <span class="n">you</span> <span class="n">can</span> <span class="n">use</span> <span class="n">the</span> <span class="o">--</span><span class="n">allow</span><span class="o">-</span><span class="n">incomplete</span><span class="o">-</span><span class="n">classpath</span> <span class="n">option</span><span class="o">.</span> <span class="n">The</span> <span class="n">missing</span> <span class="n">type</span> <span class="k">is</span> <span class="n">then</span> <span class="n">reported</span> <span class="n">at</span> <span class="n">run</span> <span class="n">time</span> <span class="n">when</span> <span class="n">it</span> <span class="k">is</span> <span class="n">accessed</span> <span class="n">the</span> <span class="n">first</span> <span class="n">time</span><span class="o">.</span>
+</pre>
+
+
+<p>The classic workaround was to add the module back with <code>--add-modules
+java.xml.bind</code>. Since it's just a trial import (see patch), you can instead use
+the workaround suggested in the error message (<code>--allow-incomplete-classpath</code>)
+and it'll work fine. The downside is this moves <em>all</em> errors to runtime. There's
+a <a href="https://github.com/oracle/graal/issues/1664">Graal ticket</a> for a more precise command line
+argument limiting the suppressed error to that class. I'm confident there's
+already a way to express this in Graal command line arguments, but I haven't
+tried to figure out the right incantation yet.</p>
+<h3>Single binary TLS!</h3>
+<p>Once you fix the above issue with clj-http-lite, as long as you enable the TLS
+subsystem (<code>--enable-https</code>), you'll just get single-binary HTTPS with
+libsunec.so under the hood, meaning I can finally close
+<a href="https://github.com/oracle/graal/issues/1336">#1336</a>.</p>
+<h3>
+<code>locking</code> errors appear to be gone... sometimes?</h3>
+<p>Clojure 1.10+ introduces a dependency on clojure.spec. That library is unusual
+because it uses the <code>locking</code> macro. Ordinarily, the <code>locking</code> macro is pretty
+rare because Clojure has different, higher-level concurrency primitives.</p>
+<p>Bytecode verifiers that are more aggressive than those in the JDK would balk at
+the resulting bytecode. Historically this was the Android toolchain, but the
+issue resurfaced with Graal. This got documented in <a href="https://clojure.atlassian.net/browse/CLJ-1472">CLJ-1472</a>.
+This issue had a whole myriad of workarounds that mostly involved replacing the
+<code>locking</code> implementation and then hooking clj loads with dynapath. The most
+common workaround was to just downgrade Clojure to 1.9.0.</p>
+<p>With Graal 19.3.0, the error appears to have simply disappeared. I don't know
+which Graal change precipitated this, but I'll happily take being able to use
+the current release of Clojure without hacks. (FWIW: this doesn't appear to be
+the case for everyone, so likely some combination of events just made it harder
+to trigger the problem.)</p>
+<h2>Example project</h2>
+<p>I updated https://github.com/lvh/cljurl-graalvm-demo if you want to try any of
+this at home. If you're on Linux and want to debug the TLS issues, I wrote
+https://github.com/lvh/nscap specifically for this purpose. It leverages Linux
+namespaces to elegantly capture network traffic for a single process. You can
+then throw the resulting PCAP into e.g. wireguard.</p>
+<h2>What I'd still love to see in native-image</h2>
+<p>The compiler is slow. It's in the range of rustc speed: typically faster than
+C++, certainly slower than Go. It eats a lot of RAM. It's fine because I don't
+iterate on the binary version. I develop Clojure apps targeting native-image as
+if they're normal Clojure apps and then eventually run some end-to-end tests on
+the binary. But you knocked out my #1 feature so now I have a new one 😊</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../tags/clojure/" rel="tag">clojure</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../how-not-to-sign-a-json-object/" rel="prev" title="How (not) to sign a JSON object">Previous post</a>
+            </li>
+        </ul></nav></aside></article><!--End of body content--><footer id="footer">
+            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36779422-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

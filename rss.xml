@@ -1,5 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 04 Nov 2019 17:00:04 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 24 Nov 2019 19:24:31 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Clojure and native-image on JDK 11-flavored GraalVM (19.3.0+)</title><link>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;My takeaways from &lt;a href="https://www.graalvm.org/docs/release-notes/19_3/"&gt;the GraalVM 19.3.0 release notes&lt;/a&gt;:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;JDK code inlining support&lt;/li&gt;
+&lt;li&gt;Optional JDK11 support&lt;/li&gt;
+&lt;li&gt;Better Windows support&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;These may not seem like much, but JDK code inlining fixes my one major niggle
+with native-image: it was too hard to get top-notch single-binary TLS, and
+now it just works.&lt;/p&gt;
+&lt;p&gt;(There are lots of other great things that happened in this release! They're
+just not in parts of Graal I use.)&lt;/p&gt;
+&lt;h2&gt;Updating to JDK 11&lt;/h2&gt;
+&lt;p&gt;Updating to JDK 11 is optional, but you might as well get it over with now.&lt;/p&gt;
+&lt;h3&gt;A brief summary of Jigsaw (JDK9+) breakage&lt;/h3&gt;
+&lt;p&gt;There are two things that bit Clojure-using early adopters of JDK 9, both
+consequences of &lt;a href="https://openjdk.java.net/projects/jigsaw/"&gt;Project Jigsaw&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The module system hiding previously-available classes&lt;/li&gt;
+&lt;li&gt;Changes to the way classloaders work&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These two changes broke Clojure and a whole host of common libraries (mostly
+because of the now-unavailable classes) and the two common build tools
+(leiningen and boot, mostly because of the bootclassloader). These were quickly
+resolved and only affect you now if you care about supporting a long range of
+Clojure versions or a long range of JDKs. Since this blog post is about
+native-image, your output is a standalone binary and you get to pick the JDK
+version. However, you still need to know a bit about this background in order to
+understand some of the workarounds necessary for supporting GraalVM native-image
+targeting JDK11 and above. This is happening now because Graal was previously
+targeting JDK8, avoiding all of these issues.&lt;/p&gt;
+&lt;p&gt;The two classes that tend to come up that were often used but hidden in modules
+are &lt;code&gt;java.sql.Timestamp&lt;/code&gt; and &lt;code&gt;javax.xml.bind.DatatypeConverter&lt;/code&gt;. Despite their
+package names, they don't have anything to do with SQL or XML. Clojure used them
+because &lt;code&gt;Timestamp&lt;/code&gt; was the good instant type (&lt;code&gt;java.util.Date&lt;/code&gt; being famously
+bad), and &lt;code&gt;DatatypeConverter&lt;/code&gt; was the good Base64 implementation available
+everywhere.&lt;/p&gt;
+&lt;h3&gt;Example: DatatypeConverter in clj-http-lite&lt;/h3&gt;
+&lt;p&gt;Outside of Clojure, clj-http and clj-http-lite used &lt;code&gt;DatatypeConverter&lt;/code&gt; as well
+(also for base64). clj-http-lite is very popular in native-image Clojure
+projects. Like other libraries, they were quickly patched to support JDK9. The
+patch still attempted to import &lt;code&gt;DatatypeConverter&lt;/code&gt; (see &lt;a href="https://github.com/martinklepsch/clj-http-lite/commit/3f41fc53a1b692549c88a8602e753cfb887330ae"&gt;the actual patch in
+clj-http-lite&lt;/a&gt;), because the Base64 implementation
+replacing it isn't available on every JDK those libraries wanted to support.
+Normally, this is fine: the import fails and the alternative library gets used.
+However, the static analysis step in GraalVM sees the trial import and
+complains:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;oracle&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;graal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;pointsto&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;UnresolvedElementException&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Discovered&lt;/span&gt; &lt;span class="n"&gt;unresolved&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="n"&gt;during&lt;/span&gt; &lt;span class="n"&gt;parsing&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;javax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;xml&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;bind&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;DatatypeConverter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;To&lt;/span&gt; &lt;span class="n"&gt;diagnose&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;issue&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;can&lt;/span&gt; &lt;span class="n"&gt;use&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;allow&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;incomplete&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;classpath&lt;/span&gt; &lt;span class="n"&gt;option&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;missing&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="k"&gt;is&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt; &lt;span class="n"&gt;reported&lt;/span&gt; &lt;span class="n"&gt;at&lt;/span&gt; &lt;span class="n"&gt;run&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="n"&gt;when&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="k"&gt;is&lt;/span&gt; &lt;span class="n"&gt;accessed&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;The classic workaround was to add the module back with &lt;code&gt;--add-modules
+java.xml.bind&lt;/code&gt;. Since it's just a trial import (see patch), you can instead use
+the workaround suggested in the error message (&lt;code&gt;--allow-incomplete-classpath&lt;/code&gt;)
+and it'll work fine. The downside is this moves &lt;em&gt;all&lt;/em&gt; errors to runtime. There's
+a &lt;a href="https://github.com/oracle/graal/issues/1664"&gt;Graal ticket&lt;/a&gt; for a more precise command line
+argument limiting the suppressed error to that class. I'm confident there's
+already a way to express this in Graal command line arguments, but I haven't
+tried to figure out the right incantation yet.&lt;/p&gt;
+&lt;h3&gt;Single binary TLS!&lt;/h3&gt;
+&lt;p&gt;Once you fix the above issue with clj-http-lite, as long as you enable the TLS
+subsystem (&lt;code&gt;--enable-https&lt;/code&gt;), you'll just get single-binary HTTPS with
+libsunec.so under the hood, meaning I can finally close
+&lt;a href="https://github.com/oracle/graal/issues/1336"&gt;#1336&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;&lt;code&gt;locking&lt;/code&gt; errors appear to be gone... sometimes?&lt;/h3&gt;
+&lt;p&gt;Clojure 1.10+ introduces a dependency on clojure.spec. That library is unusual
+because it uses the &lt;code&gt;locking&lt;/code&gt; macro. Ordinarily, the &lt;code&gt;locking&lt;/code&gt; macro is pretty
+rare because Clojure has different, higher-level concurrency primitives.&lt;/p&gt;
+&lt;p&gt;Bytecode verifiers that are more aggressive than those in the JDK would balk at
+the resulting bytecode. Historically this was the Android toolchain, but the
+issue resurfaced with Graal. This got documented in &lt;a href="https://clojure.atlassian.net/browse/CLJ-1472"&gt;CLJ-1472&lt;/a&gt;.
+This issue had a whole myriad of workarounds that mostly involved replacing the
+&lt;code&gt;locking&lt;/code&gt; implementation and then hooking clj loads with dynapath. The most
+common workaround was to just downgrade Clojure to 1.9.0.&lt;/p&gt;
+&lt;p&gt;With Graal 19.3.0, the error appears to have simply disappeared. I don't know
+which Graal change precipitated this, but I'll happily take being able to use
+the current release of Clojure without hacks. (FWIW: this doesn't appear to be
+the case for everyone, so likely some combination of events just made it harder
+to trigger the problem.)&lt;/p&gt;
+&lt;h2&gt;Example project&lt;/h2&gt;
+&lt;p&gt;I updated https://github.com/lvh/cljurl-graalvm-demo if you want to try any of
+this at home. If you're on Linux and want to debug the TLS issues, I wrote
+https://github.com/lvh/nscap specifically for this purpose. It leverages Linux
+namespaces to elegantly capture network traffic for a single process. You can
+then throw the resulting PCAP into e.g. wireguard.&lt;/p&gt;
+&lt;h2&gt;What I'd still love to see in native-image&lt;/h2&gt;
+&lt;p&gt;The compiler is slow. It's in the range of rustc speed: typically faster than
+C++, certainly slower than Go. It eats a lot of RAM. It's fine because I don't
+iterate on the binary version. I develop Clojure apps targeting native-image as
+if they're normal Clojure apps and then eventually run some end-to-end tests on
+the binary. But you knocked out my #1 feature so now I have a new one 😊&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><guid>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</guid><pubDate>Sun, 24 Nov 2019 16:50:15 GMT</pubDate></item><item><title>How (not) to sign a JSON object</title><link>https://www.lvh.io/posts/how-not-to-sign-a-json-object/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.&lt;/p&gt;
 &lt;h2&gt;You don’t really want a signature&lt;/h2&gt;
 &lt;p&gt;When cryptography engineers say "signature" they tend to mean something asymmetric, like RSA or ECDSA. Developers reach for asymmetric tools too often. There are a lot of ways to screw them up. By comparison, symmetric “signing” (MACs) are easy to use and hard to screw up. HMAC is bulletproof and ubiquitous.&lt;/p&gt;
 &lt;p&gt;Unless you have a good reason why you need an (asymmetric) signature, you want a MAC. If you really do want a signature, check out our Cryptographic Right Answers post to make that as safe as possible. For the rest of this blog post, "signing" means symmetrically, and in practice that means HMAC.&lt;/p&gt;
@@ -1035,166 +1124,4 @@ and auditors alike. Here are some archetypes we've found:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;PS: Groups can let some users post as the group. I haven't ran a phishing
 exercise that way, but I'm guessing an email appearing to legitimately come from
-board@company.com is going to be pretty effective.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/gripes-with-google-groups/</guid><pubDate>Tue, 29 May 2018 23:14:00 GMT</pubDate></item><item><title>Cryptographic right answers</title><link>https://www.lvh.io/posts/cryptographic-right-answers/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;We’re less interested in empowering developers and a lot more pessimistic about the prospects of getting this stuff right.&lt;/p&gt;
-&lt;p&gt;There are, in the literature and in the most sophisticated modern systems, “better” answers for many of these items. If you’re building for low-footprint embedded systems, you can use STROBE and a sound, modern, authenticated encryption stack entirely out of a single SHA-3-like sponge constructions. You can use NOISE to build a secure transport protocol with its own AKE. Speaking of AKEs, there are, like, 30 different password AKEs you could choose from.&lt;/p&gt;
-&lt;p&gt;But if you’re a developer and not a cryptography engineer, you shouldn’t do any of that. You should keep things simple and conventional and easy to analyze; “boring”, as the Google TLS people would say.&lt;/p&gt;
-&lt;p&gt;(This content has been developed and updated by different people over a decade. We've kept what Colin Percival originally said in 2009, Thomas Ptacek said in 2015, and what we're saying in 2018 for comparison. If you're designing something today, just use the 2018 Latacora recommendation.)&lt;/p&gt;
-&lt;h3&gt;Cryptographic Right Answers&lt;/h3&gt;
-&lt;h4&gt;Encrypting Data&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009:&lt;/em&gt; AES-CTR with HMAC.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015:&lt;/em&gt; (1) NaCl/libsodium’s default, (2) ChaCha20-Poly1305, or (3) AES-GCM.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; KMS or XSalsa20+Poly1305&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're hiding information from users or the network.&lt;/p&gt;
-&lt;p&gt;If you are in a position to use KMS, Amazon’s (or Google’s) Hardware Security Module time share, use KMS. If you could use KMS but encrypting is just a fun weekend project and you might be able to save some money by minimizing your KMS usage, use KMS. If you’re just encrypting secrets like API tokens for your application at startup, use SSM Parameter Store, which is KMS. You don’t have to understand how KMS works.&lt;/p&gt;
-&lt;p&gt;Otherwise, what you want ideally is “AEAD”: authenticated encryption with additional data (the option for plaintext authenticated headers).&lt;/p&gt;
-&lt;p&gt;The mainstream way to get authenticated encryption is to use a stream cipher (usually: AES in CTR mode) composed with a polynomial MAC (a cryptographic CRC).&lt;/p&gt;
-&lt;p&gt;The problem you’ll run into with all those mainstream options is nonces: they want you to come up with a unique (usually random) number for each stream which can never be reused. It’s simplest to generate nonces from a secure random number generator, so you want a scheme that makes that easy.&lt;/p&gt;
-&lt;p&gt;Nonces are particularly important for AES-GCM, which is the most popular mode of encryption. Unfortunately, it’s particularly tricky with AES-GCM, where it’s just-barely-but-maybe-not-quite on the border of safe to use random nonces.&lt;/p&gt;
-&lt;p&gt;So we recommend you use XSalsa20-Poly1305. This is a species of “ChaPoly” constructions, which, put together, are the most common encryption constructions outside of AES-GCM. Get XSalsa20-Poly1305 from libsodium or NaCl.&lt;/p&gt;
-&lt;p&gt;The advantage to XSalsa20 over ChaCha20 and Salsa20 is that XSalsa supports an extended nonce; it’s big enough that you can simply generate a big long random nonce for every stream and not worry about how many streams you’re encrypting.&lt;/p&gt;
-&lt;p&gt;There are “NMR” or “MRAE” schemes in the pipeline that promise some degree of security even if nonces are mishandled; these include GCM-SIV (all the SIVs, really) and CAESAR-contest-finalist Deoxys-II. They’re interesting, but nobody really supports or uses them yet, and with an extended nonce, the security win is kind of marginal. They’re not boring. Stay boring for now.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; AES-CBC, AES-CTR by itself, block ciphers with 64-bit blocks --- most especially Blowfish, which is inexplicably popular, OFB mode. Don't ever use RC4, which is comically broken.&lt;/p&gt;
-&lt;h4&gt;Symmetric key length&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use 256-bit keys.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use 256-bit keys.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Go ahead and use 256 bit keys.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're using cryptography.&lt;/p&gt;
-&lt;p&gt;But remember: your AES key is far less likely to be broken than your public key pair, so the latter key size should be larger if you're going to obsess about this.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; constructions with huge keys, cipher "cascades", key sizes under 128 bits.&lt;/p&gt;
-&lt;h4&gt;Symmetric “Signatures”&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use HMAC.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Yep, use HMAC.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Still HMAC.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're securing an API, encrypting session cookies, or are encrypting user data but, against medical advice, not using an AEAD construction.&lt;/p&gt;
-&lt;p&gt;If you're authenticating but not encrypting, as with API requests, don't do anything complicated. There is a class of crypto implementation bugs that arises from how you feed data to your MAC, so, if you're designing a new system from scratch, Google "crypto canonicalization bugs". Also, use a secure compare function.&lt;/p&gt;
-&lt;p&gt;If you use HMAC, people will feel the need to point out that SHA3 (and the truncated SHA2 hashes) can do “KMAC”, which is to say you can just concatenate the key and data and hash them and be secure. This means that in theory HMAC is doing unnecessary extra work with SHA-3 or truncated SHA-2. But who cares? Think of HMAC as cheap insurance for your design, in case someone switches to non-truncated SHA-2.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; custom "keyed hash" constructions, HMAC-MD5, HMAC-SHA1, complex polynomial MACs, encrypted hashes, CRC.&lt;/p&gt;
-&lt;h4&gt;Hashing algorithm&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use SHA256 (SHA-2).&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use SHA-2.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Still SHA-2.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you always care about this.&lt;/p&gt;
-&lt;p&gt;If you can get away with it: use SHA-512/256, which truncates its output and sidesteps length extension attacks.&lt;/p&gt;
-&lt;p&gt;We still think it's less likely that you'll upgrade from SHA-2 to SHA-3 than it is that you'll upgrade from SHA-2 to something faster than SHA-3, and SHA-2 still looks great, so get comfortable and cuddly with SHA-2.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; SHA-1, MD5, MD6.&lt;/p&gt;
-&lt;h4&gt;Random IDs&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use 256-bit random numbers.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use 256-bit random numbers.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt; Use 256-bit random numbers.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you always care about this.&lt;/p&gt;
-&lt;p&gt;From /dev/urandom.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; userspace random number generators, the OpenSSL RNG, havaged, prngd, egd, /dev/random.&lt;/p&gt;
-&lt;h4&gt;Password handling&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: scrypt or PBKDF2.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;:  In order of preference, use scrypt, bcrypt, and then if nothing else is available PBKDF2.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  In order of preference, use scrypt, argon2, bcrypt, and then if nothing else is available PBKDF2.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you accept passwords from users or, anywhere in your system, have human-intelligible secret keys.&lt;/p&gt;
-&lt;p&gt;But, seriously: you can throw a dart at a wall to pick one of these. Technically, argon2 and scrypt are materially better than bcrypt, which is much better than PBKDF2. In practice, it mostly matters that you use a real secure password hash, and not as much which one you use.&lt;/p&gt;
-&lt;p&gt;Don’t build elaborate password-hash-agility schemes.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; SHA-3, naked SHA-2, SHA-1, MD5.&lt;/p&gt;
-&lt;h4&gt;Asymmetric encryption&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use RSAES-OAEP with SHA256 and MGF1+SHA256 bzzrt pop ffssssssst exponent 65537.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use NaCl/libsodium (box / crypto_box).&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use Nacl/libsodium (box / crypto_box).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if&lt;/em&gt;: you need to encrypt the same kind of message to many different people, some of them strangers, and they need to be able to accept the message asynchronously, like it was store-and-forward email, and then decrypt it offline. It's a pretty narrow use case.&lt;/p&gt;
-&lt;p&gt;Of all the cryptographic "right answers", this is the one you're least likely to get right on your own. Don't freelance public key encryption, and don't use a low-level crypto library like OpenSSL or BouncyCastle.&lt;/p&gt;
-&lt;p&gt;Here are several reasons you should stop using RSA and switch to elliptic curve:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;RSA (and DH) drag you towards "backwards compatibility" (ie: downgrade-attack compatibility) with insecure systems.&lt;/li&gt;
-&lt;li&gt;RSA begs implementors to encrypt directly with its public key primitive, which is usually not what you want to do&lt;/li&gt;
-&lt;li&gt;RSA has too many knobs. In modern curve systems, like Curve25519, everything is pre-set for security.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;NaCl uses Curve25519 (the most popular modern curve, carefully designed to eliminate several classes of attacks against the NIST standard curves) in conjunction with a ChaPoly AEAD scheme. Your language will have bindings (or, in the case of Go, its own library implementation) to NaCl/libsodium; use them. Don’t try to assemble this yourself. Libsodium has &lt;a href="https://libsodium.gitbook.io/doc/bindings_for_other_languages"&gt;a list&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Don't use RSA.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; Systems designed after 2015 that use RSA, RSA-PKCS1v15, RSA, ElGamal, I don't know, Merkle-Hellman knapsacks? Just avoid RSA.&lt;/p&gt;
-&lt;h4&gt;Asymmetric signatures&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use RSASSA-PSS with SHA256 then MGF1+SHA256 in tricolor systemic silicate orientation.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use Nacl, Ed25519, or RFC6979.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use Nacl or Ed25519.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if&lt;/em&gt;: you're designing a new cryptocurrency. Or, a system to sign Ruby Gems or Vagrant images, or a DRM scheme, where the authenticity of a series of files arriving at random times needs to be checked offline against the same secret key. Or, you're designing an encrypted message transport.&lt;/p&gt;
-&lt;p&gt;The allegations from the previous answer are incorporated herein as if stated in full.&lt;/p&gt;
-&lt;p&gt;The two dominating use cases within the last 10 years for asymmetric signatures are cryptocurrencies and forward-secret key agreement, as with ECDHE-TLS. The dominating algorithms for these use cases are all elliptic-curve based. Be wary of new systems that use RSA signatures.&lt;/p&gt;
-&lt;p&gt;In the last few years there has been a major shift away from conventional DSA signatures and towards misuse-resistent "deterministic" signature schemes, of which EdDSA and RFC6979 are the best examples. You can think of these schemes as "user-proofed" responses to the Playstation 3 ECDSA flaw, in which reuse of a random number leaked secret keys. Use deterministic signatures in preference to any other signature scheme.&lt;/p&gt;
-&lt;p&gt;Ed25519, the NaCl/libsodium default, is by far the most popular public key signature scheme outside of Bitcoin. It’s misuse-resistant and carefully designed in other ways as well. You shouldn’t freelance this either; get it from NaCl.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; RSA-PKCS1v15, RSA, ECDSA, DSA; really, especially avoid conventional DSA and ECDSA.&lt;/p&gt;
-&lt;h4&gt;Diffie-Hellman&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Operate over the 2048-bit Group #14 with a generator of 2.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Probably still DH-2048, or Nacl.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Probably nothing. Or use Curve25519.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you're designing an encrypted transport or messaging system that will be used someday by a stranger, and so static AES keys won't work.&lt;/p&gt;
-&lt;p&gt;The 2015 version of this document confused the hell out of everyone.&lt;/p&gt;
-&lt;p&gt;Part of the problem is that our “Right Answers” are a response to Colin Percival’s “Right Answers”, and his included a “Diffie-Hellman” answer, as if “Diffie-Hellmanning” was a thing developers routinely do. In reality, developers simply shouldn’t freelance their own encrypted transports. To get a sense of the complexity of this issue, read the documentation for the Noise Protocol Framework. If you’re doing a key-exchange with DH, you probably want an authenticated key exchange (AKE) that resists key compromise impersonation (KCI), and so the primitive you use for DH is not the only important security concern.&lt;/p&gt;
-&lt;p&gt;But whatever.&lt;/p&gt;
-&lt;p&gt;It remains the case: if you can just use NaCl, use NaCl. You don't even have to care what NaCl does. That’s the point of NaCl.&lt;/p&gt;
-&lt;p&gt;Otherwise: use Curve25519. There are libraries for virtually every language. In 2015, we were worried about encouraging people to write their own Curve25519 libraries, with visions of Javascript bignum implementations dancing in our heads. But really, part of the point of Curve25519 is that the entire curve was carefully chosen to minimize implementation errors. Don’t write your own! But really, just use Curve25519.&lt;/p&gt;
-&lt;p&gt;Don’t do ECDH with the NIST curves, where you’ll have to carefully verify elliptic curve points before computing with them to avoid leaking secrets. That attack is very simple to implement, easier than a CBC padding oracle, and far more devastating.&lt;/p&gt;
-&lt;p&gt;The 2015 document included a clause about using DH-1024 in preference to sketchy curve libraries. You know what? That’s still a valid point. Valid and stupid. The way to solve the “DH-1024 vs. sketchy curve library” problem is, the same as the “should I use Blowfish or IDEA?” problem. Don’t have that problem. Use Curve25519.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; conventional DH, SRP, J-PAKE, handshakes and negotiation, elaborate key negotiation schemes that only use block ciphers, srand(time()).*&lt;/p&gt;
-&lt;h4&gt;Website security&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use OpenSSL.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Remains: OpenSSL, or BoringSSL if you can. Or just use AWS ELBs&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use AWS ALB/ELB or OpenSSL, with LetsEncrypt&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you have a website.&lt;/p&gt;
-&lt;p&gt;If you can pay AWS not to care about this problem, we recommend you do that.&lt;/p&gt;
-&lt;p&gt;Otherwise, there was a dark period between 2010 and 2016 where OpenSSL might not have been the right answer, but that time has passed. OpenSSL has gotten better, and, more importantly, OpenSSL is on-the-ball with vulnerability disclosure and response.&lt;/p&gt;
-&lt;p&gt;Using anything besides OpenSSL will drastically complicate your system for little, no, or even negative security benefit. So just keep it simple.&lt;/p&gt;
-&lt;p&gt;Speaking of simple: LetsEncrypt is free and automated. Set up a cron job to re-fetch certificates regularly, and test it.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; offbeat TLS libraries like PolarSSL, GnuTLS, and MatrixSSL.&lt;/p&gt;
-&lt;h4&gt;Client-server application security&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Distribute the server's public RSA key with the client code, and do not use SSL.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use OpenSSL, or BoringSSL if you can. Or just use AWS ELBs&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Use AWS ALB/ELB or OpenSSL, with LetsEncrypt&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; the previous recommendations about public-key crypto were relevant to you.*&lt;/p&gt;
-&lt;p&gt;It seems a little crazy to recommend TLS given its recent history:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The Logjam DH negotiation attack&lt;/li&gt;
-&lt;li&gt;The FREAK export cipher attack&lt;/li&gt;
-&lt;li&gt;The POODLE CBC oracle attack&lt;/li&gt;
-&lt;li&gt;The RC4 fiasco&lt;/li&gt;
-&lt;li&gt;The CRIME compression attack&lt;/li&gt;
-&lt;li&gt;The Lucky13 CBC padding oracle timing attack&lt;/li&gt;
-&lt;li&gt;The BEAST CBC chained IV attack&lt;/li&gt;
-&lt;li&gt;Heartbleed&lt;/li&gt;
-&lt;li&gt;Renegotiation&lt;/li&gt;
-&lt;li&gt;Triple Handshakes&lt;/li&gt;
-&lt;li&gt;Compromised CAs&lt;/li&gt;
-&lt;li&gt;DROWN (though personally we’re warped and an opportunity to play with attacks like DROWN would be in our “pro” column)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Here's why you should still use TLS for your custom transport problem:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;In custom protocols, you don’t have to (and shouldn’t) depend on 3rd party CAs. You don’t even have to use CAs at all (though it’s not hard to set up your own); you can just use a whitelist of self-signed certificates  which is approximately what SSH does by default, and what you’d come up with on your own.&lt;/li&gt;
-&lt;li&gt;Since you’re doing a custom protocol, you can use the best possible TLS cipher suites: TLS 1.2+, Curve25519, and ChaPoly. That eliminates most attacks on TLS. The reason everyone doesn’t do this is that they need backwards-compatibility, but in custom protocols you don’t need that.&lt;/li&gt;
-&lt;li&gt;Many of these attacks only work against browsers, because they rely on the victim accepting and executing attacker-controlled Javascript in order to generate repeated known/chosen plaintexts.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;Avoid:&lt;/em&gt; designing your own encrypted transport, which is a genuinely hard engineering problem; using TLS but in a default configuration, like, with "curl"; using "curl", IPSEC.&lt;/p&gt;
-&lt;h4&gt;Online backups&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Percival, 2009&lt;/em&gt;: Use Tarsnap.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Ptacek, 2015&lt;/em&gt;: Use Tarsnap.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Latacora, 2018:&lt;/em&gt;  Store PMAC-SIV-encrypted arc files to S3 and save fingerprints of your backups to an ERC20-compatible blockchain.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;You care about this if:&lt;/em&gt; you bother backing things up.&lt;/p&gt;
-&lt;p&gt;Just kidding. You should still use Tarsnap.&lt;/p&gt;
-&lt;p&gt;(This post was syndicated on the Latacora blog.)&lt;/p&gt;&lt;/div&gt;</description><category>cryptography</category><guid>https://www.lvh.io/posts/cryptographic-right-answers/</guid><pubDate>Tue, 03 Apr 2018 21:25:00 GMT</pubDate></item></channel></rss>
+board@company.com is going to be pretty effective.&lt;/p&gt;&lt;/div&gt;</description><category>security</category><guid>https://www.lvh.io/posts/gripes-with-google-groups/</guid><pubDate>Tue, 29 May 2018 23:14:00 GMT</pubDate></item></channel></rss>

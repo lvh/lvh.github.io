@@ -1,5 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about clojure)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/clojure.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 04 Nov 2019 17:00:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about clojure)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/clojure.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 24 Nov 2019 19:24:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Clojure and native-image on JDK 11-flavored GraalVM (19.3.0+)</title><link>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;My takeaways from &lt;a href="https://www.graalvm.org/docs/release-notes/19_3/"&gt;the GraalVM 19.3.0 release notes&lt;/a&gt;:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;JDK code inlining support&lt;/li&gt;
+&lt;li&gt;Optional JDK11 support&lt;/li&gt;
+&lt;li&gt;Better Windows support&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;These may not seem like much, but JDK code inlining fixes my one major niggle
+with native-image: it was too hard to get top-notch single-binary TLS, and
+now it just works.&lt;/p&gt;
+&lt;p&gt;(There are lots of other great things that happened in this release! They're
+just not in parts of Graal I use.)&lt;/p&gt;
+&lt;h2&gt;Updating to JDK 11&lt;/h2&gt;
+&lt;p&gt;Updating to JDK 11 is optional, but you might as well get it over with now.&lt;/p&gt;
+&lt;h3&gt;A brief summary of Jigsaw (JDK9+) breakage&lt;/h3&gt;
+&lt;p&gt;There are two things that bit Clojure-using early adopters of JDK 9, both
+consequences of &lt;a href="https://openjdk.java.net/projects/jigsaw/"&gt;Project Jigsaw&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The module system hiding previously-available classes&lt;/li&gt;
+&lt;li&gt;Changes to the way classloaders work&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These two changes broke Clojure and a whole host of common libraries (mostly
+because of the now-unavailable classes) and the two common build tools
+(leiningen and boot, mostly because of the bootclassloader). These were quickly
+resolved and only affect you now if you care about supporting a long range of
+Clojure versions or a long range of JDKs. Since this blog post is about
+native-image, your output is a standalone binary and you get to pick the JDK
+version. However, you still need to know a bit about this background in order to
+understand some of the workarounds necessary for supporting GraalVM native-image
+targeting JDK11 and above. This is happening now because Graal was previously
+targeting JDK8, avoiding all of these issues.&lt;/p&gt;
+&lt;p&gt;The two classes that tend to come up that were often used but hidden in modules
+are &lt;code&gt;java.sql.Timestamp&lt;/code&gt; and &lt;code&gt;javax.xml.bind.DatatypeConverter&lt;/code&gt;. Despite their
+package names, they don't have anything to do with SQL or XML. Clojure used them
+because &lt;code&gt;Timestamp&lt;/code&gt; was the good instant type (&lt;code&gt;java.util.Date&lt;/code&gt; being famously
+bad), and &lt;code&gt;DatatypeConverter&lt;/code&gt; was the good Base64 implementation available
+everywhere.&lt;/p&gt;
+&lt;h3&gt;Example: DatatypeConverter in clj-http-lite&lt;/h3&gt;
+&lt;p&gt;Outside of Clojure, clj-http and clj-http-lite used &lt;code&gt;DatatypeConverter&lt;/code&gt; as well
+(also for base64). clj-http-lite is very popular in native-image Clojure
+projects. Like other libraries, they were quickly patched to support JDK9. The
+patch still attempted to import &lt;code&gt;DatatypeConverter&lt;/code&gt; (see &lt;a href="https://github.com/martinklepsch/clj-http-lite/commit/3f41fc53a1b692549c88a8602e753cfb887330ae"&gt;the actual patch in
+clj-http-lite&lt;/a&gt;), because the Base64 implementation
+replacing it isn't available on every JDK those libraries wanted to support.
+Normally, this is fine: the import fails and the alternative library gets used.
+However, the static analysis step in GraalVM sees the trial import and
+complains:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;oracle&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;graal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;pointsto&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;constraints&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;UnresolvedElementException&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Discovered&lt;/span&gt; &lt;span class="n"&gt;unresolved&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="n"&gt;during&lt;/span&gt; &lt;span class="n"&gt;parsing&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;javax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;xml&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;bind&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;DatatypeConverter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;To&lt;/span&gt; &lt;span class="n"&gt;diagnose&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;issue&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;can&lt;/span&gt; &lt;span class="n"&gt;use&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;allow&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;incomplete&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;classpath&lt;/span&gt; &lt;span class="n"&gt;option&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;missing&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="k"&gt;is&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt; &lt;span class="n"&gt;reported&lt;/span&gt; &lt;span class="n"&gt;at&lt;/span&gt; &lt;span class="n"&gt;run&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="n"&gt;when&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="k"&gt;is&lt;/span&gt; &lt;span class="n"&gt;accessed&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;The classic workaround was to add the module back with &lt;code&gt;--add-modules
+java.xml.bind&lt;/code&gt;. Since it's just a trial import (see patch), you can instead use
+the workaround suggested in the error message (&lt;code&gt;--allow-incomplete-classpath&lt;/code&gt;)
+and it'll work fine. The downside is this moves &lt;em&gt;all&lt;/em&gt; errors to runtime. There's
+a &lt;a href="https://github.com/oracle/graal/issues/1664"&gt;Graal ticket&lt;/a&gt; for a more precise command line
+argument limiting the suppressed error to that class. I'm confident there's
+already a way to express this in Graal command line arguments, but I haven't
+tried to figure out the right incantation yet.&lt;/p&gt;
+&lt;h3&gt;Single binary TLS!&lt;/h3&gt;
+&lt;p&gt;Once you fix the above issue with clj-http-lite, as long as you enable the TLS
+subsystem (&lt;code&gt;--enable-https&lt;/code&gt;), you'll just get single-binary HTTPS with
+libsunec.so under the hood, meaning I can finally close
+&lt;a href="https://github.com/oracle/graal/issues/1336"&gt;#1336&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;&lt;code&gt;locking&lt;/code&gt; errors appear to be gone... sometimes?&lt;/h3&gt;
+&lt;p&gt;Clojure 1.10+ introduces a dependency on clojure.spec. That library is unusual
+because it uses the &lt;code&gt;locking&lt;/code&gt; macro. Ordinarily, the &lt;code&gt;locking&lt;/code&gt; macro is pretty
+rare because Clojure has different, higher-level concurrency primitives.&lt;/p&gt;
+&lt;p&gt;Bytecode verifiers that are more aggressive than those in the JDK would balk at
+the resulting bytecode. Historically this was the Android toolchain, but the
+issue resurfaced with Graal. This got documented in &lt;a href="https://clojure.atlassian.net/browse/CLJ-1472"&gt;CLJ-1472&lt;/a&gt;.
+This issue had a whole myriad of workarounds that mostly involved replacing the
+&lt;code&gt;locking&lt;/code&gt; implementation and then hooking clj loads with dynapath. The most
+common workaround was to just downgrade Clojure to 1.9.0.&lt;/p&gt;
+&lt;p&gt;With Graal 19.3.0, the error appears to have simply disappeared. I don't know
+which Graal change precipitated this, but I'll happily take being able to use
+the current release of Clojure without hacks. (FWIW: this doesn't appear to be
+the case for everyone, so likely some combination of events just made it harder
+to trigger the problem.)&lt;/p&gt;
+&lt;h2&gt;Example project&lt;/h2&gt;
+&lt;p&gt;I updated https://github.com/lvh/cljurl-graalvm-demo if you want to try any of
+this at home. If you're on Linux and want to debug the TLS issues, I wrote
+https://github.com/lvh/nscap specifically for this purpose. It leverages Linux
+namespaces to elegantly capture network traffic for a single process. You can
+then throw the resulting PCAP into e.g. wireguard.&lt;/p&gt;
+&lt;h2&gt;What I'd still love to see in native-image&lt;/h2&gt;
+&lt;p&gt;The compiler is slow. It's in the range of rustc speed: typically faster than
+C++, certainly slower than Go. It eats a lot of RAM. It's fine because I don't
+iterate on the binary version. I develop Clojure apps targeting native-image as
+if they're normal Clojure apps and then eventually run some end-to-end tests on
+the binary. But you knocked out my #1 feature so now I have a new one 😊&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><guid>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</guid><pubDate>Sun, 24 Nov 2019 16:50:15 GMT</pubDate></item><item><title>Smaller Clojure Docker builds with multi-stage builds</title><link>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;A common pattern in Docker is to use a separate build environment from the
 runtime environment. Many platforms have different requirements when you're
 generating a runnable artifact than when you're running it.&lt;/p&gt;
 &lt;p&gt;In languages like Go, Rust or C, where the most common implementations produce

@@ -75,7 +75,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/index-6.html</loc>
-  <lastmod>2019-11-04T17:00:00Z</lastmod>
+  <lastmod>2019-11-24T19:19:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack/</loc>
@@ -212,6 +212,10 @@
  <url>
   <loc>https://www.lvh.io/posts/call-for-proposal-proposals/</loc>
   <lastmod>2019-11-04T17:00:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</loc>
+  <lastmod>2019-11-24T19:19:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/conflicting-threat-models/</loc>

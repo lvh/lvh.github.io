@@ -838,8 +838,16 @@ magically work.</p>
 <p>A different way to implement this would be to walk this part of the parse tree
 manually.</p>
 <h2>Backrefs</h2>
+<p>Backreferences are an interesting challenge because so far we've just assumed we
+can recurisvely turn the regex parse tree into goals piecemeal, and backrefs
+break that assumption: they necessarily depend on a totally different part of
+the parse tree. There are two ways to address that:</p>
+<ol>
+<li>Change the implementation to</li>
+<li>Cheat and introduce side effects to propagate data ()</li>
+</ol>
 <p>Like class negation, one way to implement this would be to walk the parse tree
-in advance instead of just trying to recursively walk it once.</p>
+instead of just trying to recursively walk it once.</p>
 <h2>Conclusion</h2>
 <p>This introduction was a little unorthodox. Most texts focus on introducing
 different primitives, have you write small static rules and build up from there.
