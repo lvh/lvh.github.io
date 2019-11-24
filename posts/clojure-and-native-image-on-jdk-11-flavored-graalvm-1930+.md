@@ -9,7 +9,7 @@
 .. type: text
 -->
 
-My takeaways from [the release notes][https://www.graalvm.org/docs/release-notes/19_3/]:
+My takeaways from [the release notes][relnotes]
 
 1. JDK code inlining support
 1. Optional JDK11 support
@@ -21,6 +21,8 @@ now it just works.
 
 (There are lots of other great things that happened in this release! They're
 just not in parts of Graal I use.)
+
+[relnotes]: https://www.graalvm.org/docs/release-notes/19_3/
 
 # Updating to JDK 11
 
