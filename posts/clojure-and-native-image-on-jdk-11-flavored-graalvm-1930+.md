@@ -88,7 +88,7 @@ subsystem (`--enable-https`), you'll just get single-binary HTTPS with
 libsunec.so under the hood, meaning I can finally close
 [#1336][single-binary-tls].
 
-## `locking` errors are fixed
+## `locking` errors appear to be gone... sometimes?
 
 Clojure 1.10+ introduces a dependency on clojure.spec. That library is unusual
 because it uses the `locking` macro. Ordinarily, the `locking` macro is pretty
@@ -103,7 +103,9 @@ common workaround was to just downgrade Clojure to 1.9.0.
 
 With Graal 19.3.0, the error appears to have simply disappeared. I don't know
 which Graal change precipitated this, but I'll happily take being able to use
-the current release of Clojure.
+the current release of Clojure without hacks. (FWIW: this doesn't appear to be
+the case for everyone, so likely some combination of events just made it harder
+to trigger the problem.)
 
 [locking-macro]: https://clojure.atlassian.net/browse/CLJ-1472
 
