@@ -9,7 +9,7 @@
 .. type: text
 -->
 
-My takeaways from [the release notes][relnotes]
+My takeaways from [the GraalVM 19.3.0 release notes][relnotes]:
 
 1. JDK code inlining support
 1. Optional JDK11 support
@@ -29,6 +29,7 @@ just not in parts of Graal I use.)
 Updating to JDK 11 is optional, but you might as well get it over with now.
 
 ## A brief summary of Jigsaw (JDK9+) breakages
+## A brief summary of Jigsaw (JDK9+) breakage
 
 There are two things that bit Clojure-using early adopters of JDK 9, both
 consequences of [Project Jigsaw][jigsaw]:
