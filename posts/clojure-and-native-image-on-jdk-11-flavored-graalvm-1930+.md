@@ -28,7 +28,6 @@ just not in parts of Graal I use.)
 
 Updating to JDK 11 is optional, but you might as well get it over with now.
 
-## A brief summary of Jigsaw (JDK9+) breakages
 ## A brief summary of Jigsaw (JDK9+) breakage
 
 There are two things that bit Clojure-using early adopters of JDK 9, both
@@ -112,11 +111,14 @@ to trigger the problem.)
 
 # Example project
 
-I updated https://github.com/lvh/cljurl-graalvm-demo if you want to try any of
+I updated [cljurl-graalvm-demo][cljurl-graalvm-demo] if you want to try any of
 this at home. If you're on Linux and want to debug the TLS issues, I wrote
-https://github.com/lvh/nscap specifically for this purpose. It leverages Linux
-namespaces to elegantly capture network traffic for a single process. You can
-then throw the resulting PCAP into e.g. wireguard.
+[nscap][nscap] specifically for this purpose. It leverages Linux namespaces to
+elegantly capture network traffic for a single process. You can then throw the
+resulting PCAP into e.g. wireshark.
+
+[cljurl-graalvm-demo]: https://github.com/lvh/cljurl-graalvm-demo
+[nscap]: https://github.com/lvh/nscap
 
 # What I'd still love to see in native-image
 
