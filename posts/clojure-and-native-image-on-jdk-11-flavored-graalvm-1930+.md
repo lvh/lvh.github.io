@@ -101,11 +101,11 @@ This issue had a whole myriad of workarounds that mostly involved replacing the
 `locking` implementation and then hooking clj loads with dynapath. The most
 common workaround was to just downgrade Clojure to 1.9.0.
 
-With Graal 19.3.0, the error appears to have simply disappeared. I don't know
-which Graal change precipitated this, but I'll happily take being able to use
-the current release of Clojure without hacks. (FWIW: this doesn't appear to be
-the case for everyone, so likely some combination of events just made it harder
-to trigger the problem.)
+With Graal 19.3.0, the error appears to have simply disappeared in my tests so
+far. I don't know which Graal change precipitated this, but I'll happily take
+being able to use the current release of Clojure without hacks. This
+doesn't appear to be the case for everyone, so likely some combination of events
+just made it harder to trigger the problem.
 
 [locking-macro]: https://clojure.atlassian.net/browse/CLJ-1472
 
