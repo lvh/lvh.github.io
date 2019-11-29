@@ -895,6 +895,10 @@ consequence of the problem we solved, not a principled stance on how to use
 `core.logic` let alone teach it. Reading [The Little Schemer][tls] is still a
 good idea if you want to learn to write your own programs.
 
+(If you want a logic program where the goals are not fixed in advance, you might
+want to just stick to the JVM so there are no restrictions on eval use. I
+haven't tried running core.logic on [sci](https://github.com/borkdude/sci).)
+
 # Next steps
 
 These are things I thought were neat but didn't make sense in the original text.
