@@ -14,11 +14,10 @@
 <meta property="og:site_name" content="lvh">
 <meta property="og:title" content="Solving regex crosswords">
 <meta property="og:url" content="https://www.lvh.io/posts/solving-regex-crosswords/">
-<meta property="og:description" content="DRAFT!
-Regex Crossword is a puzzle game to help you
+<meta property="og:description" content="Regex Crossword is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
 on GitHub as lvh/regex-crossword.
-This blog post walks you through ho">
+This blog post walks you through how I wro">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2019-10-25T19:36:29-07:00">
 <meta property="article:tag" content="clojure">
@@ -101,7 +100,6 @@ navbar-dark bg-dark
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p><strong>DRAFT!</strong></p>
 <p><a href="https://regexcrossword.com/">Regex Crossword</a> is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
 on GitHub as <a href="https://github.com/lvh/regex-crossword"><code>lvh/regex-crossword</code></a>.
@@ -802,6 +800,7 @@ we already use, and just a Clojure description of what a range <em>is</em>:</p>
 </pre>
 
 
+<p>Implemented by:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:range</span>
   <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="p">[</span><span class="nv">lvar</span> <span class="ss">:as</span> <span class="nv">lvars</span><span class="p">]]</span>
   <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">-&gt; </span><span class="nv">lvars</span> <span class="nb">count </span><span class="p">(</span><span class="nb">= </span><span class="mi">1</span><span class="p">))</span>
@@ -815,7 +814,13 @@ we already use, and just a Clojure description of what a range <em>is</em>:</p>
 <p>Because ranges like <code>A-Z0-9</code> are implemented using <code>:class-union</code>, they just
 magically work.</p>
 <h3>Simple classes</h3>
+<p>"Simple classes" are things like <code>\d</code>, <code>\w</code>, <code>\s</code>. You know how to implement
+these already.</p>
 <h2>Class negation</h2>
+<p>Class negation is actually surprisingly tricky! Many logic systems, core.logic
+included, focus on positive statements. There is support for disunification
+(e.g. this lvar will never be 5) with <code>l/!=</code>. There's also more general support
+for negation as a constraint, as used here:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:class-negation</span>
     <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
     <span class="p">(</span><span class="nf">l/and*</span>
@@ -823,31 +828,47 @@ magically work.</p>
 </pre>
 
 
+<p>Unfortunately nafc is marked as experimental and for good reason. For one, it
+only works if the vars are ground. Docstring claims execution will be delayed if
+they aren't... but that doesn't appear to be true. See
+<a href="https://clojure.atlassian.net/browse/LOGIC-172">LOGIC-172</a> for details. This
+problem annoyingly surfaced depending on the order clauses were evaluated in
+(since that changed if they were ground or not). I was able to get it to work
+consistently by adding a hack to make sure the vars are ground, and adding a
+test to make sure it would work even if this was the first clause:</p>
 <pre class="code literal-block"><span></span><span class="p">(</span><span class="kd">defmethod </span><span class="nv">re-&gt;goal</span> <span class="ss">:class-negation</span>
   <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">elements</span><span class="p">]}</span> <span class="nv">lvars</span><span class="p">]</span>
   <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">neg-goal</span> <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">e</span> <span class="nv">elements</span><span class="p">]</span> <span class="p">(</span><span class="nf">l/nafc</span> <span class="nv">re-&gt;goal</span> <span class="nv">e</span> <span class="nv">lvars</span><span class="p">)))</span>
         <span class="nv">domain</span> <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nb">range </span><span class="p">(</span><span class="nb">int </span><span class="sc">\A</span><span class="p">)</span> <span class="p">(</span><span class="nb">inc </span><span class="p">(</span><span class="nb">int </span><span class="sc">\Z</span><span class="p">)))</span> <span class="p">(</span><span class="nb">map </span><span class="nv">char</span><span class="p">))</span>
         <span class="nv">ground-hack</span> <span class="p">(</span><span class="nf">l/and*</span> <span class="p">(</span><span class="nb">for </span><span class="p">[</span><span class="nv">v</span> <span class="nv">lvars</span><span class="p">]</span> <span class="p">(</span><span class="nf">l/membero</span> <span class="nv">v</span> <span class="nv">domain</span><span class="p">)))]</span>
-    <span class="c1">;; HACK: nafc only works if the vars are ground. Docstring claims execution</span>
-    <span class="c1">;; will be delayed if they aren't... but that doesn't appear to be true.</span>
-    <span class="c1">;; https://clojure.atlassian.net/browse/LOGIC-172</span>
     <span class="p">(</span><span class="nf">l/all</span> <span class="nv">ground-hack</span> <span class="nv">neg-goal</span><span class="p">)))</span>
 </pre>
 
 
 <p>A different way to implement this would be to walk this part of the parse tree
-manually.</p>
+manually. Once you find a negation, you look at the rest of the parse tree and
+aggregate all the classes it covers. Then, you use plain negation
+(disunification), which has no caveats. This is what I ended up implementing; if
+you're interested you can read the details <a href="https://github.com/lvh/regex-crossword/blob/fd00aa5f97f285c2bcf4c539144e96d18573f755/src/lvh/regex_crossword/logic.clj#L99">in the implementation</a>.</p>
 <h2>Backrefs</h2>
 <p>Backreferences are an interesting challenge because so far we've just assumed we
 can recurisvely turn the regex parse tree into goals piecemeal, and backrefs
 break that assumption: they necessarily depend on a totally different part of
 the parse tree. There are two ways to address that:</p>
 <ol>
-<li>Change the implementation to</li>
-<li>Cheat and introduce side effects to propagate data ()</li>
+<li>Change the implementation to produce a data structure instead of logic goals
+   directly, and then do something eval-like later to turn the data structure
+   into goals</li>
+<li>Cheat and introduce side effects to propagate within the tree walk.</li>
 </ol>
-<p>Like class negation, one way to implement this would be to walk the parse tree
-instead of just trying to recursively walk it once.</p>
+<p>The first is clearly the "good" answer. It would also enable other improvements,
+like tree-level performance optimization. It's also a good chunk of work, and I
+had spent enough time on this weekend project already. So, instead, I did the
+hacky side-effecty version. This turned out to be tricky to implement not from a
+logic perspective (that part is easy) but because the underlying parser I had
+forklifted was from a project that didn't support backrefs, and so it didn't
+bother to parse them out correctly. You can see how I hacked around that <a href="https://github.com/lvh/regex-crossword/blob/fd00aa5f97f285c2bcf4c539144e96d18573f755/src/lvh/regex_crossword/logic.clj#L126">in the
+implementation</a>.</p>
 <h2>Conclusion</h2>
 <p>This introduction was a little unorthodox. Most texts focus on introducing
 different primitives, have you write small static rules and build up from there.

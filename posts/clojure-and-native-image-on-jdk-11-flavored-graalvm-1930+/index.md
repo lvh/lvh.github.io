@@ -101,21 +101,24 @@ This issue had a whole myriad of workarounds that mostly involved replacing the
 `locking` implementation and then hooking clj loads with dynapath. The most
 common workaround was to just downgrade Clojure to 1.9.0.
 
-With Graal 19.3.0, the error appears to have simply disappeared. I don't know
-which Graal change precipitated this, but I'll happily take being able to use
-the current release of Clojure without hacks. (FWIW: this doesn't appear to be
-the case for everyone, so likely some combination of events just made it harder
-to trigger the problem.)
+With Graal 19.3.0, the error appears to have simply disappeared in my tests so
+far. I don't know which Graal change precipitated this, but I'll happily take
+being able to use the current release of Clojure without hacks. This
+doesn't appear to be the case for everyone, so likely some combination of events
+just made it harder to trigger the problem.
 
 [locking-macro]: https://clojure.atlassian.net/browse/CLJ-1472
 
 # Example project
 
-I updated https://github.com/lvh/cljurl-graalvm-demo if you want to try any of
+I updated [cljurl-graalvm-demo][cljurl-graalvm-demo] if you want to try any of
 this at home. If you're on Linux and want to debug the TLS issues, I wrote
-https://github.com/lvh/nscap specifically for this purpose. It leverages Linux
-namespaces to elegantly capture network traffic for a single process. You can
-then throw the resulting PCAP into e.g. wireguard.
+[nscap][nscap] specifically for this purpose. It leverages Linux namespaces to
+elegantly capture network traffic for a single process. You can then throw the
+resulting PCAP into e.g. wireshark.
+
+[cljurl-graalvm-demo]: https://github.com/lvh/cljurl-graalvm-demo
+[nscap]: https://github.com/lvh/nscap
 
 # What I'd still love to see in native-image
 

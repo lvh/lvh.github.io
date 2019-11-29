@@ -10,8 +10,6 @@
 .. type: text
 -->
 
-**DRAFT!**
-
 [Regex Crossword](https://regexcrossword.com/) is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
 on GitHub as [`lvh/regex-crossword`](https://github.com/lvh/regex-crossword).
@@ -803,6 +801,8 @@ we already use, and just a Clojure description of what a range *is*:
             (-> "[A-F]" cre/parse (rcl/re->goal [q])))))
 ```
 
+Implemented by:
+
 ```clojure
 (defmethod re->goal :range
   [{:keys [elements]} [lvar :as lvars]]
@@ -818,7 +818,15 @@ magically work.
 
 ## Simple classes
 
+"Simple classes" are things like `\d`, `\w`, `\s`. You know how to implement
+these already.
+
 # Class negation
+
+Class negation is actually surprisingly tricky! Many logic systems, core.logic
+included, focus on positive statements. There is support for disunification
+(e.g. this lvar will never be 5) with `l/!=`. There's also more general support
+for negation as a constraint, as used here:
 
 ```clojure
 (defmethod re->goal :class-negation
@@ -827,20 +835,31 @@ magically work.
      (for [e elements] (l/nafc re->goal e lvars))))
 ```
 
+Unfortunately nafc is marked as experimental and for good reason. For one, it
+only works if the vars are ground. Docstring claims execution will be delayed if
+they aren't... but that doesn't appear to be true. See
+[LOGIC-172](https://clojure.atlassian.net/browse/LOGIC-172) for details. This
+problem annoyingly surfaced depending on the order clauses were evaluated in
+(since that changed if they were ground or not). I was able to get it to work
+consistently by adding a hack to make sure the vars are ground, and adding a
+test to make sure it would work even if this was the first clause:
+
 ```clojure
 (defmethod re->goal :class-negation
   [{:keys [elements]} lvars]
   (let [neg-goal (l/and* (for [e elements] (l/nafc re->goal e lvars)))
         domain (->> (range (int \A) (inc (int \Z))) (map char))
         ground-hack (l/and* (for [v lvars] (l/membero v domain)))]
-    ;; HACK: nafc only works if the vars are ground. Docstring claims execution
-    ;; will be delayed if they aren't... but that doesn't appear to be true.
-    ;; https://clojure.atlassian.net/browse/LOGIC-172
     (l/all ground-hack neg-goal)))
 ```
 
 A different way to implement this would be to walk this part of the parse tree
-manually.
+manually. Once you find a negation, you look at the rest of the parse tree and
+aggregate all the classes it covers. Then, you use plain negation
+(disunification), which has no caveats. This is what I ended up implementing; if
+you're interested you can read the details [in the implementation][class-neg].
+
+[class-neg]: https://github.com/lvh/regex-crossword/blob/fd00aa5f97f285c2bcf4c539144e96d18573f755/src/lvh/regex_crossword/logic.clj#L99
 
 # Backrefs
 
@@ -849,13 +868,21 @@ can recurisvely turn the regex parse tree into goals piecemeal, and backrefs
 break that assumption: they necessarily depend on a totally different part of
 the parse tree. There are two ways to address that:
 
-1. Change the implementation to
-2. Cheat and introduce side effects to propagate data ()
+1. Change the implementation to produce a data structure instead of logic goals
+   directly, and then do something eval-like later to turn the data structure
+   into goals
+2. Cheat and introduce side effects to propagate within the tree walk.
 
-Like class negation, one way to implement this would be to walk the parse tree
-instead of just trying to recursively walk it once.
+The first is clearly the "good" answer. It would also enable other improvements,
+like tree-level performance optimization. It's also a good chunk of work, and I
+had spent enough time on this weekend project already. So, instead, I did the
+hacky side-effecty version. This turned out to be tricky to implement not from a
+logic perspective (that part is easy) but because the underlying parser I had
+forklifted was from a project that didn't support backrefs, and so it didn't
+bother to parse them out correctly. You can see how I hacked around that [in the
+implementation][backrefs].
 
-
+[backrefs]: https://github.com/lvh/regex-crossword/blob/fd00aa5f97f285c2bcf4c539144e96d18573f755/src/lvh/regex_crossword/logic.clj#L126
 
 # Conclusion
 

@@ -159,17 +159,17 @@ issue resurfaced with Graal. This got documented in <a href="https://clojure.atl
 This issue had a whole myriad of workarounds that mostly involved replacing the
 <code>locking</code> implementation and then hooking clj loads with dynapath. The most
 common workaround was to just downgrade Clojure to 1.9.0.</p>
-<p>With Graal 19.3.0, the error appears to have simply disappeared. I don't know
-which Graal change precipitated this, but I'll happily take being able to use
-the current release of Clojure without hacks. (FWIW: this doesn't appear to be
-the case for everyone, so likely some combination of events just made it harder
-to trigger the problem.)</p>
+<p>With Graal 19.3.0, the error appears to have simply disappeared in my tests so
+far. I don't know which Graal change precipitated this, but I'll happily take
+being able to use the current release of Clojure without hacks. This
+doesn't appear to be the case for everyone, so likely some combination of events
+just made it harder to trigger the problem.</p>
 <h2>Example project</h2>
-<p>I updated https://github.com/lvh/cljurl-graalvm-demo if you want to try any of
+<p>I updated <a href="https://github.com/lvh/cljurl-graalvm-demo">cljurl-graalvm-demo</a> if you want to try any of
 this at home. If you're on Linux and want to debug the TLS issues, I wrote
-https://github.com/lvh/nscap specifically for this purpose. It leverages Linux
-namespaces to elegantly capture network traffic for a single process. You can
-then throw the resulting PCAP into e.g. wireguard.</p>
+<a href="https://github.com/lvh/nscap">nscap</a> specifically for this purpose. It leverages Linux namespaces to
+elegantly capture network traffic for a single process. You can then throw the
+resulting PCAP into e.g. wireshark.</p>
 <h2>What I'd still love to see in native-image</h2>
 <p>The compiler is slow. It's in the range of rustc speed: typically faster than
 C++, certainly slower than Go. It eats a lot of RAM. It's fine because I don't
