@@ -939,6 +939,16 @@ Wikipedia page, use something like TF/IDF to find important words, filter by the
 appropriate size, and introduce them as constraints. I don't expect this will
 speed anything up much even if you discount the initial step.
 
+## Hexagon shaped puzzles
+
+I made these work, but didn't hook it up to the solver permanently (mostly
+because I lost interest). I like hex grids a lot, but they're not interesting
+from a logic perspective so I didn't cover them in this post. You can check out
+[the implementation][hexgrid] but be warned: it's mostly just some tedious bean
+counting.
+
+[hexgrid]: https://github.com/lvh/regex-crossword/blob/master/src/lvh/regex_crossword/slices.clj
+
 [how-to-play]: https://regexcrossword.com/howtoplay
 [ccl]: https://github.com/clojure/core.logic
 [tls]: https://www.amazon.com/Little-Schemer-Daniel-P-Friedman/dp/0262560992
