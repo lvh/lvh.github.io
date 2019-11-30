@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 30 Nov 2019 18:11:52 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Clojure and native-image on JDK 11-flavored GraalVM (19.3.0+)</title><link>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;My takeaways from &lt;a href="https://www.graalvm.org/docs/release-notes/19_3/"&gt;the GraalVM 19.3.0 release notes&lt;/a&gt;:&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh</title><link>https://www.lvh.io/</link><description>lvh's blog</description><atom:link href="https://www.lvh.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 30 Nov 2019 18:40:56 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Clojure and native-image on JDK 11-flavored GraalVM (19.3.0+)</title><link>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;My takeaways from &lt;a href="https://www.graalvm.org/docs/release-notes/19_3/"&gt;the GraalVM 19.3.0 release notes&lt;/a&gt;:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;JDK code inlining support&lt;/li&gt;
 &lt;li&gt;Optional JDK11 support&lt;/li&gt;
@@ -62,21 +62,6 @@ tried to figure out the right incantation yet.&lt;/p&gt;
 subsystem (&lt;code&gt;--enable-https&lt;/code&gt;), you'll just get single-binary HTTPS with
 libsunec.so under the hood, meaning I can finally close
 &lt;a href="https://github.com/oracle/graal/issues/1336"&gt;#1336&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;locking&lt;/code&gt; errors appear to be gone... sometimes?&lt;/h3&gt;
-&lt;p&gt;Clojure 1.10+ introduces a dependency on clojure.spec. That library is unusual
-because it uses the &lt;code&gt;locking&lt;/code&gt; macro. Ordinarily, the &lt;code&gt;locking&lt;/code&gt; macro is pretty
-rare because Clojure has different, higher-level concurrency primitives.&lt;/p&gt;
-&lt;p&gt;Bytecode verifiers that are more aggressive than those in the JDK would balk at
-the resulting bytecode. Historically this was the Android toolchain, but the
-issue resurfaced with Graal. This got documented in &lt;a href="https://clojure.atlassian.net/browse/CLJ-1472"&gt;CLJ-1472&lt;/a&gt;.
-This issue had a whole myriad of workarounds that mostly involved replacing the
-&lt;code&gt;locking&lt;/code&gt; implementation and then hooking clj loads with dynapath. The most
-common workaround was to just downgrade Clojure to 1.9.0.&lt;/p&gt;
-&lt;p&gt;With Graal 19.3.0, the error appears to have simply disappeared in my tests so
-far. I don't know which Graal change precipitated this, but I'll happily take
-being able to use the current release of Clojure without hacks. This
-doesn't appear to be the case for everyone, so likely some combination of events
-just made it harder to trigger the problem.&lt;/p&gt;
 &lt;h2&gt;Example project&lt;/h2&gt;
 &lt;p&gt;I updated &lt;a href="https://github.com/lvh/cljurl-graalvm-demo"&gt;cljurl-graalvm-demo&lt;/a&gt; if you want to try any of
 this at home. If you're on Linux and want to debug the TLS issues, I wrote
@@ -88,7 +73,11 @@ resulting PCAP into e.g. wireshark.&lt;/p&gt;
 C++, certainly slower than Go. It eats a lot of RAM. It's fine because I don't
 iterate on the binary version. I develop Clojure apps targeting native-image as
 if they're normal Clojure apps and then eventually run some end-to-end tests on
-the binary. But you knocked out my #1 feature so now I have a new one 😊&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><guid>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</guid><pubDate>Sun, 24 Nov 2019 16:50:15 GMT</pubDate></item><item><title>Solving regex crosswords</title><link>https://www.lvh.io/posts/solving-regex-crosswords/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="https://regexcrossword.com/"&gt;Regex Crossword&lt;/a&gt; is a puzzle game to help you
+the binary. But you knocked out my #1 feature so now I have a new one 😊&lt;/p&gt;
+&lt;h2&gt;Corrections&lt;/h2&gt;
+&lt;p&gt;I previously thought/posted that the locking macro (&lt;a href="https://clojure.atlassian.net/browse/CLJ-1472"&gt;CLJ-1472&lt;/a&gt;)
+problems appear to be gone or at least reduced, but I have been unable to
+consistently reproduce that and others have reported no change.&lt;/p&gt;&lt;/div&gt;</description><category>clojure</category><guid>https://www.lvh.io/posts/clojure-and-native-image-on-jdk-11-flavored-graalvm-1930%2B/</guid><pubDate>Sun, 24 Nov 2019 16:50:15 GMT</pubDate></item><item><title>Solving regex crosswords</title><link>https://www.lvh.io/posts/solving-regex-crosswords/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="https://regexcrossword.com/"&gt;Regex Crossword&lt;/a&gt; is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
 on GitHub as &lt;a href="https://github.com/lvh/regex-crossword"&gt;&lt;code&gt;lvh/regex-crossword&lt;/code&gt;&lt;/a&gt;. If
 you're on amd64 Linux, you can try the &lt;a href="https://github.com/lvh/regex-crossword/releases/tag/0.1.0"&gt;demo binary too&lt;/a&gt;. This blog post

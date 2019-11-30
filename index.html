@@ -148,22 +148,6 @@ tried to figure out the right incantation yet.</p>
 subsystem (<code>--enable-https</code>), you'll just get single-binary HTTPS with
 libsunec.so under the hood, meaning I can finally close
 <a href="https://github.com/oracle/graal/issues/1336">#1336</a>.</p>
-<h3>
-<code>locking</code> errors appear to be gone... sometimes?</h3>
-<p>Clojure 1.10+ introduces a dependency on clojure.spec. That library is unusual
-because it uses the <code>locking</code> macro. Ordinarily, the <code>locking</code> macro is pretty
-rare because Clojure has different, higher-level concurrency primitives.</p>
-<p>Bytecode verifiers that are more aggressive than those in the JDK would balk at
-the resulting bytecode. Historically this was the Android toolchain, but the
-issue resurfaced with Graal. This got documented in <a href="https://clojure.atlassian.net/browse/CLJ-1472">CLJ-1472</a>.
-This issue had a whole myriad of workarounds that mostly involved replacing the
-<code>locking</code> implementation and then hooking clj loads with dynapath. The most
-common workaround was to just downgrade Clojure to 1.9.0.</p>
-<p>With Graal 19.3.0, the error appears to have simply disappeared in my tests so
-far. I don't know which Graal change precipitated this, but I'll happily take
-being able to use the current release of Clojure without hacks. This
-doesn't appear to be the case for everyone, so likely some combination of events
-just made it harder to trigger the problem.</p>
 <h2>Example project</h2>
 <p>I updated <a href="https://github.com/lvh/cljurl-graalvm-demo">cljurl-graalvm-demo</a> if you want to try any of
 this at home. If you're on Linux and want to debug the TLS issues, I wrote
@@ -176,6 +160,10 @@ C++, certainly slower than Go. It eats a lot of RAM. It's fine because I don't
 iterate on the binary version. I develop Clojure apps targeting native-image as
 if they're normal Clojure apps and then eventually run some end-to-end tests on
 the binary. But you knocked out my #1 feature so now I have a new one 😊</p>
+<h2>Corrections</h2>
+<p>I previously thought/posted that the locking macro (<a href="https://clojure.atlassian.net/browse/CLJ-1472">CLJ-1472</a>)
+problems appear to be gone or at least reduced, but I have been unable to
+consistently reproduce that and others have reported no change.</p>
 </div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/solving-regex-crosswords/" class="u-url">Solving regex crosswords</a></h1>
