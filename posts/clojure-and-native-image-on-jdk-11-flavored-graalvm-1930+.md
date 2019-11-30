@@ -88,27 +88,6 @@ subsystem (`--enable-https`), you'll just get single-binary HTTPS with
 libsunec.so under the hood, meaning I can finally close
 [#1336][single-binary-tls].
 
-## `locking` errors appear to be gone... sometimes?
-
-Clojure 1.10+ introduces a dependency on clojure.spec. That library is unusual
-because it uses the `locking` macro. Ordinarily, the `locking` macro is pretty
-rare because Clojure has different, higher-level concurrency primitives.
-
-Bytecode verifiers that are more aggressive than those in the JDK would balk at
-the resulting bytecode. Historically this was the Android toolchain, but the
-issue resurfaced with Graal. This got documented in [CLJ-1472][locking-macro].
-This issue had a whole myriad of workarounds that mostly involved replacing the
-`locking` implementation and then hooking clj loads with dynapath. The most
-common workaround was to just downgrade Clojure to 1.9.0.
-
-With Graal 19.3.0, the error appears to have simply disappeared in my tests so
-far. I don't know which Graal change precipitated this, but I'll happily take
-being able to use the current release of Clojure without hacks. This
-doesn't appear to be the case for everyone, so likely some combination of events
-just made it harder to trigger the problem.
-
-[locking-macro]: https://clojure.atlassian.net/browse/CLJ-1472
-
 # Example project
 
 I updated [cljurl-graalvm-demo][cljurl-graalvm-demo] if you want to try any of
@@ -127,6 +106,14 @@ C++, certainly slower than Go. It eats a lot of RAM. It's fine because I don't
 iterate on the binary version. I develop Clojure apps targeting native-image as
 if they're normal Clojure apps and then eventually run some end-to-end tests on
 the binary. But you knocked out my #1 feature so now I have a new one 😊
+
+# Corrections
+
+I previously thought/posted that the locking macro ([CLJ-1472][locking-macro])
+problems appear to be gone or at least reduced, but I have been unable to
+consistently reproduce that and others have reported no change.
+
+[locking-macro]: https://clojure.atlassian.net/browse/CLJ-1472
 
 [specific-incomplete-classpath]: https://github.com/oracle/graal/issues/1664
 [clj-http-lite-base64]: https://github.com/martinklepsch/clj-http-lite/commit/3f41fc53a1b692549c88a8602e753cfb887330ae
