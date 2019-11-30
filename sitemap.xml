@@ -75,7 +75,7 @@
  </url>
  <url>
   <loc>https://www.lvh.io/index-6.html</loc>
-  <lastmod>2019-11-24T19:19:00Z</lastmod>
+  <lastmod>2019-11-30T18:11:00Z</lastmod>
  </url>
  <url>
   <loc>https://www.lvh.io/posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack/</loc>
@@ -295,6 +295,10 @@
  </url>
  <url>
   <loc>https://www.lvh.io/posts/smaller-clojure-docker-builds-with-multi-stage-builds/</loc>
+  <lastmod>2019-11-04T17:00:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://www.lvh.io/posts/solving-regex-crosswords/</loc>
   <lastmod>2019-11-04T17:00:00Z</lastmod>
  </url>
  <url>
