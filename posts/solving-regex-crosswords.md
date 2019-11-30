@@ -3,7 +3,7 @@
 .. slug: solving-regex-crosswords
 .. date: 2019-10-25 19:36:29 UTC-07:00
 .. tags: clojure
-.. status: private
+.. status:
 .. category:
 .. link:
 .. description:
@@ -12,8 +12,11 @@
 
 [Regex Crossword](https://regexcrossword.com/) is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
-on GitHub as [`lvh/regex-crossword`](https://github.com/lvh/regex-crossword).
-This blog post walks you through how I wrote it using logic programming.
+on GitHub as [`lvh/regex-crossword`](https://github.com/lvh/regex-crossword). If
+you're on amd64 Linux, you can try the [demo binary too][demo]. This blog post
+walks you through how I wrote it using logic programming.
+
+[demo]: https://github.com/lvh/regex-crossword/releases/tag/0.1.0
 
 To me this game feels more like Sudoku than a crossword. When you solve a
 crossword, you start by filling out the words you're certain of and use those
