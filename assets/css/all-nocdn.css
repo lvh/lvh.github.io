@@ -915,6 +915,15 @@ s::after {
     img#logo {
         display: none !important;
     }
+
+    .body-content p, .body-content blockquote {
+        text-align: initial;
+        margin-bottom: 1em;
+    }
+
+    .body-content p, .body-content li, .body-content blockquote {
+        line-height: 150%;
+    }
 }
 
 @media (min-width: 1024px) {
