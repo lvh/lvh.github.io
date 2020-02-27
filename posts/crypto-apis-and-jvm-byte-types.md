@@ -185,7 +185,7 @@ we're dispatching on types, which comes with its own set of issues. In the
 next blog post, I'll go into more detail on how that works, with a bunch of
 benchmarks. Stay tuned!
 
-[tradeoffs]: /posts/tradeoffs-in-cryptographic-api-design.html
+[tradeoffs]: /posts/tradeoffs-in-cryptographic-api-design
 [caesium]: https://github.com/lvh/caesium
 [twisted]: https://twistedmatrix.com/
 [manifold]: https://github.com/ztellman/manifold
