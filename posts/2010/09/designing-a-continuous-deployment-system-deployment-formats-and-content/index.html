@@ -28,10 +28,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,8 +100,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<div>Hi and welcome again to my articles on continuous deployment! In this article, I'm going to talk about <i>what</i> exactly I think you should deploy and what format you should use to deploy it in.</div>
+    <div>Hi and welcome again to my articles on continuous deployment! In this article, I'm going to talk about <i>what</i> exactly I think you should deploy and what format you should use to deploy it in.</div>
 
 <p></p> <div>Again, the stuff here probably isn't super controversial. I'm probably not kicking any shins in this one unless you've already done continuous deployment and you picked something else. Analogous with the last article, if you don't really care about deployment formats, save yourself the time and don't bother reading.</div> <p></p>
 <div>When getting in touch with a few people I know are doing continuous deployment, there are a number of things I've heard people say about formats and what exactly to deploy. Here's what they used:</div> <div><ol>
@@ -117,7 +117,6 @@ navbar-dark bg-dark
 <div>Another thing I've seen people package is their development environment. Unless you're also using this as the base for your tests, I think this is a very bad idea. I think we've all had cases where something worked fine on a development box, and started breaking for new checkouts. During development, all sorts of stuff Some languages/development environments are more susceptible to these problems than others, but they're prevalent enough to want to avoid the problem altogether.</div> <p></p>
 <div>Even if you are testing your development environment, I dislike it for purity reasons. The people doing this said they did that because it was the easiest way to get stuff running, and they just went along with the path of least resistance. As much as I'm willing to believe that's true, I also believe that if you need a developer to chant some magic runes and sacrifice a chicken over a checkout of your code before it'll actually work, you're doing it wrong.</div> <p></p>I think repackaging test environments for deployment is a sensible idea. I talked this over with Holger Krekel, the guy who wrote <a href="http://codespeak.net/tox/" target="_blank">Tox</a>, and he immediately pointed out a flaw in that plan: it'll only work reliably if the testing environment is identical to the deployment environment in terms of platform, architecture, versions of available software... I thought this was a limitation at first, but I'm now convinced this is a useful limitation (another idea I stole from Holger ;)). If you didn't <i>test</i> it in environment X, what business do you have <i>deploying</i> it there? <p></p>
 <div>I think I've got most of the annoying administrative stuff out of the way now, maybe we can move on to more interesting things that are actually specific to continuous deployment :-) That starts with the next article, which, as I've already hinted above, will be about "cautious deployment", a robust technique for scheduling deployment.</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -127,7 +126,7 @@ navbar-dark bg-dark
                 <a href="../../10/designing-a-continuous-deployment-system-cautious-deployment/" rel="next" title="Designing a continuous deployment system: cautious deployment">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -138,9 +137,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -26,10 +26,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,8 +98,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>Hi, and welcome to the second part to my ranting about development stacks. In my previous post, I talked about the issues with some of the popular hosted solutions (Github, Bitbucket and Launchpad). In this post, I'll try to roll my own dev stack that hopefully doesn't suck too much.</p>
+    <p>Hi, and welcome to the second part to my ranting about development stacks. In my previous post, I talked about the issues with some of the popular hosted solutions (Github, Bitbucket and Launchpad). In this post, I'll try to roll my own dev stack that hopefully doesn't suck too much.</p>
 
 <p></p>
 <div>Recall from the last post that I'm looking for three things:</div>
@@ -126,7 +126,6 @@ navbar-dark bg-dark
 <div>Last up: Mercurial. When it comes to code review, I've already explained in a previous post why I think Bitbucket's pull requests are a missed opportunity. (Short version: they make a distinction between local branches and branches in different repositories, which is in my opinion unnecessary. I think the way Launchpad allows merge proposals between arbitrary branches is much better. Github has recently copied this behavior somewhat with Pull Requests 2.0.). However, the main reason I wanted that is for a point to introduce code review. Georg Brandl (birkenfeld) pointed out that Mercurial has the pretty impressive <a href="https://bitbucket.org/sjl/hg-review/src" target="_blank">hg-review extension</a>. It has a sleek, usable <a href="http://review.stevelosh.com/" target="_blank">web interface</a> (try it!). It also has the advantage of the point I made earlier: data is included with your repository, you don't need to go fish for it. Even if you don't use that now, it has the great advantage of being able to do cool things with it later (such as identifying recurring problems in the review process and pointing those out to the reviewer/author).</div>
 <p></p>
 <div>Stay tuned for the next installment, where I try something totally crazy.</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -136,7 +135,7 @@ navbar-dark bg-dark
                 <a href="../designing-a-continuous-deployment-system-deployment-formats-and-content/" rel="next" title="Designing a continuous deployment system: deployment formats and content">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -147,9 +146,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

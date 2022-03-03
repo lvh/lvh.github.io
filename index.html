@@ -20,10 +20,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href=".">
             <img src="pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,8 +85,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>My takeaways from <a href="https://www.graalvm.org/docs/release-notes/19_3/">the GraalVM 19.3.0 release notes</a>:</p>
+    <p>My takeaways from <a href="https://www.graalvm.org/docs/release-notes/19_3/">the GraalVM 19.3.0 release notes</a>:</p>
 <ol>
 <li>JDK code inlining support</li>
 <li>Optional JDK11 support</li>
@@ -164,7 +164,6 @@ the binary. But you knocked out my #1 feature so now I have a new one 😊</p>
 <p>I previously thought/posted that the locking macro (<a href="https://clojure.atlassian.net/browse/CLJ-1472">CLJ-1472</a>)
 problems appear to be gone or at least reduced, but I have been unable to
 consistently reproduce that and others have reported no change.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/solving-regex-crosswords/" class="u-url">Solving regex crosswords</a></h1>
         <div class="metadata">
@@ -177,8 +176,7 @@ consistently reproduce that and others have reported no change.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p><a href="https://regexcrossword.com/">Regex Crossword</a> is a puzzle game to help you
+    <p><a href="https://regexcrossword.com/">Regex Crossword</a> is a puzzle game to help you
 practice regular expressions. I wrote a program to solve them. You can find it
 on GitHub as <a href="https://github.com/lvh/regex-crossword"><code>lvh/regex-crossword</code></a>. If
 you're on amd64 Linux, you can try the <a href="https://github.com/lvh/regex-crossword/releases/tag/0.1.0">demo binary too</a>. This blog post
@@ -1000,7 +998,6 @@ because I lost interest). I like hex grids a lot, but they're not interesting
 from a logic perspective so I didn't cover them in this post. You can check out
 <a href="https://github.com/lvh/regex-crossword/blob/master/src/lvh/regex_crossword/slices.clj">the implementation</a> but be warned: it's mostly just some tedious bean
 counting.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/how-not-to-sign-a-json-object/" class="u-url">How (not) to sign a JSON object</a></h1>
         <div class="metadata">
@@ -1013,8 +1010,7 @@ counting.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.</p>
+    <p>Last year we did a blog post on interservice auth. This post is mostly about authenticating consumers to an API. That’s a related but subtly different problem: you can probably impose more requirements on your internal users than your customers. The idea is the same though: you’re trying to differentiate between a legitimate user and an attacker, usually by getting the legitimate user to prove that they know a credential that the attacker doesn’t.</p>
 <h2>You don’t really want a signature</h2>
 <p>When cryptography engineers say "signature" they tend to mean something asymmetric, like RSA or ECDSA. Developers reach for asymmetric tools too often. There are a lot of ways to screw them up. By comparison, symmetric “signing” (MACs) are easy to use and hard to screw up. HMAC is bulletproof and ubiquitous.</p>
 <p>Unless you have a good reason why you need an (asymmetric) signature, you want a MAC. If you really do want a signature, check out our Cryptographic Right Answers post to make that as safe as possible. For the rest of this blog post, "signing" means symmetrically, and in practice that means HMAC.</p>
@@ -1089,7 +1085,6 @@ counting.</p>
 <li>The corollary here is that it’s way harder to do request signing for a REST API (where stuff like headers and paths and methods matter) than it is to do signing for an RPC-like API.</li>
 </ul>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-pgp-problem/" class="u-url">The PGP problem</a></h1>
         <div class="metadata">
@@ -1102,8 +1097,7 @@ counting.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p><a href="https://blog.cryptographyengineering.com/2014/08/13/whats-matter-with-pgp/">Cryptography engineers have been tearing their hair out over PGP’s deficiencies</a> for (literally) decades. When other kinds of engineers get wind of this, they’re shocked. PGP is bad? Why do people keep telling me to use PGP? The answer is that they shouldn’t be telling you that, because PGP is bad and needs to go away.</p>
+    <p><a href="https://blog.cryptographyengineering.com/2014/08/13/whats-matter-with-pgp/">Cryptography engineers have been tearing their hair out over PGP’s deficiencies</a> for (literally) decades. When other kinds of engineers get wind of this, they’re shocked. PGP is bad? Why do people keep telling me to use PGP? The answer is that they shouldn’t be telling you that, because PGP is bad and needs to go away.</p>
 <p>There are, as you’re about to see, lots of problems with PGP. Fortunately, if you’re not morbidly curious, there’s a simple meta-problem with it: it was designed in the 1990s, before serious modern cryptography. No competent crypto engineer would design a system that looked like PGP today, nor tolerate most of its defects in any other design. Serious cryptographers have largely given up on PGP and don’t spend much time publishing on it anymore (<a href="https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-poddebniak.pdf">with a notable exception</a>). Well-understood problems in PGP have gone unaddressed for over a decade because of this.</p>
 <p>Two quick notes: first, we wrote this for engineers, not lawyers and activists. Second: “PGP” can mean a bunch of things, from the <a href="https://tools.ietf.org/html/rfc4880">OpenPGP standard</a> to its reference implementation in GnuPG. We use the term “PGP” to cover all of these things.</p>
 <h2>The Problems</h2>
@@ -1178,7 +1172,6 @@ counting.</p>
 <p>This really is a problem. If you’re/not/making a backup, and you’re /not/archiving something offline for long-term storage, and you’re /not/encrypting in order to securely send the file to someone else, and you’re /not/encrypting virtual drives that you mount/unmount as needed to get work done, then there’s no one good tool that does this now. Filippo Valsorda is working on “<a href="https://docs.google.com/document/d/11yHom20CrsuX8KQJXBBw04s80Unjv8zCg_A7sPAX_9Y/view">age</a>” for these use cases, and I'm super optimistic about it, but it's not there yet.</p>
 <p>Hopefully it’s clear that this is a pretty narrow use case. We work in software security and handle sensitive data, including bug bounty reports (another super common “we need PGP!” use case), and we almost never have to touch PGP.</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/analyzing-a-simple-encryption-scheme-using-github-ssh-keys/" class="u-url">Analyzing a simple encryption scheme using GitHub SSH keys</a></h1>
         <div class="metadata">
@@ -1191,8 +1184,7 @@ counting.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>(This is an introductory level analysis of a scheme involving RSA. If you're already comfortable with Bleichenbacher oracles you should skip it.)</p>
+    <p>(This is an introductory level analysis of a scheme involving RSA. If you're already comfortable with Bleichenbacher oracles you should skip it.)</p>
 <p>Someone pointed me at the following suggestion on the Internet for encrypting secrets to people based on their GitHub SSH keys. I like the idea of making it easier for people to leverage key material and tools they already have.  The encryption instructions are:</p>
 <pre class="code literal-block"><span></span><span class="nb">echo</span> <span class="s2">"my secret"</span> &gt; message.txt
 curl -q github.com/<span class="nv">$USER</span>.keys <span class="p">|</span> head -n <span class="m">1</span> &gt; recipient.pub
@@ -1221,7 +1213,6 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</spa
 <p>There's a straightforward way to improve this. Remember how I said <code>-ssl</code> was weird? Not specifying anything would've resulted in the better-still-not-great PKCS1v15 padding. If you are going to specify a padding strategy, specify <code>-oaep</code>. OAEP is the good RSA encryption padding. By default, OpenSSL uses SHA1 with it (for both the message digest and in MGF1), which is fine for this purpose. That gives you 160 bits of randomness, which ought to be plenty.</p>
 <p>This is why most schemes use RSA to encrypt a symmetric key.</p>
 <p>Future blog posts: how to fix this, creative scenarios in which we mess with those parameters so it breaks, and how to do the same with ECDSA/EdDSA keys. For the latter: I asked a smart person and the "obvious" thing to them was not the thing I'd have done. For EdDSA, my first choice would be to convert the public key from Ed25519 to X25519 and then use NaCl box. They'd use the EdDSA key directly. So, if you're interested, we'll could do a post on that. And then we'd probably talk about why you use NIST P-256 for both signatures and ECDH, but different curve formats in djb country: Ed25519 for signatures and X25519 for ECDH. Oh, and we should do some entropy estimation. People often know how to do that for passwords, but for this threat model we also need to do that for English prose.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-default-openssh-key-encryption-is-worse-than-plaintext/" class="u-url">The default OpenSSH key encryption is worse than plaintext</a></h1>
         <div class="metadata">
@@ -1234,8 +1225,7 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</spa
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>The eslint-scope npm package got compromised recently, stealing npm credentials from your home directory. We started running tabletop exercises: what else would you smash-and-grab, and how can we mitigate that risk?</p>
+    <p>The eslint-scope npm package got compromised recently, stealing npm credentials from your home directory. We started running tabletop exercises: what else would you smash-and-grab, and how can we mitigate that risk?</p>
 <p>Most people have an RSA SSH key laying around. That SSH key has all sorts of privileges: typically logging into prod and GitHub access. Unlike an npm credential, an SSH key is encrypted, so perhaps it’s safe even if it leaks? Let’s find out!</p>
 <pre class="code literal-block"><span></span><span class="nv">user</span><span class="o">@</span><span class="nv">work</span> <span class="nv">/tmp</span> <span class="nv">$</span> <span class="nv">ssh-keygen</span>
 <span class="nv">Generating</span> <span class="nv">public/private</span> <span class="nv">rsa</span> <span class="nb">key </span><span class="nv">pair.</span>
@@ -1260,7 +1250,6 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</spa
 <p>PS: It’s hard to find an authoritative source, but from my memory: the versioned parameter in the PEM-like OpenSSH private key format only affect the encryption method. That doesn’t matter in the slightest: it’s the KDF that’s broken. That’s an argument against piecemeal negotiating parts of protocols, I’m sure. We’ll get you a blog post on that later.</p>
 <p>The full key is available here, just in case you feel like running john the ripper on something today: <a href="https://gist.github.com/lvh/c532c8fd46115d2857f40a433a2416fd">gist.github.com/lvh/c532c...</a></p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/factoring-the-noise-protocol-matrix/" class="u-url">Factoring the Noise protocol matrix</a></h1>
         <div class="metadata">
@@ -1273,8 +1262,7 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</spa
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<style>
+    <style>
     .matrix {
         position: relative;
         margin: auto;
@@ -1732,7 +1720,6 @@ Right Answer. Just don't stare at the eldritch rune matrix too long. You
 probably want Noise_IK. Or, you know, ask your security person :)</p>
 <p>Thanks to Katriel Cohn-Gordon for reviewing this blog post.</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/self-compressing-pickles/" class="u-url">Self-compressing pickles</a></h1>
         <div class="metadata">
@@ -1745,8 +1732,7 @@ probably want Noise_IK. Or, you know, ask your security person :)</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>I’ve been working on some pickle security stuff. This is a teaser.</p>
+    <p>I’ve been working on some pickle security stuff. This is a teaser.</p>
 <p>Python pickles are extremely flexible: they can run essentially whatever code they want. That means you can create a pickle that contains a compressed pickle. The consumer doesn’t know if an incoming pickle will be compressed or not: the Pickle VM takes care of the details.</p>
 <p>To do this, we define a useful little helper class:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">PickleCall</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1796,7 +1782,6 @@ len(zpickle), len(pickle)
 
 <p>If you're trying to protect pickles the punchline here is that you probably need to whitelist because there are too many ways to hide things inside a pickle. (We're working on it.)</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/loud-subshells/" class="u-url">Loud subshells</a></h1>
         <div class="metadata">
@@ -1809,8 +1794,7 @@ len(zpickle), len(pickle)
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Default shells usually end in $. Unless you're root and it's #. That
+    <p>Default shells usually end in $. Unless you're root and it's #. That
 tradition has been around forever: people recognized the need to highlight
 you're not just some random shmoe.</p>
 <p>These days we have lots of snazzy shell magic. You might still su, but you're
@@ -1947,7 +1931,6 @@ why are you like this
 <p>Please don't do that. Depending on context, use an rc-less shell or a dedicated
 environment variable or source something. Please?</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/a-childs-garden-of-inter-service-authentication-schemes/" class="u-url">A child's garden of inter-service authentication schemes</a></h1>
         <div class="metadata">
@@ -1960,8 +1943,7 @@ environment variable or source something. Please?</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Modern applications tend to be composed from relationships between smaller applications. Secure modern applications thus need a way to express and enforce security policies that span multiple services. This is the “server-to-server” (S2S) authentication and authorization problem (for simplicity, I’ll mash both concepts into the term “auth” for most of this post).</p>
+    <p>Modern applications tend to be composed from relationships between smaller applications. Secure modern applications thus need a way to express and enforce security policies that span multiple services. This is the “server-to-server” (S2S) authentication and authorization problem (for simplicity, I’ll mash both concepts into the term “auth” for most of this post).</p>
 <p>Designers today have a lot of options for S2S auth, but there isn’t much clarity about what the options are or why you’d select any of them. Bad decisions sometimes result. What follows is a stab at clearing the question up.</p>
 <h3>Cast Of Characters</h3>
 <p>Alice and Bob are services on a production VPC. Alice wants to make a request of Bob. How can we design a system that allows this to happen?</p>
@@ -2058,7 +2040,6 @@ environment variable or source something. Please?</p>
 <p>Beyond that, we don’t want to be too much more prescriptive. Rather, we’d just urge you to think about what you’re actually getting from an S2S auth scheme before adopting it.</p>
 <p>(But really, you should just use Macaroons.)</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article>
 </div>
@@ -2067,7 +2048,7 @@ environment variable or source something. Please?</p>
 <li class="next"><a href="index-6.html" rel="next">Older posts</a></li>
         </ul>
 <!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -2078,9 +2059,7 @@ environment variable or source something. Please?</p>
         <script src="assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

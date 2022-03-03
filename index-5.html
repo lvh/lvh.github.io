@@ -21,10 +21,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href=".">
             <img src="pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +86,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>In a previous post, I talked about <a href="posts/tradeoffs-in-cryptographic-api-design.html">crypto API tradeoffs</a>. In this
+    <p>In a previous post, I talked about <a href="posts/tradeoffs-in-cryptographic-api-design.html">crypto API tradeoffs</a>. In this
 post, I'll go into a specific API design case in <a href="https://github.com/lvh/caesium"><code>caesium</code></a>, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.</p>
@@ -241,7 +241,6 @@ problems with reflection using explicitly annotated call sites. That means
 we're dispatching on types, which comes with its own set of issues. In the
 next blog post, I'll go into more detail on how that works, with a bunch of
 benchmarks. Stay tuned!</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/tradeoffs-in-cryptographic-api-design/" class="u-url">Tradeoffs in cryptographic API design</a></h1>
         <div class="metadata">
@@ -254,8 +253,7 @@ benchmarks. Stay tuned!</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Producing cryptographic software is a difficult and specialized endeavor. One
+    <p>Producing cryptographic software is a difficult and specialized endeavor. One
 of the pitfalls is that getting it wrong looks exactly like getting it
 right. Much like a latent memory corruption bug or a broken distributed
 consensus algorithm, a piece of cryptographic software can appear to be
@@ -335,7 +333,6 @@ support for memory pinning since PyPy will support it in the upcoming
 5.2 release, although that means I'll no longer be able to make
 <a href="https://github.com/reaperhulk">Paul Kehrer of PyCA fame</a> jealous with the pinning support in
 <a href="https://github.com/lvh/caesium">caesium</a>.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/nonce-misuse-resistance-101/" class="u-url">Nonce misuse resistance 101</a></h1>
         <div class="metadata">
@@ -348,8 +345,7 @@ support for memory pinning since PyPy will support it in the upcoming
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p><em>This post is an introduction to nonce-misused resistant cryptosystems and why
+    <p><em>This post is an introduction to nonce-misused resistant cryptosystems and why
 I think they matter. The first part of this post is about nonce-based
 authenticated encryption schemes: how they work, and how they fail. If you're
 already familiar with them, you can skip to the section on
@@ -496,7 +492,6 @@ scanned before the nonce can be computed. For some protocols, that may not be
 acceptable, although plenty of protocols work around this assumption by simply
 making individual messages sufficiently small.</p>
 <p><em>Thanks to Aaron Zauner and Kurt Griffiths for proofreading this post.</em></p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/supersingular-isogeny-diffie-hellman-101/" class="u-url">Supersingular isogeny Diffie-Hellman 101</a></h1>
         <div class="metadata">
@@ -509,8 +504,7 @@ making individual messages sufficiently small.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
+    <p>Craig Costello, Patrick Longa and Michael Naehrig, three cryptographers at
 Microsoft Research, recently published a <a href="https://eprint.iacr.org/2016/413">paper</a> on supersingular
 isogeny Diffie-Hellman. This paper garnered a lot of interest in the security
 community and even made it to the front page of Hacker News. Most of the
@@ -751,7 +745,6 @@ w.r.t the Hasse invariant (the Hasse-Witt matrix is undefined, not
 singular.). Finally, I'd like to thank all the people who reviewed drafts of
 this post, including (in no particular order) Bryan Geraghty, Shane Wilton,
 Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.</em></p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/introducing-teleport/" class="u-url">Introducing Teleport</a></h1>
         <div class="metadata">
@@ -764,8 +757,7 @@ Sean Devlin, Thomas Ptacek, Tanner Prynn, Glyph Lefkowitz and Chris Wolfe.</em><
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>I'm happy to introduce <a href="https://github.com/gravitational/teleport">Teleport</a>, a new open source platform for
+    <p>I'm happy to introduce <a href="https://github.com/gravitational/teleport">Teleport</a>, a new open source platform for
 managing SSH infrastructure. Teleport is built by <a href="http://www.gravitational.com/">Gravitational</a>, a Y
 Combinator company that ships SaaS on any platform. While I'm not a part of
 Gravitational, I have been advising them on the Teleport project.</p>
@@ -826,7 +818,6 @@ here to stay, and they need a real security story, too.</p>
 <p>Teleport is still in its early stages. It's usable today, and I'm convinced it
 has a bright future ahead of it. It's written in a beautiful, hackable Go
 codebase, and <a href="https://github.com/gravitational/teleport">available on Github</a> starting today.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/dont-expose-the-docker-socket-not-even-to-a-container/" class="u-url">Don't expose the Docker socket (not even to a container)</a></h1>
         <div class="metadata">
@@ -839,8 +830,7 @@ codebase, and <a href="https://github.com/gravitational/teleport">available on G
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Docker primarily works as a client that communicates with a daemon
+    <p>Docker primarily works as a client that communicates with a daemon
 process (<code>dockerd</code>). Typically that socket is a UNIX domain socket
 called <code>/var/run/docker.sock</code>. That daemon is highly privileged;
 effectively having root access. Any process that can write to the
@@ -891,7 +881,6 @@ container with write access to the Docker socket).</p>
 ever since the (unfortunately trivially cross-site scriptable) REST
 API listening on a local TCP port was replaced with the
 <code>/var/run/docker.sock</code> UNIX domain socket.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/queryselectorall-from-an-element-probably-doesnt-do-what-you-think-it-does/" class="u-url">querySelectorAll from an element probably doesn't do what you think it does</a></h1>
         <div class="metadata">
@@ -904,8 +893,7 @@ API listening on a local TCP port was replaced with the
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Modern browsers have APIs called <code>querySelector</code> and <code>querySelectorAll</code>. They
+    <p>Modern browsers have APIs called <code>querySelector</code> and <code>querySelectorAll</code>. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, the Mozilla Developer Network has an excellent
@@ -1028,7 +1016,6 @@ to discover from just the behavior. Fortunately, you can often rewrite your
 selector so that it isn't a problem. If you can't, there's always a polyfill
 to give you the modern API you want. Alternatively, libraries like jQuery can
 also help you get a consistent, friendly interface for querying the DOM.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/todays-openssl-bug-for-techies-without-infosec-chops/" class="u-url">Today's OpenSSL bug (for techies without infosec chops)</a></h1>
         <div class="metadata">
@@ -1041,8 +1028,7 @@ also help you get a consistent, friendly interface for querying the DOM.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<h2>What happened?</h2>
+    <h2>What happened?</h2>
 <p>OpenSSL 1.0.1n+ and 1.0.2b+ had a new feature that allows finding an
 alternative certificate chain when the first one fails. The logic in
 that feature had a bug in it, such that it didn't properly verify if
@@ -1144,7 +1130,6 @@ third-party source. The most popular source is Homebrew, which up
 until earlier this morning shipped 1.0.2c. The bug affects that
 version. If you installed OpenSSL through Homebrew, you should go
 update right now.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/https-requests-with-client-certificates-in-clojure/" class="u-url">HTTPS requests with client certificates in Clojure</a></h1>
         <div class="metadata">
@@ -1157,8 +1142,7 @@ update right now.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>The vast majority of TLS connections only authenticate the
+    <p>The vast majority of TLS connections only authenticate the
 server. When the client opens the connection, the server sends its
 certificate. The client checks the certificate against the list of
 certificate authorities that it knows about. The client is typically
@@ -1202,7 +1186,6 @@ free! Oh, and if you're looking for information security positions
 (that includes entry-level!) in an inclusive and friendly environment
 that puts a heavy emphasis on teaching and personal development, you
 should get in touch with me at <code>_@lvh.io</code>.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/call-for-proposal-proposals/" class="u-url">Call for proposal proposals</a></h1>
         <div class="metadata">
@@ -1215,8 +1198,7 @@ should get in touch with me at <code>_@lvh.io</code>.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>I'm excited to announce that I was invited to speak at PyCon
+    <p>I'm excited to announce that I was invited to speak at PyCon
 PL. Hence, I'm preparing to freshen up my arsenal of talks for the
 coming year. The organizers have very generously given me a lot of
 freedom regarding what to talk about.</p>
@@ -1283,7 +1265,6 @@ systems. Unlike the other two, it will (hopefully) actually help
 people build secure software. Also, the other two will just make
 people feel sad. I feel like those points generalize to all attack
 talks; are they just not that useful?</p>
-</div>
     </div>
     </article>
 </div>
@@ -1293,7 +1274,7 @@ talks; are they just not that useful?</p>
             <li class="next"><a href="index-4.html" rel="next">Older posts</a></li>
         </ul>
 <!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -1304,9 +1285,7 @@ talks; are they just not that useful?</p>
         <script src="assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

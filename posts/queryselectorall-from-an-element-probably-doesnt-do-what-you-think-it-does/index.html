@@ -29,10 +29,11 @@ familiarity with CSS selectors: how you select elements,">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,8 +101,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>Modern browsers have APIs called <code>querySelector</code> and <code>querySelectorAll</code>. They
+    <p>Modern browsers have APIs called <code>querySelector</code> and <code>querySelectorAll</code>. They
 find one or more elements matching a CSS selector. I'm assuming basic
 familiarity with CSS selectors: how you select elements, classes and ids. If
 you haven't used them, the Mozilla Developer Network has an excellent
@@ -224,7 +224,6 @@ to discover from just the behavior. Fortunately, you can often rewrite your
 selector so that it isn't a problem. If you can't, there's always a polyfill
 to give you the modern API you want. Alternatively, libraries like jQuery can
 also help you get a consistent, friendly interface for querying the DOM.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../tags/web/" rel="tag">web</a></li>
@@ -237,7 +236,7 @@ also help you get a consistent, friendly interface for querying the DOM.</p>
                 <a href="../dont-expose-the-docker-socket-not-even-to-a-container/" rel="next" title="Don't expose the Docker socket (not even to a container)">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -248,9 +247,7 @@ also help you get a consistent, friendly interface for querying the DOM.</p>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

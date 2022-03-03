@@ -29,10 +29,11 @@ For those who still haven">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,8 +101,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<div>The previously planned crazy installment (I was going to install my own Launchpad instance) has been cancelled (or maybe deferred) to bring you this important announcement.</div>
+    <div>The previously planned crazy installment (I was going to install my own Launchpad instance) has been cancelled (or maybe deferred) to bring you this important announcement.</div>
 
 <p></p>
 <div>For those who still haven't heard yet (sorry about the late blog -- this happened around 4AM my time), <a href="http://blog.bitbucket.org/2010/09/29/bitbucket-joins-atlassian/" target="_blank">Atlassian have bought Bitbucket and are doing crazy awesome things with it</a>.</div>
@@ -119,7 +119,6 @@ navbar-dark bg-dark
 <div>I think it's time to revisit Bitbucket. Even if most of the tools end up being horrible, you just can't argue with 'free'. If feature X in Bitbucket ends up being unusably bad, I can just install my own code review tool. I've been told Bitbucket repositories are accessible over SVN, so it may even be possible to hook it up to Rietveld and end up with something where I do <em>zero</em> hosting.</div>
 <p></p>
 <div>Regardless of what happens to Bitbucket, I'd like to congratulate Jesper on Atlassian buying Bitbucket and wish him the best of luck in whatever he does next, be it Bitbucket or something else.</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -129,7 +128,7 @@ navbar-dark bg-dark
                 <a href="../we-now-have-an-animal-mascot-/" rel="next" title="We now have an animal mascot!">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -140,9 +139,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -26,10 +26,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,15 +98,13 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>Hello again :-)</p>
+    <p>Hello again :-)</p>
 <p></p>
 <br>I tweeted something. I'm quite proud of it. It's exactly 140 characters, and it captures the essence of the last few days' worth of articles quite well. Obviously it makes concessions to accuracy for reasons of brevity, but here goes anyway:<p></p> <div style="margin-left: 40px;">It seems to me Github people use Github as a coping mechanism for git, and Launchpad people use Bazaar and a coping mechanism for Launchpad.</div>
 <br>That explains virtually all of the feedback and workflow I've received. It seems Github users use git as a tool to get code into Github as quickly as possible, so magic and sprinkles can be added to it. That means the Github people have done an excellent job. It's managed to create an environment where you have awesome features like truly polished pull requests and a great code browser that lets you peek into someone else's repository without you having to worry about adding a remote, fetching objects, removing a remote...<p></p> Github tries to minimize your exposure to git -- <a href="http://chriswanstrath.com/hub/">hub</a> even more so (with hub, clones and pulls look like they do with bzr for me. Huge win.). Even without having to call git's UX bad, that makes (business) sense: the Github people aren't the git people so they want you in their service as much as possible. And man, have they succeeded.<p></p> On the other side of that argument, there's Launchpad and Bazaar. Most of the discussions about Launchpad's UI warts (and, keeping in mind my last article, some of them are just a question of catering to a different audience but some of them really are simply faults) go something like this:<br><div style="margin-left: 40px;">
 <b>unhappy user:</b> Hey lvh, take a look at $BOGUS_UI_CHOICE. Come on, you have to admit, that just sucks.<br><b>lvh</b>: Huh. You're right -- that is pretty bad. I just never noticed because I use $BZR_INVOCATION to get to that information.<br>
 </div>
 <br>Case in point: merge proposals. Apparently they had an in-page diff. I had no idea.<p></p>Github users use Github to do things. Launchpad users use Launchpad as branch storage + metadata (bug tracker, merge proposals, primarily) so they can convince bzr to do things. When Github users go to Launchpad, perhaps without truly trying to use it, they see the prospect of using something like Github but worse. When Launchpad users go to Github, they see the prospect of getting to use git for everything instead of bzr. (And, let's be honest -- if you're diffing between remotes all day, Github is more pleasant than plain git, and bzr is too.)<p></p> cheers<div>lvh</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -115,7 +114,7 @@ navbar-dark bg-dark
                 <a href="../../05/crowdsourcing-opinions-on-a-rest-api-post-put-or-both-/" rel="next" title="Crowdsourcing opinions on a REST API: POST, PUT or both?">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -126,9 +125,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

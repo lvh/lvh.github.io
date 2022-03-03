@@ -21,10 +21,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href=".">
             <img src="pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +86,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>If you’re like me, you think of Google Groups as the Usenet client turned
+    <p>If you’re like me, you think of Google Groups as the Usenet client turned
 mailing list manager. If you’re a GCP user or maybe one of a handful of SAML
 users you probably know Google Groups as an access control mechanism. The bad
 news is we’re both right.</p>
@@ -166,7 +166,6 @@ and auditors alike. Here are some archetypes we've found:</p>
 <p>PS: Groups can let some users post as the group. I haven't ran a phishing
 exercise that way, but I'm guessing an email appearing to legitimately come from
 board@company.com is going to be pretty effective.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/cryptographic-right-answers/" class="u-url">Cryptographic right answers</a></h1>
         <div class="metadata">
@@ -179,8 +178,7 @@ board@company.com is going to be pretty effective.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>We’re less interested in empowering developers and a lot more pessimistic about the prospects of getting this stuff right.</p>
+    <p>We’re less interested in empowering developers and a lot more pessimistic about the prospects of getting this stuff right.</p>
 <p>There are, in the literature and in the most sophisticated modern systems, “better” answers for many of these items. If you’re building for low-footprint embedded systems, you can use STROBE and a sound, modern, authenticated encryption stack entirely out of a single SHA-3-like sponge constructions. You can use NOISE to build a secure transport protocol with its own AKE. Speaking of AKEs, there are, like, 30 different password AKEs you could choose from.</p>
 <p>But if you’re a developer and not a cryptography engineer, you shouldn’t do any of that. You should keep things simple and conventional and easy to analyze; “boring”, as the Google TLS people would say.</p>
 <p>(This content has been developed and updated by different people over a decade. We've kept what Colin Percival originally said in 2009, Thomas Ptacek said in 2015, and what we're saying in 2018 for comparison. If you're designing something today, just use the 2018 Latacora recommendation.)</p>
@@ -379,7 +377,6 @@ board@company.com is going to be pretty effective.</p>
 <p><em>You care about this if:</em> you bother backing things up.</p>
 <p>Just kidding. You should still use Tarsnap.</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/smaller-clojure-docker-builds-with-multi-stage-builds/" class="u-url">Smaller Clojure Docker builds with multi-stage builds</a></h1>
         <div class="metadata">
@@ -392,8 +389,7 @@ board@company.com is going to be pretty effective.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>A common pattern in Docker is to use a separate build environment from the
+    <p>A common pattern in Docker is to use a separate build environment from the
 runtime environment. Many platforms have different requirements when you're
 generating a runnable artifact than when you're running it.</p>
 <p>In languages like Go, Rust or C, where the most common implementations produce
@@ -462,7 +458,6 @@ feature was in beta at time of writing. That was/is correct, but it's since
 been released, so I updated the post.</p>
 <p><em>Edited:</em>* Łukasz Korecki pointed out that <code>project.clj</code> has an <code>:uberjar-name</code>
 parameter which can be used to avoid the gnarly <code>sed</code> expression. Thanks Łukasz!</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2016-rmbp-caveats/" class="u-url">2016 rMBP caveats</a></h1>
         <div class="metadata">
@@ -475,8 +470,7 @@ parameter which can be used to avoid the gnarly <code>sed</code> expression. Tha
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
+    <p>I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
 had it for a week now, and there have been some issues you might want to be
 aware of if you'd like to get one.</p>
 <p>(There are a bunch of links to Amazon in this article. They're not affiliate
@@ -580,7 +574,6 @@ either side is an unexpected nice benefit.</p>
 literally and figuratively. However, most of the dongles don't actually work,
 and that sucks. So, maybe wait for the refresh, or at least until the
 high-quality docks are available.</p>
-</div>
     </div>
     </article>
 </div>
@@ -590,7 +583,7 @@ high-quality docks are available.</p>
             <li class="next"><a href="index-5.html" rel="next">Older posts</a></li>
         </ul>
 <!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -601,9 +594,7 @@ high-quality docks are available.</p>
         <script src="assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

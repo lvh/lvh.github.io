@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about gamedev)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/gamedev.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 04 Nov 2019 17:00:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</link><dc:creator>lvh</dc:creator><description>&lt;div&gt;&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>lvh (Posts about gamedev)</title><link>https://www.lvh.io/</link><description></description><atom:link href="https://www.lvh.io/tags/gamedev.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Thu, 03 Mar 2022 16:37:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>On multiplayer turn-based game mechanics</title><link>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</link><dc:creator>lvh</dc:creator><description>&lt;p&gt;Most classic turn-based games, from chess all the way to Civilization
 V, are sequential in nature. A player makes a move, then the next
 player makes a move, and so on. The details can vary, for example:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -89,7 +89,7 @@ time, why can't the enemy fire missiles? Either time is
 stopped, or it isn't. Sure, games can be abstract, but that
 feels like an undue inconsistency.&lt;/p&gt;
 &lt;/dd&gt;
-&lt;/dl&gt;&lt;/div&gt;</description><category>gamedev</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</link><dc:creator>lvh</dc:creator><description>&lt;div class="section" id="hypercathexis"&gt;
+&lt;/dl&gt;</description><category>gamedev</category><guid>https://www.lvh.io/posts/on-multiplayer-turn-based-game-mechanics/</guid><pubDate>Sun, 26 Oct 2014 16:00:02 GMT</pubDate></item><item><title>hypercathexis dev notes part 1</title><link>https://www.lvh.io/posts/hypercathexis-dev-notes-part-1/</link><dc:creator>lvh</dc:creator><description>&lt;div class="section" id="hypercathexis"&gt;
 &lt;h2&gt;hypercathexis&lt;/h2&gt;
 &lt;blockquote class="epigraph"&gt;
 &lt;p&gt;hy·per·ca·thex·is, n, pl hy·per·ca·thex·es \-kə-ˈthek-səs, -ka-\:

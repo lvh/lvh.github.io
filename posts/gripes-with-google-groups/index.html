@@ -29,10 +29,11 @@ users you probably know Google Groups as an acces">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,8 +101,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>If you’re like me, you think of Google Groups as the Usenet client turned
+    <p>If you’re like me, you think of Google Groups as the Usenet client turned
 mailing list manager. If you’re a GCP user or maybe one of a handful of SAML
 users you probably know Google Groups as an access control mechanism. The bad
 news is we’re both right.</p>
@@ -181,7 +181,6 @@ and auditors alike. Here are some archetypes we've found:</p>
 <p>PS: Groups can let some users post as the group. I haven't ran a phishing
 exercise that way, but I'm guessing an email appearing to legitimately come from
 board@company.com is going to be pretty effective.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../tags/security/" rel="tag">security</a></li>
@@ -194,7 +193,7 @@ board@company.com is going to be pretty effective.</p>
                 <a href="../a-childs-garden-of-inter-service-authentication-schemes/" rel="next" title="A child's garden of inter-service authentication schemes">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -205,9 +204,7 @@ board@company.com is going to be pretty effective.</p>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

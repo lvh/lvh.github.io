@@ -28,10 +28,11 @@ There are, in the literature and in the most sophisticated modern systems, “b"
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,8 +100,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>We’re less interested in empowering developers and a lot more pessimistic about the prospects of getting this stuff right.</p>
+    <p>We’re less interested in empowering developers and a lot more pessimistic about the prospects of getting this stuff right.</p>
 <p>There are, in the literature and in the most sophisticated modern systems, “better” answers for many of these items. If you’re building for low-footprint embedded systems, you can use STROBE and a sound, modern, authenticated encryption stack entirely out of a single SHA-3-like sponge constructions. You can use NOISE to build a secure transport protocol with its own AKE. Speaking of AKEs, there are, like, 30 different password AKEs you could choose from.</p>
 <p>But if you’re a developer and not a cryptography engineer, you shouldn’t do any of that. You should keep things simple and conventional and easy to analyze; “boring”, as the Google TLS people would say.</p>
 <p>(This content has been developed and updated by different people over a decade. We've kept what Colin Percival originally said in 2009, Thomas Ptacek said in 2015, and what we're saying in 2018 for comparison. If you're designing something today, just use the 2018 Latacora recommendation.)</p>
@@ -299,7 +299,6 @@ navbar-dark bg-dark
 <p><em>You care about this if:</em> you bother backing things up.</p>
 <p>Just kidding. You should still use Tarsnap.</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../tags/cryptography/" rel="tag">cryptography</a></li>
@@ -312,7 +311,7 @@ navbar-dark bg-dark
                 <a href="../gripes-with-google-groups/" rel="next" title="Gripes with Google Groups">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -323,9 +322,7 @@ navbar-dark bg-dark
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -28,10 +28,11 @@ Someone pointed me at the following suggestion on the ">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,8 +100,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>(This is an introductory level analysis of a scheme involving RSA. If you're already comfortable with Bleichenbacher oracles you should skip it.)</p>
+    <p>(This is an introductory level analysis of a scheme involving RSA. If you're already comfortable with Bleichenbacher oracles you should skip it.)</p>
 <p>Someone pointed me at the following suggestion on the Internet for encrypting secrets to people based on their GitHub SSH keys. I like the idea of making it easier for people to leverage key material and tools they already have.  The encryption instructions are:</p>
 <pre class="code literal-block"><span></span><span class="nb">echo</span> <span class="s2">"my secret"</span> &gt; message.txt
 curl -q github.com/<span class="nv">$USER</span>.keys <span class="p">|</span> head -n <span class="m">1</span> &gt; recipient.pub
@@ -129,7 +129,6 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</spa
 <p>There's a straightforward way to improve this. Remember how I said <code>-ssl</code> was weird? Not specifying anything would've resulted in the better-still-not-great PKCS1v15 padding. If you are going to specify a padding strategy, specify <code>-oaep</code>. OAEP is the good RSA encryption padding. By default, OpenSSL uses SHA1 with it (for both the message digest and in MGF1), which is fine for this purpose. That gives you 160 bits of randomness, which ought to be plenty.</p>
 <p>This is why most schemes use RSA to encrypt a symmetric key.</p>
 <p>Future blog posts: how to fix this, creative scenarios in which we mess with those parameters so it breaks, and how to do the same with ECDSA/EdDSA keys. For the latter: I asked a smart person and the "obvious" thing to them was not the thing I'd have done. For EdDSA, my first choice would be to convert the public key from Ed25519 to X25519 and then use NaCl box. They'd use the EdDSA key directly. So, if you're interested, we'll could do a post on that. And then we'd probably talk about why you use NIST P-256 for both signatures and ECDH, but different curve formats in djb country: Ed25519 for signatures and X25519 for ECDH. Oh, and we should do some entropy estimation. People often know how to do that for passwords, but for this threat model we also need to do that for English prose.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../tags/cryptography/" rel="tag">cryptography</a></li>
@@ -142,7 +141,7 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</spa
                 <a href="../the-pgp-problem/" rel="next" title="The PGP problem">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -153,9 +152,7 @@ openssl rsautl -encrypt -pubin -inkey recipient.pem -ssl <span class="se">\</spa
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

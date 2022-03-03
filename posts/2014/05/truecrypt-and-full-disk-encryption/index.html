@@ -32,10 +32,11 @@ WARNING: Using Tru">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,8 +104,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>Since the early hours of May 29th (CEST), <a href="https://www.truecrypt.org">the TrueCrypt website
+    <p>Since the early hours of May 29th (CEST), <a href="https://www.truecrypt.org">the TrueCrypt website
 (<code>https://www.truecrypt.org</code>)</a> has pointed
 to <code>http://truecrypt.sourceforge.net/</code>, with an ominous-looking error
 message:</p>
@@ -243,7 +243,6 @@ you're on Windows, your options are looking a bit thin right now:</p>
 and then wait until someone actually writes the native LUKS support.</p>
 <p>Oh, and you should probably install GPG to encrypt some of those files
 stored on that encrypted volume.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../../../tags/cryptography/" rel="tag">cryptography</a></li>
@@ -256,7 +255,7 @@ stored on that encrypted volume.</p>
                 <a href="../../../switched-to-nikola/" rel="next" title="Switched to Nikola">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -267,9 +266,7 @@ stored on that encrypted volume.</p>
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

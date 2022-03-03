@@ -26,10 +26,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,8 +98,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>(Note: just because I say "perceived" flaws doesn't mean I don't agree they are. It's just a way to encourage feedback from people who disagree.)</p>
+    <p>(Note: just because I say "perceived" flaws doesn't mean I don't agree they are. It's just a way to encourage feedback from people who disagree.)</p>
 <p></p>I've compiled the responses I've received so far to <a href="http://b.lvh.cc/why-do-people-hate-launchpad-so-much" target="_blank">my previous article about Launchpad</a>. This is intended as constructive criticism and hopefully stuff that can be used to build a better Launchpad.<p></p> I'd like to thank everyone who bothered to have a <a href="http://b.lvh.cc/religious-wars-considered-harmful-considered">sensible, adult discussion</a> about Launchpad with me. I very much appreciate your feedback, even the rants. The Launchpad people are also expressed interest in this previously unreceived feedback (which makes sense, I guess). There certainly were a lot of you! If it ends up making Launchpad a nicer place for everyone maybe it's worth the time it took, though.<p></p> The vast majority of complaints I've seen are about Launchpad's interface.  People perceive the Launchpad interface as hard to use and anything but obvious. They particularly feel there's just too much noise, making useful features hard to find.<p></p> I tried to distill stuff that smells like it's easy to fix to me. It didn't always work, of course. Some problems (primarily about Loggerhead) require non-trivial amounts of work.<p></p>Here are some concrete examples:
 <ol>
 <li>As a user, I don't care that a project doesn't use Launchpad for translations, but it takes up the spot of a primary feature in the main menu and the Get Involved box. It should only be shown to the Maintainer (a single user or a group). This also counts for  Blueprints and Answers, except it's less obvious what they mean to people, apparently. Most projects really only need Overview, Code and Bugs (in fact, Github and Bitbucket do away with the entire Overview tab, too -- but that's not universally seen as a requirement for a usable thing).</li>
@@ -118,7 +118,7 @@ navbar-dark bg-dark
 <li>Some people can't use the e-mail interface <a href="https://bugs.launchpad.net/bugs/643224">because the DKIM whitelist is hardcoded</a>.</li>
 </ol>
 <p><br>To be continued.</p>
-<p></p>cheers<br>lvh</div>
+<p></p>cheers<br>lvh
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -128,7 +128,7 @@ navbar-dark bg-dark
                 <a href="../on-sysadmins-programmers-and-reconciliation-a-response-to-zed-shaw-s-post-/" rel="next" title="On sysadmins, programmers, and reconciliation (a response to Zed Shaw's post)">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -139,9 +139,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

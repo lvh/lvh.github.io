@@ -28,10 +28,11 @@ Despite the ominous messages ">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,8 +100,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.</p>
+    <p>This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.</p>
 
 <p>Despite the ominous messages in my last post about continuous deployment changing your dev shop dramatically, I do think it's possible to prepare properly. That means that you get up to the point where you <em>could</em> be doing continuous deployment, but you just aren't. Or, to put it differently, imagining you had to release right now, and getting trunk up to the point where that doesn't raise your blood pressure.</p>
 
@@ -129,7 +129,6 @@ navbar-dark bg-dark
 <p>A lot of people dislike being criticized about their code. <strong>Stamp this behavior out as soon as possible.</strong> Everyone's only human, and plenty of ugly, broken or otherwise inadequate code gets written. The point is to get it out, not berating the person that wrote it.</p>
 
 <p>Pressing the big red button once you're done will still be scary. You might even have a hiccup or two. But ideally, nothing will blow up. After a while (and probably in less time than you think it will), releases will become, as Timothy Fitz puts it, a non-event.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -139,7 +138,7 @@ navbar-dark bg-dark
                 <a href="../a-continuous-deployment-interlude-picking-a-development-stack/" rel="next" title="A continuous deployment interlude: picking a development stack">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -150,9 +149,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

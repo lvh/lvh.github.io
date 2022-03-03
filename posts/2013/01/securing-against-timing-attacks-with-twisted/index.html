@@ -31,10 +31,11 @@ A complete explanation is outside">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,8 +103,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<h3>What are timing attacks?</h3>
+    <h3>What are timing attacks?</h3>
 <p>Timing attacks are side-channel attacks that rely on inferring secret
 information from operations by measuring how long they take to execute.</p>
 <p>A complete explanation is outside of the scope of this article, but
@@ -228,7 +228,6 @@ already the case, since one of the first things it did was defer to a
 thread that released the GIL (to compute the key from the password
 using <code>scrypt</code>). Alternatively, if you're doing this for Python
 code, you could write your function cooperatively.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../../../tags/python/" rel="tag">python</a></li>
@@ -242,7 +241,7 @@ code, you could write your function cooperatively.</p>
                 <a href="../../10/thoughts-on-rdrand-in-linux/" rel="next" title="Thoughts on RDRAND in Linux">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -253,9 +252,7 @@ code, you could write your function cooperatively.</p>
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

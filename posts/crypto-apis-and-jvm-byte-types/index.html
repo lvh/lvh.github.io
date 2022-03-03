@@ -29,10 +29,11 @@ cryptographic library for Clojure, a language that runs on the Java Virtua">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,8 +101,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>In a previous post, I talked about <a href="../tradeoffs-in-cryptographic-api-design.html">crypto API tradeoffs</a>. In this
+    <p>In a previous post, I talked about <a href="../tradeoffs-in-cryptographic-api-design.html">crypto API tradeoffs</a>. In this
 post, I'll go into a specific API design case in <a href="https://github.com/lvh/caesium"><code>caesium</code></a>, my
 cryptographic library for Clojure, a language that runs on the Java Virtual
 Machine.</p>
@@ -256,7 +256,6 @@ problems with reflection using explicitly annotated call sites. That means
 we're dispatching on types, which comes with its own set of issues. In the
 next blog post, I'll go into more detail on how that works, with a bunch of
 benchmarks. Stay tuned!</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../tags/cryptography/" rel="tag">cryptography</a></li>
@@ -269,7 +268,7 @@ benchmarks. Stay tuned!</p>
                 <a href="../2016-rmbp-caveats/" rel="next" title="2016 rMBP caveats">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -280,9 +279,7 @@ benchmarks. Stay tuned!</p>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -26,10 +26,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,8 +98,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>Hey.</p>
+    <p>Hey.</p>
 <p></p>
 <br>Ever the diplomat, I've been trying to figure out a way to use Launchpad yet keeping the people that dislike it happy.<p></p>It is based on two premises. If you disagree with them, you may as well stop reading now. (or, even better: tell me why)<br><ul>
 <li>Launchpad's bug tracker is preferable, or at least equal, to Github Issues.</li>
@@ -106,7 +106,6 @@ navbar-dark bg-dark
 <li>Grabbing the pull request diff</li>
 <li>Using bzr-git to import the branch into git</li>
 </ul> (The latter is preferable because it preserves commit structure. The former is probably easier to implement and less hairy to implement/maintain due to impedance mismatches.)<p></p>Either way, a new branch is created with the same name as the Github branch. Ideally, the merge proposal is linked to the appropriate bug. That means the branch should contain information about the bug it relates to (possibly in the name, eg 54321-fixQuantumTransmogrifier), since, as far as I know, git has no equivalent to bzr commit's --fixes. The pull request gets a link to the merge proposal. All review-related work happens in Launchpad, not Github. Based on the second premise, this is acceptable.<p></p> The obvious problem here is that Github users can't really monitor what's going on in terms of development in Launchpadland and vice-versa. A solution may be to push more branches, but I dislike doing that. Perhaps using their respective APIs, the data can be syndicated into a common source. Ideas welcome.<p></p> cheers<div>lvh</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -116,7 +115,7 @@ navbar-dark bg-dark
                 <a href="../a-compiled-list-of-launchpad-s-perceived-flaws/" rel="next" title="A compiled list of Launchpad's perceived flaws">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -127,9 +126,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

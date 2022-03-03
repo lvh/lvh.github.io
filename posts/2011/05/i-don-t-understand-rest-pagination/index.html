@@ -26,10 +26,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,11 +98,9 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>Hey.</p>
+    <p>Hey.</p>
 <p></p>
 <br>So, in <a href="https://github.com/lvh/txyoga">txYoga</a>, in implemented pagination in terms of query parameters to a collection. If you want to access the range of elements [100, 110), you would say: <span style="font-family: courier new,monospace;"><a href="http://whatever/collection?start=100;stop=110">http://whatever/collection?start=100;stop=110</a></span>. The feature here is that pages give you the link to the next and previous page. The response (JSON) looks something like <span style="font-family: courier new,monospace;">{"results": [...], "next": nextURL, "prev": prevURL}</span>. That way, you pretty much just have to follow URLs to walk down the collection as a doubly  linked list of pages. The supposed feature is that I can change how my pages work, and users hopefully won't notice, since they shouldn't be building their own URLs anyway.<p></p> Now, at the same time, I'm looking at <a href="http://dojotoolkit.org/reference-guide/dojo/store/JsonRest.html">dojo's JsonRest API</a>. It's suggesting that I use the Range and Content-Range headers for pagination support. It also has a single JSON array as a response (so, [{...}, ...]) instead of my JSON object. I started RFC diving and hey look, they're right, HTTP understands <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.12">ranges with arbitrary units</a>. So, are my URLs wrong? Are people supposed to conjure Range URLs themselves? Why are these darned ranges inclusive? Another problem is that the specification doesn't really seem to support non-numeric ranges, whereas to txYoga, that's not really a problem as long as the underlying collection understands it.<p></p> Isn't REST supposed to be hypertext-driven? Aren't people basically supposed to never construct URLs, and rely on me to provide them to them? Where am I supposed to put those URLs? Yaaargh.<p></p> <br>cheers<div>lvh</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -111,7 +110,7 @@ navbar-dark bg-dark
                 <a href="../../11/designing-a-rest-api-logging-in/" rel="next" title="Designing a REST API: logging in">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -122,9 +121,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

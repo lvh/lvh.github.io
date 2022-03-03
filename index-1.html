@@ -20,10 +20,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href=".">
             <img src="pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,8 +85,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>This article will be about a deployment scheduling technique which I call operationally cautious deployment. (I didn't pick the name so the acronym would end up being OCD! Honest! I swear!).</p>
+    <p>This article will be about a deployment scheduling technique which I call operationally cautious deployment. (I didn't pick the name so the acronym would end up being OCD! Honest! I swear!).</p>
 <p></p>
 <div>Note: This isn't <i>new</i>. I didn't invent it. The fact that a big number of people around the globe with similar problems have come up with this idea independently and that most of them are happy with the results speaks for itself: this is mostly just common sense thinking applied to fixing a real problem. It's one of those things that sound obvious when you have them explained to you, but you probably wouldn't come up with unless you spend quiet a bit of time pondering the problem.</div> <p></p>
 <div>So you have a wonderful continuous deployment system! Congratulations! You deploy a new version, monitor your cluster of hosts, and create wonderful graphs:</div>
@@ -109,7 +109,6 @@ navbar-dark bg-dark
 <p></p>
 <div>There's one obvious problem with all of this. Being able to continue deployment on positive feedback and revert deployments on negative feedback relies on actually having feedback. Useful health metrics for a cluster are halfway between art and science, and are definitely outside of the scope of this article.</div> <p></p>
 <div>The next article will be about another benefit of cautious deployment: continuous <i>availability</i>. That one is probably going to be halfway between an article about continuous deployment and a rant about how people need to learn more statistics.</div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-deployment-formats-and-content/" class="u-url">Designing a continuous deployment system: deployment formats and content</a></h1>
         <div class="metadata">
@@ -122,8 +121,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<div>Hi and welcome again to my articles on continuous deployment! In this article, I'm going to talk about <i>what</i> exactly I think you should deploy and what format you should use to deploy it in.</div>
+    <div>Hi and welcome again to my articles on continuous deployment! In this article, I'm going to talk about <i>what</i> exactly I think you should deploy and what format you should use to deploy it in.</div>
 
 <p></p> <div>Again, the stuff here probably isn't super controversial. I'm probably not kicking any shins in this one unless you've already done continuous deployment and you picked something else. Analogous with the last article, if you don't really care about deployment formats, save yourself the time and don't bother reading.</div> <p></p>
 <div>When getting in touch with a few people I know are doing continuous deployment, there are a number of things I've heard people say about formats and what exactly to deploy. Here's what they used:</div> <div><ol>
@@ -140,7 +138,6 @@ navbar-dark bg-dark
 <div>Another thing I've seen people package is their development environment. Unless you're also using this as the base for your tests, I think this is a very bad idea. I think we've all had cases where something worked fine on a development box, and started breaking for new checkouts. During development, all sorts of stuff Some languages/development environments are more susceptible to these problems than others, but they're prevalent enough to want to avoid the problem altogether.</div> <p></p>
 <div>Even if you are testing your development environment, I dislike it for purity reasons. The people doing this said they did that because it was the easiest way to get stuff running, and they just went along with the path of least resistance. As much as I'm willing to believe that's true, I also believe that if you need a developer to chant some magic runes and sacrifice a chicken over a checkout of your code before it'll actually work, you're doing it wrong.</div> <p></p>I think repackaging test environments for deployment is a sensible idea. I talked this over with Holger Krekel, the guy who wrote <a href="http://codespeak.net/tox/" target="_blank">Tox</a>, and he immediately pointed out a flaw in that plan: it'll only work reliably if the testing environment is identical to the deployment environment in terms of platform, architecture, versions of available software... I thought this was a limitation at first, but I'm now convinced this is a useful limitation (another idea I stole from Holger ;)). If you didn't <i>test</i> it in environment X, what business do you have <i>deploying</i> it there? <p></p>
 <div>I think I've got most of the annoying administrative stuff out of the way now, maybe we can move on to more interesting things that are actually specific to continuous deployment :-) That starts with the next article, which, as I've already hinted above, will be about "cautious deployment", a robust technique for scheduling deployment.</div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-rolling-your-own-development-stack/" class="u-url">A continuous deployment interlude: rolling your own development stack</a></h1>
         <div class="metadata">
@@ -153,8 +150,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Hi, and welcome to the second part to my ranting about development stacks. In my previous post, I talked about the issues with some of the popular hosted solutions (Github, Bitbucket and Launchpad). In this post, I'll try to roll my own dev stack that hopefully doesn't suck too much.</p>
+    <p>Hi, and welcome to the second part to my ranting about development stacks. In my previous post, I talked about the issues with some of the popular hosted solutions (Github, Bitbucket and Launchpad). In this post, I'll try to roll my own dev stack that hopefully doesn't suck too much.</p>
 
 <p></p>
 <div>Recall from the last post that I'm looking for three things:</div>
@@ -182,7 +178,6 @@ navbar-dark bg-dark
 <div>Last up: Mercurial. When it comes to code review, I've already explained in a previous post why I think Bitbucket's pull requests are a missed opportunity. (Short version: they make a distinction between local branches and branches in different repositories, which is in my opinion unnecessary. I think the way Launchpad allows merge proposals between arbitrary branches is much better. Github has recently copied this behavior somewhat with Pull Requests 2.0.). However, the main reason I wanted that is for a point to introduce code review. Georg Brandl (birkenfeld) pointed out that Mercurial has the pretty impressive <a href="https://bitbucket.org/sjl/hg-review/src" target="_blank">hg-review extension</a>. It has a sleek, usable <a href="http://review.stevelosh.com/" target="_blank">web interface</a> (try it!). It also has the advantage of the point I made earlier: data is included with your repository, you don't need to go fish for it. Even if you don't use that now, it has the great advantage of being able to do cool things with it later (such as identifying recurring problems in the review process and pointing those out to the reviewer/author).</div>
 <p></p>
 <div>Stay tuned for the next installment, where I try something totally crazy.</div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/designing-a-continuous-deployment-system-on-being-language-agnostic/" class="u-url">Designing a continuous deployment system: on being language agnostic</a></h1>
         <div class="metadata">
@@ -195,8 +190,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<div>Hi, and welcome again to my series of rants about continuous deployment :) In the next few posts, I'll try to scope out what I think a hypothetical greenfielded continuous deployment system should and shouldn't do, and then get that down to what a <i>feasible</i> continuous deployment system should and shouldn't do. Hopefully there won't be too much cutting.</div>
+    <div>Hi, and welcome again to my series of rants about continuous deployment :) In the next few posts, I'll try to scope out what I think a hypothetical greenfielded continuous deployment system should and shouldn't do, and then get that down to what a <i>feasible</i> continuous deployment system should and shouldn't do. Hopefully there won't be too much cutting.</div>
 
 <p></p>
 <p></p>
@@ -210,7 +204,6 @@ navbar-dark bg-dark
 <div>If your architecture makes it possible, why not allow a programmer to foray into the slightly unknown? Who knows, you might develop something nice. Programmers are typically creative people: giving them a lot of a freedom to tinker tends to repay itself many times over (Google figured this out with 20% time).</div> <p></p>
 <div>The bottom line is simple: don't make it work for Python only. Or, which is more like what I'm going to do: make it Python only for now, but don't make it hard for other people to do whatever they like with it.</div> <p></p>
 <div>The next article is going to be about <i>what</i> to deploy and the format to deploy it in.</div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/we-now-have-an-animal-mascot-/" class="u-url">We now have an animal mascot!</a></h1>
         <div class="metadata">
@@ -223,8 +216,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<div>(Sorry, I'll try to keep the unrelated chatter to a minimum and stick to tech stuff! But this is still pretty related.)</div>
+    <div>(Sorry, I'll try to keep the unrelated chatter to a minimum and stick to tech stuff! But this is still pretty related.)</div>
 
 <p></p>
 <p>After a Django pony, testing goat, packaging pig, there is now also a <a href="http://twitter.com/deploymentduck">deployment duck</a>.</p>
@@ -234,7 +226,6 @@ navbar-dark bg-dark
 <div><img title="ducklings_ali_465x349.jpg" src="http://www.bbc.co.uk/devon/content/images/2007/03/12/ducklings_ali_465x349.jpg" alt="ducklings_ali_465x349.jpg"></div>
 <p></p>
 <div>Also, <a href="http://xkcd.com/537/">obligatory XKCD</a>.</div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/well-now-this-changes-everything-/" class="u-url">Well now, this changes everything.</a></h1>
         <div class="metadata">
@@ -247,8 +238,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<div>The previously planned crazy installment (I was going to install my own Launchpad instance) has been cancelled (or maybe deferred) to bring you this important announcement.</div>
+    <div>The previously planned crazy installment (I was going to install my own Launchpad instance) has been cancelled (or maybe deferred) to bring you this important announcement.</div>
 
 <p></p>
 <div>For those who still haven't heard yet (sorry about the late blog -- this happened around 4AM my time), <a href="http://blog.bitbucket.org/2010/09/29/bitbucket-joins-atlassian/" target="_blank">Atlassian have bought Bitbucket and are doing crazy awesome things with it</a>.</div>
@@ -266,7 +256,6 @@ navbar-dark bg-dark
 <div>I think it's time to revisit Bitbucket. Even if most of the tools end up being horrible, you just can't argue with 'free'. If feature X in Bitbucket ends up being unusably bad, I can just install my own code review tool. I've been told Bitbucket repositories are accessible over SVN, so it may even be possible to hook it up to Rietveld and end up with something where I do <em>zero</em> hosting.</div>
 <p></p>
 <div>Regardless of what happens to Bitbucket, I'd like to congratulate Jesper on Atlassian buying Bitbucket and wish him the best of luck in whatever he does next, be it Bitbucket or something else.</div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/a-continuous-deployment-interlude-picking-a-development-stack/" class="u-url">A continuous deployment interlude: picking a development stack</a></h1>
         <div class="metadata">
@@ -280,7 +269,6 @@ navbar-dark bg-dark
         </div>
     </header><div class="e-content entry-content">
     <div>
-<div>
 <div>At some point in time, you're going to have to pick a set of tools to do your dev work with. You probably want a bunch of things, including:</div>
 <div><ol>
 <li>A version control system. Preferably not CVS, Visual SourceSafe, ClearCase, Perforce, RCS, SCCS...</li>
@@ -311,7 +299,6 @@ navbar-dark bg-dark
 </div>
 
 <div>In the next post, I'll talk about rolling your own development stack.</div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-three-preparing-for-continuous-deployment/" class="u-url">Building a continuous deployment system, part three, preparing for continuous deployment</a></h1>
         <div class="metadata">
@@ -324,8 +311,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.</p>
+    <p>This post is just about the process of moving a dev shop to continuous deployment. If you're just interested in the things I'd like to build, feel free to skip this one.</p>
 
 <p>Despite the ominous messages in my last post about continuous deployment changing your dev shop dramatically, I do think it's possible to prepare properly. That means that you get up to the point where you <em>could</em> be doing continuous deployment, but you just aren't. Or, to put it differently, imagining you had to release right now, and getting trunk up to the point where that doesn't raise your blood pressure.</p>
 
@@ -354,7 +340,6 @@ navbar-dark bg-dark
 <p>A lot of people dislike being criticized about their code. <strong>Stamp this behavior out as soon as possible.</strong> Everyone's only human, and plenty of ugly, broken or otherwise inadequate code gets written. The point is to get it out, not berating the person that wrote it.</p>
 
 <p>Pressing the big red button once you're done will still be scary. You might even have a hiccup or two. But ideally, nothing will blow up. After a while (and probably in less time than you think it will), releases will become, as Timothy Fitz puts it, a non-event.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-one/" class="u-url">Building a continuous deployment system, part one</a></h1>
         <div class="metadata">
@@ -367,8 +352,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Lately, I've been thinking a lot about building a continuous deployment system.</p>
+    <p>Lately, I've been thinking a lot about building a continuous deployment system.</p>
 
 <p>I was really glad to find out that Timothy Fitz was doing <a href="http://timothyfitz.wordpress.com/2009/02/10/continuous-deployment-at-imvu-doing-the-impossible-fifty-times-a-day/">continuous deployment over at IMVU</a> (partially because Timothy and I like some of the same software). Eric Ries, former CTO and co-founder of IMVU, has had a lot of <a href="http://www.startuplessonslearned.com/search/label/continuous%20deployment">interesting things</a> to say about it as well. I used to do this at my old day job, and it's been an absolute eye-opener -- yes, it does require quite a bit of discipline, but I'm convinced it pays off handsomely, especially in the long run.</p>
 
@@ -377,7 +361,6 @@ navbar-dark bg-dark
 <p>The goal of this series of blog posts is to end up with a continuous deployment system people can agree on. (If you're laughing, yes, I realize that's probably a little naive -- I'm hoping to come out relatively unscathed and with a continuous deployment system I can agree on.)</p>
 
 <p> </p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/2010/09/building-a-continuous-deployment-system-part-two-what-is-it-/" class="u-url">Building a continuous deployment system, part two: what is it?</a></h1>
         <div class="metadata">
@@ -390,8 +373,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Hi! This is part two of my continuous deployment <span style="text-decoration: line-through;">rant</span>series which started <a href="http://lvh.posterous.com/building-a-continuous-deployment-system-part">here</a>. In this part, I'll try to explain what I'm talking about when I say continuous deployment.</p>
+    <p>Hi! This is part two of my continuous deployment <span style="text-decoration: line-through;">rant</span>series which started <a href="http://lvh.posterous.com/building-a-continuous-deployment-system-part">here</a>. In this part, I'll try to explain what I'm talking about when I say continuous deployment.</p>
 
 <p>Strictly speaking, continuous deployment just means that you push code out to production servers all the time, practically as it gets written.</p>
 
@@ -406,7 +388,6 @@ navbar-dark bg-dark
 <p>So, I guess the series is partially about continuous deployment proper, and partly about greenfielding a development process that rocks.</p>
 
 <p> </p>
-</div>
     </div>
     </article>
 </div>
@@ -415,7 +396,7 @@ navbar-dark bg-dark
 <li class="previous"><a href="index-2.html" rel="prev">Newer posts</a></li>
         </ul>
 <!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -426,9 +407,7 @@ navbar-dark bg-dark
         <script src="assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

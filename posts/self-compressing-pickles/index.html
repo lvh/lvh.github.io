@@ -30,10 +30,11 @@ Python pickles are extremely flexible: they can run essentially whatever code th
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,8 +102,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>I’ve been working on some pickle security stuff. This is a teaser.</p>
+    <p>I’ve been working on some pickle security stuff. This is a teaser.</p>
 <p>Python pickles are extremely flexible: they can run essentially whatever code they want. That means you can create a pickle that contains a compressed pickle. The consumer doesn’t know if an incoming pickle will be compressed or not: the Pickle VM takes care of the details.</p>
 <p>To do this, we define a useful little helper class:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">PickleCall</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -152,7 +152,6 @@ len(zpickle), len(pickle)
 
 <p>If you're trying to protect pickles the punchline here is that you probably need to whitelist because there are too many ways to hide things inside a pickle. (We're working on it.)</p>
 <p>(This post was syndicated on the Latacora blog.)</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../tags/pickle/" rel="tag">pickle</a></li>
@@ -167,7 +166,7 @@ len(zpickle), len(pickle)
                 <a href="../factoring-the-noise-protocol-matrix/" rel="next" title="Factoring the Noise protocol matrix">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -178,9 +177,7 @@ len(zpickle), len(pickle)
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

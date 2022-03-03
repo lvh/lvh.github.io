@@ -26,10 +26,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,8 +98,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<div>In <a href="http://lvh.posterous.com/designing-a-continuous-deployment-system-caut">my last post</a>, I talked about cautious deployment as a technique for recovering from botched deployments. Cautious deployment also solves a second problem by helping you get continuous availability.</div>
+    <div>In <a href="http://lvh.posterous.com/designing-a-continuous-deployment-system-caut">my last post</a>, I talked about cautious deployment as a technique for recovering from botched deployments. Cautious deployment also solves a second problem by helping you get continuous availability.</div>
 
 <p></p>
 <div>In the article about cautious deployment, I had the following graph for hypothetical, optimistic deployment:</div>
@@ -133,7 +133,6 @@ navbar-dark bg-dark
 <div>Bottom line? Statistics is hard, and it's easy to get fooled into thinking you've got it right even when you're miles off (I've been bitten by this myself, more than once). Once you've done that, set up a sandboxed miniature model for your entire (distributed) system, and check the assumptions from your statistics against it. After that, you're only likely to miss scale issues. </div>
 <p></p>
 <div>Even when you take all of that into account, you will get things wrong. That was my original point about cautious deployment: as long as you have that and it works, you're allowed to get it wrong once in a while. Fail gracefully. It's not so scary to leap the chasm when there's a net to catch you.</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -143,7 +142,7 @@ navbar-dark bg-dark
                 <a href="../pycon-us-talk/" rel="next" title="Pycon US talk">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -154,9 +153,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

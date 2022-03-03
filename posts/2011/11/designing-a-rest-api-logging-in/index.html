@@ -29,10 +29,11 @@ The problem I'm hitting is registration and logging in. It jus">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,8 +101,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<div>Hey. As many of you probably know, I'm building a business, and that business involves a REST API being consumed by browsers (for now).</div>
+    <div>Hey. As many of you probably know, I'm building a business, and that business involves a REST API being consumed by browsers (for now).</div>
 
 <p></p>
 <div>The problem I'm hitting is registration and logging in. It just doesn't seem to be a problem that fits REST very well -- maybe I'm thinking too much about services and not enough about resources, so I'm writing this blog posts to get my thoughts in order and hopefully get some useful feedback.</div>
@@ -154,7 +154,6 @@ The downside is that there are two things. One of them speaks REST, and the othe
 <div>Downside is that the API should probably still be able to take user credentials, since this is is a shortcut....</div>
 <p></p>
 <div>Yes, I know OAuth exists. For now, we have no interest in opening this API up yet. We'll do that as soon as we have a platform worth caring about, an API that doesn't change every three seconds, and a security expert that's reviewed it.</div>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -164,7 +163,7 @@ The downside is that there are two things. One of them speaks REST, and the othe
                 <a href="../../../2013/01/moving-to-octopress-on-github-pages/" rel="next" title="Moving to Octopress on Github Pages">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -175,9 +174,7 @@ The downside is that there are two things. One of them speaks REST, and the othe
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

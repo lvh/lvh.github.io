@@ -30,10 +30,11 @@ impossible to understand and manage. What's the">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,8 +102,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>I've migrated from Octopress to Nikola.</p>
+    <p>I've migrated from Octopress to Nikola.</p>
 <p>Nothing personal. Octopress is fine software, but:</p>
 <ul class="simple">
 <li><p>External packages, like themes, made my installation quickly
@@ -119,7 +119,6 @@ than learning about A-grade Ruby developer installations.</p></li>
 <a class="reference external" href="https://www.github.com/mikemccracken/nikola-octopress-import">nikola-octopress-import</a>. Did most of what I wanted; I contributed
 some minor PRs so that it would also handle extended date formats
 (with seconds and timezones) and legacy HTML posts.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -129,7 +128,7 @@ some minor PRs so that it would also handle extended date formats
                 <a href="../on-discussing-software-security-improvements/" rel="next" title="On discussing software security improvements">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -140,9 +139,7 @@ some minor PRs so that it would also handle extended date formats
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

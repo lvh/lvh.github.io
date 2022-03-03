@@ -30,10 +30,11 @@ nicer than fo">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,8 +102,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>The greedy hotel pairing algorithm from my <a href="http://blog.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/">previous post</a>
+    <p>The greedy hotel pairing algorithm from my <a href="http://blog.lvh.io/blog/2014/03/10/optimization-problems-and-pycon-financial-aid/">previous post</a>
 gives good solutions. If you make some fairly reasonable-sounding
 assumptions about the problem, <em>very</em> good solutions. At any rate
 nicer than forcing a human to drudge through it; both in terms of
@@ -159,7 +159,6 @@ out I was wrong, and shoving me in the direction of the answers.</p>
 <p>In this blog post I used several freely available graph illustrations
 from Wikipedia. The complete graph illustrations were made by
 <a href="https://commons.wikimedia.org/wiki/User:Koko90">koko90</a>.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../../../tags/pycon/" rel="tag">pycon</a></li>
@@ -174,7 +173,7 @@ from Wikipedia. The complete graph illustrations were made by
         </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -185,9 +184,7 @@ from Wikipedia. The complete graph illustrations were made by
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

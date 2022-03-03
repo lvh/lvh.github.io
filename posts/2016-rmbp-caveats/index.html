@@ -29,10 +29,11 @@ aware of if you'd like to get one.
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../">
             <img src="../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,8 +101,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
+    <p>I bought the 2016 15" retina MacBook Pro as soon as it became available. I've
 had it for a week now, and there have been some issues you might want to be
 aware of if you'd like to get one.</p>
 <p>(There are a bunch of links to Amazon in this article. They're not affiliate
@@ -205,7 +205,6 @@ either side is an unexpected nice benefit.</p>
 literally and figuratively. However, most of the dongles don't actually work,
 and that sucks. So, maybe wait for the refresh, or at least until the
 high-quality docks are available.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -215,7 +214,7 @@ high-quality docks are available.</p>
                 <a href="../smaller-clojure-docker-builds-with-multi-stage-builds/" rel="next" title="Smaller Clojure Docker builds with multi-stage builds">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -226,9 +225,7 @@ high-quality docks are available.</p>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

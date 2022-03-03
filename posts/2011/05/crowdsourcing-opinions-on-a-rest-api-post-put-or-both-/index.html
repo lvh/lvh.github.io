@@ -26,10 +26,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href="../../../../">
             <img src="../../../../pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,8 +98,7 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>As some of you undoubtedly know, I'm writing a thing called txYoga, which is a REST framework for Twisted.</p>
+    <p>As some of you undoubtedly know, I'm writing a thing called txYoga, which is a REST framework for Twisted.</p>
 <p></p>The fundamental operations in this post are CRUD:<br><ol>
 <li>Creating elements</li>
 <li>Retrieving them</li> <li>Updating them</li>
@@ -107,7 +107,7 @@ navbar-dark bg-dark
 <li>If the client knows the complete path to the element (so, particularly the final part of the new element's URI), it PUTs to that URI (for which there is currently no element).</li>
 <li>If the client doesn't know or care, it POSTs to the collection. The collection creates the element, and probably returns the URL under which the new element is available.<br>
 </li>
-</ol>One of the fundamental differences between POST and PUT is that PUT is idempotent, but POST is not. If you send me the same PUT request once, twice or ten times, you'll end up with the same state. POSTing to the collection might work once (or pretty much indefinitely, if you're producing objects with an UUID identifier for example).<p></p> This is because in txYoga, each element has exactly one identifying attribute (which is the thing that's used to access the element). That's what makes PUT feels so awkward: what you're putting contains the information to decide what the name of the object is (since it has to have the identifying attribute), but the object doesn't know what name it's going to be put under (since that name only exists after the object is created), so you have to repeat yourself. With POST, you don't really care.<p></p> Additionally, you'd be using the same thing for updating and creating new elements, which I guess sort-of makes sense, but reminds me of Perl's autovivification and not in a good way.<p></p>The question is: should I support both PUT and POST for creating elements? On the one hand, There should be one-- and preferably only one --obvious way to do it. On the other, this is what REST pretty much does -- and practicality beats purity (although this isn't very practical for me...).</div>
+</ol>One of the fundamental differences between POST and PUT is that PUT is idempotent, but POST is not. If you send me the same PUT request once, twice or ten times, you'll end up with the same state. POSTing to the collection might work once (or pretty much indefinitely, if you're producing objects with an UUID identifier for example).<p></p> This is because in txYoga, each element has exactly one identifying attribute (which is the thing that's used to access the element). That's what makes PUT feels so awkward: what you're putting contains the information to decide what the name of the object is (since it has to have the identifying attribute), but the object doesn't know what name it's going to be put under (since that name only exists after the object is created), so you have to repeat yourself. With POST, you don't really care.<p></p> Additionally, you'd be using the same thing for updating and creating new elements, which I guess sort-of makes sense, but reminds me of Perl's autovivification and not in a good way.<p></p>The question is: should I support both PUT and POST for creating elements? On the one hand, There should be one-- and preferably only one --obvious way to do it. On the other, this is what REST pretty much does -- and practicality beats purity (although this isn't very practical for me...).
     </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -117,7 +117,7 @@ navbar-dark bg-dark
                 <a href="../i-don-t-understand-rest-pagination/" rel="next" title="I don't understand REST pagination">Next post</a>
             </li>
         </ul></nav></aside></article><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -128,9 +128,7 @@ navbar-dark bg-dark
         <script src="../../../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

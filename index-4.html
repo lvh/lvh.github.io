@@ -21,10 +21,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://www.lvh.io/">
+        <a class="navbar-brand" href=".">
             <img src="pinchy.svg" alt="lvh" id="logo" class="d-inline-block align-top"><span id="blog-title">lvh</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +86,7 @@ navbar-dark bg-dark
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>For the past two years, I've been running PyCon's financial aid
+    <p>For the past two years, I've been running PyCon's financial aid
 program. Starting this year, the event coordinator has asked all staff
 members to document what they do for PyCon. Firstly, this helps to
 objectively recognize the hard work done by our (volunteer) staff, and
@@ -394,7 +394,6 @@ PyCon, but I consider that a superb problem to have.</p>
 <li>Diana Clarke, for Charing PyCon US in Montreal</li>
 </ul>
 </div>
-    </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/conflicting-threat-models/" class="u-url">Conflicting threat models</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
@@ -406,8 +405,7 @@ PyCon, but I consider that a superb problem to have.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>As I mentioned <a href="http://www.lvh.io/posts/were-just-getting-started.html">in my previous post</a>, we have a long way to go when it comes to information security. I'll be presenting <a href="https://us.pycon.org/2015/schedule/presentation/342/">a talk on building secure systems</a> at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.</p>
+    <p>As I mentioned <a href="http://www.lvh.io/posts/were-just-getting-started.html">in my previous post</a>, we have a long way to go when it comes to information security. I'll be presenting <a href="https://us.pycon.org/2015/schedule/presentation/342/">a talk on building secure systems</a> at PyCon 2015 next month, and I hope to blog more about interesting bits of comprehensible security.</p>
 <p>I'm a strong believer in the importance of threat models. A threat model is your idea of what you're protecting against. It may seem obvious that you can't effectively protect anything without knowing what you're protecting it from. Sadly, simply contemplating your threat model puts you ahead of the curve in today's software industry.</p>
 <p>Threat models often simply deal with how much effort you're willing to spend to prevent something from happening. In a world with finite resources, we have to make choices. Some models are unrealistic or prohibitively expensive to defend against. These questions aren't all strictly technical: perhaps some risk is adequately covered by insurance. Perhaps you have a legal or a compliance requirement to do something, even if the result is technically inferior. These questions are also not just about <em>how much</em> you're going to do: different threat models can lead to mutually exclusive resolutions, each a clear security win.</p>
 <p>Consider your smartphone. Our phones have a lot of important, private information; it makes sense to protect them. The iPhone 6 provides two options for the lock screen: a passcode and a fingerprint sensor. Passcodes have been around for about as long as smartphones have, while fingerprint sensors are new and exciting. It's clear that either of them is more secure than not protecting your phone at all. But which one is more secure?</p>
@@ -417,7 +415,6 @@ PyCon, but I consider that a superb problem to have.</p>
 <p>In the United States, under the Fifth Amendment, you don't have to divulge information that might incriminate you. I am not a lawyer, and courts have provided conflicting rulings, <a href="https://en.wikipedia.org/wiki/Fifth_Amendment_to_the_United_States_Constitution#Computer_passwords">but currently it appears that this includes computer passwords.</a> <a href="http://hamptonroads.com/2014/10/police-can-require-cellphone-fingerprint-not-pass-code?wpisrc=nl-swbd&amp;wpmm=1#">However, a court has ruled that a fingerprint doesn't count as secret information.</a> If you can unlock your phone with your fingerprint, they can force you to unlock it.</p>
 <p>If your threat models include people snooping, the fingerprint sensor is superior. If your threat model includes law enforcement, the passcode is superior. So, which do you pick? It depends on your threat model.</p>
 <p>Disclaimer: this is an illustration of how threat models can conflict. It is <em>not</em> operational security advice; in which case I would point out other options. It is not legal advice, which I am not at all qualified to dispense.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/updated-gpg-key/" class="u-url">Updated GPG key</a></h1>
         <div class="metadata">
@@ -430,8 +427,7 @@ PyCon, but I consider that a superb problem to have.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>This message is also available <a href="https://gist.github.com/lvh/6adfe51aa42bb268a273">as a Gist</a>. I have also updated
+    <p>This message is also available <a href="https://gist.github.com/lvh/6adfe51aa42bb268a273">as a Gist</a>. I have also updated
 <a href="https://keybase.io/lvh">Keybase</a> since writing the GPG signed message below.</p>
 <pre class="code literal-block"><span></span>-----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
@@ -476,7 +472,6 @@ De57mY9RnWwt5fy6AWd1
 =lzks
 -----END PGP SIGNATURE-----
 </pre>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/securing-apis-with-shims/" class="u-url">Securing APIs with shims</a></h1>
         <div class="metadata">
@@ -489,8 +484,7 @@ De57mY9RnWwt5fy6AWd1
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Imagine that you had a capability URL, except instead of giving you
+    <p>Imagine that you had a capability URL, except instead of giving you
 the ability to perform a specific <em>action</em>, it gave you the ability to
 perform a (limited) set of operations on a third party API,
 e.g. OpenStack. The capability URL wouldn't just be something you
@@ -586,7 +580,6 @@ I'm going to invest a ton of time improving the documentation for both
 <code>core.logic</code> and <code>core.typed</code>. They're <em>fantastic</em> projects, but
 they're harder to get started with than they could be, and that's a
 shame.</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/reverse-ungineering/" class="u-url">Reverse ungineering</a></h1>
         <div class="metadata">
@@ -599,8 +592,7 @@ shame.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>(Title with apologies to Glyph.)</p>
+    <p>(Title with apologies to Glyph.)</p>
 <p>Recently, some friends of mine suggested that "software engineer" is
 not a good job title. While they are of course free to call their
 profession whatever they like, I respectfully disagree: I think
@@ -783,7 +775,6 @@ The theory just wasn't there yet.</p>
 </dl>
 <!-- LocalWords:  engineeringest -->
 </div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/on-multiplayer-turn-based-game-mechanics/" class="u-url">On multiplayer turn-based game mechanics</a></h1>
         <div class="metadata">
@@ -796,8 +787,7 @@ The theory just wasn't there yet.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>Most classic turn-based games, from chess all the way to Civilization
+    <p>Most classic turn-based games, from chess all the way to Civilization
 V, are sequential in nature. A player makes a move, then the next
 player makes a move, and so on. The details can vary, for example:</p>
 <ul class="simple">
@@ -890,7 +880,6 @@ feels like an undue inconsistency.</p>
 </dd>
 </dl>
 </div>
-    </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/hypercathexis-dev-notes-part-1/" class="u-url">hypercathexis dev notes part 1</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
@@ -965,8 +954,7 @@ supposed to:</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>It's no secret that I love Clojure. Like any tool though, it isn't
+    <p>It's no secret that I love Clojure. Like any tool though, it isn't
 perfect. Today, I was trying to write unit tests that use
 <code class="docutils literal">clojure.core.async/timeout</code>, so I wrote a test double analogous to
 Twisted's <code class="docutils literal">Clock</code>. As I tried to <code class="docutils literal"><span class="pre">with-redefs</span></code> it in, I got the
@@ -1006,7 +994,6 @@ special. That works for doubles, too:</p>
 &gt; (parents (type (fn [^double x ^long y] x)))
 #{clojure.lang.IFn$DLO clojure.lang.AFunction}</pre>
 <p>Adding a simple type hint to the function fixed it. Success!</p>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/on-discussing-software-security-improvements/" class="u-url">On discussing software security improvements</a></h1>
         <div class="metadata">
@@ -1019,8 +1006,7 @@ special. That works for doubles, too:</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>A common criticism of information security folks is that they tend to
+    <p>A common criticism of information security folks is that they tend to
 advise people to not do any crypto. Through projects like <a class="reference external" href="https://www.crypto101.io/">Crypto
 101</a>, I've attempted to make a small contribution towards fixing
 that.</p>
@@ -1162,7 +1148,6 @@ private key.</p>
 conversation. I believe this to be an improvement over the overall
 status quo.</p>
 </div>
-</div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/switched-to-nikola/" class="u-url">Switched to Nikola</a></h1>
         <div class="metadata">
@@ -1175,8 +1160,7 @@ status quo.</p>
             </p>
         </div>
     </header><div class="e-content entry-content">
-    <div>
-<p>I've migrated from Octopress to Nikola.</p>
+    <p>I've migrated from Octopress to Nikola.</p>
 <p>Nothing personal. Octopress is fine software, but:</p>
 <ul class="simple">
 <li><p>External packages, like themes, made my installation quickly
@@ -1193,7 +1177,6 @@ than learning about A-grade Ruby developer installations.</p></li>
 <a class="reference external" href="https://www.github.com/mikemccracken/nikola-octopress-import">nikola-octopress-import</a>. Did most of what I wanted; I contributed
 some minor PRs so that it would also handle extended date formats
 (with seconds and timezones) and legacy HTML posts.</p>
-</div>
     </div>
     </article>
 </div>
@@ -1205,7 +1188,7 @@ some minor PRs so that it would also handle extended date formats
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script><!--End of body content--><footer id="footer">
-            Contents © 2019         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2022         <a href="mailto:_@lvh.io">lvh</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
             
         </footer>
@@ -1216,9 +1199,7 @@ some minor PRs so that it would also handle extended date formats
         <script src="assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
